@@ -1,0 +1,33 @@
+{
+    "check-coverage": true,
+    "lines": 80,
+    "watermarks": {
+        "lines": [80, 90],
+        "functions": [80, 90],
+        "branches": [80, 90],
+        "statements": [80, 90]
+    },
+    "exclude": [
+        "src/config",
+        "src/libs",
+        "src/resources",
+        "src/test",
+        "src/web",
+        "src/web.core/dtos/common",
+        "src/web.api/middlewares",
+        "src/web.infrastructure"
+    ],
+    "extension": [
+        ".ts"
+    ],
+    "require": [
+        "ts-node/register"
+    ],
+    "reporter": [
+        "text",
+        "html"
+    ],
+    "instrument": true,
+    "all": false,
+    "cache": false
+}

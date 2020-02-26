@@ -1,0 +1,15 @@
+import { {PascalName} } from '../../../models/{PascalName}';
+import { {PascalName}FilterRequest } from '../../../dtos/{camelName}/requests/{PascalName}FilterRequest';
+
+export interface I{PascalName}Repository {
+    find(filter: {PascalName}FilterRequest): Promise<[{PascalName}[], number]>;
+
+    getById(id: number): Promise<{PascalName} | undefined>;
+
+    checkNameExist(name: string): Promise<boolean>;
+    checkNameExist(name: string, excludeId: number): Promise<boolean>;
+
+    create(data: {PascalName}): Promise<number | undefined>;
+
+    update(id: number, data: {PascalName}): Promise<boolean>;
+}

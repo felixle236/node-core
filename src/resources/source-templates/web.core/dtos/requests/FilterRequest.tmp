@@ -1,0 +1,9 @@
+import { BaseFilterRequest } from '../../common/BaseFilterRequest';
+import { IsBoolean } from 'class-validator';
+
+export class {PascalName}FilterRequest extends BaseFilterRequest {
+    keyword?: string;
+
+    @IsBoolean()
+    isDeleted?: boolean;
+}

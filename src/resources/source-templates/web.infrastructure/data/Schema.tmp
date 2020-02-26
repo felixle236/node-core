@@ -1,0 +1,11 @@
+export class {PascalName}Schema {
+    static TABLE_NAME = '{camelName}';
+
+    static COLUMNS = {
+        ID: 'id',
+        CREATED_AT: 'created_at',
+        UPDATED_AT: 'updated_at',
+        DELETED_AT: 'deleted_at',
+        NAME: 'name'
+    };
+}

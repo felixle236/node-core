@@ -1,0 +1,30 @@
+{
+    "search.exclude": {
+        "**/.nyc_output": true,
+        "**/.vscode": true,
+        "**/coverage": true,
+        "**/dist": true,
+        "**/node_modules": true,
+        "**/uploads": true,
+        "**/.history": true,
+        "**/.static": true,
+        "**/.tmp": true,
+        "**/.git": true
+    },
+    "editor.tabSize": 4,
+    "eslint.enable": true,
+    "eslint.options": {
+        "extensions": [
+            ".html",
+            ".js",
+            ".ts",
+            ".json",
+            ".css",
+            ".scss"
+        ]
+    },
+    "eslint.format.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}

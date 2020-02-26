@@ -1,0 +1,22 @@
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { {PascalName}Schema } from '../schemas/{PascalName}Schema';
+import { I{PascalName} } from '../../../../web.core/interfaces/models/I{PascalName}';
+
+@Entity({PascalName}Schema.TABLE_NAME)
+@Index(({camelName}: {PascalName}Entity) => [{camelName}.name, {camelName}.deletedAt], { unique: true })
+export class {PascalName}Entity implements I{PascalName} {
+    @PrimaryGeneratedColumn({ name: {PascalName}Schema.COLUMNS.ID })
+    id: number;
+
+    @CreateDateColumn({ name: {PascalName}Schema.COLUMNS.CREATED_AT, type: 'timestamptz', update: false })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: {PascalName}Schema.COLUMNS.UPDATED_AT, type: 'timestamptz', update: false })
+    updatedAt: Date;
+
+    @Column('timestamptz', { name: {PascalName}Schema.COLUMNS.DELETED_AT, nullable: true })
+    deletedAt?: Date;
+
+    @Column({ name: {PascalName}Schema.COLUMNS.NAME, length: 50 })
+    name: string;
+}

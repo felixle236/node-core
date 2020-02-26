@@ -1,0 +1,8 @@
+{
+    "delay": 800,
+    "watch": [
+        "src/",
+        ".env"
+    ],
+    "ignore": [] 
+}

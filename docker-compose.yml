@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+    web-api:
+        container_name: ${PROJECT_ID}
+        build:
+            context: .
+            network: webnet
+        ports:
+            - ${API_PORT}:${API_PORT}
+            - ${WEB_PORT}:${WEB_PORT}
+            - ${SOCKET_PORT}:${SOCKET_PORT}
+        networks:
+            - webnet
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '8m'
+                max-file: '10'
+        restart: always
+networks:
+    webnet:
+        name: webnet
+        driver: bridge

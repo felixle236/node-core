@@ -1,0 +1,7 @@
+export interface I{PascalName} {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt?: Date;
+    name: string;
+}

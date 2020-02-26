@@ -1,0 +1,17 @@
+import { {PascalName}CreateRequest } from '../../dtos/{camelName}/requests/{PascalName}CreateRequest';
+import { {PascalName}FilterRequest } from '../../dtos/{camelName}/requests/{PascalName}FilterRequest';
+import { {PascalName}Response } from '../../dtos/{camelName}/responses/{PascalName}Response';
+import { {PascalName}UpdateRequest } from '../../dtos/{camelName}/requests/{PascalName}UpdateRequest';
+import { ResultListResponse } from '../../dtos/common/ResultListResponse';
+
+export interface I{PascalName}Business {
+    find(filter: {PascalName}FilterRequest): Promise<ResultListResponse<{PascalName}Response>>;
+
+    getById(id: number): Promise<{PascalName}Response | undefined>;
+
+    create(data: {PascalName}CreateRequest): Promise<{PascalName}Response | undefined>;
+
+    update(id: number, data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined>;
+
+    delete(id: number): Promise<boolean>;
+}
