@@ -6,7 +6,7 @@ export class StripeFactory implements IPaymentService {
 
     constructor(apiKey: string) {
         this.stripe = new Stripe(apiKey, {
-            apiVersion: '2019-12-03'
+            apiVersion: '2020-03-02'
         });
     }
 

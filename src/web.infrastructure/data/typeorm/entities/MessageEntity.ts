@@ -8,10 +8,10 @@ export class MessageEntity implements IMessage {
     @PrimaryGeneratedColumn({ name: MessageSchema.COLUMNS.ID })
     id: number;
 
-    @CreateDateColumn({ name: MessageSchema.COLUMNS.CREATED_AT, type: 'timestamptz', update: false })
+    @CreateDateColumn({ name: MessageSchema.COLUMNS.CREATED_AT, type: 'timestamptz' })
     createdAt: Date;
 
-    @UpdateDateColumn({ name: MessageSchema.COLUMNS.UPDATED_AT, type: 'timestamptz', update: false })
+    @UpdateDateColumn({ name: MessageSchema.COLUMNS.UPDATED_AT, type: 'timestamptz' })
     updatedAt: Date;
 
     @Column({ name: MessageSchema.COLUMNS.SENDER_ID })

@@ -63,11 +63,6 @@ export class {PascalName}Business implements I{PascalName}Business {
         if (!{camelName})
             throw new SystemError(1004, '{camelName}');
 
-        {camelName}.deletedAt = new Date();
-
-        const result = await this.{camelName}Repository.update(id, {camelName});
-        if (!result)
-            throw new SystemError(5);
-        return result;
+        return await this.{camelName}Repository.delete(id);
     }
 }

@@ -685,7 +685,7 @@ describe('User business testing', () => {
     it('Delete user successfully', async () => {
         const item = list[0];
         sandbox.stub(UserRepository.prototype, 'getById').resolves(item);
-        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+        sandbox.stub(UserRepository.prototype, 'delete').resolves(true);
 
         const result = await userBusiness.delete(item.id);
         expect(result).to.eq(true);

@@ -40,8 +40,7 @@ export class {PascalName}Repository implements I{PascalName}Repository {
 
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
         let query = this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
-            .where(`lower(${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.NAME}) = lower(:name)`, { name })
-            .andWhere(`${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.DELETED_AT} IS NULL`);
+            .where(`lower(${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
             query = query.andWhere(`${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.ID} != :id`, { id: excludeId });
@@ -61,6 +60,14 @@ export class {PascalName}Repository implements I{PascalName}Repository {
     async update(id: number, {camelName}: {PascalName}): Promise<boolean> {
         const result = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .update({camelName}.toData())
+            .whereInIds(id)
+            .execute();
+        return !!result.affected;
+    }
+
+    async delete(id: number): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+            .softDelete()
             .whereInIds(id)
             .execute();
         return !!result.affected;

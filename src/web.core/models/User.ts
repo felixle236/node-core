@@ -29,10 +29,6 @@ export class User implements IUser {
         return this.data.deletedAt;
     }
 
-    set deletedAt(val: Date | undefined) {
-        this.data.deletedAt = val;
-    }
-
     get roleId(): number {
         return this.data.roleId;
     }
@@ -286,7 +282,6 @@ export class User implements IUser {
 
     toData() {
         const data = {} as IUser;
-        data.deletedAt = this.data.deletedAt;
         data.roleId = this.data.roleId;
         data.firstName = this.data.firstName;
         data.lastName = this.data.lastName;

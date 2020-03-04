@@ -50,7 +50,7 @@ export class PermissionRepository implements IPermissionRepository {
 
     async getAllByRole(roleId: number, expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Permission[]> {
         const permissions = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
-            .innerJoin(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME, `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS NULL`)
+            .innerJoin(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .cache('permissions', expireTimeCaching)
             .getMany();
         return mapModels(Permission, permissions.filter(permission => permission.roleId === roleId));
@@ -58,7 +58,7 @@ export class PermissionRepository implements IPermissionRepository {
 
     async getById(id: number): Promise<Permission | undefined> {
         const permission = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
-            .innerJoinAndSelect(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME, `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS NULL`)
+            .innerJoinAndSelect(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
 

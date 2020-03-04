@@ -18,10 +18,10 @@ import { User } from '../../../../web.core/models/User';
 import { UserClaim } from '../../../../constants/claims/UserClaim';
 import { UserRepository } from '../repositories/UserRepository';
 
-export class Initialize1581270591670 implements MigrationInterface {
-    name = 'Initialize1581270591670'
+export class Initialize1583337280442 implements MigrationInterface {
+    name = 'Initialize1583337280442'
 
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('CREATE TABLE "permission" ("id" SERIAL NOT NULL, "role_id" integer NOT NULL, "claim" integer NOT NULL, CONSTRAINT "PK_3b8b97af9d9d8807e41e6f48362" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_2f40e26a987fc2b8edacd2a15c" ON "permission" ("role_id", "claim") ');
         await queryRunner.query('CREATE TABLE "role" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "name" character varying(50) NOT NULL, "level" smallint NOT NULL, CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id"))');
@@ -41,7 +41,7 @@ export class Initialize1581270591670 implements MigrationInterface {
         await initBucket();
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('ALTER TABLE "message" DROP CONSTRAINT "FK_f4da40532b0102d51beb220f16a"');
         await queryRunner.query('ALTER TABLE "message" DROP CONSTRAINT "FK_c0ab99d9dfc61172871277b52f6"');
         await queryRunner.query('ALTER TABLE "users" DROP CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1"');

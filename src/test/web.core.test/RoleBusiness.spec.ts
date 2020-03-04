@@ -317,7 +317,7 @@ describe('Role business testing', () => {
     it('Delete role with cannot save error', async () => {
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
-        sandbox.stub(RoleRepository.prototype, 'update').resolves(false);
+        sandbox.stub(RoleRepository.prototype, 'delete').resolves(false);
 
         await roleBusiness.delete(item.id).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(5).message);
@@ -327,7 +327,7 @@ describe('Role business testing', () => {
     it('Delete role successfully', async () => {
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
-        sandbox.stub(RoleRepository.prototype, 'update').resolves(true);
+        sandbox.stub(RoleRepository.prototype, 'delete').resolves(true);
         sandbox.stub(RoleRepository.prototype, 'clearCaching').resolves();
 
         const result = await roleBusiness.delete(item.id);

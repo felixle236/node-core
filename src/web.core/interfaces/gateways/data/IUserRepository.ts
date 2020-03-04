@@ -30,4 +30,6 @@ export interface IUserRepository {
 
     update(id: number, data: User): Promise<boolean>;
     update(id: number, data: User, queryRunner: QueryRunner): Promise<boolean>;
+
+    delete(id: number): Promise<boolean>;
 }

@@ -155,8 +155,7 @@ export class UserBusiness implements IUserBusiness {
         if (userAuth && user.role && user.role.level <= userAuth.role.level)
             throw new SystemError(3);
 
-        user.deletedAt = new Date();
-        return await this.userRepository.update(id, user);
+        return await this.userRepository.delete(id);
     }
 
     async createSampleData(): Promise<BulkActionResponse> {

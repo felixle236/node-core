@@ -8,9 +8,6 @@ export class UserFilterRequest extends BaseFilterRequest {
     roleId?: number;
 
     @IsBoolean()
-    isDeleted?: boolean;
-
-    @IsBoolean()
     isActived?: boolean;
 
     level?: number; // Role level

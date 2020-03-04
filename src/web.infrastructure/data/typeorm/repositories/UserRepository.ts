@@ -18,8 +18,7 @@ export class UserRepository implements IUserRepository {
 
     async find(filter: UserFilterRequest): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
-            .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS ${filter.isDeleted ? 'NOT' : ''} NULL`);
+            .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
@@ -49,8 +48,7 @@ export class UserRepository implements IUserRepository {
     async findMembers(filter: MemberFilterRequest): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
+            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} >= ${filter.level}`);
@@ -81,8 +79,7 @@ export class UserRepository implements IUserRepository {
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.AVATAR}`
             ])
             .innerJoin(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
+            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
@@ -116,8 +113,7 @@ export class UserRepository implements IUserRepository {
 
     async getByEmail(email: string, queryRunner?: QueryRunner): Promise<User | undefined> {
         const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
+            .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return mapModel(User, user);
     }
@@ -126,8 +122,7 @@ export class UserRepository implements IUserRepository {
         const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .leftJoinAndSelect(`${RoleSchema.TABLE_NAME}.${RoleSchema.RELATED_MANY.PERMISSIONS}`, PermissionSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
+            .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.PASSWORD} = :password`, { password })
             .getOne();
         return mapModel(User, user);
@@ -135,24 +130,21 @@ export class UserRepository implements IUserRepository {
 
     async getByActiveKey(activeKey: string): Promise<User | undefined> {
         const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVE_KEY} = :activeKey`, { activeKey })
+            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVE_KEY} = :activeKey`, { activeKey })
             .getOne();
         return mapModel(User, user);
     }
 
     async getByForgotKey(forgotKey: string): Promise<User | undefined> {
         const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.FORGOT_KEY} = :forgotKey`, { forgotKey })
+            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.FORGOT_KEY} = :forgotKey`, { forgotKey })
             .getOne();
         return mapModel(User, user);
     }
 
     async checkEmailExist(email: string): Promise<boolean> {
         const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.DELETED_AT} IS NULL`)
-            .andWhere(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
+            .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return !!user;
     }
@@ -168,6 +160,14 @@ export class UserRepository implements IUserRepository {
     async update(id: number, user: User, queryRunner?: QueryRunner): Promise<boolean> {
         const result = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .update(user.toData())
+            .whereInIds(id)
+            .execute();
+        return !!result.affected;
+    }
+
+    async delete(id: number): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+            .softDelete()
             .whereInIds(id)
             .execute();
         return !!result.affected;

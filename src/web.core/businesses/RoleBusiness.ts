@@ -88,9 +88,7 @@ export class RoleBusiness implements IRoleBusiness {
         if (userAuth && role.level <= userAuth.role.level)
             throw new SystemError(3);
 
-        role.deletedAt = new Date();
-
-        const result = await this.roleRepository.update(id, role);
+        const result = await this.roleRepository.delete(id);
         if (!result)
             throw new SystemError(5);
 

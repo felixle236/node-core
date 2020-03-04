@@ -21,5 +21,7 @@ export interface IRoleRepository {
 
     update(id: number, data: Role): Promise<boolean>;
 
+    delete(id: number): Promise<boolean>;
+
     clearCaching(): Promise<void>;
 }

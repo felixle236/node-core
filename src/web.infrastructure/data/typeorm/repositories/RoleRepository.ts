@@ -20,7 +20,6 @@ export class RoleRepository implements IRoleRepository {
 
     async getAll(expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Role[]> {
         const list = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .where(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS NULL`)
             .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
             .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
             .cache('roles', expireTimeCaching)
@@ -29,8 +28,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async find(filter: RoleFilterRequest): Promise<[Role[], number]> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .where(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS ${filter.isDeleted ? 'NOT' : ''} NULL`);
+        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
@@ -56,8 +54,7 @@ export class RoleRepository implements IRoleRepository {
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`,
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`
-            ])
-            .where(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS NULL`);
+            ]);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
@@ -86,8 +83,7 @@ export class RoleRepository implements IRoleRepository {
 
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
         let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .where(`lower(${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}) = lower(:name)`, { name })
-            .andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.DELETED_AT} IS NULL`);
+            .where(`lower(${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID} != :id`, { id: excludeId });
@@ -107,6 +103,14 @@ export class RoleRepository implements IRoleRepository {
     async update(id: number, role: Role): Promise<boolean> {
         const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .update(role.toData())
+            .whereInIds(id)
+            .execute();
+        return !!result.affected;
+    }
+
+    async delete(id: number): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+            .softDelete()
             .whereInIds(id)
             .execute();
         return !!result.affected;

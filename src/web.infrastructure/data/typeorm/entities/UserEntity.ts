@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { DateTransformer } from '../transformers/DateTransformer';
 import { Gender } from '../../../../constants/Enums';
 import { IUser } from '../../../../web.core/interfaces/models/IUser';
@@ -12,13 +12,13 @@ export class UserEntity implements IUser {
     @PrimaryGeneratedColumn({ name: UserSchema.COLUMNS.ID })
     id: number;
 
-    @CreateDateColumn({ name: UserSchema.COLUMNS.CREATED_AT, type: 'timestamptz', update: false })
+    @CreateDateColumn({ name: UserSchema.COLUMNS.CREATED_AT, type: 'timestamptz' })
     createdAt: Date;
 
-    @UpdateDateColumn({ name: UserSchema.COLUMNS.UPDATED_AT, type: 'timestamptz', update: false })
+    @UpdateDateColumn({ name: UserSchema.COLUMNS.UPDATED_AT, type: 'timestamptz' })
     updatedAt: Date;
 
-    @Column('timestamptz', { name: UserSchema.COLUMNS.DELETED_AT, nullable: true })
+    @DeleteDateColumn({ name: UserSchema.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
     deletedAt?: Date;
 
     @Column({ name: UserSchema.COLUMNS.ROLE_ID })

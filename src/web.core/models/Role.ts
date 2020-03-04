@@ -26,10 +26,6 @@ export class Role implements IRole {
         return this.data.deletedAt;
     }
 
-    set deletedAt(val: Date | undefined) {
-        this.data.deletedAt = val;
-    }
-
     get name(): string {
         return this.data.name;
     }
@@ -75,7 +71,6 @@ export class Role implements IRole {
     toData() {
         const data = {} as IRole;
         data.id = this.data.id;
-        data.deletedAt = this.data.deletedAt;
         data.name = this.data.name;
         data.level = this.data.level;
         return data;

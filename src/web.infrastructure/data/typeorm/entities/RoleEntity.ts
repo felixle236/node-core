@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IRole } from '../../../../web.core/interfaces/models/IRole';
 import { PermissionEntity } from './PermissionEntity';
 import { RoleSchema } from '../schemas/RoleSchema';
@@ -10,13 +10,13 @@ export class RoleEntity implements IRole {
     @PrimaryGeneratedColumn({ name: RoleSchema.COLUMNS.ID })
     id: number;
 
-    @CreateDateColumn({ name: RoleSchema.COLUMNS.CREATED_AT, type: 'timestamptz', update: false })
+    @CreateDateColumn({ name: RoleSchema.COLUMNS.CREATED_AT, type: 'timestamptz' })
     createdAt: Date;
 
-    @UpdateDateColumn({ name: RoleSchema.COLUMNS.UPDATED_AT, type: 'timestamptz', update: false })
+    @UpdateDateColumn({ name: RoleSchema.COLUMNS.UPDATED_AT, type: 'timestamptz' })
     updatedAt: Date;
 
-    @Column('timestamptz', { name: RoleSchema.COLUMNS.DELETED_AT, nullable: true })
+    @DeleteDateColumn({ name: RoleSchema.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
     deletedAt?: Date;
 
     @Column({ name: RoleSchema.COLUMNS.NAME, length: 50 })

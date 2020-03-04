@@ -12,4 +12,6 @@ export interface I{PascalName}Repository {
     create(data: {PascalName}): Promise<number | undefined>;
 
     update(id: number, data: {PascalName}): Promise<boolean>;
+
+    delete(id: number): Promise<boolean>;
 }
