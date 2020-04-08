@@ -43,8 +43,8 @@ export const DB_PASS: string = process.env.DB_PASS || '';
 
 // CONFIGURATION OF REDIS
 
-export const REDIS_HOST: string = process.env.REDIS_HOST || 'localhost';
-export const REDIS_PORT: number = process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379;
+export const REDIS_CONFIG_HOST: string = process.env.REDIS_CONFIG_HOST || 'localhost';
+export const REDIS_CONFIG_PORT: number = process.env.REDIS_CONFIG_PORT ? Number(process.env.REDIS_CONFIG_PORT) : 6379;
 
 // AUTHENTICATION
 

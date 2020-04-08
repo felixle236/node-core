@@ -4,7 +4,6 @@ services:
         container_name: ${PROJECT_ID}
         build:
             context: .
-            network: webnet
         ports:
             - ${API_PORT}:${API_PORT}
             - ${WEB_PORT}:${WEB_PORT}

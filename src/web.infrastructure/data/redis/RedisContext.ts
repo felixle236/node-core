@@ -1,6 +1,6 @@
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
-import { REDIS_HOST, REDIS_PORT } from '../../../constants/Environments';
+import { REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
 import { IRedisClient } from '../../../web.core/interfaces/types/IRedisClient';
 import { Service } from 'typedi';
 
@@ -26,7 +26,7 @@ export class RedisContext {
                 delete this._connection;
         }
 
-        this._connection = promisifyRedis(redisLib).createClient(REDIS_PORT, REDIS_HOST) as IRedisClient;
+        this._connection = promisifyRedis(redisLib).createClient(REDIS_CONFIG_PORT, REDIS_CONFIG_HOST) as IRedisClient;
         return this._connection;
     }
 }
