@@ -57,8 +57,8 @@ export const AUTH_SECRET_OR_PUBLIC_KEY: string = process.env.AUTH_SECRET_KEY || 
 export const STORAGE_TYPE: number = process.env.STORAGE_TYPE ? Number(process.env.STORAGE_TYPE) : StorageType.LOGGING;
 export const BUCKET_NAME: string = process.env.BUCKET_NAME || 'dev';
 
-export const MINIO_HOST: string = process.env.MINIO_HOST || 'localhost';
-export const MINIO_PORT: number = process.env.MINIO_PORT ? Number(process.env.MINIO_PORT) : 9000;
+export const MINIO_CONFIG_HOST: string = process.env.MINIO_CONFIG_HOST || 'localhost';
+export const MINIO_CONFIG_PORT: number = process.env.MINIO_CONFIG_PORT ? Number(process.env.MINIO_CONFIG_PORT) : 9000;
 export const MINIO_USE_SSL: boolean = process.env.MINIO_USE_SSL ? JSON.parse(process.env.MINIO_USE_SSL) : false;
 export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY || '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY || '';

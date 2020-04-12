@@ -1,4 +1,4 @@
-import { ENABLE_DATA_LOGGING, MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_TYPE } from '../../../constants/Environments';
+import { ENABLE_DATA_LOGGING, MINIO_ACCESS_KEY, MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_TYPE } from '../../../constants/Environments';
 import { IBucketItem, IStorageService } from '../../../web.core/interfaces/gateways/medias/IStorageService';
 import { AwsS3Factory } from './providers/AwsS3Factory';
 import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
@@ -14,7 +14,7 @@ export class StorageService {
     constructor() {
         switch (STORAGE_TYPE) {
         case StorageType.MINIO:
-            this.storage = new MinioFactory(MINIO_HOST, MINIO_PORT, MINIO_USE_SSL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
+            this.storage = new MinioFactory(MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, MINIO_USE_SSL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
             break;
 
         case StorageType.AWS_S3:
