@@ -5,9 +5,9 @@ import { DbContext } from '../DbContext';
 import { IRole } from '../../../../web.core/interfaces/models/IRole';
 import { IRoleRepository } from '../../../../web.core/interfaces/gateways/data/IRoleRepository';
 import { Role } from '../../../../web.core/models/Role';
+import { RoleCommonFilterRequest } from '../../../../web.core/dtos/role/requests/RoleCommonFilterRequest';
 import { RoleEntity } from '../entities/RoleEntity';
 import { RoleFilterRequest } from '../../../../web.core/dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../../../../web.core/dtos/role/requests/RoleLookupFilterRequest';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { SortType } from '../../../../constants/Enums';
 
@@ -48,7 +48,7 @@ export class RoleRepository implements IRoleRepository {
         return [mapModels(Role, list), count];
     }
 
-    async lookup(filter: RoleLookupFilterRequest): Promise<[Role[], number]> {
+    async findCommon(filter: RoleCommonFilterRequest): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .select([
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,

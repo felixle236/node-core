@@ -1,14 +1,12 @@
 import * as crypto from 'crypto';
-import { Container } from 'typedi';
+import * as validator from 'class-validator';
 import { Gender } from '../../constants/Enums';
 import { IUser } from '../interfaces/models/IUser';
 import { Role } from './Role';
 import { SystemError } from '../dtos/common/Exception';
-import { Validator } from 'class-validator';
 import { addSeconds } from '../../libs/date';
 import { hashMD5 } from '../../libs/crypt';
 import { mapModel } from '../../libs/common';
-const validator = Container.get(Validator);
 
 export class User implements IUser {
     constructor(private data = {} as IUser) { }

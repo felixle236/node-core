@@ -64,13 +64,22 @@ describe('Permission business testing', () => {
         expect(Array.isArray(results) && results.length && results[0].items.length && results[0].name === claimView.name && results[0].items[0].code === claimView.items[0].code).to.eq(true);
     });
 
-    it('Get all permissions by role', async () => {
-        const role = generateRole();
+    it('Get all permissions successfull without user authenticated', async () => {
         sandbox.stub(PermissionRepository.prototype, 'getAllByRole').resolves(list);
-        sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
 
         const permissions = await permissionBusiness.getAllByRole(list[0].roleId);
         expect(Array.isArray(permissions) && permissions.length > 0).to.eq(true);
+    });
+
+    it('Get all permissions by role is not exist', async () => {
+        const role = generateRole();
+        sandbox.stub(PermissionRepository.prototype, 'getAllByRole').resolves(list);
+        sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
+        const userAuth = new UserAuthenticated();
+
+        await permissionBusiness.getAllByRole(1000, userAuth).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1004, 'role').message);
+        });
     });
 
     it('Get all permissions by role with access denied', async () => {
@@ -81,8 +90,22 @@ describe('Permission business testing', () => {
         userAuth.role = new Role();
         userAuth.role.level = 2;
 
+        await permissionBusiness.getAllByRole(list[0].roleId, userAuth).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(3).message);
+        });
+    });
+
+    it('Get all permissions by role', async () => {
+        const role = generateRole();
+        role.level = 2;
+        sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
+        sandbox.stub(PermissionRepository.prototype, 'getAllByRole').resolves(list);
+        const userAuth = new UserAuthenticated();
+        userAuth.role = new Role();
+        userAuth.role.level = 1;
+
         const permissions = await permissionBusiness.getAllByRole(list[0].roleId, userAuth);
-        expect(Array.isArray(permissions) && permissions.length === 0).to.eq(true);
+        expect(Array.isArray(permissions) && permissions.length > 0).to.eq(true);
     });
 
     it('Get permission by id with access denied', async () => {

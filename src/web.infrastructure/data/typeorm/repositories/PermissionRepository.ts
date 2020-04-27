@@ -25,7 +25,7 @@ export class PermissionRepository implements IPermissionRepository {
         if (claims.length)
             return claims;
 
-        const dir = path.join(__dirname, '../../constants/claims/');
+        const dir = path.join(__dirname, '../../../../constants/claims/');
         const files = await getFiles(dir);
 
         files.forEach(file => {

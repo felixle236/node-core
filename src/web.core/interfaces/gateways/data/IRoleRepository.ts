@@ -1,15 +1,23 @@
 import { QueryRunner } from 'typeorm';
 import { Role } from '../../../models/Role';
+import { RoleCommonFilterRequest } from '../../../dtos/role/requests/RoleCommonFilterRequest';
 import { RoleFilterRequest } from '../../../dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../../../dtos/role/requests/RoleLookupFilterRequest';
 
 export interface IRoleRepository {
+    /**
+     * Get all roles with caching mode.
+     */
     getAll(): Promise<Role[]>;
+
+    /**
+     * Get all roles with caching mode, we can set the time for caching expiration.
+     * @param expireTimeCaching config expire time.
+     */
     getAll(expireTimeCaching: number): Promise<Role[]>;
 
     find(filter: RoleFilterRequest): Promise<[Role[], number]>;
 
-    lookup(filter: RoleLookupFilterRequest): Promise<[Role[], number]>;
+    findCommon(filter: RoleCommonFilterRequest): Promise<[Role[], number]>;
 
     getById(id: number): Promise<Role | undefined>;
 

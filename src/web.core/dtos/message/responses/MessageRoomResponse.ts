@@ -1,5 +1,6 @@
 import { Message } from '../../../models/Message';
 import { UserResponse } from '../../user/responses/UserResponse';
+import { mapModel } from '../../../../libs/common';
 
 export class MessageRoomResponse {
     id: number;
@@ -19,6 +20,6 @@ export class MessageRoomResponse {
         this.room = model.room;
         this.content = model.content;
 
-        this.sender = model.sender && new UserResponse(model.sender);
+        this.sender = mapModel(UserResponse, model.sender);
     }
 }

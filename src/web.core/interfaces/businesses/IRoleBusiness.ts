@@ -1,8 +1,8 @@
 import { ResultListResponse } from '../../dtos/common/ResultListResponse';
+import { RoleCommonFilterRequest } from '../../dtos/role/requests/RoleCommonFilterRequest';
+import { RoleCommonResponse } from '../../dtos/role/responses/RoleCommonResponse';
 import { RoleCreateRequest } from '../../dtos/role/requests/RoleCreateRequest';
 import { RoleFilterRequest } from '../../dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../../dtos/role/requests/RoleLookupFilterRequest';
-import { RoleLookupResponse } from '../../dtos/role/responses/RoleLookupResponse';
 import { RoleResponse } from '../../dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../dtos/role/requests/RoleUpdateRequest';
 import { UserAuthenticated } from '../../dtos/user/UserAuthenticated';
@@ -11,8 +11,8 @@ export interface IRoleBusiness {
     find(filter: RoleFilterRequest): Promise<ResultListResponse<RoleResponse>>;
     find(filter: RoleFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<RoleResponse>>;
 
-    lookup(filter: RoleLookupFilterRequest): Promise<ResultListResponse<RoleLookupResponse>>;
-    lookup(filter: RoleLookupFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<RoleLookupResponse>>;
+    findCommon(filter: RoleCommonFilterRequest): Promise<ResultListResponse<RoleCommonResponse>>;
+    findCommon(filter: RoleCommonFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<RoleCommonResponse>>;
 
     getById(id: number): Promise<RoleResponse | undefined>;
     getById(id: number, userAuth: UserAuthenticated): Promise<RoleResponse | undefined>;

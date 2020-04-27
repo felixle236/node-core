@@ -11,8 +11,8 @@ import { Response } from 'request';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { Role } from '../../web.core/models/Role';
 import { RoleBusiness } from '../../web.core/businesses/RoleBusiness';
+import { RoleCommonResponse } from '../../web.core/dtos/role/responses/RoleCommonResponse';
 import { RoleCreateRequest } from '../../web.core/dtos/role/requests/RoleCreateRequest';
-import { RoleLookupResponse } from '../../web.core/dtos/role/responses/RoleLookupResponse';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { Server } from 'http';
@@ -95,18 +95,18 @@ describe('Role controller testing', () => {
         expect(data.pagination && data.results && Array.isArray(data.results) && data.results.length === resultList.results.length).to.eq(true);
     });
 
-    it('Lookup roles without permission', async () => {
-        await request.get(url + '/lookup').catch((response: Response) => {
+    it('Find common roles without permission', async () => {
+        await request.get(url + '/common').catch((response: Response) => {
             expect(response.statusCode).to.eq(401);
         });
     });
 
-    it('Lookup roles', async () => {
-        const resultList = new ResultListResponse(mapModels(RoleLookupResponse, list), list.length, 0, 10);
+    it('Find common roles', async () => {
+        const resultList = new ResultListResponse(mapModels(RoleCommonResponse, list), list.length, 0, 10);
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
-        sandbox.stub(RoleBusiness.prototype, 'lookup').resolves(resultList);
+        sandbox.stub(RoleBusiness.prototype, 'findCommon').resolves(resultList);
 
-        const { data } = await request.get(url + '/lookup');
+        const { data } = await request.get(url + '/common');
         expect(data.pagination && data.results && Array.isArray(data.results) && data.results.length === resultList.results.length).to.eq(true);
     });
 

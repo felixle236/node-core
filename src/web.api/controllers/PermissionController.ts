@@ -19,6 +19,12 @@ export class RoleController {
         return await this.permissionBusiness.getClaims();
     }
 
+    @Get('/mine')
+    @Authorized(PermissionClaim.GET)
+    async getMyPermissions(@CurrentUser() userAuth: UserAuthenticated): Promise<PermissionResponse[]> {
+        return await this.permissionBusiness.getAllByRole(userAuth.role.id);
+    }
+
     @Get('/roles/:roleId([0-9]+)')
     @Authorized(PermissionClaim.GET)
     async getAllByRole(@CurrentUser() userAuth: UserAuthenticated, @Param('roleId') roleId: number): Promise<PermissionResponse[]> {

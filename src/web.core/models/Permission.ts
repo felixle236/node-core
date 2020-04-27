@@ -1,10 +1,8 @@
-import { Container } from 'typedi';
+import * as validator from 'class-validator';
 import { IPermission } from '../interfaces/models/IPermission';
 import { Role } from './Role';
 import { SystemError } from '../dtos/common/Exception';
-import { Validator } from 'class-validator';
 import { mapModel } from '../../libs/common';
-const validator = Container.get(Validator);
 
 export class Permission implements IPermission {
     constructor(private data = {} as IPermission) { }

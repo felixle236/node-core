@@ -116,18 +116,18 @@ describe('User controller testing', () => {
         expect(data.pagination && data.results && Array.isArray(data.results) && data.results.length === resultList.results.length).to.eq(true);
     });
 
-    it('Lookup users without permission', async () => {
-        await request.get(url + '/lookup').catch((response: Response) => {
+    it('Find common users without permission', async () => {
+        await request.get(url + '/common').catch((response: Response) => {
             expect(response.statusCode).to.eq(401);
         });
     });
 
-    it('Lookup users', async () => {
+    it('Find common users', async () => {
         const resultList = new ResultListResponse(mapModels(UserResponse, list), list.length, 0, 10);
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
-        sandbox.stub(UserBusiness.prototype, 'lookup').resolves(resultList);
+        sandbox.stub(UserBusiness.prototype, 'findCommon').resolves(resultList);
 
-        const { data } = await request.get(url + '/lookup');
+        const { data } = await request.get(url + '/common');
         expect(data.pagination && data.results && Array.isArray(data.results) && data.results.length === resultList.results.length).to.eq(true);
     });
 

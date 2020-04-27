@@ -1,10 +1,10 @@
 import { BulkActionResponse } from '../../dtos/common/BulkActionResponse';
 import { ResultListResponse } from '../../dtos/common/ResultListResponse';
 import { UserAuthenticated } from '../../dtos/user/UserAuthenticated';
+import { UserCommonFilterRequest } from '../../dtos/user/requests/UserCommonFilterRequest';
+import { UserCommonResponse } from '../../dtos/user/responses/UserCommonResponse';
 import { UserCreateRequest } from '../../dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../../dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../../dtos/user/requests/UserLookupFilterRequest';
-import { UserLookupResponse } from '../../dtos/user/responses/UserLookupResponse';
 import { UserPasswordUpdateRequest } from '../../dtos/user/requests/UserPasswordUpdateRequest';
 import { UserResponse } from '../../dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../../dtos/user/requests/UserUpdateRequest';
@@ -13,8 +13,8 @@ export interface IUserBusiness {
     find(filter: UserFilterRequest): Promise<ResultListResponse<UserResponse>>;
     find(filter: UserFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<UserResponse>>;
 
-    lookup(filter: UserLookupFilterRequest): Promise<ResultListResponse<UserLookupResponse>>;
-    lookup(filter: UserLookupFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<UserLookupResponse>>;
+    findCommon(filter: UserCommonFilterRequest): Promise<ResultListResponse<UserCommonResponse>>;
+    findCommon(filter: UserCommonFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<UserCommonResponse>>;
 
     getById(id: number): Promise<UserResponse | undefined>;
     getById(id: number, userAuth: UserAuthenticated): Promise<UserResponse | undefined>;

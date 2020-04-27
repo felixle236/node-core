@@ -1,11 +1,9 @@
-import { Container } from 'typedi';
+import * as validator from 'class-validator';
 import { IRole } from '../interfaces/models/IRole';
 import { Permission } from './Permission';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from './User';
-import { Validator } from 'class-validator';
 import { mapModels } from '../../libs/common';
-const validator = Container.get(Validator);
 
 export class Role implements IRole {
     constructor(private data = {} as IRole) { }

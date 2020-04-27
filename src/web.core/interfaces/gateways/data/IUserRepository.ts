@@ -1,15 +1,15 @@
 import { MemberFilterRequest } from '../../../dtos/member/requests/MemberFilterRequest';
 import { QueryRunner } from 'typeorm';
 import { User } from '../../../models/User';
+import { UserCommonFilterRequest } from '../../../dtos/user/requests/UserCommonFilterRequest';
 import { UserFilterRequest } from '../../../dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../../../dtos/user/requests/UserLookupFilterRequest';
 
 export interface IUserRepository {
     find(filter: UserFilterRequest): Promise<[User[], number]>;
 
     findMembers(filter: MemberFilterRequest): Promise<[User[], number]>;
 
-    lookup(filter: UserLookupFilterRequest): Promise<[User[], number]>;
+    findCommon(filter: UserCommonFilterRequest): Promise<[User[], number]>;
 
     getById(id: number): Promise<User | undefined>;
     getById(id: number, queryRunner: QueryRunner): Promise<User | undefined>;

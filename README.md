@@ -600,5 +600,5 @@ DELETE http://localhost/api/users/1
    - Web Socket:
       - Controller (src/web.socket/controllers)
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
-- The function order should be arranged in turn according to find, lookup, get, check, create, update, delete, remove.
+- The function order should be arranged in turn according to find, findCommon, get, check, create, update, delete, remove.
 - The query param will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to UserFilterRequest.ts file.

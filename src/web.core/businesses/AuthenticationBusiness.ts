@@ -1,4 +1,5 @@
-import { Container, Inject, Service } from 'typedi';
+import * as validator from 'class-validator';
+import { Inject, Service } from 'typedi';
 import { SystemError, UnauthorizedError } from '../dtos/common/Exception';
 import { IAuthenticationBusiness } from '../interfaces/businesses/IAuthenticationBusiness';
 import { IAuthenticationService } from '../interfaces/gateways/auth/IAuthenticationService';
@@ -13,9 +14,7 @@ import { UserResponse } from '../dtos/user/responses/UserResponse';
 import { UserSigninRequest } from '../dtos/user/requests/UserSigninRequest';
 import { UserSigninSucceedResponse } from '../dtos/user/responses/UserSigninSucceedResponse';
 import { UserSignupRequest } from '../dtos/user/requests/UserSignupRequest';
-import { Validator } from 'class-validator';
 import { mapModel } from '../../libs/common';
-const validator = Container.get(Validator);
 
 @Service('authentication.business')
 export class AuthenticationBusiness implements IAuthenticationBusiness {

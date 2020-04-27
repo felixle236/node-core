@@ -3,10 +3,10 @@ import { Inject, Service } from 'typedi';
 import { IRoleBusiness } from '../../web.core/interfaces/businesses/IRoleBusiness';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { RoleClaim } from '../../constants/claims/RoleClaim';
+import { RoleCommonFilterRequest } from '../../web.core/dtos/role/requests/RoleCommonFilterRequest';
+import { RoleCommonResponse } from '../../web.core/dtos/role/responses/RoleCommonResponse';
 import { RoleCreateRequest } from '../../web.core/dtos/role/requests/RoleCreateRequest';
 import { RoleFilterRequest } from '../../web.core/dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../../web.core/dtos/role/requests/RoleLookupFilterRequest';
-import { RoleLookupResponse } from '../../web.core/dtos/role/responses/RoleLookupResponse';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
@@ -23,10 +23,10 @@ export class RoleController {
         return await this.roleBusiness.find(filter, userAuth);
     }
 
-    @Get('/lookup')
+    @Get('/common')
     @Authorized(RoleClaim.GET)
-    async lookup(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleLookupFilterRequest): Promise<ResultListResponse<RoleLookupResponse>> {
-        return await this.roleBusiness.lookup(filter, userAuth);
+    async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleCommonFilterRequest): Promise<ResultListResponse<RoleCommonResponse>> {
+        return await this.roleBusiness.findCommon(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')

@@ -1,10 +1,8 @@
-import { Container } from 'typedi';
+import * as validator from 'class-validator';
 import { IMessage } from '../interfaces/models/IMessage';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from './User';
-import { Validator } from 'class-validator';
 import { mapModel } from '../../libs/common';
-const validator = Container.get(Validator);
 
 export class Message implements IMessage {
     constructor(private data = {} as IMessage) { }

@@ -1,6 +1,6 @@
 import { Role } from '../../../models/Role';
 
-export class RoleLookupResponse {
+export class RoleCommonResponse {
     id: number;
     name: string;
     level: number;

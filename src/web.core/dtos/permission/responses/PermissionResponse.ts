@@ -1,5 +1,6 @@
 import { Permission } from '../../../models/Permission';
 import { RoleResponse } from '../../role/responses/RoleResponse';
+import { mapModel } from '../../../../libs/common';
 
 export class PermissionResponse {
     id: number;
@@ -13,6 +14,6 @@ export class PermissionResponse {
         this.roleId = model.roleId;
         this.claim = model.claim;
 
-        this.role = model.role && new RoleResponse(model.role);
+        this.role = mapModel(RoleResponse, model.role);
     }
 }

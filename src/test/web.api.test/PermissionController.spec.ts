@@ -92,6 +92,20 @@ describe('Permission controller testing', () => {
         expect(Array.isArray(data) && data.length && data[0].items && data[0].items.length && data[0].items[0].code === 1).to.eq(true);
     });
 
+    it('Get my permissions without permission', async () => {
+        await request.get(url + '/mine').catch((response: Response) => {
+            expect(response.statusCode).to.eq(401);
+        });
+    });
+
+    it('Get my permissions', async () => {
+        sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
+        sandbox.stub(PermissionBusiness.prototype, 'getAllByRole').resolves(mapModels(PermissionResponse, list));
+
+        const { data } = await request.get(url + '/mine');
+        expect(Array.isArray(data) && data.length === list.length).to.eq(true);
+    });
+
     it('Get permissions by role without permission', async () => {
         await request.get(url + '/roles/1').catch((response: Response) => {
             expect(response.statusCode).to.eq(401);

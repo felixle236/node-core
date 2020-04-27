@@ -12,10 +12,10 @@ import { ResultListResponse } from '../dtos/common/ResultListResponse';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from '../models/User';
 import { UserAuthenticated } from '../dtos/user/UserAuthenticated';
+import { UserCommonFilterRequest } from '../dtos/user/requests/UserCommonFilterRequest';
+import { UserCommonResponse } from '../dtos/user/responses/UserCommonResponse';
 import { UserCreateRequest } from '../dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../dtos/user/requests/UserLookupFilterRequest';
-import { UserLookupResponse } from '../dtos/user/responses/UserLookupResponse';
 import { UserPasswordUpdateRequest } from '../dtos/user/requests/UserPasswordUpdateRequest';
 import { UserResponse } from '../dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../dtos/user/requests/UserUpdateRequest';
@@ -39,10 +39,10 @@ export class UserBusiness implements IUserBusiness {
         return filter.toResultList(mapModels(UserResponse, list), count);
     }
 
-    async lookup(filter: UserLookupFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserLookupResponse>> {
+    async findCommon(filter: UserCommonFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserCommonResponse>> {
         filter.level = userAuth && userAuth.role.level;
-        const [list, count] = await this.userRepository.lookup(filter);
-        return filter.toResultList(mapModels(UserLookupResponse, list), count);
+        const [list, count] = await this.userRepository.findCommon(filter);
+        return filter.toResultList(mapModels(UserCommonResponse, list), count);
     }
 
     async getById(id: number, userAuth?: UserAuthenticated): Promise<UserResponse | undefined> {

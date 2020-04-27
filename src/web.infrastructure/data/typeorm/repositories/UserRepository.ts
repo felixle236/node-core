@@ -7,9 +7,9 @@ import { PermissionSchema } from '../schemas/PermissionSchema';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
 import { User } from '../../../../web.core/models/User';
+import { UserCommonFilterRequest } from '../../../../web.core/dtos/user/requests/UserCommonFilterRequest';
 import { UserEntity } from '../entities/UserEntity';
 import { UserFilterRequest } from '../../../../web.core/dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../../../../web.core/dtos/user/requests/UserLookupFilterRequest';
 import { UserSchema } from '../schemas/UserSchema';
 
 @Service('user.repository')
@@ -69,7 +69,7 @@ export class UserRepository implements IUserRepository {
         return [mapModels(User, users), count];
     }
 
-    async lookup(filter: UserLookupFilterRequest): Promise<[User[], number]> {
+    async findCommon(filter: UserCommonFilterRequest): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .select([
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ID}`,

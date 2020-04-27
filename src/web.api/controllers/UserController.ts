@@ -4,10 +4,10 @@ import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusines
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
 import { UserClaim } from '../../constants/claims/UserClaim';
+import { UserCommonFilterRequest } from '../../web.core/dtos/user/requests/UserCommonFilterRequest';
+import { UserCommonResponse } from '../../web.core/dtos/user/responses/UserCommonResponse';
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../../web.core/dtos/user/requests/UserLookupFilterRequest';
-import { UserLookupResponse } from '../../web.core/dtos/user/responses/UserLookupResponse';
 import { UserResponse } from '../../web.core/dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
 
@@ -23,10 +23,10 @@ export class UserController {
         return await this.userBusiness.find(filter, userAuth);
     }
 
-    @Get('/lookup')
+    @Get('/common')
     @Authorized(UserClaim.GET)
-    async lookup(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserLookupFilterRequest): Promise<ResultListResponse<UserLookupResponse>> {
-        return await this.userBusiness.lookup(filter, userAuth);
+    async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserCommonFilterRequest): Promise<ResultListResponse<UserCommonResponse>> {
+        return await this.userBusiness.findCommon(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')

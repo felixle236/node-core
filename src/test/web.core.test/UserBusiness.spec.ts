@@ -14,9 +14,9 @@ import { StorageService } from '../../web.infrastructure/medias/storage/StorageS
 import { SystemError } from '../../web.core/dtos/common/Exception';
 import { User } from '../../web.core/models/User';
 import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserCommonFilterRequest } from '../../web.core/dtos/user/requests/UserCommonFilterRequest';
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
-import { UserLookupFilterRequest } from '../../web.core/dtos/user/requests/UserLookupFilterRequest';
 import { UserPasswordUpdateRequest } from '../../web.core/dtos/user/requests/UserPasswordUpdateRequest';
 import { UserRepository } from '../../web.infrastructure/data/typeorm/repositories/UserRepository';
 import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
@@ -109,30 +109,30 @@ describe('User business testing', () => {
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
-    it('Lookup users without param items', async () => {
-        sandbox.stub(UserRepository.prototype, 'lookup').resolves([list, 10]);
+    it('Find common users without param items', async () => {
+        sandbox.stub(UserRepository.prototype, 'findCommon').resolves([list, 10]);
 
-        const result = await userBusiness.lookup(new UserLookupFilterRequest());
+        const result = await userBusiness.findCommon(new UserCommonFilterRequest());
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
-    it('Lookup users with permission', async () => {
-        sandbox.stub(UserRepository.prototype, 'lookup').resolves([list, 10]);
+    it('Find common users with permission', async () => {
+        sandbox.stub(UserRepository.prototype, 'findCommon').resolves([list, 10]);
         const userAuth = new UserAuthenticated();
         userAuth.role = new Role();
         userAuth.role.level = 1;
 
-        const result = await userBusiness.lookup(new UserLookupFilterRequest(), userAuth);
+        const result = await userBusiness.findCommon(new UserCommonFilterRequest(), userAuth);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
-    it('Lookup users with name or email', async () => {
-        sandbox.stub(UserRepository.prototype, 'lookup').resolves([list, 10]);
+    it('Find common users with name or email', async () => {
+        sandbox.stub(UserRepository.prototype, 'findCommon').resolves([list, 10]);
 
-        const filter = new UserLookupFilterRequest();
+        const filter = new UserCommonFilterRequest();
         filter.keyword = 'localhost';
 
-        const result = await userBusiness.lookup(filter);
+        const result = await userBusiness.findCommon(filter);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 

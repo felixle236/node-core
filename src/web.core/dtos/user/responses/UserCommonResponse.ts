@@ -3,7 +3,7 @@ import { IStorageService } from '../../../interfaces/gateways/medias/IStorageSer
 import { User } from '../../../models/User';
 const storageService = Container.get<IStorageService>('storage.service');
 
-export class UserLookupResponse {
+export class UserCommonResponse {
     id: number;
     firstName: string;
     lastName?: string;

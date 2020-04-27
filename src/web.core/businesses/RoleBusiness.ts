@@ -4,10 +4,10 @@ import { IRoleBusiness } from '../interfaces/businesses/IRoleBusiness';
 import { IRoleRepository } from '../interfaces/gateways/data/IRoleRepository';
 import { ResultListResponse } from '../dtos/common/ResultListResponse';
 import { Role } from '../models/Role';
+import { RoleCommonFilterRequest } from '../dtos/role/requests/RoleCommonFilterRequest';
+import { RoleCommonResponse } from '../dtos/role/responses/RoleCommonResponse';
 import { RoleCreateRequest } from '../dtos/role/requests/RoleCreateRequest';
 import { RoleFilterRequest } from '../dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../dtos/role/requests/RoleLookupFilterRequest';
-import { RoleLookupResponse } from '../dtos/role/responses/RoleLookupResponse';
 import { RoleResponse } from '../dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../dtos/role/requests/RoleUpdateRequest';
 import { SystemError } from '../dtos/common/Exception';
@@ -24,10 +24,10 @@ export class RoleBusiness implements IRoleBusiness {
         return filter.toResultList(mapModels(RoleResponse, list), count);
     }
 
-    async lookup(filter: RoleLookupFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<RoleLookupResponse>> {
+    async findCommon(filter: RoleCommonFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<RoleCommonResponse>> {
         filter.level = userAuth && userAuth.role.level;
-        const [list, count] = await this.roleRepository.lookup(filter);
-        return filter.toResultList(mapModels(RoleLookupResponse, list), count);
+        const [list, count] = await this.roleRepository.findCommon(filter);
+        return filter.toResultList(mapModels(RoleCommonResponse, list), count);
     }
 
     async getById(id: number, userAuth?: UserAuthenticated): Promise<RoleResponse | undefined> {

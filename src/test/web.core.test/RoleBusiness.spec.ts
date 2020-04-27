@@ -5,9 +5,9 @@ import { Container } from 'typedi';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { IRoleBusiness } from '../../web.core/interfaces/businesses/IRoleBusiness';
 import { Role } from '../../web.core/models/Role';
+import { RoleCommonFilterRequest } from '../../web.core/dtos/role/requests/RoleCommonFilterRequest';
 import { RoleCreateRequest } from '../../web.core/dtos/role/requests/RoleCreateRequest';
 import { RoleFilterRequest } from '../../web.core/dtos/role/requests/RoleFilterRequest';
-import { RoleLookupFilterRequest } from '../../web.core/dtos/role/requests/RoleLookupFilterRequest';
 import { RoleRepository } from '../../web.infrastructure/data/typeorm/repositories/RoleRepository';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { SystemError } from '../../web.core/dtos/common/Exception';
@@ -69,20 +69,20 @@ describe('Role business testing', () => {
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
-    it('Lookup roles without param items', async () => {
-        sandbox.stub(RoleRepository.prototype, 'lookup').resolves([list, 10]);
+    it('Find common roles without param items', async () => {
+        sandbox.stub(RoleRepository.prototype, 'findCommon').resolves([list, 10]);
 
-        const result = await roleBusiness.lookup(new RoleLookupFilterRequest());
+        const result = await roleBusiness.findCommon(new RoleCommonFilterRequest());
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
-    it('Lookup roles with name param', async () => {
-        sandbox.stub(RoleRepository.prototype, 'lookup').resolves([list, 10]);
+    it('Find common roles with name param', async () => {
+        sandbox.stub(RoleRepository.prototype, 'findCommon').resolves([list, 10]);
 
-        const filter = new RoleLookupFilterRequest();
+        const filter = new RoleCommonFilterRequest();
         filter.keyword = 'role';
 
-        const result = await roleBusiness.lookup(filter);
+        const result = await roleBusiness.findCommon(filter);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
