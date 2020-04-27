@@ -29,8 +29,8 @@ sandbox.stub(process, 'env').value({
     DB_USER: '',
     DB_PASS: '',
 
-    REDIS_HOST: 'redis.node-core.com',
-    REDIS_PORT: 80,
+    REDIS_CONFIG_HOST: 'redis.node-core.com',
+    REDIS_CONFIG_PORT: 80,
 
     AUTH_SIGNATURE: 'HS256',
     AUTH_SECRET_KEY: 'SECRET_KEY',
@@ -38,8 +38,8 @@ sandbox.stub(process, 'env').value({
     STORAGE_TYPE: 1,
     BUCKET_NAME: 'bs',
 
-    MINIO_HOST: '',
-    MINIO_PORT: 0,
+    MINIO_CONFIG_HOST: '',
+    MINIO_CONFIG_PORT: 0,
     MINIO_USE_SSL: false,
     MINIO_ACCESS_KEY: '',
     MINIO_SECRET_KEY: '',

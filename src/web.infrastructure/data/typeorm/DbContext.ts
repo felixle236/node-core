@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
-import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENABLE_QUERY_LOGGING, REDIS_HOST, REDIS_PORT } from '../../../constants/Environments';
+import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENABLE_QUERY_LOGGING, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
 import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/dtos/common/Exception';
 
@@ -37,8 +37,8 @@ export class DbContext {
             cache: {
                 type: 'redis',
                 options: {
-                    host: REDIS_HOST,
-                    port: REDIS_PORT
+                    host: REDIS_CONFIG_HOST,
+                    port: REDIS_CONFIG_PORT
                 }
             },
             synchronize: false,

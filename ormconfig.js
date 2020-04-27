@@ -11,8 +11,8 @@ module.exports = {
     cache: {
         type: 'redis',
         options: {
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT)
+            host: process.env.REDIS_CONFIG_HOST,
+            port: Number(process.env.REDIS_CONFIG_PORT)
         }
     },
     synchronize: false,
