@@ -56,7 +56,7 @@ describe('Role controller testing', () => {
     let sandbox: SinonSandbox;
     let server: Server;
     const port = 3000;
-    const url = `http://localhost:${port}/api/roles`;
+    const url = `http://localhost:${port}/api/v1/roles`;
     const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
     let userAuth: UserAuthenticated;
     let list: Role[];

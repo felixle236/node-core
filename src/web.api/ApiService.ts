@@ -19,7 +19,7 @@ export class ApiService {
                 preflightContinue: true,
                 optionsSuccessStatus: 204
             },
-            routePrefix: '/api',
+            routePrefix: '/api/v1',
             controllers: [
                 path.join(__dirname, './controllers/*{.js,.ts}')
             ],

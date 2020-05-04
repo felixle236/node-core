@@ -5,7 +5,7 @@ import * as requestPromise from 'request-promise';
 import { SinonSandbox, createSandbox } from 'sinon';
 import { ApiService } from '../../web.api/ApiService';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IUser } from '../../web.core/interfaces/models/IUser';
 import { Server } from 'http';
 import { User } from '../../web.core/models/User';
@@ -25,7 +25,7 @@ const generateUser = () => {
         firstName: 'Test',
         lastName: '1',
         email: 'test.1@localhost.com',
-        gender: Gender.Male,
+        gender: GenderType.Male,
         birthday: new Date(),
         avatar: '../../resources/images/test-1-icon.png'
     } as IUser);
@@ -35,7 +35,7 @@ describe('Authentication controller testing', () => {
     let sandbox: SinonSandbox;
     let server: Server;
     const port = 3000;
-    const url = `http://localhost:${port}/api/auth`;
+    const url = `http://localhost:${port}/api/v1/auth`;
     const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
     let user: User;
 

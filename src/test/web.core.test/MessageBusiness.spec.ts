@@ -4,7 +4,7 @@ import '../../ModuleRegister';
 import * as SocketMock from 'socket.io-mock';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
 import { Container } from 'typedi';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IMessage } from '../../web.core/interfaces/models/IMessage';
 import { IMessageBusiness } from '../../web.core/interfaces/businesses/IMessageBusiness';
 import { IRole } from '../../web.core/interfaces/models/IRole';
@@ -25,8 +25,8 @@ import { expect } from 'chai';
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser)
     ];
 };
 

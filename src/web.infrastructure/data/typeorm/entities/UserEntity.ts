@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { DateTransformer } from '../transformers/DateTransformer';
-import { Gender } from '../../../../constants/Enums';
+import { GenderType } from '../../../../constants/Enums';
 import { IUser } from '../../../../web.core/interfaces/models/IUser';
 import { MessageEntity } from './MessageEntity';
 import { RoleEntity } from './RoleEntity';
@@ -39,8 +39,8 @@ export class UserEntity implements IUser {
     @Column({ name: UserSchema.COLUMNS.AVATAR, length: 200, nullable: true })
     avatar?: string;
 
-    @Column('smallint', { name: UserSchema.COLUMNS.GENDER, nullable: true })
-    gender?: Gender;
+    @Column({ name: UserSchema.COLUMNS.GENDER, type: 'enum', enum: GenderType, nullable: true })
+    gender?: GenderType;
 
     @Column('date', { name: UserSchema.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })
     birthday?: Date;

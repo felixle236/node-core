@@ -5,7 +5,7 @@ function login() {
 
     $.ajax({
         method: 'POST',
-        url: baseUrl + '/api/auth/signin',
+        url: baseUrl + '/api/v1/auth/signin',
         contentType: 'application/json',
         data: JSON.stringify({
             email: email,

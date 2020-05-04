@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { Gender } from '../../../../constants/Enums';
+import { GenderType } from '../../../../constants/Enums';
 import { IStorageService } from '../../../interfaces/gateways/medias/IStorageService';
 import { RoleResponse } from '../../role/responses/RoleResponse';
 import { User } from '../../../models/User';
@@ -15,7 +15,7 @@ export class UserResponse {
     fullName: string;
     email: string;
     avatar?: string;
-    gender?: Gender;
+    gender?: GenderType;
     birthday?: string;
     phone?: string;
     address?: string;

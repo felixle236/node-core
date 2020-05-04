@@ -32,7 +32,7 @@ export enum RoleId {
     CommonUser = 2
 }
 
-export enum Gender {
-    Male = 1,
-    Female = 2
+export enum GenderType {
+    Male = 'male',
+    Female = 'female'
 }

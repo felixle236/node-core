@@ -1,10 +1,10 @@
-import { Gender } from '../../../../constants/Enums';
+import { GenderType } from '../../../../constants/Enums';
 import { Type } from 'class-transformer';
 
 export class UserUpdateRequest {
     firstName: string;
     lastName?: string;
-    gender?: Gender;
+    gender?: GenderType;
 
     @Type(/* istanbul ignore next */ () => Date)
     birthday?: Date;

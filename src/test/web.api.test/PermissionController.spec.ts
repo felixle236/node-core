@@ -48,7 +48,7 @@ describe('Permission controller testing', () => {
     let sandbox: SinonSandbox;
     let server: Server;
     const port = 3000;
-    const url = `http://localhost:${port}/api/permissions`;
+    const url = `http://localhost:${port}/api/v1/permissions`;
     const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
     let userAuth: UserAuthenticated;
     let list: Permission[];

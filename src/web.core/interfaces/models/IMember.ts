@@ -1,4 +1,4 @@
-import { Gender } from '../../../constants/Enums';
+import { GenderType } from '../../../constants/Enums';
 import { RoleResponse } from '../../dtos/role/responses/RoleResponse';
 
 export interface IMember {
@@ -8,7 +8,7 @@ export interface IMember {
     lastName?: string;
     email: string;
     avatar?: string;
-    gender?: Gender;
+    gender?: GenderType;
     birthday?: Date;
     phone?: string;
     address?: string;

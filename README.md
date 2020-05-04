@@ -404,7 +404,7 @@ npm run migration:revert
 - Return error object [UnauthorizedError] with status code 401, this is handler of routing-controllers package.
 ```
 Request:
-curl -i -H Accept:application/json -X GET http://localhost:3000/api/me
+curl -i -H Accept:application/json -X GET http://localhost:3000/api/v1/me
 
 Response:
 HTTP/1.1 401 Unauthorized
@@ -417,7 +417,7 @@ HTTP/1.1 401 Unauthorized
 - Return error object [SystemError] with status code 400, this is logic handler.
 ```
 Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com","password": "Nodecore@2"}'
+curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com","password": "Nodecore@2"}'
 
 Response:
 HTTP/1.1 400 Bad Request
@@ -430,7 +430,7 @@ HTTP/1.1 400 Bad Request
 - Return data object [UserSigninSucceedResponse] with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com", "password": "Nodecore@2"}'
+curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com", "password": "Nodecore@2"}'
 
 Response:
 HTTP/1.1 200 OK
@@ -446,7 +446,7 @@ HTTP/1.1 200 OK
          "fullName": "Super Admin",
          "email": "admin@localhost.com",
          "avatar": null,
-         "gender": 1,
+         "gender": "male",
          "birthday": "1990-12-31",
          "phone": "0912345678",
          "address": "123 Abc",
@@ -475,7 +475,7 @@ HTTP/1.1 200 OK
 - Return data object [ResultListResponse\<T\>] with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X GET http://localhost:3000/api/roles
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X GET http://localhost:3000/api/v1/roles
 
 Response:
 HTTP/1.1 200 OK
@@ -509,7 +509,7 @@ HTTP/1.1 200 OK
 - Return data object [BulkActionResponse\<T\>] with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/systems/sample-data -H Content-Type:application/json
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/systems/sample-data -H Content-Type:application/json
 
 Response:
 HTTP/1.1 200 OK
@@ -527,7 +527,7 @@ HTTP/1.1 200 OK
 - Return boolean data with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X DELETE http://localhost:3000/api/roles/3 -H Content-Type:application/json
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X DELETE http://localhost:3000/api/v1/roles/3 -H Content-Type:application/json
 
 Response:
 HTTP/1.1 200 OK
@@ -541,42 +541,42 @@ HTTP/1.1 200 OK
 - `GET`: Used to get the data, it can be the data list, object, number,....
 
 ```
-GET http://localhost/api/users                         --> Find user and return the user list.
-GET http://localhost/api/users?keyword=felix           --> Find user with name and return the user list.
-GET http://localhost/api/users/1                       --> Get user with id is 1 and return the user object.
-GET http://localhost/api/users/1/role                  --> Get role of user with id is 1 and return the role object.
+GET http://localhost/api/v1/users                         --> Find user and return the user list.
+GET http://localhost/api/v1/users?keyword=felix           --> Find user with name and return the user list.
+GET http://localhost/api/v1/users/1                       --> Get user with id is 1 and return the user object.
+GET http://localhost/api/v1/users/1/role                  --> Get role of user with id is 1 and return the role object.
 ```
 
 - `POST`: Used to create new resource, add a child resource, upload file, requests the creation of an activation.
 
 ```
-POST http://localhost/api/auth/signin                   --> Signin request.
-POST http://localhost/api/auth/signup                   --> Register new user.
-POST http://localhost/api/auth/active                   --> Request active user.
-POST http://localhost/api/auth/resend-activation
-POST http://localhost/api/auth/forgot-password
-POST http://localhost/api/auth/resend-activation
-POST http://localhost/api/me/avatar                     --> Upload binary file.
-POST http://localhost/api/users                         --> Create user.
+POST http://localhost/api/v1/auth/signin                   --> Signin request.
+POST http://localhost/api/v1/auth/signup                   --> Register new user.
+POST http://localhost/api/v1/auth/active                   --> Request active user.
+POST http://localhost/api/v1/auth/resend-activation
+POST http://localhost/api/v1/auth/forgot-password
+POST http://localhost/api/v1/auth/resend-activation
+POST http://localhost/api/v1/me/avatar                     --> Upload binary file.
+POST http://localhost/api/v1/users                         --> Create user.
 ```
 
 - `PUT`: Used to create new resource or update (replace object) if it already exists, replace the entire using the data specified in request.
 
 ```
-PUT http://localhost/api/users/1                       --> Update user object with id 1.
-PUT http://localhost/api/auth/reset-password           --> Reset/update password.
+PUT http://localhost/api/v1/users/1                       --> Update user object with id 1.
+PUT http://localhost/api/v1/auth/reset-password           --> Reset/update password.
 ```
 
 - `PATCH`: Used only to update some fields with record id. Besides, it's just about the meaning, sometime it's very difficult to recognize the boundary, we can use `PUT` instead of `PATCH`.
 
 ```
-PATCH http://localhost/api/me/password
+PATCH http://localhost/api/v1/me/password
 ```
 
 - `DELETE`: Used to delete, remove item, disable, inactive,....
 
 ```
-DELETE http://localhost/api/users/1
+DELETE http://localhost/api/v1/users/1
 ```
 
 ### Experiences

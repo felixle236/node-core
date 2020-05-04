@@ -1,4 +1,4 @@
-import { Gender } from '../../../constants/Enums';
+import { GenderType } from '../../../constants/Enums';
 import { IRole } from './IRole';
 
 export interface IUser {
@@ -12,7 +12,7 @@ export interface IUser {
     email: string;
     password: string;
     avatar?: string;
-    gender?: Gender;
+    gender?: GenderType;
     birthday?: Date;
     phone?: string;
     address?: string;

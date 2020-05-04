@@ -6,7 +6,7 @@ import * as requestPromise from 'request-promise';
 import { SinonSandbox, createSandbox } from 'sinon';
 import { ApiService } from '../../web.api/ApiService';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IUser } from '../../web.core/interfaces/models/IUser';
 import { Response } from 'request';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
@@ -32,9 +32,9 @@ const generateUserAuth = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 3, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 3, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -42,7 +42,7 @@ const generateUserUpdate = () => {
     const userUpdate = new UserUpdateRequest();
     userUpdate.firstName = 'Test';
     userUpdate.lastName = 'Local';
-    userUpdate.gender = Gender.Male;
+    userUpdate.gender = GenderType.Male;
     userUpdate.birthday = new Date();
     userUpdate.phone = '0123456789';
     userUpdate.address = '123 Abc';
@@ -56,7 +56,7 @@ describe('Me controller testing', () => {
     let sandbox: SinonSandbox;
     let server: Server;
     const port = 3000;
-    const url = `http://localhost:${port}/api/me`;
+    const url = `http://localhost:${port}/api/v1/me`;
     const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
     let userAuth: UserAuthenticated;
     let list: User[];

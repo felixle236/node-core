@@ -3,7 +3,7 @@ import '../mocks';
 import '../../ModuleRegister';
 import * as ioClient from 'socket.io-client';
 import { SinonSandbox, createSandbox } from 'sinon';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IMessage } from '../../web.core/interfaces/models/IMessage';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { ISocket } from '../../web.core/interfaces/types/ISocket';
@@ -24,10 +24,10 @@ import { mapModels } from '../../libs/common';
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1' } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.3@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-3-icon.png' } as IUser),
-        new User({ id: 12345, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.12345@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '/images/test-4-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1' } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-3-icon.png' } as IUser),
+        new User({ id: 12345, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2' } as IRole, firstName: 'Test', lastName: '2', email: 'test.12345@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-4-icon.png' } as IUser)
     ];
 };
 

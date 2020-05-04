@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import * as validator from 'class-validator';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IUser } from '../interfaces/models/IUser';
 import { Role } from './Role';
 import { SystemError } from '../dtos/common/Exception';
@@ -131,13 +131,13 @@ export class User implements IUser {
         this.data.avatar = val;
     }
 
-    get gender(): Gender | undefined {
+    get gender(): GenderType | undefined {
         return this.data.gender;
     }
 
-    set gender(val: Gender | undefined) {
+    set gender(val: GenderType | undefined) {
         if (validator.isNotEmpty(val)) {
-            if (!validator.isEnum(val, Gender))
+            if (!validator.isEnum(val, GenderType))
                 throw new SystemError(1002, 'gender');
         }
 

@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { Gender } from '../../../../constants/Enums';
+import { GenderType } from '../../../../constants/Enums';
 import { IStorageService } from '../../../interfaces/gateways/medias/IStorageService';
 import { User } from '../../../models/User';
 const storageService = Container.get<IStorageService>('storage.service');
@@ -10,7 +10,7 @@ export class MemberResponse {
     lastName?: string;
     email: string;
     avatar?: string;
-    gender?: Gender;
+    gender?: GenderType;
     birthday?: Date;
     phone?: string;
     address?: string;

@@ -4,7 +4,7 @@ import '../../ModuleRegister';
 import * as path from 'path';
 import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
 import { Container } from 'typedi';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { IUser } from '../../web.core/interfaces/models/IUser';
 import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
@@ -30,9 +30,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -43,7 +43,7 @@ const generateUserCreate = () => {
     userCreate.lastName = 'Local';
     userCreate.email = 'test@localhost.com';
     userCreate.password = 'Nodecore@2';
-    userCreate.gender = Gender.Male;
+    userCreate.gender = GenderType.Male;
     userCreate.birthday = new Date();
     userCreate.phone = '0123456789';
     userCreate.address = '123 Abc';
@@ -57,7 +57,7 @@ const generateUserUpdate = () => {
     const userUpdate = new UserUpdateRequest();
     userUpdate.firstName = 'Test';
     userUpdate.lastName = 'Local';
-    userUpdate.gender = Gender.Male;
+    userUpdate.gender = GenderType.Male;
     userUpdate.birthday = new Date();
     userUpdate.phone = '0123456789';
     userUpdate.address = '123 Abc';
@@ -292,7 +292,7 @@ describe('User business testing', () => {
 
     it('Create user with an invalid gender', async () => {
         const userCreate = generateUserCreate();
-        userCreate.gender = 3;
+        userCreate.gender = 'abc' as any;
 
         await userBusiness.create(userCreate).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1002, 'gender').message);

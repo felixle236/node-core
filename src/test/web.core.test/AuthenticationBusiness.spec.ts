@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../constants/Environments';
 import { SystemError, UnauthorizedError } from '../../web.core/dtos/common/Exception';
 import { Container } from 'typedi';
-import { Gender } from '../../constants/Enums';
+import { GenderType } from '../../constants/Enums';
 import { IAuthenticationBusiness } from '../../web.core/interfaces/businesses/IAuthenticationBusiness';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { IUser } from '../../web.core/interfaces/models/IUser';
@@ -28,9 +28,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -284,7 +284,7 @@ describe('User auth business testing', () => {
     });
 
     it('Signin with return permissions successfully', async () => {
-        const item = new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1, permissions: [{ id: 1, roleId: 1, claim: 1 }] }, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: Gender.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as User);
+        const item = new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1, permissions: [{ id: 1, roleId: 1, claim: 1 }] }, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as User);
         sandbox.stub(UserRepository.prototype, 'getByUserPassword').resolves(item);
 
         const userSignin = new UserSigninRequest();
