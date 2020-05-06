@@ -1,4 +1,5 @@
 const path = require('path');
+const sourceDir = process.env.NODE_ENV === 'development' ? 'src' : 'dist';
 
 module.exports = {
     name: 'default',
@@ -18,17 +19,17 @@ module.exports = {
     synchronize: false,
     logging: true,
     entities: [
-        path.join(__dirname, './src/web.infrastructure/data/typeorm/entities/*{.js,.ts}')
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/entities/*{.js,.ts}`)
     ],
     migrations: [
-        path.join(__dirname, './src/web.infrastructure/data/typeorm/migrations/*{.js,.ts}')
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/migrations/*{.js,.ts}`)
     ],
     subscribers: [
-        path.join(__dirname, './src/web.infrastructure/data/typeorm/subscribers/*{.js,.ts}')
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/subscribers/*{.js,.ts}`)
     ],
     cli: {
-        entitiesDir: 'src/web.infrastructure/data/typeorm/entities',
-        migrationsDir: 'src/web.infrastructure/data/typeorm/migrations',
-        subscribersDir: 'src/web.infrastructure/data/typeorm/subscribers'
+        entitiesDir: `${sourceDir}/web.infrastructure/data/typeorm/entities`,
+        migrationsDir: `${sourceDir}/web.infrastructure/data/typeorm/migrations`,
+        subscribersDir: `${sourceDir}/web.infrastructure/data/typeorm/subscribers`
     }
 };
