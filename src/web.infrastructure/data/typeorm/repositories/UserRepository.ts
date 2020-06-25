@@ -12,7 +12,7 @@ import { UserEntity } from '../entities/UserEntity';
 import { UserFilterRequest } from '../../../../web.core/dtos/user/requests/UserFilterRequest';
 import { UserSchema } from '../schemas/UserSchema';
 
-@Service('user._repository')
+@Service('user.repository')
 export class UserRepository implements IUserRepository {
     private readonly _repository = getRepository<IUser>(UserEntity);
 

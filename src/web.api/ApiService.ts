@@ -35,7 +35,7 @@ export class ApiService {
             currentUserChecker: authenticator.userAuthChecker
         });
 
-        app.get('/healthz', (req, res) => {
+        app.get('/healthz', (_req, res) => {
             res.status(200).end('ok');
         });
 

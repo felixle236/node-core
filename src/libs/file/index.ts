@@ -80,10 +80,10 @@ export function readFileAsText(filePath: string, encoding: string = 'utf8'): Pro
         if (!filePath || !filePath.trim())
             return reject(new Error('The path is required!'));
 
-        fs.readFile(filePath, { encoding }, (error, content) => {
+        fs.readFile(filePath, { encoding } as fs.BaseEncodingOptions, (error, content) => {
             if (error)
                 return reject(error);
-            resolve(content);
+            resolve(content as string);
         });
     });
 }
@@ -108,7 +108,7 @@ export function writeFile(filePath: string, content: string | Buffer, encoding?:
         if (dir === filePath.trim())
             return reject(new Error('The path is invalid!'));
 
-        fs.writeFile(filePath, content, { encoding }, error => {
+        fs.writeFile(filePath, content, { encoding } as fs.BaseEncodingOptions, error => {
             if (error)
                 return reject(error);
             resolve();
@@ -136,7 +136,7 @@ export function appendFile(filePath: string, content: string | Buffer, encoding?
         if (dir === filePath.trim())
             return reject(new Error('The path is invalid!'));
 
-        fs.appendFile(filePath, content, { encoding }, error => {
+        fs.appendFile(filePath, content, { encoding } as fs.BaseEncodingOptions, error => {
             if (error)
                 return reject(error);
             resolve();

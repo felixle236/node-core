@@ -11,8 +11,7 @@ module.exports = {
         ecmaVersion: 8,
         sourceType: 'module',
         ecmaFeatures: {},
-        project: './tsconfig.json',
-        // createDefaultProgram: true
+        project: './tsconfig.json'
     },
     plugins: ['@typescript-eslint'],
     overrides: [{
@@ -37,6 +36,11 @@ module.exports = {
                 {
                     "selector": "memberLike",
                     "format": ["camelCase", "UPPER_CASE"]
+                },
+                {
+                    "selector": "parameter",
+                    "format": ["camelCase"],
+                    "leadingUnderscore": "allow"
                 },
                 {
                     "selector": "variableLike",
