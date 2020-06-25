@@ -1,7 +1,7 @@
 import './ModuleRegister';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import { API_PORT, DEVELOPMENT_MODE, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
+import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
 import { ApiService } from './web.api/ApiService';
 import { Container } from 'typedi';
 import { DbContext } from './web.infrastructure/data/typeorm/DbContext';
@@ -40,7 +40,7 @@ const showServiceStatus = () => {
         console.log('Socket service is ready', '\x1b[32m', `http://localhost:${SOCKET_PORT}`, '\x1b[0m', '\n');
 };
 
-if (DEVELOPMENT_MODE) {
+if (IS_DEVELOPMENT) {
     console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode....\n');
     startApplication().then(async () => {
         await runMigrations();

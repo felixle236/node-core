@@ -330,7 +330,7 @@ describe('Role business testing', () => {
         sandbox.stub(RoleRepository.prototype, 'delete').resolves(true);
         sandbox.stub(RoleRepository.prototype, 'clearCaching').resolves();
 
-        const result = await roleBusiness.delete(item.id);
-        expect(result).to.eq(true);
+        const hasSucceed = await roleBusiness.delete(item.id);
+        expect(hasSucceed).to.eq(true);
     });
 });

@@ -8,15 +8,15 @@ const sibApiV3Sdk = require('sib-api-v3-sdk');
  */
 
 export class SendInBlueFactory implements IMailSender {
-    private smtpApi;
+    private readonly _smtpApi;
 
     constructor(apiKey: string) {
         sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
-        this.smtpApi = new sibApiV3Sdk.SMTPApi();
+        this._smtpApi = new sibApiV3Sdk.SMTPApi();
     }
 
     send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {
-        return this.smtpApi.sendTransacEmail({
+        return this._smtpApi.sendTransacEmail({
             sender: {
                 name: senderName,
                 email: senderEmail
@@ -28,7 +28,7 @@ export class SendInBlueFactory implements IMailSender {
     }
 
     sendHtml(senderEmail: string, senderName: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
-        return this.smtpApi.sendTransacEmail({
+        return this._smtpApi.sendTransacEmail({
             sender: {
                 name: senderName,
                 email: senderEmail

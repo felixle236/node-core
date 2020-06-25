@@ -16,9 +16,9 @@ import { getFiles } from '../../../../libs/file';
 @Service('permission.repository')
 export class PermissionRepository implements IPermissionRepository {
     @Inject('database.context')
-    private readonly dbContext: DbContext;
+    private readonly _dbContext: DbContext;
 
-    private readonly repository = getRepository<IPermission>(PermissionEntity);
+    private readonly _repository = getRepository<IPermission>(PermissionEntity);
 
     async getClaims(): Promise<ClaimResponse[]> {
         const claims = Container.has<ClaimResponse[]>('claims') ? Container.get<ClaimResponse[]>('claims') : [];
@@ -49,7 +49,7 @@ export class PermissionRepository implements IPermissionRepository {
     }
 
     async getAllByRole(roleId: number, expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Permission[]> {
-        const permissions = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
+        const permissions = await this._repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
             .innerJoin(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .cache('permissions', expireTimeCaching)
             .getMany();
@@ -57,7 +57,7 @@ export class PermissionRepository implements IPermissionRepository {
     }
 
     async getById(id: number): Promise<Permission | undefined> {
-        const permission = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
+        const permission = await this._repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
             .innerJoinAndSelect(`${PermissionSchema.TABLE_NAME}.${PermissionSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
@@ -66,7 +66,7 @@ export class PermissionRepository implements IPermissionRepository {
     }
 
     async create(permission: Permission, queryRunner?: QueryRunner): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(PermissionSchema.TABLE_NAME, queryRunner)
             .insert()
             .values(permission.toData())
             .execute();
@@ -74,7 +74,7 @@ export class PermissionRepository implements IPermissionRepository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(PermissionSchema.TABLE_NAME)
             .delete()
             .whereInIds(id)
             .execute();
@@ -82,6 +82,6 @@ export class PermissionRepository implements IPermissionRepository {
     }
 
     async clearCaching(): Promise<void> {
-        await this.dbContext.clearCaching('permissions');
+        await this._dbContext.clearCaching('permissions');
     }
 }

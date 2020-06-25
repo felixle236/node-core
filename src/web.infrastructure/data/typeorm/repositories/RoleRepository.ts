@@ -14,12 +14,12 @@ import { SortType } from '../../../../constants/Enums';
 @Service('role.repository')
 export class RoleRepository implements IRoleRepository {
     @Inject('database.context')
-    private readonly dbContext: DbContext;
+    private readonly _dbContext: DbContext;
 
-    private readonly repository = getRepository<IRole>(RoleEntity);
+    private readonly _repository = getRepository<IRole>(RoleEntity);
 
     async getAll(expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Role[]> {
-        const list = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        const list = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
             .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
             .cache('roles', expireTimeCaching)
@@ -28,7 +28,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async find(filter: RoleFilterRequest): Promise<[Role[], number]> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME);
+        let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME);
 
         if (filter.level)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
@@ -49,7 +49,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async findCommon(filter: RoleCommonFilterRequest): Promise<[Role[], number]> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .select([
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`,
@@ -75,14 +75,14 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async getById(id: number): Promise<Role | undefined> {
-        const data = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        const data = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
         return mapModel(Role, data);
     }
 
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .where(`lower(${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
@@ -93,7 +93,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async create(role: Role, queryRunner?: QueryRunner): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME, queryRunner)
             .insert()
             .values(role.toData())
             .execute();
@@ -101,7 +101,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async update(id: number, role: Role): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .update(role.toData())
             .whereInIds(id)
             .execute();
@@ -109,7 +109,7 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .softDelete()
             .whereInIds(id)
             .execute();
@@ -117,6 +117,6 @@ export class RoleRepository implements IRoleRepository {
     }
 
     async clearCaching(): Promise<void> {
-        await this.dbContext.clearCaching('roles');
+        await this._dbContext.clearCaching('roles');
     }
 }

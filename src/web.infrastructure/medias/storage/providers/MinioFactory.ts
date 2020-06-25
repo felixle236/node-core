@@ -2,50 +2,56 @@ import * as minio from 'minio';
 import { IBucketItem, IStorageService } from '../../../../web.core/interfaces/gateways/medias/IStorageService';
 
 export class MinioFactory implements IStorageService {
-    private minioClient: minio.Client;
+    private readonly _minioClient: minio.Client;
 
-    constructor(private host: string, private port: number, private useSSL: boolean, private accessKey: string, private secretKey: string) {
-        this.minioClient = new minio.Client({
-            endPoint: this.host,
-            port: this.port,
-            useSSL: this.useSSL,
-            accessKey: this.accessKey,
-            secretKey: this.secretKey
+    constructor(
+        private readonly _host: string,
+        private readonly _port: number,
+        private readonly _useSSL: boolean,
+        private readonly _accessKey: string,
+        private readonly _secretKey: string
+    ) {
+        this._minioClient = new minio.Client({
+            endPoint: this._host,
+            port: this._port,
+            useSSL: this._useSSL,
+            accessKey: this._accessKey,
+            secretKey: this._secretKey
         });
     }
 
     getBuckets(): Promise<string[]> {
-        return this.minioClient.listBuckets().then(buckets => (buckets || []).map(bucket => bucket.name));
+        return this._minioClient.listBuckets().then(buckets => (buckets || []).map(bucket => bucket.name));
     }
 
     getBucketPolicy(bucketName: string): Promise<string> {
-        return this.minioClient.getBucketPolicy(bucketName);
+        return this._minioClient.getBucketPolicy(bucketName);
     }
 
     checkBucketExist(bucketName: string): Promise<boolean> {
-        return this.minioClient.bucketExists(bucketName);
+        return this._minioClient.bucketExists(bucketName);
     }
 
     createBucket(bucketName: string): Promise<void> {
-        return this.minioClient.makeBucket(bucketName, 'ap-southeast-1');
+        return this._minioClient.makeBucket(bucketName, 'ap-southeast-1');
     }
 
     setBucketPolicy(bucketName: string, policy: string): Promise<void> {
-        return this.minioClient.setBucketPolicy(bucketName, policy);
+        return this._minioClient.setBucketPolicy(bucketName, policy);
     }
 
     deleteBucket(bucketName: string): Promise<void> {
-        return this.minioClient.removeBucket(bucketName);
+        return this._minioClient.removeBucket(bucketName);
     }
 
     deleteBucketPolicy(bucketName: string): Promise<void> {
-        return this.minioClient.setBucketPolicy(bucketName, '');
+        return this._minioClient.setBucketPolicy(bucketName, '');
     }
 
     getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
         return new Promise((resolve, reject) => {
             const items: IBucketItem[] = [];
-            const bucketStream = this.minioClient.listObjectsV2(bucketName, prefix);
+            const bucketStream = this._minioClient.listObjectsV2(bucketName, prefix);
 
             bucketStream.on('data', obj => {
                 items.push({
@@ -66,14 +72,14 @@ export class MinioFactory implements IStorageService {
     }
 
     upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
-        return this.minioClient.putObject(bucketName, objectName, buffer).then(() => {
+        return this._minioClient.putObject(bucketName, objectName, buffer).then(() => {
             return `/${bucketName}/${objectName}`;
         });
     }
 
     download(bucketName: string, objectName: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {
-            this.minioClient.getObject(bucketName, objectName, (err, dataStream) => {
+            this._minioClient.getObject(bucketName, objectName, (err, dataStream) => {
                 if (err) return reject(err);
                 const chunks: Buffer[] = [];
 
@@ -91,6 +97,6 @@ export class MinioFactory implements IStorageService {
     }
 
     mapUrl(url: string): string {
-        return (this.useSSL ? 'https' : 'http') + `://${this.host}` + (this.port === 80 ? '' : `:${this.port}`) + url;
+        return (this._useSSL ? 'https' : 'http') + `://${this._host}` + (this._port === 80 ? '' : `:${this._port}`) + url;
     }
 }

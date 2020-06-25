@@ -4,13 +4,13 @@ import { NextFunction, Request, Response } from 'express';
 
 @Middleware({ type: 'before', priority: 5 })
 export class BodyParserMiddleware implements ExpressMiddlewareInterface {
-    private jsonBodyParser;
+    private readonly _jsonBodyParser;
 
     constructor() {
-        this.jsonBodyParser = bodyParser.json();
+        this._jsonBodyParser = bodyParser.json();
     }
 
     use(req: Request, res: Response, next: NextFunction) {
-        this.jsonBodyParser(req, res, next);
+        this._jsonBodyParser(req, res, next);
     }
 }

@@ -2,19 +2,21 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { IBucketItem, IStorageService } from '../../../../web.core/interfaces/gateways/medias/IStorageService';
 
 export class AwsS3Factory implements IStorageService {
-    private s3Client: S3;
+    private readonly _s3Client: S3;
+    private readonly _region: string;
 
-    constructor(private region: string, private accessKey: string, private secretKey: string) {
-        this.s3Client = new S3({
-            region: this.region,
-            accessKeyId: this.accessKey,
-            secretAccessKey: this.secretKey
+    constructor(region: string, accessKeyId: string, secretAccessKey: string) {
+        this._region = region;
+        this._s3Client = new S3({
+            region,
+            accessKeyId,
+            secretAccessKey
         });
     }
 
     getBuckets(): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            this.s3Client.listBuckets((err, data) => {
+            this._s3Client.listBuckets((err, data) => {
                 if (err) return reject(err);
 
                 const bucketNames = (data.Buckets || []).map(bucket => bucket.Name || '');
@@ -25,7 +27,9 @@ export class AwsS3Factory implements IStorageService {
 
     getBucketPolicy(bucketName: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.s3Client.getBucketPolicy({ Bucket: bucketName }, (err, data) => {
+            this._s3Client.getBucketPolicy({
+                Bucket: bucketName // eslint-disable-line
+            }, (err, data) => {
                 if (err) return reject(err);
                 resolve(data.Policy);
             });
@@ -38,7 +42,9 @@ export class AwsS3Factory implements IStorageService {
 
     createBucket(bucketName: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.s3Client.createBucket({ Bucket: bucketName }, err => {
+            this._s3Client.createBucket({
+                Bucket: bucketName // eslint-disable-line
+            }, err => {
                 if (err) return reject(err);
                 resolve();
             });
@@ -47,7 +53,10 @@ export class AwsS3Factory implements IStorageService {
 
     setBucketPolicy(bucketName: string, policy: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.s3Client.putBucketPolicy({ Bucket: bucketName, Policy: policy }, err => {
+            this._s3Client.putBucketPolicy({
+                Bucket: bucketName, // eslint-disable-line
+                Policy: policy // eslint-disable-line
+            }, err => {
                 if (err) return reject(err);
                 resolve();
             });
@@ -56,7 +65,9 @@ export class AwsS3Factory implements IStorageService {
 
     deleteBucket(bucketName: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.s3Client.deleteBucket({ Bucket: bucketName }, err => {
+            this._s3Client.deleteBucket({
+                Bucket: bucketName // eslint-disable-line
+            }, err => {
                 if (err) return reject(err);
                 resolve();
             });
@@ -65,7 +76,9 @@ export class AwsS3Factory implements IStorageService {
 
     deleteBucketPolicy(bucketName: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.s3Client.deleteBucketPolicy({ Bucket: bucketName }, err => {
+            this._s3Client.deleteBucketPolicy({
+                Bucket: bucketName // eslint-disable-line
+            }, err => {
                 if (err) return reject(err);
                 resolve();
             });
@@ -75,9 +88,9 @@ export class AwsS3Factory implements IStorageService {
     getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
         return new Promise<IBucketItem[]>((resolve, reject) => {
             const items: IBucketItem[] = [];
-            this.s3Client.listObjectsV2({
-                Bucket: bucketName,
-                Prefix: prefix
+            this._s3Client.listObjectsV2({
+                Bucket: bucketName, // eslint-disable-line
+                Prefix: prefix // eslint-disable-line
             }, (err, data) => {
                 if (err) return reject(err);
 
@@ -97,10 +110,10 @@ export class AwsS3Factory implements IStorageService {
 
     upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.s3Client.upload({
-                Bucket: bucketName,
-                Key: objectName,
-                Body: buffer
+            this._s3Client.upload({
+                Bucket: bucketName, // eslint-disable-line
+                Key: objectName, // eslint-disable-line
+                Body: buffer // eslint-disable-line
             }, err => {
                 if (err) return reject(err);
                 resolve(`/${bucketName}/${objectName}`);
@@ -110,9 +123,9 @@ export class AwsS3Factory implements IStorageService {
 
     download(bucketName: string, objectName: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {
-            this.s3Client.getObject({
-                Bucket: bucketName,
-                Key: objectName
+            this._s3Client.getObject({
+                Bucket: bucketName, // eslint-disable-line
+                Key: objectName // eslint-disable-line
             }, (err, data) => {
                 if (err) return reject(err);
                 resolve(<Buffer>data.Body);
@@ -121,6 +134,6 @@ export class AwsS3Factory implements IStorageService {
     }
 
     mapUrl(url: string): string {
-        return `https://s3.${this.region}.amazonaws.com${url}`;
+        return `https://s3.${this._region}.amazonaws.com${url}`;
     }
 }

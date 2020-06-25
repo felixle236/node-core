@@ -1,4 +1,4 @@
-import { DEVELOPMENT_MODE, ENABLE_DATA_LOGGING, ENABLE_WRITE_LOG } from '../../constants/Environments';
+import { ENABLE_DATA_LOGGING, ENABLE_WRITE_LOG, IS_DEVELOPMENT } from '../../constants/Environments';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import { NextFunction, Request, Response } from 'express';
 import { ILogService } from '../../web.core/interfaces/gateways/logs/ILogService';
@@ -8,7 +8,7 @@ import { SystemError } from '../../web.core/dtos/common/Exception';
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
     @Inject('log.service')
-    private readonly logService: ILogService;
+    private readonly _logService: ILogService;
 
     // @ts-ignore
     error(err: SystemError, req: Request, res: Response, next: NextFunction) {
@@ -16,7 +16,7 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             console.error({ ...err, stack: err.stack });
 
         if (ENABLE_WRITE_LOG)
-            this.logService.writeLog(JSON.stringify({ ...err, stack: err.stack }));
+            this._logService.writeLog(JSON.stringify({ ...err, stack: err.stack }));
 
         // Handle upload error.
         if (err.name === 'MulterError') {
@@ -31,7 +31,7 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             message: err.message
         } as SystemError;
 
-        if (DEVELOPMENT_MODE)
+        if (IS_DEVELOPMENT)
             error.stack = err.stack;
 
         // Handle internal server error.

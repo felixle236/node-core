@@ -1,14 +1,14 @@
 import * as PushNotification from 'node-pushnotifications';
-import { ANDROID_KEY, DEVELOPMENT_MODE, IOS_KEY, PROJECT_NAME } from '../../../constants/Environments';
+import { ANDROID_KEY, IOS_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../constants/Environments';
 import { INotificationService } from '../../../web.core/interfaces/gateways/messages/INotificationService';
 import { Service } from 'typedi';
 
 @Service('notification.service')
 export class NotificationService implements INotificationService {
-    private sender: PushNotification;
+    private readonly _sender: PushNotification;
 
     constructor() {
-        this.sender = new PushNotification({
+        this._sender = new PushNotification({
             gcm: {
                 id: ANDROID_KEY
             },
@@ -18,13 +18,13 @@ export class NotificationService implements INotificationService {
                     keyId: IOS_KEY,
                     teamId: 'EFGH'
                 },
-                production: !DEVELOPMENT_MODE // true for APN production environment, false for APN sandbox environment,
+                production: !IS_DEVELOPMENT // true for APN production environment, false for APN sandbox environment,
             }
         });
     }
 
-    private send(deviceIds: string[], title: string, body: string): Promise<any> {
-        return this.sender.send(deviceIds, {
+    send(deviceIds: string[], title: string, body: string): Promise<any> {
+        return this._sender.send(deviceIds, {
             title, // REQUIRED for Android
             topic: title, // REQUIRED for iOS (apn and gcm)
             body: body,

@@ -28,9 +28,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -284,7 +284,7 @@ describe('User auth business testing', () => {
     });
 
     it('Signin with return permissions successfully', async () => {
-        const item = new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1, permissions: [{ id: 1, roleId: 1, claim: 1 }] }, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as User);
+        const item = new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), activedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1, permissions: [{ id: 1, roleId: 1, claim: 1 }] }, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as User);
         sandbox.stub(UserRepository.prototype, 'getByUserPassword').resolves(item);
 
         const userSignin = new UserSigninRequest();
@@ -483,8 +483,8 @@ describe('User auth business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(item);
         sandbox.stub(UserRepository.prototype, 'update').resolves(true);
 
-        const result = await userAuthBusiness.active('node-core');
-        expect(result).to.eq(true);
+        const hasSucceed = await userAuthBusiness.active('node-core');
+        expect(hasSucceed).to.eq(true);
     });
 
     it('Re-send activation with an invalid email', async () => {
@@ -517,8 +517,8 @@ describe('User auth business testing', () => {
         sandbox.stub(UserRepository.prototype, 'update').resolves(true);
         sandbox.stub(MailService.prototype, 'resendUserActivation').resolves();
 
-        const result = await userAuthBusiness.resendActivation('test@localhost.com');
-        expect(result).to.eq(true);
+        const hasSucceed = await userAuthBusiness.resendActivation('test@localhost.com');
+        expect(hasSucceed).to.eq(true);
     });
 
     it('Forgot password with an invalid email', async () => {
@@ -551,8 +551,8 @@ describe('User auth business testing', () => {
         sandbox.stub(UserRepository.prototype, 'update').resolves(true);
         sandbox.stub(MailService.prototype, 'sendForgotPassword').resolves();
 
-        const result = await userAuthBusiness.forgotPassword('test@localhost.com');
-        expect(result).to.eq(true);
+        const hasSucceed = await userAuthBusiness.forgotPassword('test@localhost.com');
+        expect(hasSucceed).to.eq(true);
     });
 
     it('Reset password without forgot key', async () => {
@@ -603,7 +603,7 @@ describe('User auth business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(item);
         sandbox.stub(UserRepository.prototype, 'update').resolves(true);
 
-        const result = await userAuthBusiness.resetPassword('node-core', 'Nodecore@2');
-        expect(result).to.eq(true);
+        const hasSucceed = await userAuthBusiness.resetPassword('node-core', 'Nodecore@2');
+        expect(hasSucceed).to.eq(true);
     });
 });

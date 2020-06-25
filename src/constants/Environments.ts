@@ -4,7 +4,7 @@ dotenv.config();
 
 // SYSTEM ENVIRONMENT
 
-export const DEVELOPMENT_MODE: boolean = process.env.NODE_ENV === 'development';
+export const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === 'development';
 
 export const PROJECT_ID: string = process.env.PROJECT_ID || '';
 export const PROJECT_NAME: string = process.env.PROJECT_NAME || '';
@@ -59,9 +59,9 @@ export const BUCKET_NAME: string = process.env.BUCKET_NAME || 'dev';
 
 export const MINIO_CONFIG_HOST: string = process.env.MINIO_CONFIG_HOST || 'localhost';
 export const MINIO_CONFIG_PORT: number = process.env.MINIO_CONFIG_PORT ? Number(process.env.MINIO_CONFIG_PORT) : 9000;
-export const MINIO_USE_SSL: boolean = process.env.MINIO_USE_SSL ? JSON.parse(process.env.MINIO_USE_SSL) : false;
 export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY || '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY || '';
+export const IS_USE_SSL_MINIO: boolean = process.env.IS_USE_SSL_MINIO ? JSON.parse(process.env.IS_USE_SSL_MINIO) : false;
 
 export const S3_REGION: string = process.env.S3_REGION || 'us-east-1';
 export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY || '';

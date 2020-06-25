@@ -567,13 +567,13 @@ export interface IRedisClient extends RedisClient {
     zscoreAsync(key: string, member: string): Promise<string>;
 }
 
-export interface IOverloadedKeyCommandAsync<T, U> {
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<U>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<U>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<U>;
-    (key: string, arg1: T, arg2: T, arg3: T): Promise<U>;
-    (key: string, arg1: T, arg2: T): Promise<U>;
-    (key: string, arg1: T | T[]): Promise<U>;
-    (key: string, ...args: Array<T>): Promise<U>;
-    (...args: Array<string | T>): Promise<U>;
+export interface IOverloadedKeyCommandAsync<T, T2> {
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T): Promise<T2>;
+    (key: string, arg1: T | T[]): Promise<T2>;
+    (key: string, ...args: Array<T>): Promise<T2>;
+    (...args: Array<string | T>): Promise<T2>;
 }

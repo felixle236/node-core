@@ -30,9 +30,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -43,7 +43,7 @@ const generateUserCreate = () => {
     userCreate.lastName = 'Local';
     userCreate.email = 'test@localhost.com';
     userCreate.password = 'Nodecore@2';
-    userCreate.gender = GenderType.Male;
+    userCreate.gender = GenderType.MALE;
     userCreate.birthday = new Date();
     userCreate.phone = '0123456789';
     userCreate.address = '123 Abc';
@@ -57,7 +57,7 @@ const generateUserUpdate = () => {
     const userUpdate = new UserUpdateRequest();
     userUpdate.firstName = 'Test';
     userUpdate.lastName = 'Local';
-    userUpdate.gender = GenderType.Male;
+    userUpdate.gender = GenderType.MALE;
     userUpdate.birthday = new Date();
     userUpdate.phone = '0123456789';
     userUpdate.address = '123 Abc';
@@ -555,8 +555,8 @@ describe('User business testing', () => {
         userPassword.password = 'Nodecore@2';
         userPassword.newPassword = 'Nodecore@2';
 
-        const result = await userBusiness.updatePassword(item.id, userPassword);
-        expect(result).to.eq(true);
+        const hasSucceed = await userBusiness.updatePassword(item.id, userPassword);
+        expect(hasSucceed).to.eq(true);
     });
 
     it('Upload avatar with id not exists', async () => {
@@ -687,8 +687,8 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getById').resolves(item);
         sandbox.stub(UserRepository.prototype, 'delete').resolves(true);
 
-        const result = await userBusiness.delete(item.id);
-        expect(result).to.eq(true);
+        const hasSucceed = await userBusiness.delete(item.id);
+        expect(hasSucceed).to.eq(true);
     });
 
     it('Create data sample successfully', async () => {

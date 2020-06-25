@@ -8,10 +8,10 @@ import { IMailSender } from '../interfaces/IMailSender';
  */
 
 export class GoogleSmtpFactory implements IMailSender {
-    private transporter: nodeMailer.Transporter;
+    private _transporter: nodeMailer.Transporter;
 
     constructor(userName: string, password: string) {
-        this.transporter = nodeMailer.createTransport({
+        this._transporter = nodeMailer.createTransport({
             service: 'gmail',
             auth: {
                 user: userName,
@@ -21,7 +21,7 @@ export class GoogleSmtpFactory implements IMailSender {
     }
 
     send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {
-        return this.transporter.sendMail({
+        return this._transporter.sendMail({
             from: `${senderName} <${senderEmail}>`,
             to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
             subject: subject,
@@ -30,7 +30,7 @@ export class GoogleSmtpFactory implements IMailSender {
     }
 
     sendHtml(senderEmail: string, senderName: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
-        return this.transporter.sendMail({
+        return this._transporter.sendMail({
             from: `${senderName} <${senderEmail}>`,
             to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
             subject: subject,

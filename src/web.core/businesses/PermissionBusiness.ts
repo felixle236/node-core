@@ -13,21 +13,21 @@ import { UserAuthenticated } from '../dtos/user/UserAuthenticated';
 @Service('permission.business')
 export class PermissionBusiness implements IPermissionBusiness {
     @Inject('role.repository')
-    private readonly roleRepository: IRoleRepository;
+    private readonly _roleRepository: IRoleRepository;
 
     @Inject('permission.repository')
-    private readonly permissionRepository: IPermissionRepository;
+    private readonly _permissionRepository: IPermissionRepository;
 
     async getClaims(): Promise<ClaimResponse[]> {
-        return await this.permissionRepository.getClaims();
+        return await this._permissionRepository.getClaims();
     }
 
     async getAllByRole(roleId: number, userAuth?: UserAuthenticated): Promise<PermissionResponse[]> {
         let permissions: Permission[];
         if (!userAuth)
-            permissions = await this.permissionRepository.getAllByRole(roleId); // Get permissions from cache
+            permissions = await this._permissionRepository.getAllByRole(roleId); // Get permissions from cache
         else {
-            const roles = await this.roleRepository.getAll(); // Get permissions from cache
+            const roles = await this._roleRepository.getAll(); // Get permissions from cache
             const role = roles.find(role => role.id === roleId);
             if (!role)
                 throw new SystemError(1004, 'role');
@@ -35,13 +35,13 @@ export class PermissionBusiness implements IPermissionBusiness {
             if (userAuth.role.level >= role.level)
                 throw new SystemError(3);
 
-            permissions = await this.permissionRepository.getAllByRole(roleId); // Get permissions from cache
+            permissions = await this._permissionRepository.getAllByRole(roleId); // Get permissions from cache
         }
         return mapModels(PermissionResponse, permissions);
     }
 
     async getById(id: number, userAuth?: UserAuthenticated): Promise<PermissionResponse | undefined> {
-        const permission = await this.permissionRepository.getById(id);
+        const permission = await this._permissionRepository.getById(id);
         if (permission && userAuth && permission.role && permission.role.level <= userAuth.role.level)
             return;
         return mapModel(PermissionResponse, permission);
@@ -52,36 +52,36 @@ export class PermissionBusiness implements IPermissionBusiness {
         permission.roleId = data.roleId;
         permission.claim = data.claim;
 
-        const role = await this.roleRepository.getById(permission.roleId);
+        const role = await this._roleRepository.getById(permission.roleId);
         if (!role)
             throw new SystemError(1004, 'role');
 
         if (userAuth && userAuth.role.level >= role.level)
             throw new SystemError(3);
 
-        const permissions = await this.permissionRepository.getAllByRole(permission.roleId);
+        const permissions = await this._permissionRepository.getAllByRole(permission.roleId);
         if (permissions.find(p => p.claim === permission.claim))
             throw new SystemError(1005, 'permission');
 
-        const id = await this.permissionRepository.create(permission);
+        const id = await this._permissionRepository.create(permission);
         if (!id)
             throw new SystemError(5);
 
-        await this.permissionRepository.clearCaching();
-        const result = await this.permissionRepository.getById(id);
+        await this._permissionRepository.clearCaching();
+        const result = await this._permissionRepository.getById(id);
         return mapModel(PermissionResponse, result);
     }
 
     async delete(id: number, userAuth?: UserAuthenticated): Promise<boolean> {
-        const permission = await this.permissionRepository.getById(id);
+        const permission = await this._permissionRepository.getById(id);
         if (!permission)
             throw new SystemError(1004, 'permission');
 
         if (userAuth && permission.role && userAuth.role.level >= permission.role.level)
             throw new SystemError(3);
 
-        const result = await this.permissionRepository.delete(id);
-        if (result) await this.permissionRepository.clearCaching();
-        return result;
+        const hasSucceed = await this._permissionRepository.delete(id);
+        if (hasSucceed) await this._permissionRepository.clearCaching();
+        return hasSucceed;
     }
 }

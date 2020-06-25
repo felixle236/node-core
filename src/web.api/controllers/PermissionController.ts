@@ -11,41 +11,41 @@ import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
 @JsonController('/permissions')
 export class RoleController {
     @Inject('permission.business')
-    private readonly permissionBusiness: IPermissionBusiness;
+    private readonly _permissionBusiness: IPermissionBusiness;
 
     @Get('/claims')
     @Authorized(PermissionClaim.GET)
     async getClaims(): Promise<ClaimResponse[]> {
-        return await this.permissionBusiness.getClaims();
+        return await this._permissionBusiness.getClaims();
     }
 
     @Get('/mine')
     @Authorized(PermissionClaim.GET)
     async getMyPermissions(@CurrentUser() userAuth: UserAuthenticated): Promise<PermissionResponse[]> {
-        return await this.permissionBusiness.getAllByRole(userAuth.role.id);
+        return await this._permissionBusiness.getAllByRole(userAuth.role.id);
     }
 
     @Get('/roles/:roleId([0-9]+)')
     @Authorized(PermissionClaim.GET)
     async getAllByRole(@CurrentUser() userAuth: UserAuthenticated, @Param('roleId') roleId: number): Promise<PermissionResponse[]> {
-        return await this.permissionBusiness.getAllByRole(roleId, userAuth);
+        return await this._permissionBusiness.getAllByRole(roleId, userAuth);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized(PermissionClaim.GET)
     async getById(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<PermissionResponse | undefined> {
-        return await this.permissionBusiness.getById(id, userAuth);
+        return await this._permissionBusiness.getById(id, userAuth);
     }
 
     @Post('/')
     @Authorized(PermissionClaim.CREATE)
     async create(@CurrentUser() userAuth: UserAuthenticated, @Body() data: PermissionCreateRequest): Promise<PermissionResponse | undefined> {
-        return await this.permissionBusiness.create(data, userAuth);
+        return await this._permissionBusiness.create(data, userAuth);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized(PermissionClaim.DELETE)
     async delete(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this.permissionBusiness.delete(id, userAuth);
+        return await this._permissionBusiness.delete(id, userAuth);
     }
 }

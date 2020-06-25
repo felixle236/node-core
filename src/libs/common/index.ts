@@ -1,14 +1,14 @@
 /**
  * Map model item for object.
  */
-export function mapModel<T1, T2>(Type: { new(p: T1): T2 }, item?: T1): T2 | undefined {
+export function mapModel<T1, T2>(Type: { new(p: T1): T2 }, item?: T1): T2 | undefined { // eslint-disable-line
     return item ? new Type(item) : undefined;
 }
 
 /**
  * Map model list for array object.
  */
-export function mapModels<T1, T2>(Type: { new(p: T1): T2 }, list: T1[]): T2[] {
+export function mapModels<T1, T2>(Type: { new(p: T1): T2 }, list: T1[]): T2[] { // eslint-disable-line
     return Array.isArray(list) ? list.map(item => new Type(item)) : [];
 }
 

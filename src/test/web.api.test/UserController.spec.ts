@@ -36,9 +36,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 3, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 3, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -49,7 +49,7 @@ const generateUserCreate = () => {
     userCreate.lastName = 'Local';
     userCreate.email = 'test@localhost.com';
     userCreate.password = 'Nodecore@2';
-    userCreate.gender = GenderType.Male;
+    userCreate.gender = GenderType.MALE;
     userCreate.birthday = new Date();
     userCreate.phone = '0123456789';
     userCreate.address = '123 Abc';
@@ -63,7 +63,7 @@ const generateUserUpdate = () => {
     const userUpdate = new UserUpdateRequest();
     userUpdate.firstName = 'Test';
     userUpdate.lastName = 'Local';
-    userUpdate.gender = GenderType.Male;
+    userUpdate.gender = GenderType.MALE;
     userUpdate.birthday = new Date();
     userUpdate.phone = '0123456789';
     userUpdate.address = '123 Abc';
@@ -78,7 +78,9 @@ describe('User controller testing', () => {
     let server: Server;
     const port = 3000;
     const url = `http://localhost:${port}/api/v1/users`;
-    const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
+    const headers = {};
+    headers['Content-Type'] = 'application/json';
+    const request = requestPromise.defaults({ headers, json: true });
     let userAuth: UserAuthenticated;
     let list: User[];
 

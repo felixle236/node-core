@@ -25,28 +25,28 @@ import { readFile } from '../../libs/file';
 @Service('user.business')
 export class UserBusiness implements IUserBusiness {
     @Inject('role.repository')
-    private readonly roleRepository: IRoleRepository;
+    private readonly _roleRepository: IRoleRepository;
 
     @Inject('user.repository')
-    private readonly userRepository: IUserRepository;
+    private readonly _userRepository: IUserRepository;
 
     @Inject('storage.service')
-    private readonly storageService: IStorageService;
+    private readonly _storageService: IStorageService;
 
     async find(filter: UserFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserResponse>> {
         filter.level = userAuth && userAuth.role.level;
-        const [list, count] = await this.userRepository.find(filter);
+        const [list, count] = await this._userRepository.find(filter);
         return filter.toResultList(mapModels(UserResponse, list), count);
     }
 
     async findCommon(filter: UserCommonFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserCommonResponse>> {
         filter.level = userAuth && userAuth.role.level;
-        const [list, count] = await this.userRepository.findCommon(filter);
+        const [list, count] = await this._userRepository.findCommon(filter);
         return filter.toResultList(mapModels(UserCommonResponse, list), count);
     }
 
     async getById(id: number, userAuth?: UserAuthenticated): Promise<UserResponse | undefined> {
-        const user = await this.userRepository.getById(id);
+        const user = await this._userRepository.getById(id);
         if (user && userAuth && user.role && user.role.level <= userAuth.role.level)
             return;
         return mapModel(UserResponse, user);
@@ -67,26 +67,26 @@ export class UserBusiness implements IUserBusiness {
         user.currency = data.currency;
         user.activedAt = new Date();
 
-        if (await this.userRepository.checkEmailExist(user.email))
+        if (await this._userRepository.checkEmailExist(user.email))
             throw new SystemError(1005, 'email');
 
-        const role = await this.roleRepository.getById(user.roleId);
+        const role = await this._roleRepository.getById(user.roleId);
         if (!role)
             throw new SystemError(1002, 'role');
 
         if (userAuth && role.level <= userAuth.role.level)
             throw new SystemError(3);
 
-        const id = await this.userRepository.create(user);
+        const id = await this._userRepository.create(user);
         if (!id)
             throw new SystemError(5);
 
-        const newData = await this.userRepository.getById(id);
+        const newData = await this._userRepository.getById(id);
         return mapModel(UserResponse, newData);
     }
 
     async update(id: number, data: UserUpdateRequest, userAuth?: UserAuthenticated): Promise<UserResponse | undefined> {
-        const user = await this.userRepository.getById(id);
+        const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
 
@@ -102,16 +102,16 @@ export class UserBusiness implements IUserBusiness {
         user.currency = data.currency;
         user.culture = data.culture;
 
-        const result = await this.userRepository.update(id, user);
-        if (!result)
+        const hasSucceed = await this._userRepository.update(id, user);
+        if (!hasSucceed)
             throw new SystemError(5);
 
-        const newData = await this.userRepository.getById(id);
+        const newData = await this._userRepository.getById(id);
         return mapModel(UserResponse, newData);
     }
 
     async updatePassword(id: number, data: UserPasswordUpdateRequest, userAuth?: UserAuthenticated): Promise<boolean> {
-        const user = await this.userRepository.getById(id);
+        const user = await this._userRepository.getById(id);
         if (!user || user.password !== user.hashPassword(data.password))
             throw new SystemError(1003, 'password');
 
@@ -119,11 +119,11 @@ export class UserBusiness implements IUserBusiness {
             throw new SystemError(3);
 
         user.password = data.newPassword;
-        return await this.userRepository.update(id, user);
+        return await this._userRepository.update(id, user);
     }
 
     async uploadAvatar(id: number, buffer: Buffer, userAuth?: UserAuthenticated): Promise<string> {
-        const user = await this.userRepository.getById(id);
+        const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
 
@@ -140,28 +140,28 @@ export class UserBusiness implements IUserBusiness {
             throw new SystemError(3);
 
         const avatarPath = user.getAvatarPath(extension);
-        const url = await this.storageService.upload(BUCKET_NAME, avatarPath, buffer);
+        const url = await this._storageService.upload(BUCKET_NAME, avatarPath, buffer);
         user.avatar = url;
 
-        await this.userRepository.update(id, user);
-        return this.storageService.mapUrl(url);
+        await this._userRepository.update(id, user);
+        return this._storageService.mapUrl(url);
     }
 
     async delete(id: number, userAuth?: UserAuthenticated): Promise<boolean> {
-        const user = await this.userRepository.getById(id);
+        const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
 
         if (userAuth && user.role && user.role.level <= userAuth.role.level)
             throw new SystemError(3);
 
-        return await this.userRepository.delete(id);
+        return await this._userRepository.delete(id);
     }
 
     async createSampleData(): Promise<BulkActionResponse> {
         const users = require('../../resources/sample-data/users.json');
         const bulkAction = new BulkActionResponse(users.length);
-        const roles = await this.roleRepository.getAll();
+        const roles = await this._roleRepository.getAll();
 
         for (let index = 0; index < users.length; index++) {
             const item = users[index];
@@ -171,7 +171,7 @@ export class UserBusiness implements IUserBusiness {
             else {
                 await getConnection().transaction(async entityManager => {
                     const queryRunner = entityManager.connection.createQueryRunner();
-                    let user = await this.userRepository.getByEmail(item.email, queryRunner);
+                    let user = await this._userRepository.getByEmail(item.email, queryRunner);
                     if (user)
                         bulkAction.ignore();
                     else {
@@ -189,9 +189,9 @@ export class UserBusiness implements IUserBusiness {
                         user.currency = item.currency;
                         user.activedAt = new Date();
 
-                        const id = await this.userRepository.create(user, queryRunner);
+                        const id = await this._userRepository.create(user, queryRunner);
                         if (id && item.avatar) {
-                            user = await this.userRepository.getById(id, queryRunner);
+                            user = await this._userRepository.getById(id, queryRunner);
                             if (user) {
                                 const filePath = path.join(__dirname, item.avatar);
                                 const buffer = await readFile(filePath);
@@ -202,10 +202,10 @@ export class UserBusiness implements IUserBusiness {
                                 user.validateAvatarSize(buffer.length);
 
                                 const avatarPath = user.getAvatarPath(extension);
-                                const url = await this.storageService.upload(BUCKET_NAME, avatarPath, buffer);
+                                const url = await this._storageService.upload(BUCKET_NAME, avatarPath, buffer);
                                 user.avatar = url;
 
-                                await this.userRepository.update(id, user, queryRunner);
+                                await this._userRepository.update(id, user, queryRunner);
                             }
                         }
                         bulkAction.success();

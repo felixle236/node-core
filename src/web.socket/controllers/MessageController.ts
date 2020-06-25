@@ -15,16 +15,16 @@ import { ResultListResponse } from '../../web.core/dtos/common/ResultListRespons
 @SocketController('/messages')
 export default class MessageController {
     @Inject('message.business')
-    private readonly messageBusiness: IMessageBusiness;
+    private readonly _messageBusiness: IMessageBusiness;
 
     @OnConnect()
     async connect(@ConnectedSocket() socket: ISocket, @SocketQueryParam('token') token: string): Promise<void> {
-        await this.messageBusiness.connect(socket, token);
+        await this._messageBusiness.connect(socket, token);
     }
 
     @OnDisconnect()
     disconnect(@ConnectedSocket() socket: ISocket) {
-        this.messageBusiness.disconnect(socket);
+        this._messageBusiness.disconnect(socket);
     }
 
     @OnMessage('message_list')
@@ -32,7 +32,7 @@ export default class MessageController {
     @EmitOnSuccess('message_list_successfully')
     @SkipEmitOnEmptyResult()
     async find(@ConnectedSocket() socket: ISocket, @MessageBody() filter: MessageFilterRequest): Promise<ResultListResponse<MessageResponse>> {
-        return await this.messageBusiness.find(socket, filter);
+        return await this._messageBusiness.find(socket, filter);
     }
 
     @OnMessage('member_list')
@@ -40,7 +40,7 @@ export default class MessageController {
     @EmitOnSuccess('member_list_successfully')
     @SkipEmitOnEmptyResult()
     async findMembers(@ConnectedSocket() socket: ISocket, @MessageBody() filter: MemberFilterRequest): Promise<ResultListResponse<MemberResponse>> {
-        return await this.messageBusiness.findMembers(socket, filter);
+        return await this._messageBusiness.findMembers(socket, filter);
     }
 
     @OnMessage('message_directly')
@@ -48,7 +48,7 @@ export default class MessageController {
     @EmitOnSuccess('message_directly_successfully')
     @SkipEmitOnEmptyResult()
     async create(@ConnectedSocket() socket: ISocket, @MessageBody() data: MessageCreateRequest): Promise<MessageResponse | undefined> {
-        return await this.messageBusiness.create(socket, data);
+        return await this._messageBusiness.create(socket, data);
     }
 
     @OnMessage('message_room')
@@ -56,7 +56,7 @@ export default class MessageController {
     @EmitOnSuccess('message_room_successfully')
     @SkipEmitOnEmptyResult()
     async createByRoom(@ConnectedSocket() socket: ISocket, @MessageBody() data: MessageRoomCreateRequest): Promise<MessageRoomResponse | undefined> {
-        return await this.messageBusiness.createByRoom(socket, data);
+        return await this._messageBusiness.createByRoom(socket, data);
     }
 
     @OnMessage('message_status')
@@ -64,6 +64,6 @@ export default class MessageController {
     @EmitOnSuccess('message_status_successfully')
     @SkipEmitOnEmptyResult()
     async updateStatus(@ConnectedSocket() socket: ISocket, @MessageBody() room: number): Promise<boolean> {
-        return await this.messageBusiness.updateNewMessageStatus(socket, room);
+        return await this._messageBusiness.updateNewMessageStatus(socket, room);
     }
 }

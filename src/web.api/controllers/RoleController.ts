@@ -15,41 +15,41 @@ import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
 @JsonController('/roles')
 export class RoleController {
     @Inject('role.business')
-    private readonly roleBusiness: IRoleBusiness;
+    private readonly _roleBusiness: IRoleBusiness;
 
     @Get('/')
     @Authorized(RoleClaim.GET)
     async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleFilterRequest): Promise<ResultListResponse<RoleResponse>> {
-        return await this.roleBusiness.find(filter, userAuth);
+        return await this._roleBusiness.find(filter, userAuth);
     }
 
     @Get('/common')
     @Authorized(RoleClaim.GET)
     async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleCommonFilterRequest): Promise<ResultListResponse<RoleCommonResponse>> {
-        return await this.roleBusiness.findCommon(filter, userAuth);
+        return await this._roleBusiness.findCommon(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized(RoleClaim.GET)
     async getById(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<RoleResponse | undefined> {
-        return await this.roleBusiness.getById(id, userAuth);
+        return await this._roleBusiness.getById(id, userAuth);
     }
 
     @Post('/')
     @Authorized(RoleClaim.CREATE)
     async create(@CurrentUser() userAuth: UserAuthenticated, @Body() data: RoleCreateRequest): Promise<RoleResponse | undefined> {
-        return await this.roleBusiness.create(data, userAuth);
+        return await this._roleBusiness.create(data, userAuth);
     }
 
     @Put('/:id([0-9]+)')
     @Authorized(RoleClaim.UPDATE)
     async update(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number, @Body() data: RoleUpdateRequest): Promise<RoleResponse | undefined> {
-        return await this.roleBusiness.update(id, data, userAuth);
+        return await this._roleBusiness.update(id, data, userAuth);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized(RoleClaim.DELETE)
     async delete(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this.roleBusiness.delete(id, userAuth);
+        return await this._roleBusiness.delete(id, userAuth);
     }
 }

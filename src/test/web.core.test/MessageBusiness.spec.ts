@@ -25,8 +25,8 @@ import { expect } from 'chai';
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.Male, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '/images/test-2-icon.png' } as IUser)
     ];
 };
 
@@ -350,7 +350,7 @@ describe('Message business testing', () => {
     it('Update new message status successfully', async () => {
         sandbox.stub(MemberStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
 
-        const result = await messageBusiness.updateNewMessageStatus(socket, 0);
-        expect(result).to.eq(true);
+        const hasSucceed = await messageBusiness.updateNewMessageStatus(socket, 0);
+        expect(hasSucceed).to.eq(true);
     });
 });

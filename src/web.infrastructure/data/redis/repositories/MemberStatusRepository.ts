@@ -4,19 +4,19 @@ import { RedisContext } from '../RedisContext';
 
 @Service('member.status.repository')
 export class MemberStatusRepository implements IMemberStatusRepository {
-    private readonly onlineStatusKey = 'online_status';
-    private readonly newMessageStatusKey = 'new_message_status';
-
     @Inject('redis.context')
-    private readonly redisContext: RedisContext;
+    private readonly _redisContext: RedisContext;
+
+    private readonly _onlineStatusKey = 'online_status';
+    private readonly _newMessageStatusKey = 'new_message_status';
 
     async getListOnlineStatus(): Promise<number[]> {
-        const list = await this.redisContext.redisClient.lrangeAsync(this.onlineStatusKey, 0, -1);
+        const list = await this._redisContext.redisClient.lrangeAsync(this._onlineStatusKey, 0, -1);
         return list.map(item => parseInt(item));
     }
 
     async getListNewMessageStatus(roomOrReceiverId: number): Promise<number[]> {
-        const result = await this.redisContext.redisClient.hgetAsync(this.newMessageStatusKey, roomOrReceiverId.toString());
+        const result = await this._redisContext.redisClient.hgetAsync(this._newMessageStatusKey, roomOrReceiverId.toString());
         return !result ? [] : JSON.parse(result) as number[];
     }
 
@@ -25,7 +25,7 @@ export class MemberStatusRepository implements IMemberStatusRepository {
         if (list.indexOf(memberId) !== -1)
             return false;
 
-        const result = await this.redisContext.redisClient.lpushAsync(this.onlineStatusKey, memberId.toString());
+        const result = await this._redisContext.redisClient.lpushAsync(this._onlineStatusKey, memberId.toString());
         return !!result;
     }
 
@@ -35,7 +35,7 @@ export class MemberStatusRepository implements IMemberStatusRepository {
             return false;
 
         list.push(senderId);
-        const result = await this.redisContext.redisClient.hsetAsync(this.newMessageStatusKey, roomOrReceiverId.toString(), JSON.stringify(list));
+        const result = await this._redisContext.redisClient.hsetAsync(this._newMessageStatusKey, roomOrReceiverId.toString(), JSON.stringify(list));
         return !!result;
     }
 
@@ -44,7 +44,7 @@ export class MemberStatusRepository implements IMemberStatusRepository {
         if (list.indexOf(memberId) === -1)
             return false;
 
-        const result = await this.redisContext.redisClient.lremAsync(this.onlineStatusKey, 1, memberId.toString());
+        const result = await this._redisContext.redisClient.lremAsync(this._onlineStatusKey, 1, memberId.toString());
         return !!result;
     }
 
@@ -54,7 +54,7 @@ export class MemberStatusRepository implements IMemberStatusRepository {
             return false;
 
         list.splice(list.indexOf(roomOrSenderId), 1);
-        const result = await this.redisContext.redisClient.hsetAsync(this.newMessageStatusKey, receiverId.toString(), JSON.stringify(list));
+        const result = await this._redisContext.redisClient.hsetAsync(this._newMessageStatusKey, receiverId.toString(), JSON.stringify(list));
         return !!result;
     }
 }

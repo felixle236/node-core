@@ -1,27 +1,31 @@
+import { IPaymentParam } from '../../../../web.core/interfaces/types/IPaymentParam';
 import { IPaymentService } from '../../../../web.core/interfaces/gateways/payments/IPaymentService';
 import { Stripe } from 'stripe';
 
 export class StripeFactory implements IPaymentService {
-    private stripe: Stripe;
+    private readonly _stripe: Stripe;
 
     constructor(apiKey: string) {
-        this.stripe = new Stripe(apiKey, {
+        this._stripe = new Stripe(apiKey, {
             apiVersion: '2020-03-02'
         });
     }
 
-    async pay(data: any): Promise<any> {
-        const customer = await this.stripe.customers.create({
+    async pay(data: IPaymentParam): Promise<string> {
+        const customerParams: Stripe.CustomerCreateParams = {
             name: data.name,
             email: data.email,
-            source: data.stripeToken
-        });
-        await this.stripe.charges.create({
+            source: data.token
+        };
+        const customer = await this._stripe.customers.create(customerParams);
+
+        const chargeParams: Stripe.ChargeCreateParams = {
             amount: data.amount * 100,
             currency: 'usd',
             customer: customer.id,
             description: data.description
-        });
+        };
+        await this._stripe.charges.create(chargeParams);
         return customer.id;
     }
 }

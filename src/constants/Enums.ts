@@ -28,11 +28,11 @@ export enum PaymentType {
 }
 
 export enum RoleId {
-    SuperAdmin = 1,
-    CommonUser = 2
+    SUPER_ADMIN = 1,
+    COMMON_USER = 2
 }
 
 export enum GenderType {
-    Male = 'male',
-    Female = 'female'
+    MALE = 'male',
+    FEMALE = 'female'
 }

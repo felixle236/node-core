@@ -19,26 +19,31 @@ import { mapModel } from '../../libs/common';
 @Service('authentication.business')
 export class AuthenticationBusiness implements IAuthenticationBusiness {
     @Inject('role.repository')
-    private readonly roleRepository: IRoleRepository;
+    private readonly _roleRepository: IRoleRepository;
 
     @Inject('user.repository')
-    private readonly userRepository: IUserRepository;
+    private readonly _userRepository: IUserRepository;
 
     @Inject('permission.repository')
-    private readonly permissionRepository: IPermissionRepository;
+    private readonly _permissionRepository: IPermissionRepository;
 
     @Inject('authentication.service')
-    private readonly authenticationService: IAuthenticationService
+    private readonly _authenticationService: IAuthenticationService
 
     @Inject('mail.service')
-    private readonly mailService: IMailService;
+    private readonly _mailService: IMailService;
 
     async authenticateUser(token: string, claims?: number[]): Promise<UserAuthenticated> {
-        if (!validator.isJWT(token)) throw new UnauthorizedError(1010, 'authorization token');
-        let payload;
+        const parts = (token || '').split(' ');
+        if (parts.length === 2 && parts[0] === 'Bearer')
+            token = parts[1];
 
+        if (!validator.isJWT(token))
+            throw new UnauthorizedError(1010, 'authorization token');
+
+        let payload;
         try {
-            payload = this.authenticationService.verify(token);
+            payload = this._authenticationService.verify(token);
         }
         catch (error) {
             if (error.name === 'TokenExpiredError')
@@ -52,13 +57,13 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         userAuth.id = Number(payload.sub);
         userAuth.accessToken = token;
 
-        const roles = await this.roleRepository.getAll();
+        const roles = await this._roleRepository.getAll();
         const role = roles.find(role => role.id === payload.roleId);
         if (!role)
             throw new UnauthorizedError(3);
         userAuth.role = role;
 
-        const permissions = await this.permissionRepository.getAllByRole(payload.roleId);
+        const permissions = await this._permissionRepository.getAllByRole(payload.roleId);
         userAuth.claims = permissions.map(permission => permission.claim);
 
         if (!claims || !claims.length)
@@ -75,14 +80,14 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         userSignin.email = data.email;
         userSignin.password = data.password;
 
-        const user = await this.userRepository.getByUserPassword(userSignin.email, userSignin.password);
+        const user = await this._userRepository.getByUserPassword(userSignin.email, userSignin.password);
         if (!user)
             throw new SystemError(1003, 'email address or password');
 
         if (!user.activedAt)
             throw new SystemError(1009, 'account');
 
-        const accessToken = this.authenticationService.sign(user);
+        const accessToken = this._authenticationService.sign(user);
         return new UserSigninSucceedResponse(user, accessToken);
     }
 
@@ -93,22 +98,22 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         user.email = data.email;
         user.password = data.password;
 
-        if (await this.userRepository.checkEmailExist(user.email))
+        if (await this._userRepository.checkEmailExist(user.email))
             throw new SystemError(1005, 'email');
 
-        const role = await this.roleRepository.getById(RoleId.CommonUser);
+        const role = await this._roleRepository.getById(RoleId.COMMON_USER);
         if (!role)
             throw new SystemError(1004, 'role');
 
         user.roleId = role.id;
         user.generateActiveKey();
 
-        const id = await this.userRepository.create(user);
+        const id = await this._userRepository.create(user);
         if (!id)
             throw new SystemError(5);
 
-        const newUser = await this.userRepository.getById(id);
-        await this.mailService.sendUserActivation(user);
+        const newUser = await this._userRepository.getById(id);
+        await this._mailService.sendUserActivation(user);
         return mapModel(UserResponse, newUser);
     }
 
@@ -116,7 +121,7 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         if (!activeKey)
             throw new SystemError();
 
-        const user = await this.userRepository.getByActiveKey(activeKey);
+        const user = await this._userRepository.getByActiveKey(activeKey);
         if (!user)
             throw new SystemError(1004, 'activation key');
         if (user.activedAt)
@@ -127,42 +132,42 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         user.activeKey = undefined;
         user.activeExpire = undefined;
         user.activedAt = new Date();
-        return await this.userRepository.update(user.id, user);
+        return await this._userRepository.update(user.id, user);
     }
 
     async resendActivation(email: string): Promise<boolean> {
         if (!validator.isEmail(email))
             throw new SystemError(1002, 'email');
 
-        const user = await this.userRepository.getByEmail(email);
+        const user = await this._userRepository.getByEmail(email);
         if (!user || user.activedAt)
             throw new SystemError();
 
         user.generateActiveKey();
-        const result = await this.userRepository.update(user.id, user);
-        await this.mailService.resendUserActivation(user);
-        return result;
+        const hasSucceed = await this._userRepository.update(user.id, user);
+        await this._mailService.resendUserActivation(user);
+        return hasSucceed;
     }
 
     async forgotPassword(email: string): Promise<boolean> {
         if (!validator.isEmail(email))
             throw new SystemError(1002, 'email');
 
-        const user = await this.userRepository.getByEmail(email);
+        const user = await this._userRepository.getByEmail(email);
         if (!user || !user.activedAt)
             throw new SystemError();
 
         user.generateForgotKey();
-        const result = await this.userRepository.update(user.id, user);
-        await this.mailService.sendForgotPassword(user);
-        return result;
+        const hasSucceed = await this._userRepository.update(user.id, user);
+        await this._mailService.sendForgotPassword(user);
+        return hasSucceed;
     }
 
     async resetPassword(forgotKey: string, password: string): Promise<boolean> {
         if (!forgotKey || !password)
             throw new SystemError();
 
-        const user = await this.userRepository.getByForgotKey(forgotKey);
+        const user = await this._userRepository.getByForgotKey(forgotKey);
         if (!user)
             throw new SystemError(1004, 'forgot key');
         if (!user.activedAt)
@@ -173,6 +178,6 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
         user.password = password;
         user.forgotKey = undefined;
         user.forgotExpire = undefined;
-        return await this.userRepository.update(user.id, user);
+        return await this._userRepository.update(user.id, user);
     }
 }

@@ -252,7 +252,7 @@ describe('Permission business testing', () => {
         sandbox.stub(PermissionRepository.prototype, 'delete').resolves(true);
         sandbox.stub(PermissionRepository.prototype, 'clearCaching').resolves();
 
-        const result = await permissionBusiness.delete(item.id);
-        expect(result).to.eq(true);
+        const hasSucceed = await permissionBusiness.delete(item.id);
+        expect(hasSucceed).to.eq(true);
     });
 });

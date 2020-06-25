@@ -1,4 +1,5 @@
-import { ENABLE_DATA_LOGGING, PAYMENT_TYPE, STRIPE_KEY } from '../../../constants/Environments';
+import { PAYMENT_TYPE, STRIPE_KEY } from '../../../constants/Environments';
+import { IPaymentParam } from '../../../web.core/interfaces/types/IPaymentParam';
 import { IPaymentService } from '../../../web.core/interfaces/gateways/payments/IPaymentService';
 import { LoggingFactory } from './providers/LoggingFactory';
 import { PaymentType } from '../../../constants/Enums';
@@ -7,27 +8,27 @@ import { Service } from 'typedi';
 import { StripeFactory } from './providers/StripeFactory';
 
 @Service('payment.service')
-export class PaymentService {
-    private payment: IPaymentService;
+export class PaymentService implements IPaymentService {
+    private readonly _payment: IPaymentService;
 
     constructor() {
         switch (PAYMENT_TYPE) {
         case PaymentType.STRIPE:
-            this.payment = new StripeFactory(STRIPE_KEY);
+            this._payment = new StripeFactory(STRIPE_KEY);
             break;
 
         case PaymentType.PAYPAL:
-            this.payment = new PaypalFactory();
+            this._payment = new PaypalFactory();
             break;
 
         case PaymentType.LOGGING:
         default:
-            this.payment = new LoggingFactory(ENABLE_DATA_LOGGING);
+            this._payment = new LoggingFactory();
             break;
         }
     }
 
-    async pay(data: any): Promise<any> {
-        return await this.payment.pay(data);
+    async pay(data: IPaymentParam): Promise<string> {
+        return await this._payment.pay(data);
     }
 }

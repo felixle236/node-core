@@ -1,10 +1,9 @@
+import { ENABLE_DATA_LOGGING } from '../../../../constants/Environments';
 import { IPaymentService } from '../../../../web.core/interfaces/gateways/payments/IPaymentService';
 
 export class LoggingFactory implements IPaymentService {
-    constructor(private dataLogging: boolean) { }
-
     pay(data: any): Promise<any> {
-        if (this.dataLogging) console.log('PaymentService.send', data);
+        if (ENABLE_DATA_LOGGING) console.log('PaymentService.send', data);
         return Promise.resolve(data);
     }
 }

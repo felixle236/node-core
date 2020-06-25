@@ -35,7 +35,11 @@ export class ApiService {
             currentUserChecker: authenticator.userAuthChecker
         });
 
+        app.get('/healthz', (req, res) => {
+            res.status(200).end('ok');
+        });
+
         app.use(compression({ filter: /* istanbul ignore next */ (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
-        return app.listen(API_PORT, callback);
+        return app.listen(API_PORT, '0.0.0.0', callback);
     }
 }

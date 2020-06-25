@@ -5,12 +5,12 @@ import { IAuthenticationBusiness } from '../web.core/interfaces/businesses/IAuth
 @Service('api.authenticator')
 export class ApiAuthenticator {
     @Inject('authentication.business')
-    private readonly authenticationBusiness: IAuthenticationBusiness;
+    private readonly _authBusiness: IAuthenticationBusiness;
 
     authorizationHttpChecker = async (action: Action, claims: number[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
-        action.request.userAuth = await this.authenticationBusiness.authenticateUser(token, claims);
+        action.request.userAuth = await this._authBusiness.authenticateUser(token, claims);
         return !!action.request.userAuth;
     }
 

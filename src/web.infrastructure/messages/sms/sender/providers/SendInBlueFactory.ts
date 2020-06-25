@@ -8,15 +8,15 @@ const sibApiV3Sdk = require('sib-api-v3-sdk');
  */
 
 export class SendInBlueFactory implements ISmsSender {
-    private smsApi;
+    private readonly _smsApi;
 
     constructor(apiKey: string) {
         sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
-        this.smsApi = new sibApiV3Sdk.TransactionalSMSApi();
+        this._smsApi = new sibApiV3Sdk.TransactionalSMSApi();
     }
 
     sendSMS(senderName: string, phoneNumber: string, content: string): Promise<any> {
-        return this.smsApi.sendTransacSms({
+        return this._smsApi.sendTransacSms({
             sender: senderName,
             recipient: phoneNumber,
             content

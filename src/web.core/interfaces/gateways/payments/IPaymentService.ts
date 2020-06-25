@@ -1,3 +1,5 @@
+import { IPaymentParam } from '../../types/IPaymentParam';
+
 export interface IPaymentService {
-    pay(data: any): Promise<any>;
+    pay(data: IPaymentParam): Promise<string>;
 }

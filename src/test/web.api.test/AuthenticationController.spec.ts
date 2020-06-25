@@ -25,7 +25,7 @@ const generateUser = () => {
         firstName: 'Test',
         lastName: '1',
         email: 'test.1@localhost.com',
-        gender: GenderType.Male,
+        gender: GenderType.MALE,
         birthday: new Date(),
         avatar: '../../resources/images/test-1-icon.png'
     } as IUser);
@@ -36,7 +36,9 @@ describe('Authentication controller testing', () => {
     let server: Server;
     const port = 3000;
     const url = `http://localhost:${port}/api/v1/auth`;
-    const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
+    const headers = {};
+    headers['Content-Type'] = 'application/json';
+    const request = requestPromise.defaults({ headers, json: true });
     let user: User;
 
     before(function(done) {

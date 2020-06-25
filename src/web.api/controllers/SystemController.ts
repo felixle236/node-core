@@ -10,12 +10,12 @@ import { readFile } from '../../libs/file';
 @JsonController('/systems')
 export class SystemController {
     @Inject('user.business')
-    private readonly userBusiness: IUserBusiness;
+    private readonly _userBusiness: IUserBusiness;
 
     @Post('/sample-data')
     @Authorized(SystemClaim.INIT_DATA)
     async createSampleData(): Promise<BulkActionResponse> {
-        return await this.userBusiness.createSampleData();
+        return await this._userBusiness.createSampleData();
     }
 
     // Demo API download file binary

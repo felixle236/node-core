@@ -4,13 +4,13 @@ import { Service } from 'typedi';
 
 @Service('log.service')
 export class LogService {
-    private logService: ILogService;
+    private readonly _logService: ILogService;
 
     constructor() {
-        this.logService = new FileLogFactory();
+        this._logService = new FileLogFactory();
     }
 
     writeLog(content: string): Promise<void> {
-        return this.logService.writeLog(content);
+        return this._logService.writeLog(content);
     }
 }

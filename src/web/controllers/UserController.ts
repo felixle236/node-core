@@ -9,7 +9,7 @@ import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterR
 @Controller('/users')
 export class UserController {
     @Inject('user.business')
-    private readonly userBusiness: IUserBusiness;
+    private readonly _userBusiness: IUserBusiness;
 
     @Get('/')
     @Render('users/list')
@@ -18,7 +18,7 @@ export class UserController {
         if (!userAuth)
             return response.redirect('/');
 
-        const data = await this.userBusiness.find(filter, userAuth);
+        const data = await this._userBusiness.find(filter, userAuth);
         return {
             title: 'User List',
             userAuth,

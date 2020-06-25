@@ -9,26 +9,26 @@ import { hashMD5 } from '../../libs/crypt';
 import { mapModel } from '../../libs/common';
 
 export class User implements IUser {
-    constructor(private data = {} as IUser) { }
+    constructor(private readonly _data = {} as IUser) { }
 
     get id(): number {
-        return this.data.id;
+        return this._data.id;
     }
 
     get createdAt(): Date {
-        return this.data.createdAt;
+        return this._data.createdAt;
     }
 
     get updatedAt(): Date {
-        return this.data.updatedAt;
+        return this._data.updatedAt;
     }
 
     get deletedAt(): Date | undefined {
-        return this.data.deletedAt;
+        return this._data.deletedAt;
     }
 
     get roleId(): number {
-        return this.data.roleId;
+        return this._data.roleId;
     }
 
     set roleId(val: number) {
@@ -36,11 +36,11 @@ export class User implements IUser {
             throw new SystemError(1001, 'role id');
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'role id');
-        this.data.roleId = val;
+        this._data.roleId = val;
     }
 
     get firstName(): string {
-        return this.data.firstName;
+        return this._data.firstName;
     }
 
     set firstName(val: string) {
@@ -51,11 +51,11 @@ export class User implements IUser {
         if (val.length > 20)
             throw new SystemError(2004, 'first name', 20);
 
-        this.data.firstName = val;
+        this._data.firstName = val;
     }
 
     get lastName(): string | undefined {
-        return this.data.lastName;
+        return this._data.lastName;
     }
 
     set lastName(val: string | undefined) {
@@ -68,15 +68,15 @@ export class User implements IUser {
                 throw new SystemError(2004, 'last name', 20);
         }
 
-        this.data.lastName = val;
+        this._data.lastName = val;
     }
 
     get fullName(): string {
-        return this.data.firstName + (this.data.lastName ? ' ' + this.data.lastName : '');
+        return this._data.firstName + (this._data.lastName ? ' ' + this._data.lastName : '');
     }
 
     get email(): string {
-        return this.data.email;
+        return this._data.email;
     }
 
     set email(val: string) {
@@ -92,11 +92,11 @@ export class User implements IUser {
         if (val.length > 120)
             throw new SystemError(2004, 'email', 120);
 
-        this.data.email = val;
+        this._data.email = val;
     }
 
     get password(): string {
-        return this.data.password;
+        return this._data.password;
     }
 
     set password(val: string) {
@@ -111,11 +111,11 @@ export class User implements IUser {
         if (!regExp.test(val))
             throw new SystemError(3002, 'password', 6, 20);
 
-        this.data.password = this.hashPassword(val);
+        this._data.password = this.hashPassword(val);
     }
 
     get avatar(): string | undefined {
-        return this.data.avatar;
+        return this._data.avatar;
     }
 
     set avatar(val: string | undefined) {
@@ -128,11 +128,11 @@ export class User implements IUser {
                 throw new SystemError(2004, 'avatar', 200);
         }
 
-        this.data.avatar = val;
+        this._data.avatar = val;
     }
 
     get gender(): GenderType | undefined {
-        return this.data.gender;
+        return this._data.gender;
     }
 
     set gender(val: GenderType | undefined) {
@@ -141,11 +141,11 @@ export class User implements IUser {
                 throw new SystemError(1002, 'gender');
         }
 
-        this.data.gender = val;
+        this._data.gender = val;
     }
 
     get birthday(): Date | undefined {
-        return this.data.birthday;
+        return this._data.birthday;
     }
 
     set birthday(val: Date | undefined) {
@@ -159,11 +159,11 @@ export class User implements IUser {
                 throw new SystemError(1002, 'birthday');
         }
 
-        this.data.birthday = val;
+        this._data.birthday = val;
     }
 
     get phone(): string | undefined {
-        return this.data.phone;
+        return this._data.phone;
     }
 
     set phone(val: string | undefined) {
@@ -176,11 +176,11 @@ export class User implements IUser {
                 throw new SystemError(2004, 'phone', 20);
         }
 
-        this.data.phone = val;
+        this._data.phone = val;
     }
 
     get address(): string | undefined {
-        return this.data.address;
+        return this._data.address;
     }
 
     set address(val: string | undefined) {
@@ -193,11 +193,11 @@ export class User implements IUser {
                 throw new SystemError(2004, 'address', 200);
         }
 
-        this.data.address = val;
+        this._data.address = val;
     }
 
     get culture(): string | undefined {
-        return this.data.culture;
+        return this._data.culture;
     }
 
     set culture(val: string | undefined) {
@@ -210,11 +210,11 @@ export class User implements IUser {
                 throw new SystemError(2001, 'culture', 5);
         }
 
-        this.data.culture = val;
+        this._data.culture = val;
     }
 
     get currency(): string | undefined {
-        return this.data.currency;
+        return this._data.currency;
     }
 
     set currency(val: string | undefined) {
@@ -227,76 +227,76 @@ export class User implements IUser {
                 throw new SystemError(2001, 'currency', 3);
         }
 
-        this.data.currency = val;
+        this._data.currency = val;
     }
 
     get activeKey(): string | undefined {
-        return this.data.activeKey;
+        return this._data.activeKey;
     }
 
     set activeKey(val: string | undefined) {
-        this.data.activeKey = val;
+        this._data.activeKey = val;
     }
 
     get activeExpire(): Date | undefined {
-        return this.data.activeExpire;
+        return this._data.activeExpire;
     }
 
     set activeExpire(val: Date | undefined) {
-        this.data.activeExpire = val;
+        this._data.activeExpire = val;
     }
 
     get activedAt(): Date | undefined {
-        return this.data.activedAt;
+        return this._data.activedAt;
     }
 
     set activedAt(val: Date | undefined) {
-        this.data.activedAt = val;
+        this._data.activedAt = val;
     }
 
     get forgotKey(): string | undefined {
-        return this.data.forgotKey;
+        return this._data.forgotKey;
     }
 
     set forgotKey(val: string | undefined) {
-        this.data.forgotKey = val;
+        this._data.forgotKey = val;
     }
 
     get forgotExpire(): Date | undefined {
-        return this.data.forgotExpire;
+        return this._data.forgotExpire;
     }
 
     set forgotExpire(val: Date | undefined) {
-        this.data.forgotExpire = val;
+        this._data.forgotExpire = val;
     }
 
     /* Relationship */
 
     get role(): Role | undefined {
-        return mapModel(Role, this.data.role);
+        return mapModel(Role, this._data.role);
     }
 
     /* handlers */
 
     toData() {
         const data = {} as IUser;
-        data.roleId = this.data.roleId;
-        data.firstName = this.data.firstName;
-        data.lastName = this.data.lastName;
-        data.email = this.data.email;
-        data.password = this.data.password;
-        data.avatar = this.data.avatar;
-        data.gender = this.data.gender;
-        data.birthday = this.data.birthday;
-        data.phone = this.data.phone;
-        data.address = this.data.address;
-        data.culture = this.data.culture;
-        data.currency = this.data.currency;
-        data.activeKey = this.data.activeKey;
-        data.activeExpire = this.data.activeExpire;
-        data.activedAt = this.data.activedAt;
-        data.forgotKey = this.data.forgotKey;
-        data.forgotExpire = this.data.forgotExpire;
+        data.roleId = this._data.roleId;
+        data.firstName = this._data.firstName;
+        data.lastName = this._data.lastName;
+        data.email = this._data.email;
+        data.password = this._data.password;
+        data.avatar = this._data.avatar;
+        data.gender = this._data.gender;
+        data.birthday = this._data.birthday;
+        data.phone = this._data.phone;
+        data.address = this._data.address;
+        data.culture = this._data.culture;
+        data.currency = this._data.currency;
+        data.activeKey = this._data.activeKey;
+        data.activeExpire = this._data.activeExpire;
+        data.activedAt = this._data.activedAt;
+        data.forgotKey = this._data.forgotKey;
+        data.forgotExpire = this._data.forgotExpire;
         return data;
     }
 
@@ -329,9 +329,9 @@ export class User implements IUser {
      * Use to active/re-active user feature.
      */
     generateActiveKey(): string {
-        this.data.activeKey = crypto.randomBytes(32).toString('hex');
-        this.data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return this.data.activeKey;
+        this._data.activeKey = crypto.randomBytes(32).toString('hex');
+        this._data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+        return this._data.activeKey;
     }
 
     /**
@@ -339,8 +339,8 @@ export class User implements IUser {
      * Use to reset password feature.
      */
     generateForgotKey(): string {
-        this.data.forgotKey = crypto.randomBytes(32).toString('hex');
-        this.data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return this.data.forgotKey;
+        this._data.forgotKey = crypto.randomBytes(32).toString('hex');
+        this._data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+        return this._data.forgotKey;
     }
 }

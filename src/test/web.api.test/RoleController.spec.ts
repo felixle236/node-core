@@ -57,7 +57,9 @@ describe('Role controller testing', () => {
     let server: Server;
     const port = 3000;
     const url = `http://localhost:${port}/api/v1/roles`;
-    const request = requestPromise.defaults({ headers: { 'Content-Type': 'application/json' }, json: true });
+    const headers = {};
+    headers['Content-Type'] = 'application/json';
+    const request = requestPromise.defaults({ headers, json: true });
     let userAuth: UserAuthenticated;
     let list: Role[];
 

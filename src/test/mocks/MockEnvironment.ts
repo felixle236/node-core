@@ -40,7 +40,7 @@ sandbox.stub(process, 'env').value({
 
     MINIO_CONFIG_HOST: '',
     MINIO_CONFIG_PORT: 0,
-    MINIO_USE_SSL: false,
+    IS_USE_SSL_MINIO: false,
     MINIO_ACCESS_KEY: '',
     MINIO_SECRET_KEY: '',
 

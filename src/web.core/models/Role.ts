@@ -6,26 +6,26 @@ import { User } from './User';
 import { mapModels } from '../../libs/common';
 
 export class Role implements IRole {
-    constructor(private data = {} as IRole) { }
+    constructor(private readonly _data = {} as IRole) { }
 
     get id(): number {
-        return this.data.id;
+        return this._data.id;
     }
 
     get createdAt(): Date {
-        return this.data.createdAt;
+        return this._data.createdAt;
     }
 
     get updatedAt(): Date {
-        return this.data.updatedAt;
+        return this._data.updatedAt;
     }
 
     get deletedAt(): Date | undefined {
-        return this.data.deletedAt;
+        return this._data.deletedAt;
     }
 
     get name(): string {
-        return this.data.name;
+        return this._data.name;
     }
 
     set name(val: string) {
@@ -36,11 +36,11 @@ export class Role implements IRole {
         if (val.length > 50)
             throw new SystemError(2004, 'name', 50);
 
-        this.data.name = val;
+        this._data.name = val;
     }
 
     get level(): number {
-        return this.data.level;
+        return this._data.level;
     }
 
     set level(val: number) {
@@ -51,26 +51,26 @@ export class Role implements IRole {
         if (val > 100)
             throw new SystemError(2004, 'level', 100);
 
-        this.data.level = val;
+        this._data.level = val;
     }
 
     /* Relationship */
 
     get users(): User[] | undefined {
-        return this.data.users && mapModels(User, this.data.users);
+        return this._data.users && mapModels(User, this._data.users);
     }
 
     get permissions(): Permission[] | undefined {
-        return this.data.permissions && mapModels(Permission, this.data.permissions);
+        return this._data.permissions && mapModels(Permission, this._data.permissions);
     }
 
     /* handlers */
 
     toData() {
         const data = {} as IRole;
-        data.id = this.data.id;
-        data.name = this.data.name;
-        data.level = this.data.level;
+        data.id = this._data.id;
+        data.name = this._data.name;
+        data.level = this._data.level;
         return data;
     }
 }

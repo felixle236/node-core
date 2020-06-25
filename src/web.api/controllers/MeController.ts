@@ -20,29 +20,29 @@ const avatarUploadOptions = {
 @JsonController('/me')
 export class MeController {
     @Inject('user.business')
-    private readonly userBusiness: IUserBusiness;
+    private readonly _userBusiness: IUserBusiness;
 
     @Get('/')
     @Authorized()
     async getProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<UserResponse | undefined> {
-        return await this.userBusiness.getById(userAuth.id);
+        return await this._userBusiness.getById(userAuth.id);
     }
 
     @Put('/')
     @Authorized()
     async updateProfile(@CurrentUser() userAuth: UserAuthenticated, @Body() data: UserUpdateRequest): Promise<UserResponse | undefined> {
-        return await this.userBusiness.update(userAuth.id, data);
+        return await this._userBusiness.update(userAuth.id, data);
     }
 
     @Patch('/password')
     @Authorized()
     async updatePassword(@CurrentUser() userAuth: UserAuthenticated, @Body() data: UserPasswordUpdateRequest): Promise<boolean> {
-        return await this.userBusiness.updatePassword(userAuth.id, data);
+        return await this._userBusiness.updatePassword(userAuth.id, data);
     }
 
     @Post('/avatar')
     @Authorized()
     async uploadAvatar(@CurrentUser() userAuth: UserAuthenticated, @UploadedFile('avatar', { options: avatarUploadOptions }) file: Express.Multer.File): Promise<string> {
-        return await this.userBusiness.uploadAvatar(userAuth.id, file && file.buffer);
+        return await this._userBusiness.uploadAvatar(userAuth.id, file && file.buffer);
     }
 }

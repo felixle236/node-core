@@ -12,12 +12,12 @@ import { UserEntity } from '../entities/UserEntity';
 import { UserFilterRequest } from '../../../../web.core/dtos/user/requests/UserFilterRequest';
 import { UserSchema } from '../schemas/UserSchema';
 
-@Service('user.repository')
+@Service('user._repository')
 export class UserRepository implements IUserRepository {
-    private readonly repository = getRepository<IUser>(UserEntity);
+    private readonly _repository = getRepository<IUser>(UserEntity);
 
     async find(filter: UserFilterRequest): Promise<[User[], number]> {
-        let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME);
 
         if (filter.level)
@@ -46,7 +46,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async findMembers(filter: MemberFilterRequest): Promise<[User[], number]> {
-        let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
 
@@ -70,7 +70,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async findCommon(filter: UserCommonFilterRequest): Promise<[User[], number]> {
-        let query = this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .select([
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ID}`,
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.FIRST_NAME}`,
@@ -104,7 +104,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async getById(id: number, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
@@ -112,14 +112,14 @@ export class UserRepository implements IUserRepository {
     }
 
     async getByEmail(email: string, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return mapModel(User, user);
     }
 
     async getByUserPassword(email: string, password: string): Promise<User | undefined> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .leftJoinAndSelect(`${RoleSchema.TABLE_NAME}.${RoleSchema.RELATED_MANY.PERMISSIONS}`, PermissionSchema.TABLE_NAME)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
@@ -129,28 +129,28 @@ export class UserRepository implements IUserRepository {
     }
 
     async getByActiveKey(activeKey: string): Promise<User | undefined> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVE_KEY} = :activeKey`, { activeKey })
             .getOne();
         return mapModel(User, user);
     }
 
     async getByForgotKey(forgotKey: string): Promise<User | undefined> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.FORGOT_KEY} = :forgotKey`, { forgotKey })
             .getOne();
         return mapModel(User, user);
     }
 
     async checkEmailExist(email: string): Promise<boolean> {
-        const user = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return !!user;
     }
 
     async create(user: User, queryRunner?: QueryRunner): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .insert()
             .values(user.toData())
             .execute();
@@ -158,7 +158,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async update(id: number, user: User, queryRunner?: QueryRunner): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .update(user.toData())
             .whereInIds(id)
             .execute();
@@ -166,7 +166,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .softDelete()
             .whereInIds(id)
             .execute();

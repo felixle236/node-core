@@ -72,12 +72,12 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
 
     // Initial role default: Super Admin, Common User
 
-    let role = new Role({ id: RoleId.SuperAdmin } as IRole);
+    let role = new Role({ id: RoleId.SUPER_ADMIN } as IRole);
     role.name = 'Super Admin';
     role.level = 1;
     await roleRepository.create(role, queryRunner);
 
-    role = new Role({ id: RoleId.CommonUser } as IRole);
+    role = new Role({ id: RoleId.COMMON_USER } as IRole);
     role.name = 'Common User';
     role.level = 2;
     await roleRepository.create(role, queryRunner);
@@ -85,12 +85,12 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     // Initial user detail: Super Admin
 
     const user = new User();
-    user.roleId = RoleId.SuperAdmin;
+    user.roleId = RoleId.SUPER_ADMIN;
     user.firstName = 'Super';
     user.lastName = 'Admin';
     user.email = 'admin@localhost.com';
     user.password = 'Nodecore@2';
-    user.gender = GenderType.Male;
+    user.gender = GenderType.MALE;
     user.activedAt = new Date();
     await userRepository.create(user, queryRunner);
 
@@ -114,7 +114,7 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
 
     for (let i = 0; i < claims.length; i++) {
         const permission = new Permission();
-        permission.roleId = RoleId.SuperAdmin;
+        permission.roleId = RoleId.SUPER_ADMIN;
         permission.claim = claims[i];
         await permissionRepository.create(permission, queryRunner);
     }
@@ -125,10 +125,11 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
  */
 async function initBucket(): Promise<void> {
     const storageService: IStorageService = new StorageService();
-    const bucketExist = await storageService.checkBucketExist(BUCKET_NAME);
-    if (!bucketExist) {
+    const isExist = await storageService.checkBucketExist(BUCKET_NAME);
+    if (!isExist) {
         await storageService.createBucket(BUCKET_NAME);
 
+        /* eslint-disable */
         const policy = {
             Version: '2012-10-17',
             Statement: [{
@@ -156,6 +157,7 @@ async function initBucket(): Promise<void> {
                 Resource: [`arn:aws:s3:::${BUCKET_NAME}/images/*`]
             }]
         };
+        /* eslint-enable */
         await storageService.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy));
     }
 }

@@ -1,12 +1,12 @@
 import { ResultListResponse } from './ResultListResponse';
 
 export class BaseFilterRequest {
-    private limitDefault = 10;
-    private maxLimitDefault = 30;
+    private readonly _limitDefault = 10;
+    private readonly _maxLimitDefault = 30;
 
     private _skip: number = 0;
-    private _limit: number = this.limitDefault;
-    private _maxLimit: number = this.maxLimitDefault;
+    private _limit: number = this._limitDefault;
+    private _maxLimit: number = this._maxLimitDefault;
 
     get skip(): number {
         return this._skip;
@@ -37,11 +37,11 @@ export class BaseFilterRequest {
             if (!isNaN(val))
                 val = Number(val);
             else
-                val = this.limitDefault;
+                val = this._limitDefault;
         }
 
         if (val < 1)
-            val = this.limitDefault;
+            val = this._limitDefault;
 
         this._limit = val;
     }
@@ -51,11 +51,11 @@ export class BaseFilterRequest {
             if (!isNaN(val))
                 val = Number(val);
             else
-                val = this.maxLimitDefault;
+                val = this._maxLimitDefault;
         }
 
         if (val < 1)
-            val = this.maxLimitDefault;
+            val = this._maxLimitDefault;
 
         this._maxLimit = val;
     }

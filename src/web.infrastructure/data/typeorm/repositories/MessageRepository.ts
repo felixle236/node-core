@@ -11,10 +11,10 @@ import { getRepository } from 'typeorm';
 
 @Service('message.repository')
 export class MessageRepository implements IMessageRepository {
-    private readonly repository = getRepository<IMessage>(MessageEntity);
+    private readonly _repository = getRepository<IMessage>(MessageEntity);
 
     async find(filter: MessageFilterRequest): Promise<[Message[], number]> {
-        let query = this.repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .andWhere(`${MessageSchema.TABLE_NAME}.${MessageSchema.COLUMNS.ROOM} = :room`, { room: filter.room });
 
         if (filter.keyword) {
@@ -31,14 +31,14 @@ export class MessageRepository implements IMessageRepository {
     }
 
     async getById(id: number): Promise<Message | undefined> {
-        const message = await this.repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        const message = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
         return mapModel(Message, message);
     }
 
     async create(message: Message): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .insert()
             .values(message.toData())
             .execute();
@@ -46,7 +46,7 @@ export class MessageRepository implements IMessageRepository {
     }
 
     async update(id: number, message: Message): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .update(message.toData())
             .whereInIds(id)
             .execute();
@@ -54,7 +54,7 @@ export class MessageRepository implements IMessageRepository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .delete()
             .whereInIds(id)
             .execute();

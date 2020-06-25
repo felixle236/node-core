@@ -15,41 +15,41 @@ import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateR
 @JsonController('/users')
 export class UserController {
     @Inject('user.business')
-    private readonly userBusiness: IUserBusiness;
+    private readonly _userBusiness: IUserBusiness;
 
     @Get('/')
     @Authorized(UserClaim.GET)
     async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserFilterRequest): Promise<ResultListResponse<UserResponse>> {
-        return await this.userBusiness.find(filter, userAuth);
+        return await this._userBusiness.find(filter, userAuth);
     }
 
     @Get('/common')
     @Authorized(UserClaim.GET)
     async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserCommonFilterRequest): Promise<ResultListResponse<UserCommonResponse>> {
-        return await this.userBusiness.findCommon(filter, userAuth);
+        return await this._userBusiness.findCommon(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized(UserClaim.GET)
     async getById(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<UserResponse | undefined> {
-        return await this.userBusiness.getById(id, userAuth);
+        return await this._userBusiness.getById(id, userAuth);
     }
 
     @Post('/')
     @Authorized(UserClaim.CREATE)
     async create(@CurrentUser() userAuth: UserAuthenticated, @Body() data: UserCreateRequest): Promise<UserResponse | undefined> {
-        return await this.userBusiness.create(data, userAuth);
+        return await this._userBusiness.create(data, userAuth);
     }
 
     @Put('/:id([0-9]+)')
     @Authorized(UserClaim.UPDATE)
     async update(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number, @Body() data: UserUpdateRequest): Promise<UserResponse | undefined> {
-        return await this.userBusiness.update(id, data, userAuth);
+        return await this._userBusiness.update(id, data, userAuth);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized(UserClaim.DELETE)
     async delete(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this.userBusiness.delete(id, userAuth);
+        return await this._userBusiness.delete(id, userAuth);
     }
 }

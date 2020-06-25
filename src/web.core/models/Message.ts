@@ -5,22 +5,22 @@ import { User } from './User';
 import { mapModel } from '../../libs/common';
 
 export class Message implements IMessage {
-    constructor(private data = {} as IMessage) { }
+    constructor(private readonly _data = {} as IMessage) { }
 
     get id(): number {
-        return this.data.id;
+        return this._data.id;
     }
 
     get createdAt(): Date {
-        return this.data.createdAt;
+        return this._data.createdAt;
     }
 
     get updatedAt(): Date {
-        return this.data.updatedAt;
+        return this._data.updatedAt;
     }
 
     get senderId(): number {
-        return this.data.senderId;
+        return this._data.senderId;
     }
 
     set senderId(val: number) {
@@ -28,12 +28,12 @@ export class Message implements IMessage {
             throw new SystemError(1001, 'sender id');
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'sender id');
-        this.data.senderId = val;
-        this.updateRoom();
+        this._data.senderId = val;
+        this._updateRoom();
     }
 
     get receiverId(): number | undefined {
-        return this.data.receiverId;
+        return this._data.receiverId;
     }
 
     set receiverId(val: number | undefined) {
@@ -42,12 +42,12 @@ export class Message implements IMessage {
                 throw new SystemError(1002, 'receiver id');
         }
 
-        this.data.receiverId = val;
-        this.updateRoom();
+        this._data.receiverId = val;
+        this._updateRoom();
     }
 
     get room(): number {
-        return this.data.room;
+        return this._data.room;
     }
 
     set room(val: number) {
@@ -58,13 +58,13 @@ export class Message implements IMessage {
         if (val !== 0)
             throw new SystemError(1004, 'room');
 
-        if (this.data.receiverId)
-            this.data.receiverId = undefined;
-        this.data.room = val;
+        if (this._data.receiverId)
+            this._data.receiverId = undefined;
+        this._data.room = val;
     }
 
     get content(): string {
-        return this.data.content;
+        return this._data.content;
     }
 
     set content(val: string) {
@@ -75,43 +75,43 @@ export class Message implements IMessage {
         if (val.length > 2000)
             throw new SystemError(2004, 'content', 2000);
 
-        this.data.content = val;
+        this._data.content = val;
     }
 
     /* Relationship */
 
     get sender(): User | undefined {
-        return mapModel(User, this.data.sender);
+        return mapModel(User, this._data.sender);
     }
 
     get receiver(): User | undefined {
-        return mapModel(User, this.data.receiver);
+        return mapModel(User, this._data.receiver);
     }
 
     /* handlers */
 
     toData() {
         const data = {} as IMessage;
-        data.senderId = this.data.senderId;
-        data.receiverId = this.data.receiverId;
-        data.room = this.data.room;
-        data.content = this.data.content;
+        data.senderId = this._data.senderId;
+        data.receiverId = this._data.receiverId;
+        data.room = this._data.room;
+        data.content = this._data.content;
         return data;
     }
 
-    private updateRoom() {
-        if (this.data.senderId && this.data.receiverId)
-            this.data.room = Message.generateRoom(this.data.senderId, this.data.receiverId);
+    private _updateRoom() {
+        if (this._data.senderId && this._data.receiverId)
+            this._data.room = Message.generateRoom(this._data.senderId, this._data.receiverId);
     }
 
     static generateRoom(senderId: number, receiverId: number): number {
         if (senderId > receiverId)
-            return Number(this.generateId(senderId) + this.generateId(receiverId));
+            return Number(this._generateId(senderId) + this._generateId(receiverId));
         else
-            return Number(this.generateId(receiverId) + this.generateId(senderId));
+            return Number(this._generateId(receiverId) + this._generateId(senderId));
     }
 
-    private static generateId(num: number): string {
+    private static _generateId(num: number): string {
         if (num.toString().length >= 4)
             return num.toString();
         return (num * Number('1'.padEnd(5 - num.toString().length, '0'))).toString();

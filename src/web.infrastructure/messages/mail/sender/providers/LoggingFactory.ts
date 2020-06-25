@@ -1,8 +1,7 @@
+import { ENABLE_DATA_LOGGING } from '../../../../../constants/Environments';
 import { IMailSender } from '../interfaces/IMailSender';
 
 export class LoggingFactory implements IMailSender {
-    constructor(private dataLogging: boolean) { }
-
     send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {
         const data = {
             senderEmail,
@@ -11,7 +10,7 @@ export class LoggingFactory implements IMailSender {
             subject,
             content
         };
-        if (this.dataLogging) console.log('MailSender.send', senderEmail, senderName, emails, subject);
+        if (ENABLE_DATA_LOGGING) console.log('MailSender.send', senderEmail, senderName, emails, subject);
         return Promise.resolve(data);
     }
 
@@ -23,7 +22,7 @@ export class LoggingFactory implements IMailSender {
             subject,
             htmlContent
         };
-        if (this.dataLogging) console.log('MailSender.sendHtml', senderEmail, senderName, emails, subject);
+        if (ENABLE_DATA_LOGGING) console.log('MailSender.sendHtml', senderEmail, senderName, emails, subject);
         return Promise.resolve(data);
     }
 }
