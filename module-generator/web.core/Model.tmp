@@ -1,34 +1,32 @@
-import { Container } from 'typedi';
+import * as validator from 'class-validator';
 import { I{PascalName} } from '../interfaces/models/I{PascalName}';
 import { SystemError } from '../dtos/common/Exception';
-import { Validator } from 'class-validator';
-const validator = Container.get(Validator);
 
 export class {PascalName} implements I{PascalName} {
-    constructor(private data = {} as I{PascalName}) { }
+    constructor(private readonly _data = {} as I{PascalName}) { }
 
     get id(): number {
-        return this.data.id;
+        return this._data.id;
     }
 
     get createdAt(): Date {
-        return this.data.createdAt;
+        return this._data.createdAt;
     }
 
     get updatedAt(): Date {
-        return this.data.updatedAt;
+        return this._data.updatedAt;
     }
 
     get deletedAt(): Date | undefined {
-        return this.data.deletedAt;
+        return this._data.deletedAt;
     }
 
     set deletedAt(val: Date | undefined) {
-        this.data.deletedAt = val;
+        this._data.deletedAt = val;
     }
 
     get name(): string {
-        return this.data.name;
+        return this._data.name;
     }
 
     set name(val: string) {
@@ -39,15 +37,15 @@ export class {PascalName} implements I{PascalName} {
         if (val.length > 50)
             throw new SystemError(2004, 'name', 50);
 
-        this.data.name = val;
+        this._data.name = val;
     }
 
     /* handlers */
 
     toData() {
         const data = {} as I{PascalName};
-        data.name = this.data.name;
-        data.deletedAt = this.data.deletedAt;
+        data.name = this._data.name;
+        data.deletedAt = this._data.deletedAt;
         return data;
     }
 }

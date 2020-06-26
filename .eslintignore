@@ -1,2 +1,2 @@
 src/web/**/*.js
-src/**/module-generator.js
+module-generator/generate.js

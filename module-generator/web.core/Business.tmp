@@ -13,15 +13,15 @@ import { SystemError } from '../dtos/common/Exception';
 @Service('{camelName}.business')
 export class {PascalName}Business implements I{PascalName}Business {
     @Inject('{camelName}.repository')
-    private readonly {camelName}Repository: I{PascalName}Repository;
+    private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async find(filter: {PascalName}FilterRequest): Promise<ResultListResponse<{PascalName}Response>> {
-        const [list, count] = await this.{camelName}Repository.find(filter);
+        const [list, count] = await this._{camelName}Repository.find(filter);
         return filter.toResultList(mapModels({PascalName}Response, list), count);
     }
 
     async getById(id: number): Promise<{PascalName}Response | undefined> {
-        const {camelName} = await this.{camelName}Repository.getById(id);
+        const {camelName} = await this._{camelName}Repository.getById(id);
         return mapModel({PascalName}Response, {camelName});
     }
 
@@ -29,40 +29,40 @@ export class {PascalName}Business implements I{PascalName}Business {
         const {camelName} = new {PascalName}();
         {camelName}.name = data.name;
 
-        if (await this.{camelName}Repository.checkNameExist({camelName}.name))
+        if (await this._{camelName}Repository.checkNameExist({camelName}.name))
             throw new SystemError(1005, 'name');
 
-        const id = await this.{camelName}Repository.create({camelName});
+        const id = await this._{camelName}Repository.create({camelName});
         if (!id)
             throw new SystemError(5);
 
-        const newData = await this.{camelName}Repository.getById(id);
+        const newData = await this._{camelName}Repository.getById(id);
         return mapModel({PascalName}Response, newData);
     }
 
     async update(id: number, data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined > {
-        const {camelName} = await this.{camelName}Repository.getById(id);
+        const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
             throw new SystemError(1004, '{camelName}');
 
         {camelName}.name = data.name;
 
-        if (await this.{camelName}Repository.checkNameExist({camelName}.name, id))
+        if (await this._{camelName}Repository.checkNameExist({camelName}.name, id))
             throw new SystemError(1005, 'name');
 
-        const result = await this.{camelName}Repository.update(id, {camelName});
-        if (!result)
+        const hasSucceed = await this._{camelName}Repository.update(id, {camelName});
+        if (!hasSucceed)
             throw new SystemError(5);
 
-        const newData = await this.{camelName}Repository.getById(id);
+        const newData = await this._{camelName}Repository.getById(id);
         return mapModel({PascalName}Response, newData);
     }
 
     async delete(id: number): Promise<boolean> {
-        const {camelName} = await this.{camelName}Repository.getById(id);
+        const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
             throw new SystemError(1004, '{camelName}');
 
-        return await this.{camelName}Repository.delete(id);
+        return await this._{camelName}Repository.delete(id);
     }
 }

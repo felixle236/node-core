@@ -61,6 +61,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |-- coverage ---------------------------------// Data report for testing coverage.
 - |-- dist -------------------------------------// Built from the src directory.
 - |-- logs -------------------------------------// Write logs.
+- |-- module-generator -------------------------// Source templates for creating new module.
 - |-- node_modules
 - |-- src --------------------------------------// Source of development.
 - |------ constants
@@ -73,7 +74,6 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------------ documents -----------------------// Document files (doc, docx, xls, xlsx, pdf,...).
 - |------------ images --------------------------// Image files (jpg, jpeg, png, gif,...).
 - |------------ sample-data ---------------------// Initialize sample data.
-- |------------ source-templates ----------------// Source templates for generate module.
 - |------ test ----------------------------------// Source testing.
 - |------ web
 - |------------ controllers ---------------------// Navigate for requests.
@@ -234,7 +234,7 @@ npm test
 ### Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- If you want to create module Customer, you can execute: `npm run generate:module Customer`. It will generate, model entity, schema, dtos, repository, business, controller, permission resource,....
+- If you want to create module Customer, you can execute: `npm run generate:module Customer`. It will generate model, entity, schema, dtos, repository, business, controller, permission resource,....
 
 ### Configuration
 

@@ -12,35 +12,35 @@ import { ResultListResponse } from '../../web.core/dtos/common/ResultListRespons
 @JsonController('/{camelName}s')
 export class {PascalName}Controller {
     @Inject('{camelName}.business')
-    private readonly {camelName}Business: I{PascalName}Business;
+    private readonly _{camelName}Business: I{PascalName}Business;
 
     @Get('/')
     @Authorized({PascalName}Claim.GET)
     async find(@QueryParams() filter: {PascalName}FilterRequest): Promise<ResultListResponse<{PascalName}Response>> {
-        return await this.{camelName}Business.find(filter);
+        return await this._{camelName}Business.find(filter);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized({PascalName}Claim.GET)
     async getById(@Param('id') id: number): Promise<{PascalName}Response | undefined> {
-        return await this.{camelName}Business.getById(id);
+        return await this._{camelName}Business.getById(id);
     }
 
     @Post('/')
     @Authorized({PascalName}Claim.CREATE)
     async create(@Body() data: {PascalName}CreateRequest): Promise<{PascalName}Response | undefined> {
-        return await this.{camelName}Business.create(data);
+        return await this._{camelName}Business.create(data);
     }
 
     @Put('/:id([0-9]+)')
     @Authorized({PascalName}Claim.UPDATE)
     async update(@Param('id') id: number, @Body() data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined> {
-        return await this.{camelName}Business.update(id, data);
+        return await this._{camelName}Business.update(id, data);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized({PascalName}Claim.DELETE)
     async delete(@Param('id') id: number): Promise<boolean> {
-        return await this.{camelName}Business.delete(id);
+        return await this._{camelName}Business.delete(id);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "node-core",
-    "version": "1.1.0",
+    "version": "1.1.2",
     "description": "The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.",
     "license": "Felix Le",
     "readmeFilename": "README.md",
@@ -9,7 +9,7 @@
         "migration:generate": "NODE_ENV=development ./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:generate -n",
         "migration:run": "NODE_ENV=development ./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:run",
         "migration:revert": "NODE_ENV=development ./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:revert",
-        "generate:module": "NODE_ENV=development node ./src/resources/source-templates/module-generator.js",
+        "generate:module": "NODE_ENV=development node ./module-generator/generate.js",
         "generate:claim": "NODE_ENV=development ./node_modules/.bin/grunt exec:generate_claim",
         "lint": "./node_modules/.bin/eslint --ext .ts --ext .js ./src",
         "build": "npm run lint && ./node_modules/.bin/grunt clean && ./node_modules/.bin/grunt sync && ./node_modules/.bin/tsc",
@@ -38,7 +38,7 @@
         "clean architecture"
     ],
     "dependencies": {
-        "aws-sdk": "^2.704.0",
+        "aws-sdk": "^2.705.0",
         "body-parser": "^1.19.0",
         "child-process-promise": "^2.2.1",
         "class-validator": "^0.12.2",

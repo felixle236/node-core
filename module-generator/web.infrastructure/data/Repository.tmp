@@ -11,10 +11,10 @@ import { getRepository } from 'typeorm';
 
 @Service('{camelName}.repository')
 export class {PascalName}Repository implements I{PascalName}Repository {
-    private readonly repository = getRepository<I{PascalName}>({PascalName}Entity);
+    private readonly _repository = getRepository<I{PascalName}>({PascalName}Entity);
 
     async find(filter: {PascalName}FilterRequest): Promise<[{PascalName}[], number]> {
-        let query = this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .where(`${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.DELETED_AT} IS ${filter.isDeleted ? 'NOT' : ''} NULL`);
 
         if (filter.keyword) {
@@ -32,14 +32,14 @@ export class {PascalName}Repository implements I{PascalName}Repository {
     }
 
     async getById(id: number): Promise<{PascalName} | undefined> {
-        const data = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        const data = await this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
         return mapModel({PascalName}, data);
     }
 
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
-        let query = this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        let query = this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .where(`lower(${{PascalName}Schema.TABLE_NAME}.${{PascalName}Schema.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
@@ -50,7 +50,7 @@ export class {PascalName}Repository implements I{PascalName}Repository {
     }
 
     async create({camelName}: {PascalName}): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .insert()
             .values({camelName}.toData())
             .execute();
@@ -58,7 +58,7 @@ export class {PascalName}Repository implements I{PascalName}Repository {
     }
 
     async update(id: number, {camelName}: {PascalName}): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .update({camelName}.toData())
             .whereInIds(id)
             .execute();
@@ -66,7 +66,7 @@ export class {PascalName}Repository implements I{PascalName}Repository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder({PascalName}Schema.TABLE_NAME)
             .softDelete()
             .whereInIds(id)
             .execute();
