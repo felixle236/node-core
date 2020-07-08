@@ -24,7 +24,6 @@ const generateUserAuth = () => {
     userAuth.id = 1;
     userAuth.role = new Role({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
-    userAuth.claims = [];
     return userAuth;
 };
 

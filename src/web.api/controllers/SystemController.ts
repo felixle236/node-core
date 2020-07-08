@@ -3,7 +3,7 @@ import { Authorized, ContentType, Get, JsonController, Post, Res } from 'routing
 import { Inject, Service } from 'typedi';
 import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
 import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
-import { SystemClaim } from '../../constants/claims/SystemClaim';
+import { RoleId } from '../../constants/Enums';
 import { readFile } from '../../libs/file';
 
 @Service()
@@ -13,7 +13,7 @@ export class SystemController {
     private readonly _userBusiness: IUserBusiness;
 
     @Post('/sample-data')
-    @Authorized(SystemClaim.INIT_DATA)
+    @Authorized(RoleId.SUPER_ADMIN)
     async createSampleData(): Promise<BulkActionResponse> {
         return await this._userBusiness.createSampleData();
     }

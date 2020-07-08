@@ -1,6 +1,5 @@
 import { Authorized, Body, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { {PascalName}Claim } from '../../constants/claims/{PascalName}Claim';
 import { {PascalName}CreateRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}CreateRequest';
 import { {PascalName}FilterRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}FilterRequest';
 import { {PascalName}Response } from '../../web.core/dtos/{camelName}/responses/{PascalName}Response';
@@ -15,31 +14,31 @@ export class {PascalName}Controller {
     private readonly _{camelName}Business: I{PascalName}Business;
 
     @Get('/')
-    @Authorized({PascalName}Claim.GET)
+    @Authorized()
     async find(@QueryParams() filter: {PascalName}FilterRequest): Promise<ResultListResponse<{PascalName}Response>> {
         return await this._{camelName}Business.find(filter);
     }
 
     @Get('/:id([0-9]+)')
-    @Authorized({PascalName}Claim.GET)
+    @Authorized()
     async getById(@Param('id') id: number): Promise<{PascalName}Response | undefined> {
         return await this._{camelName}Business.getById(id);
     }
 
     @Post('/')
-    @Authorized({PascalName}Claim.CREATE)
+    @Authorized()
     async create(@Body() data: {PascalName}CreateRequest): Promise<{PascalName}Response | undefined> {
         return await this._{camelName}Business.create(data);
     }
 
     @Put('/:id([0-9]+)')
-    @Authorized({PascalName}Claim.UPDATE)
+    @Authorized()
     async update(@Param('id') id: number, @Body() data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined> {
         return await this._{camelName}Business.update(id, data);
     }
 
     @Delete('/:id([0-9]+)')
-    @Authorized({PascalName}Claim.DELETE)
+    @Authorized()
     async delete(@Param('id') id: number): Promise<boolean> {
         return await this._{camelName}Business.delete(id);
     }

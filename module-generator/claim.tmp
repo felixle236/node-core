@@ -1,6 +1,0 @@
-export class {PascalName}Claim {
-    static GET = {value};
-    static CREATE = {value};
-    static UPDATE = {value};
-    static DELETE = {value};
-}

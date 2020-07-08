@@ -7,6 +7,7 @@ export class UserSchema {
         UPDATED_AT: 'updated_at',
         DELETED_AT: 'deleted_at',
         ROLE_ID: 'role_id',
+        STATUS: 'status',
         FIRST_NAME: 'first_name',
         LAST_NAME: 'last_name',
         EMAIL: 'email',
@@ -21,6 +22,7 @@ export class UserSchema {
         ACTIVE_KEY: 'active_key',
         ACTIVE_EXPIRE: 'active_expire',
         ACTIVED_AT: 'actived_at',
+        ARCHIVED_AT: 'archived_at',
         FORGOT_KEY: 'forgot_key',
         FORGOT_EXPIRE: 'forgot_expire'
     };

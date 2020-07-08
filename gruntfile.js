@@ -6,9 +6,6 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: ['dist'],
-        exec: {
-            generate_claim: `echo "\n\n===============================- \x1b[32mClaim Number: ${Math.floor(Math.random() * 100000000 * 6)}\x1b[0m -==============================="`
-        },
         sync: {
             main: {
                 files: [{

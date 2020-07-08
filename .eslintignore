@@ -1,2 +1,3 @@
+gruntfile.js
 src/web/**/*.js
 module-generator/generate.js

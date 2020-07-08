@@ -1,6 +1,7 @@
 import * as validator from 'class-validator';
 import { IRole } from '../interfaces/models/IRole';
-import { Permission } from './Permission';
+import { RoleCreateData } from '../dtos/role/data/RoleCreateData';
+import { RoleUpdateData } from '../dtos/role/data/RoleUpdateData';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from './User';
 import { mapModels } from '../../libs/common';
@@ -60,15 +61,18 @@ export class Role implements IRole {
         return this._data.users && mapModels(User, this._data.users);
     }
 
-    get permissions(): Permission[] | undefined {
-        return this._data.permissions && mapModels(Permission, this._data.permissions);
-    }
-
     /* handlers */
 
-    toData() {
-        const data = {} as IRole;
+    toCreateData() {
+        const data = new RoleCreateData();
         data.id = this._data.id;
+        data.name = this._data.name;
+        data.level = this._data.level;
+        return data;
+    }
+
+    toUpdateData() {
+        const data = new RoleUpdateData();
         data.name = this._data.name;
         data.level = this._data.level;
         return data;

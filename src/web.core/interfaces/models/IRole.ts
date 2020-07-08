@@ -1,4 +1,3 @@
-import { IPermission } from './IPermission';
 import { IUser } from './IUser';
 
 export interface IRole {
@@ -10,5 +9,4 @@ export interface IRole {
     level: number;
 
     users?: IUser[];
-    permissions?: IPermission[];
 }

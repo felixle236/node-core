@@ -1,4 +1,4 @@
-import { GenderType } from '../../../constants/Enums';
+import { GenderType, UserStatus } from '../../../constants/Enums';
 import { IRole } from './IRole';
 
 export interface IUser {
@@ -7,6 +7,7 @@ export interface IUser {
     updatedAt: Date;
     deletedAt?: Date;
     roleId: number;
+    status: UserStatus;
     firstName: string;
     lastName?: string;
     email: string;
@@ -21,6 +22,7 @@ export interface IUser {
     activeKey?: string;
     activeExpire?: Date;
     activedAt?: Date;
+    archivedAt?: Date;
     forgotKey?: string;
     forgotExpire?: Date;
 

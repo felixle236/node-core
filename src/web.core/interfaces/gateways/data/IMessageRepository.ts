@@ -1,4 +1,5 @@
 import { Message } from '../../../models/Message';
+import { MessageCreateData } from '../../../dtos/message/data/MessageCreateData';
 import { MessageFilterRequest } from '../../../dtos/message/requests/MessageFilterRequest';
 
 export interface IMessageRepository {
@@ -6,9 +7,5 @@ export interface IMessageRepository {
 
     getById(id: number): Promise<Message | undefined>;
 
-    create(message: Message): Promise<number | undefined>;
-
-    update(id: number, message: Message): Promise<boolean>;
-
-    delete(id: number): Promise<boolean>;
+    create(message: MessageCreateData): Promise<number | undefined>;
 }

@@ -32,9 +32,9 @@ const generateUsers = () => {
 
 const generateMessages = () => {
     return [
-        new Message({ id: 1, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0].toData(), receiverId: generateUsers()[1].id, receiver: generateUsers()[1].toData(), content: 'Content 1' } as IMessage),
-        new Message({ id: 2, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0].toData(), receiverId: generateUsers()[1].id, receiver: generateUsers()[1].toData(), content: 'Content 2' } as IMessage),
-        new Message({ id: 3, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0].toData(), receiverId: generateUsers()[1].id, receiver: generateUsers()[1].toData(), content: 'Content 3' } as IMessage)
+        new Message({ id: 1, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0] as IUser, receiverId: generateUsers()[1].id, receiver: generateUsers()[1] as IUser, content: 'Content 1' } as IMessage),
+        new Message({ id: 2, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0] as IUser, receiverId: generateUsers()[1].id, receiver: generateUsers()[1] as IUser, content: 'Content 2' } as IMessage),
+        new Message({ id: 3, createdAt: new Date(), updatedAt: new Date(), senderId: generateUsers()[0].id, sender: generateUsers()[0] as IUser, receiverId: generateUsers()[1].id, receiver: generateUsers()[1] as IUser, content: 'Content 3' } as IMessage)
     ];
 };
 
@@ -42,7 +42,6 @@ const generateUserAuth = (user: User) => {
     const userAuth = new UserAuthenticated();
     userAuth.id = user.id;
     userAuth.role = user.role!;
-    userAuth.claims = [1, 2, 3];
     userAuth.accessToken = 'token';
     return userAuth;
 };

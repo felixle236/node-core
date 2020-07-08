@@ -76,7 +76,7 @@ export class MessageBusiness implements IMessageBusiness {
     }
 
     async findMembers(socket: ISocket, filter: MemberFilterRequest): Promise<ResultListResponse<MemberResponse>> {
-        filter.level = socket.userAuth.role.level;
+        filter.userAuth = socket.userAuth;
         const [users, count] = await this._userRepository.findMembers(filter);
         const members = mapModels(MemberResponse, users);
 
@@ -103,7 +103,8 @@ export class MessageBusiness implements IMessageBusiness {
         message.receiverId = data.receiverId;
         message.content = data.content;
 
-        const id = await this._messageRepository.create(message);
+        const createData = message.toCreateData();
+        const id = await this._messageRepository.create(createData);
         if (!id)
             throw new SystemError(5);
 
@@ -120,7 +121,8 @@ export class MessageBusiness implements IMessageBusiness {
         message.room = data.room;
         message.content = data.content;
 
-        const id = await this._messageRepository.create(message);
+        const createData = message.toCreateData();
+        const id = await this._messageRepository.create(createData);
         if (!id)
             throw new SystemError(5);
 

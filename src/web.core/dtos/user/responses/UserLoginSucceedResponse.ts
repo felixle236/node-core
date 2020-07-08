@@ -1,7 +1,7 @@
 import { User } from '../../../models/User';
 import { UserResponse } from './UserResponse';
 
-export class UserSigninSucceedResponse {
+export class UserLoginSucceedResponse {
     profile: UserResponse;
     accessToken: string;
 

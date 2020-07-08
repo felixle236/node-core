@@ -2,12 +2,13 @@ import 'mocha';
 import '../mocks';
 import '../../ModuleRegister';
 import * as path from 'path';
+import { GenderType, UserStatus } from '../../constants/Enums';
 import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
 import { Container } from 'typedi';
-import { GenderType } from '../../constants/Enums';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { IUser } from '../../web.core/interfaces/models/IUser';
 import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
+import { MailService } from '../../web.infrastructure/messages/mail/MailService';
 import { Role } from '../../web.core/models/Role';
 import { RoleRepository } from '../../web.infrastructure/data/typeorm/repositories/RoleRepository';
 import { StorageService } from '../../web.infrastructure/medias/storage/StorageService';
@@ -18,8 +19,10 @@ import { UserCommonFilterRequest } from '../../web.core/dtos/user/requests/UserC
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
 import { UserPasswordUpdateRequest } from '../../web.core/dtos/user/requests/UserPasswordUpdateRequest';
+import { UserRegisterRequest } from '../../web.core/dtos/user/requests/UserRegisterRequest';
 import { UserRepository } from '../../web.infrastructure/data/typeorm/repositories/UserRepository';
 import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
+import { addSeconds } from '../../libs/date';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 import { readFile } from '../../libs/file';
@@ -30,9 +33,9 @@ const generateRole = () => {
 
 const generateUsers = () => {
     return [
-        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
-        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
-        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
+        new User({ id: 1, createdAt: new Date(), updatedAt: new Date(), roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, status: UserStatus.ACTIVED, firstName: 'Test', lastName: '1', email: 'test.1@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-1-icon.png' } as IUser),
+        new User({ id: 2, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, status: UserStatus.ACTIVED, firstName: 'Test', lastName: '2', email: 'test.2@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-2-icon.png' } as IUser),
+        new User({ id: 3, createdAt: new Date(), updatedAt: new Date(), roleId: 2, role: { id: 2, name: 'Role 2', level: 2 } as IRole, status: UserStatus.ACTIVED, firstName: 'Test', lastName: '3', email: 'test.3@localhost.com', gender: GenderType.MALE, birthday: new Date(), avatar: '../../resources/images/test-3-icon.png' } as IUser)
     ];
 };
 
@@ -67,15 +70,23 @@ const generateUserUpdate = () => {
     return userUpdate;
 };
 
+const generateUserRegister = () => {
+    const userRegister = new UserRegisterRequest();
+    userRegister.firstName = 'Test';
+    userRegister.lastName = 'Local';
+    userRegister.email = 'test@localhost.com';
+    userRegister.password = 'Nodecore@2';
+
+    return userRegister;
+};
+
 describe('User business testing', () => {
     const sandbox = createSandbox();
     const userBusiness = Container.get<IUserBusiness>('user.business');
     let list: User[];
-    let sampleList: any[];
 
     beforeEach(() => {
         list = generateUsers();
-        sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
     });
 
     afterEach(() => {
@@ -661,6 +672,340 @@ describe('User business testing', () => {
         expect(result).to.eq('/path/file.png');
     });
 
+    it('Register without first name', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.firstName = '';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1001, 'first name').message);
+        });
+    });
+
+    it('Register with an invalid first name', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.firstName = 123 as any;
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1002, 'first name').message);
+        });
+    });
+
+    it('Register with first name length greater than 20 characters', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.firstName = 'This is the first name with length greater than 20 characters!';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(2004, 'first name', 20).message);
+        });
+    });
+
+    it('Register with an invalid last name', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.lastName = 123 as any;
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1002, 'last name').message);
+        });
+    });
+
+    it('Register with last name length greater than 20 characters', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.lastName = 'This is the last name with length greater than 20 characters!';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(2004, 'last name', 20).message);
+        });
+    });
+
+    it('Register without email', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.email = '';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1001, 'email').message);
+        });
+    });
+
+    it('Register with an invalid email', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.email = 'test@';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+        });
+    });
+
+    it('Register with email length greater than 120 characters', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.email = 'test.localhost.test.localhost.test.localhost.localhost.localhost@test-asdfaasdfasfdgsgdsfasdfaasdfasfdgsgdsf-localhost.com';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(2004, 'email', 120).message);
+        });
+    });
+
+    it('Register without password', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.password = '';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1001, 'password').message);
+        });
+    });
+
+    it('Register with password length greater than 20 characters', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.password = 'This is the password with length greater than 20 characters!';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(2004, 'password', 20).message);
+        });
+    });
+
+    it('Register with password is not secure', async () => {
+        const userRegister = generateUserRegister();
+        userRegister.password = '123456';
+
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(3002, 'password', 6, 20).message);
+        });
+    });
+
+    it('Register with email has exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'checkEmailExist').resolves(true);
+
+        const userRegister = generateUserRegister();
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1005, 'email').message);
+        });
+    });
+
+    it('Register with role not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'checkEmailExist').resolves(false);
+        sandbox.stub(RoleRepository.prototype, 'getById').resolves(undefined);
+
+        const userRegister = generateUserRegister();
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1004, 'role').message);
+        });
+    });
+
+    it('Register with cannot save error', async () => {
+        const role = generateRole();
+        sandbox.stub(UserRepository.prototype, 'checkEmailExist').resolves(false);
+        sandbox.stub(RoleRepository.prototype, 'getById').resolves(role);
+        sandbox.stub(UserRepository.prototype, 'create').resolves();
+
+        const userRegister = generateUserRegister();
+        await userBusiness.register(userRegister).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(5).message);
+        });
+    });
+
+    it('Register successfully', async () => {
+        const user = list[0];
+        const role = generateRole();
+        sandbox.stub(UserRepository.prototype, 'checkEmailExist').resolves(false);
+        sandbox.stub(RoleRepository.prototype, 'getById').resolves(role);
+        sandbox.stub(UserRepository.prototype, 'create').resolves(user.id);
+        sandbox.stub(UserRepository.prototype, 'getById').resolves(user);
+        sandbox.stub(MailService.prototype, 'sendUserActivation').resolves();
+
+        const userRegister = generateUserRegister();
+        const result = await userBusiness.register(userRegister);
+        expect(result && result.id === user.id).to.eq(true);
+    });
+
+    it('Active account without active key', async () => {
+        await userBusiness.active('').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Active account with active key is not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(undefined);
+
+        await userBusiness.active('node-core').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1004, 'activation key').message);
+        });
+    });
+
+    it('Active account with account has actived already', async () => {
+        const item = list[0];
+        sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(item);
+
+        await userBusiness.active('node-core').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Active account with active key has expired', async () => {
+        const item = new User({ id: 1, roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, status: UserStatus.INACTIVE, activeKey: 'key', activeExpire: addSeconds(new Date(), -100), firstName: 'Test', lastName: '1', email: 'test.1@localhost.com' } as IUser);
+        sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(item);
+
+        await userBusiness.active('node-core').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1008, 'activation key').message);
+        });
+    });
+
+    it('Active account successfully', async () => {
+        const item = list[0];
+        item.status = UserStatus.INACTIVE;
+        item.createActiveKey();
+        sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(item);
+        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+
+        const hasSucceed = await userBusiness.active('node-core');
+        expect(hasSucceed).to.eq(true);
+    });
+
+    it('Re-send activation with an invalid email', async () => {
+        await userBusiness.resendActivation('test@localhost').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+        });
+    });
+
+    it('Re-send activation with email is not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(undefined);
+
+        await userBusiness.resendActivation('test@localhost.com').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Re-send activation with account has actived already', async () => {
+        const item = list[0];
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(item);
+
+        await userBusiness.resendActivation('test@localhost.com').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Re-send activation successfully', async () => {
+        const item = list[0];
+        item.status = UserStatus.INACTIVE;
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(item);
+        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+        sandbox.stub(MailService.prototype, 'resendUserActivation').resolves();
+
+        const hasSucceed = await userBusiness.resendActivation('test@localhost.com');
+        expect(hasSucceed).to.eq(true);
+    });
+
+    it('Forgot password with an invalid email', async () => {
+        await userBusiness.forgotPassword('test@localhost').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+        });
+    });
+
+    it('Forgot password with email is not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(undefined);
+
+        await userBusiness.forgotPassword('test@localhost.com').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Forgot password with account is not actived', async () => {
+        const item = list[0];
+        item.status = UserStatus.INACTIVE;
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(item);
+
+        await userBusiness.forgotPassword('test@localhost.com').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Forgot password successfully', async () => {
+        const item = list[0];
+        sandbox.stub(UserRepository.prototype, 'getByEmail').resolves(item);
+        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+        sandbox.stub(MailService.prototype, 'sendForgotPassword').resolves();
+
+        const hasSucceed = await userBusiness.forgotPassword('test@localhost.com');
+        expect(hasSucceed).to.eq(true);
+    });
+
+    it('Reset password without forgot key', async () => {
+        await userBusiness.resetPassword('', '').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Reset password without new password', async () => {
+        await userBusiness.resetPassword('node-core', '').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Reset password with forgot key is not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(undefined);
+
+        await userBusiness.resetPassword('node-core', 'Nodecore@2').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1004, 'forgot key').message);
+        });
+    });
+
+    it('Reset password with account is not actived', async () => {
+        const item = list[0];
+        item.status = UserStatus.INACTIVE;
+        sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(item);
+
+        await userBusiness.resetPassword('node-core', 'Nodecore@2').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError().message);
+        });
+    });
+
+    it('Reset password with forgot key has expired', async () => {
+        const item = new User({ id: 1, roleId: 1, role: { id: 1, name: 'Role 1', level: 1 } as IRole, status: UserStatus.ACTIVED, forgotKey: 'key', forgotExpire: addSeconds(new Date(), -100), firstName: 'Test', lastName: '1', email: 'test.1@localhost.com' } as IUser);
+        sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(item);
+
+        await userBusiness.resetPassword('node-core', 'Nodecore@2').catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1008, 'forgot key').message);
+        });
+    });
+
+    it('Reset password successfully', async () => {
+        const item = list[0];
+        item.createForgotKey();
+        sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(item);
+        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+
+        const hasSucceed = await userBusiness.resetPassword('node-core', 'Nodecore@2');
+        expect(hasSucceed).to.eq(true);
+    });
+
+    it('Archive user with id not exists', async () => {
+        sandbox.stub(UserRepository.prototype, 'getById').resolves(undefined);
+
+        await userBusiness.archive(10).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(1004, 'user').message);
+        });
+    });
+
+    it('Archive user with access denied', async () => {
+        const item = list[0];
+        sandbox.stub(UserRepository.prototype, 'getById').resolves(item);
+
+        const userAuth = new UserAuthenticated();
+        userAuth.role = new Role();
+        userAuth.role.level = 2;
+
+        await userBusiness.archive(item.id, userAuth).catch((error: SystemError) => {
+            expect(error.message).to.eq(new SystemError(3).message);
+        });
+    });
+
+    it('Archive user successfully', async () => {
+        const item = list[0];
+        sandbox.stub(UserRepository.prototype, 'getById').resolves(item);
+        sandbox.stub(UserRepository.prototype, 'update').resolves(true);
+
+        const hasSucceed = await userBusiness.archive(item.id);
+        expect(hasSucceed).to.eq(true);
+    });
+
     it('Delete user with id not exists', async () => {
         sandbox.stub(UserRepository.prototype, 'getById').resolves(undefined);
 
@@ -692,6 +1037,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully', async () => {
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
@@ -710,6 +1056,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with all items have ignored by role is not matched', async () => {
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
         const role = new Role({ id: 1000, createdAt: new Date(), updatedAt: new Date(), name: 'Role 1000', level: 1000 } as IRole);
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
 
@@ -722,6 +1069,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with an item have email already', async () => {
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
@@ -744,6 +1092,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with 2 items have failed', async () => {
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);

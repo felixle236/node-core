@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { GenderType, UserStatus } from '../../../../constants/Enums';
 import { DateTransformer } from '../transformers/DateTransformer';
-import { GenderType } from '../../../../constants/Enums';
 import { IUser } from '../../../../web.core/interfaces/models/IUser';
 import { MessageEntity } from './MessageEntity';
 import { RoleEntity } from './RoleEntity';
@@ -24,6 +24,9 @@ export class UserEntity implements IUser {
     @Column({ name: UserSchema.COLUMNS.ROLE_ID })
     roleId: number;
 
+    @Column('enum', { name: UserSchema.COLUMNS.STATUS, enumName: 'user_status_enum', enum: UserStatus, default: UserStatus.INACTIVE })
+    status: UserStatus;
+
     @Column({ name: UserSchema.COLUMNS.FIRST_NAME, length: 20 })
     firstName: string;
 
@@ -39,7 +42,7 @@ export class UserEntity implements IUser {
     @Column({ name: UserSchema.COLUMNS.AVATAR, length: 200, nullable: true })
     avatar?: string;
 
-    @Column({ name: UserSchema.COLUMNS.GENDER, type: 'enum', enum: GenderType, nullable: true })
+    @Column('enum', { name: UserSchema.COLUMNS.GENDER, enumName: 'user_gender_enum', enum: GenderType, nullable: true })
     gender?: GenderType;
 
     @Column('date', { name: UserSchema.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })
@@ -66,6 +69,9 @@ export class UserEntity implements IUser {
 
     @Column('timestamptz', { name: UserSchema.COLUMNS.ACTIVED_AT, nullable: true })
     activedAt?: Date;
+
+    @Column('timestamptz', { name: UserSchema.COLUMNS.ARCHIVED_AT, nullable: true })
+    archivedAt?: Date;
 
     @Index({ unique: true })
     @Column({ name: UserSchema.COLUMNS.FORGOT_KEY, length: 64, nullable: true })

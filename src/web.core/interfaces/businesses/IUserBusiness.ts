@@ -6,6 +6,7 @@ import { UserCommonResponse } from '../../dtos/user/responses/UserCommonResponse
 import { UserCreateRequest } from '../../dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../../dtos/user/requests/UserFilterRequest';
 import { UserPasswordUpdateRequest } from '../../dtos/user/requests/UserPasswordUpdateRequest';
+import { UserRegisterRequest } from '../../dtos/user/requests/UserRegisterRequest';
 import { UserResponse } from '../../dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../../dtos/user/requests/UserUpdateRequest';
 
@@ -30,6 +31,19 @@ export interface IUserBusiness {
 
     uploadAvatar(id: number, buffer: Buffer): Promise<string>;
     uploadAvatar(id: number, buffer: Buffer, userAuth: UserAuthenticated): Promise<string>;
+
+    register(data: UserRegisterRequest): Promise<UserResponse | undefined>;
+
+    active(confirmKey: string): Promise<boolean>;
+
+    resendActivation(email: string): Promise<boolean>;
+
+    forgotPassword(email: string): Promise<boolean>;
+
+    resetPassword(confirmKey: string, password: string): Promise<boolean>;
+
+    archive(id: number): Promise<boolean>;
+    archive(id: number, userAuth: UserAuthenticated): Promise<boolean>;
 
     delete(id: number): Promise<boolean>;
     delete(id: number, userAuth: UserAuthenticated): Promise<boolean>;

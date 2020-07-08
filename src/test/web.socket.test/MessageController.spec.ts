@@ -65,7 +65,6 @@ describe('Message socket controller testing', () => {
         userAuth.id = users[0].id;
         userAuth.role = new Role({ id: users[0].roleId } as IRole);
         userAuth.accessToken = 'token';
-        userAuth.claims = [];
 
         socketClient = ioClient(url + '/messages', { transports: ['websocket'] });
         socketClient.on('connect', done);

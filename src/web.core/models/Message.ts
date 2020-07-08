@@ -1,5 +1,6 @@
 import * as validator from 'class-validator';
 import { IMessage } from '../interfaces/models/IMessage';
+import { MessageCreateData } from '../dtos/message/data/MessageCreateData';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from './User';
 import { mapModel } from '../../libs/common';
@@ -90,8 +91,8 @@ export class Message implements IMessage {
 
     /* handlers */
 
-    toData() {
-        const data = {} as IMessage;
+    toCreateData() {
+        const data = new MessageCreateData();
         data.senderId = this._data.senderId;
         data.receiverId = this._data.receiverId;
         data.room = this._data.room;

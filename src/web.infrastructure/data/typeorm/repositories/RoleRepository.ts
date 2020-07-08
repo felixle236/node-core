@@ -6,9 +6,11 @@ import { IRole } from '../../../../web.core/interfaces/models/IRole';
 import { IRoleRepository } from '../../../../web.core/interfaces/gateways/data/IRoleRepository';
 import { Role } from '../../../../web.core/models/Role';
 import { RoleCommonFilterRequest } from '../../../../web.core/dtos/role/requests/RoleCommonFilterRequest';
+import { RoleCreateData } from '../../../../web.core/dtos/role/data/RoleCreateData';
 import { RoleEntity } from '../entities/RoleEntity';
 import { RoleFilterRequest } from '../../../../web.core/dtos/role/requests/RoleFilterRequest';
 import { RoleSchema } from '../schemas/RoleSchema';
+import { RoleUpdateData } from '../../../../web.core/dtos/role/data/RoleUpdateData';
 import { SortType } from '../../../../constants/Enums';
 
 @Service('role.repository')
@@ -30,8 +32,8 @@ export class RoleRepository implements IRoleRepository {
     async find(filter: RoleFilterRequest): Promise<[Role[], number]> {
         let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME);
 
-        if (filter.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
+        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
+            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
@@ -56,8 +58,8 @@ export class RoleRepository implements IRoleRepository {
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`
             ]);
 
-        if (filter.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
+        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
+            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
@@ -92,17 +94,17 @@ export class RoleRepository implements IRoleRepository {
         return !!role;
     }
 
-    async create(role: Role, queryRunner?: QueryRunner): Promise<number | undefined> {
+    async create(data: RoleCreateData, queryRunner?: QueryRunner): Promise<number | undefined> {
         const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME, queryRunner)
             .insert()
-            .values(role.toData())
+            .values(data)
             .execute();
         return result.identifiers && result.identifiers.length && result.identifiers[0].id;
     }
 
-    async update(id: number, role: Role): Promise<boolean> {
+    async update(id: number, data: RoleUpdateData): Promise<boolean> {
         const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .update(role.toData())
+            .update(data)
             .whereInIds(id)
             .execute();
         return !!result.affected;

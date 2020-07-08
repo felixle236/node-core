@@ -17,6 +17,7 @@ import { User } from '../../web.core/models/User';
 import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
 import { UserBusiness } from '../../web.core/businesses/UserBusiness';
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
+import { UserRegisterRequest } from '../../web.core/dtos/user/requests/UserRegisterRequest';
 import { UserResponse } from '../../web.core/dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
 import { expect } from 'chai';
@@ -26,7 +27,6 @@ const generateUserAuth = () => {
     userAuth.id = 1;
     userAuth.role = new Role({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
-    userAuth.claims = [];
     return userAuth;
 };
 
@@ -178,6 +178,61 @@ describe('User controller testing', () => {
 
         const { data } = await request.put(url + '/1', { body: userUpdate });
         expect(data && data.id === user.id).to.eq(true);
+    });
+
+    it('Register', async () => {
+        const user = list[0];
+        const userRegister = new UserRegisterRequest();
+        userRegister.firstName = 'Test';
+        userRegister.lastName = 'Local';
+        userRegister.email = 'test@localhost.com';
+        userRegister.password = 'Nodecore@2';
+        sandbox.stub(UserBusiness.prototype, 'register').resolves(mapModel(UserResponse, user));
+
+        const { data } = await request.post(url + '/register', { body: userRegister });
+        expect(data.id).to.eq(user.id);
+    });
+
+    it('Active user', async () => {
+        sandbox.stub(UserBusiness.prototype, 'active').resolves(true);
+
+        const { data } = await request.post(url + '/active', { body: { confirmKey: 'confirm key' } });
+        expect(data).to.eq(true);
+    });
+
+    it('Re-send user activation', async () => {
+        sandbox.stub(UserBusiness.prototype, 'resendActivation').resolves(true);
+
+        const { data } = await request.post(url + '/resend-activation', { body: { email: 'test@localhost.com' } });
+        expect(data).to.eq(true);
+    });
+
+    it('Forgot password', async () => {
+        sandbox.stub(UserBusiness.prototype, 'forgotPassword').resolves(true);
+
+        const { data } = await request.post(url + '/forgot-password', { body: { email: 'test@localhost.com' } });
+        expect(data).to.eq(true);
+    });
+
+    it('Reset password', async () => {
+        sandbox.stub(UserBusiness.prototype, 'resetPassword').resolves(true);
+
+        const { data } = await request.put(url + '/reset-password', { body: { confirmKey: 'confirm key', password: 'Nodecore@2' } });
+        expect(data).to.eq(true);
+    });
+
+    it('Archive user without permission', async () => {
+        await request.post(url + '/1/archive').catch((response: Response) => {
+            expect(response.statusCode).to.eq(401);
+        });
+    });
+
+    it('Archive user successfully', async () => {
+        sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
+        sandbox.stub(UserBusiness.prototype, 'archive').resolves(true);
+
+        const { data } = await request.post(url + '/1/archive');
+        expect(data).to.eq(true);
     });
 
     it('Delete user without permission', async () => {

@@ -1,7 +1,7 @@
 # Node Core
 The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.
 
-* Integrated modules: role, user, permission, authentication, message.
+* Integrated modules: role, user, authentication, message.
 * Cache data to improve performance. Can store into database or Redis.
 * Build quickly with the generate module feature.
 * Use coding rules with ESLint.
@@ -65,7 +65,6 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |-- node_modules
 - |-- src --------------------------------------// Source of development.
 - |------ constants
-- |------------ claims  ------------------------// Define the claim for authentication module.
 - |------------ Enums.ts -----------------------// Define the enum, data types.
 - |------------ Environments.ts ----------------// Define environment variables from .env file.
 - |------------ Messages.ts --------------------// Define message for API response error.
@@ -156,7 +155,6 @@ npm run migration:generate {Migration_Name} -------// Generate migration for upd
 npm run migration:run -----------------------------// Run the next migrations for update database structure.
 npm run migration:revert --------------------------// Revert migration for update database structure.
 npm run generate:module {ModuleName} --------------// Generate module: entity, dto, schema, repository, business, controller,...
-npm run generate:claim ----------------------------// Generate new claim for defination.
 npm run lint
 npm run build -------------------------------------// Build source before start with production environment.
 npm test ------------------------------------------// Start unit test.
@@ -169,7 +167,6 @@ npm start -----------------------------------------// Start with production envi
 ```s
 ./node_modules/.bin/grunt clean ---------------------------// Remove "dist" folder.
 ./node_modules/.bin/grunt sync ----------------------------// Copy all resource files to dist without extension ".ts".
-./node_modules/.bin/grunt exec:generate_claim -------------// Generate new claim for defination.
 ```
 
 ### Debug on Visual Code
@@ -234,7 +231,7 @@ npm test
 ### Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- If you want to create module Customer, you can execute: `npm run generate:module Customer`. It will generate model, entity, schema, dtos, repository, business, controller, permission resource,....
+- If you want to create module Customer, you can execute: `npm run generate:module Customer`. It will generate model, entity, schema, dtos, repository, business, controller resource,....
 
 ### Configuration
 
@@ -261,7 +258,7 @@ npm test
 
 - Default this project is using Redis for data caching. It helps greatly increase the number of large requests to less changing data.
 > But don't forget to set expire time and clear cache if have any update on the data related. Refer to [TypeORM Caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
-- Currently we are caching role list and permission list. You can refer to function `getAll` of `RoleRepository` and `getAllByRole` of `PermissionRepository`.
+- Currently we are caching role list. You can refer to function `getAll` of `RoleRepository`.
 - To clear cache, execute command `await this.dbContext.clearCaching('roles')`, we also use typeorm `typeorm cache:clear` or use npm `npm run cache:clear` for clearing all data caching.
 
 ### Authentication
@@ -388,14 +385,13 @@ npm run migration:revert
 
 ### Permission
 
-- We are using the claim for checking permission, we shouldn't use the role, the role is just the master data, think about an extended case later.
-- The claim is defined in `./src/constants/claims`, each claims number will unique with all other claims.
-- We just validate and check permission in controllers and pass user info (user authenticated) into business functions (if necessary).
+- We are using the role for checking permission.
+- We validate and check permission in controllers and pass user info (user authenticated) into business functions (if necessary).
 - Usually, we have 3 cases:
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
-   - `Any user authenticated` to allow access API, just use `@Authorized()` without claim on controller functions.
-   - `Any user authenticated and claim special` to allow access API, just use `@Authorized(UserClaim.UPDATE)` with claim on controller functions.
-- `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object. Also, we can pass the claim in this function for checking. The process will be through the cache first, so the process will be handled very quickly.
+   - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
+   - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` on controller functions.
+- `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object. Also, we can pass the role in this function for checking. The process will be through the cache first, so the process will be handled very quickly.
 
 - To check permission of the user in another place (ex: business and repository), we can use the information of `UserAuthenticated` and pass to filter data (or another param).
 
@@ -417,7 +413,7 @@ HTTP/1.1 401 Unauthorized
 - Return error object [SystemError] with status code 400, this is logic handler.
 ```
 Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com","password": "Nodecore@2"}'
+curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/login -H Content-Type:application/json -d '{"email": "admin@localhost.com","password": "Nodecore@2"}'
 
 Response:
 HTTP/1.1 400 Bad Request
@@ -427,10 +423,10 @@ HTTP/1.1 400 Bad Request
 }
 ```
 
-- Return data object [UserSigninSucceedResponse] with status code 200.
+- Return data object [UserLoginSucceedResponse] with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/signin -H Content-Type:application/json -d '{"email": "admin@localhost.com", "password": "Nodecore@2"}'
+curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/login -H Content-Type:application/json -d '{"email": "admin@localhost.com", "password": "Nodecore@2"}'
 
 Response:
 HTTP/1.1 200 OK
@@ -460,13 +456,6 @@ HTTP/1.1 200 OK
                "level": 1
          }
       },
-      "claims": [
-         16085598,
-         34040810,
-         100024013,
-         108823082,
-         ....
-      ],
       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...;"
    }
 }
@@ -550,21 +539,21 @@ GET http://localhost/api/v1/users/1/role                  --> Get role of user w
 - `POST`: Used to create new resource, add a child resource, upload file, requests the creation of an activation.
 
 ```
-POST http://localhost/api/v1/auth/signin                   --> Signin request.
-POST http://localhost/api/v1/auth/signup                   --> Register new user.
-POST http://localhost/api/v1/auth/active                   --> Request active user.
-POST http://localhost/api/v1/auth/resend-activation
-POST http://localhost/api/v1/auth/forgot-password
-POST http://localhost/api/v1/auth/resend-activation
+POST http://localhost/api/v1/auth/login                    --> Login request.
 POST http://localhost/api/v1/me/avatar                     --> Upload binary file.
 POST http://localhost/api/v1/users                         --> Create user.
+POST http://localhost/api/v1/users/register                --> Register new user.
+POST http://localhost/api/v1/users/active                  --> Request active user.
+POST http://localhost/api/v1/users/resend-activation
+POST http://localhost/api/v1/users/forgot-password
+POST http://localhost/api/v1/users/resend-activation
 ```
 
 - `PUT`: Used to create new resource or update (replace object) if it already exists, replace the entire using the data specified in request.
 
 ```
 PUT http://localhost/api/v1/users/1                       --> Update user object with id 1.
-PUT http://localhost/api/v1/auth/reset-password           --> Reset/update password.
+PUT http://localhost/api/v1/users/reset-password          --> Reset/update password.
 ```
 
 - `PATCH`: Used only to update some fields with record id. Besides, it's just about the meaning, sometime it's very difficult to recognize the boundary, we can use `PUT` instead of `PATCH`.
@@ -586,6 +575,7 @@ DELETE http://localhost/api/v1/users/1
       - Model interface (src/web.core/interfaces/models)
       - Model (src/web.core/models)
       - Dtos (src/web.core/dtos)
+         - Data
          - Responses
          - Requests
       - Gateway interface (src/web.core/interfaces/gateways(/data))

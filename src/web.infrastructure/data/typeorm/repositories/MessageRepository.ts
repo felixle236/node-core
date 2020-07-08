@@ -2,6 +2,7 @@ import { mapModel, mapModels } from '../../../../libs/common';
 import { IMessage } from '../../../../web.core/interfaces/models/IMessage';
 import { IMessageRepository } from '../../../../web.core/interfaces/gateways/data/IMessageRepository';
 import { Message } from '../../../../web.core/models/Message';
+import { MessageCreateData } from '../../../../web.core/dtos/message/data/MessageCreateData';
 import { MessageEntity } from '../entities/MessageEntity';
 import { MessageFilterRequest } from '../../../../web.core/dtos/message/requests/MessageFilterRequest';
 import { MessageSchema } from '../schemas/MessageSchema';
@@ -37,27 +38,11 @@ export class MessageRepository implements IMessageRepository {
         return mapModel(Message, message);
     }
 
-    async create(message: Message): Promise<number | undefined> {
+    async create(data: MessageCreateData): Promise<number | undefined> {
         const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .insert()
-            .values(message.toData())
+            .values(data)
             .execute();
         return result.identifiers && result.identifiers.length && result.identifiers[0].id;
-    }
-
-    async update(id: number, message: Message): Promise<boolean> {
-        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
-            .update(message.toData())
-            .whereInIds(id)
-            .execute();
-        return !!result.affected;
-    }
-
-    async delete(id: number): Promise<boolean> {
-        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
-            .delete()
-            .whereInIds(id)
-            .execute();
-        return !!result.affected;
     }
 }

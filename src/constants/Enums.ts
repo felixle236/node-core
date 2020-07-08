@@ -32,6 +32,12 @@ export enum RoleId {
     COMMON_USER = 2
 }
 
+export enum UserStatus {
+    INACTIVE = 'inactive',
+    ACTIVED = 'actived',
+    ARCHIVED = 'archived'
+}
+
 export enum GenderType {
     MALE = 'male',
     FEMALE = 'female'

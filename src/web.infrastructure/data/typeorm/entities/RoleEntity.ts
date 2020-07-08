@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IRole } from '../../../../web.core/interfaces/models/IRole';
-import { PermissionEntity } from './PermissionEntity';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { UserEntity } from './UserEntity';
 
@@ -29,7 +28,4 @@ export class RoleEntity implements IRole {
 
     @OneToMany(() => UserEntity, user => user.role)
     users: UserEntity[];
-
-    @OneToMany(() => PermissionEntity, permission => permission.role)
-    permissions: PermissionEntity[];
 }

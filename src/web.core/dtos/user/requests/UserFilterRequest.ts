@@ -1,5 +1,7 @@
-import { IsBoolean, IsInt } from 'class-validator';
+import { IsEnum, IsInt } from 'class-validator';
 import { BaseFilterRequest } from '../../common/BaseFilterRequest';
+import { UserAuthenticated } from '../UserAuthenticated';
+import { UserStatus } from '../../../../constants/Enums';
 
 export class UserFilterRequest extends BaseFilterRequest {
     keyword?: string;
@@ -7,8 +9,8 @@ export class UserFilterRequest extends BaseFilterRequest {
     @IsInt()
     roleId?: number;
 
-    @IsBoolean()
-    isActived?: boolean;
+    @IsEnum(UserStatus)
+    status?: UserStatus;
 
-    level?: number; // Role level
+    userAuth?: UserAuthenticated;
 }

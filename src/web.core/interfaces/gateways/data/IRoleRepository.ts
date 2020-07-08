@@ -1,7 +1,9 @@
 import { QueryRunner } from 'typeorm';
 import { Role } from '../../../models/Role';
 import { RoleCommonFilterRequest } from '../../../dtos/role/requests/RoleCommonFilterRequest';
+import { RoleCreateData } from '../../../dtos/role/data/RoleCreateData';
 import { RoleFilterRequest } from '../../../dtos/role/requests/RoleFilterRequest';
+import { RoleUpdateData } from '../../../dtos/role/data/RoleUpdateData';
 
 export interface IRoleRepository {
     /**
@@ -24,10 +26,10 @@ export interface IRoleRepository {
     checkNameExist(name: string): Promise<boolean>;
     checkNameExist(name: string, excludeId: number): Promise<boolean>;
 
-    create(data: Role): Promise<number | undefined>;
-    create(data: Role, queryRunner: QueryRunner): Promise<number | undefined>;
+    create(data: RoleCreateData): Promise<number | undefined>;
+    create(data: RoleCreateData, queryRunner: QueryRunner): Promise<number | undefined>;
 
-    update(id: number, data: Role): Promise<boolean>;
+    update(id: number, data: RoleUpdateData): Promise<boolean>;
 
     delete(id: number): Promise<boolean>;
 

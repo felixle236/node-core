@@ -1,9 +1,16 @@
 import * as crypto from 'crypto';
 import * as validator from 'class-validator';
-import { GenderType } from '../../constants/Enums';
+import { GenderType, UserStatus } from '../../constants/Enums';
 import { IUser } from '../interfaces/models/IUser';
 import { Role } from './Role';
 import { SystemError } from '../dtos/common/Exception';
+import { UserActiveData } from '../dtos/user/data/UserActiveData';
+import { UserArchiveData } from '../dtos/user/data/UserArchiveData';
+import { UserCreateData } from '../dtos/user/data/UserCreateData';
+import { UserForgotData } from '../dtos/user/data/UserForgotData';
+import { UserResetPasswordData } from '../dtos/user/data/UserResetPasswordData';
+import { UserUpdateData } from '../dtos/user/data/UserUpdateData';
+import { UserUpdatePasswordData } from '../dtos/user/data/UserUpdatePasswordData';
 import { addSeconds } from '../../libs/date';
 import { hashMD5 } from '../../libs/crypt';
 import { mapModel } from '../../libs/common';
@@ -37,6 +44,19 @@ export class User implements IUser {
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'role id');
         this._data.roleId = val;
+    }
+
+    get status(): UserStatus {
+        return this._data.status;
+    }
+
+    set status(val: UserStatus) {
+        if (validator.isEmpty(val))
+            throw new SystemError(1001, 'status');
+        if (!validator.isEnum(val, UserStatus))
+            throw new SystemError(1002, 'status');
+
+        this._data.status = val;
     }
 
     get firstName(): string {
@@ -234,40 +254,24 @@ export class User implements IUser {
         return this._data.activeKey;
     }
 
-    set activeKey(val: string | undefined) {
-        this._data.activeKey = val;
-    }
-
     get activeExpire(): Date | undefined {
         return this._data.activeExpire;
-    }
-
-    set activeExpire(val: Date | undefined) {
-        this._data.activeExpire = val;
     }
 
     get activedAt(): Date | undefined {
         return this._data.activedAt;
     }
 
-    set activedAt(val: Date | undefined) {
-        this._data.activedAt = val;
+    get archivedAt(): Date | undefined {
+        return this._data.archivedAt;
     }
 
     get forgotKey(): string | undefined {
         return this._data.forgotKey;
     }
 
-    set forgotKey(val: string | undefined) {
-        this._data.forgotKey = val;
-    }
-
     get forgotExpire(): Date | undefined {
         return this._data.forgotExpire;
-    }
-
-    set forgotExpire(val: Date | undefined) {
-        this._data.forgotExpire = val;
     }
 
     /* Relationship */
@@ -278,9 +282,10 @@ export class User implements IUser {
 
     /* handlers */
 
-    toData() {
-        const data = {} as IUser;
+    toCreateData() {
+        const data = new UserCreateData();
         data.roleId = this._data.roleId;
+        data.status = this._data.status;
         data.firstName = this._data.firstName;
         data.lastName = this._data.lastName;
         data.email = this._data.email;
@@ -294,9 +299,57 @@ export class User implements IUser {
         data.currency = this._data.currency;
         data.activeKey = this._data.activeKey;
         data.activeExpire = this._data.activeExpire;
+        return data;
+    }
+
+    toUpdateData() {
+        const data = new UserUpdateData();
+        data.firstName = this._data.firstName;
+        data.lastName = this._data.lastName;
+        data.avatar = this._data.avatar;
+        data.gender = this._data.gender;
+        data.birthday = this._data.birthday;
+        data.phone = this._data.phone;
+        data.address = this._data.address;
+        data.culture = this._data.culture;
+        data.currency = this._data.currency;
+        return data;
+    }
+
+    toActiveData() {
+        const data = new UserActiveData();
+        data.status = this._data.status;
+        data.activeKey = this._data.activeKey;
+        data.activeExpire = this._data.activeExpire;
         data.activedAt = this._data.activedAt;
+        return data;
+    }
+
+    toForgotData() {
+        const data = new UserForgotData();
         data.forgotKey = this._data.forgotKey;
         data.forgotExpire = this._data.forgotExpire;
+        return data;
+    }
+
+    toUpdatePasswordData() {
+        const data = new UserUpdatePasswordData();
+        data.password = this._data.password;
+        return data;
+    }
+
+    toResetPasswordData() {
+        const data = new UserResetPasswordData();
+        data.password = this._data.password;
+        data.forgotKey = this._data.forgotKey;
+        data.forgotExpire = this._data.forgotExpire;
+        return data;
+    }
+
+    toArchiveData() {
+        const data = new UserArchiveData();
+        data.status = this._data.status;
+        data.archivedAt = this._data.archivedAt;
         return data;
     }
 
@@ -328,19 +381,39 @@ export class User implements IUser {
      * Generate active key with expire time.
      * Use to active/re-active user feature.
      */
-    generateActiveKey(): string {
-        this._data.activeKey = crypto.randomBytes(32).toString('hex');
+    createActiveKey(): string {
+        const activeKey = crypto.randomBytes(32).toString('hex');
+        this._data.activeKey = activeKey;
         this._data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return this._data.activeKey;
+        return activeKey;
     }
 
     /**
      * Generate forgot key with expire time.
      * Use to reset password feature.
      */
-    generateForgotKey(): string {
-        this._data.forgotKey = crypto.randomBytes(32).toString('hex');
+    createForgotKey(): string {
+        const forgotKey = crypto.randomBytes(32).toString('hex');
+        this._data.forgotKey = forgotKey;
         this._data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return this._data.forgotKey;
+        return forgotKey;
+    }
+
+    resetPassword(password: string): void {
+        this.password = password;
+        this._data.forgotKey = undefined;
+        this._data.forgotExpire = undefined;
+    }
+
+    active(): void {
+        this._data.status = UserStatus.ACTIVED;
+        this._data.activeKey = undefined;
+        this._data.activeExpire = undefined;
+        this._data.activedAt = new Date();
+    }
+
+    archive(): void {
+        this._data.status = UserStatus.ARCHIVED;
+        this._data.archivedAt = new Date();
     }
 }

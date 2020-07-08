@@ -1,5 +1,6 @@
 import { BaseFilterRequest } from '../../common/BaseFilterRequest';
 import { IsInt } from 'class-validator';
+import { UserAuthenticated } from '../UserAuthenticated';
 
 export class UserCommonFilterRequest extends BaseFilterRequest {
     keyword?: string;
@@ -7,5 +8,5 @@ export class UserCommonFilterRequest extends BaseFilterRequest {
     @IsInt()
     roleId?: number;
 
-    level?: number; // Role level
+    userAuth?: UserAuthenticated;
 }

@@ -19,13 +19,13 @@ export class RoleBusiness implements IRoleBusiness {
     private readonly _roleRepository: IRoleRepository;
 
     async find(filter: RoleFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<RoleResponse>> {
-        filter.level = userAuth && userAuth.role.level;
+        filter.userAuth = userAuth;
         const [list, count] = await this._roleRepository.find(filter);
         return filter.toResultList(mapModels(RoleResponse, list), count);
     }
 
     async findCommon(filter: RoleCommonFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<RoleCommonResponse>> {
-        filter.level = userAuth && userAuth.role.level;
+        filter.userAuth = userAuth;
         const [list, count] = await this._roleRepository.findCommon(filter);
         return filter.toResultList(mapModels(RoleCommonResponse, list), count);
     }
@@ -48,7 +48,8 @@ export class RoleBusiness implements IRoleBusiness {
         if (await this._roleRepository.checkNameExist(role.name))
             throw new SystemError(1005, 'name');
 
-        const id = await this._roleRepository.create(role);
+        const createData = role.toCreateData();
+        const id = await this._roleRepository.create(createData);
         if (!id)
             throw new SystemError(5);
 
@@ -71,7 +72,8 @@ export class RoleBusiness implements IRoleBusiness {
         if (await this._roleRepository.checkNameExist(role.name, id))
             throw new SystemError(1005, 'name');
 
-        const hasSucceed = await this._roleRepository.update(id, role);
+        const updateData = role.toUpdateData();
+        const hasSucceed = await this._roleRepository.update(id, updateData);
         if (!hasSucceed)
             throw new SystemError(5);
 

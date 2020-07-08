@@ -11,7 +11,6 @@ export class RoleSchema {
     };
 
     static RELATED_MANY = {
-        USERS: 'users',
-        PERMISSIONS: 'permissions'
+        USERS: 'users'
     };
 }

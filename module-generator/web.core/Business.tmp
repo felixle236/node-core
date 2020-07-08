@@ -32,7 +32,8 @@ export class {PascalName}Business implements I{PascalName}Business {
         if (await this._{camelName}Repository.checkNameExist({camelName}.name))
             throw new SystemError(1005, 'name');
 
-        const id = await this._{camelName}Repository.create({camelName});
+        const createData = {camelName}.toCreateData();
+        const id = await this._{camelName}Repository.create(createData);
         if (!id)
             throw new SystemError(5);
 
@@ -50,7 +51,8 @@ export class {PascalName}Business implements I{PascalName}Business {
         if (await this._{camelName}Repository.checkNameExist({camelName}.name, id))
             throw new SystemError(1005, 'name');
 
-        const hasSucceed = await this._{camelName}Repository.update(id, {camelName});
+        const updateData = {camelName}.toUpdateData();
+        const hasSucceed = await this._{camelName}Repository.update(id, updateData);
         if (!hasSucceed)
             throw new SystemError(5);
 

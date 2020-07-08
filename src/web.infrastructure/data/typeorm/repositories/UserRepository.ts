@@ -3,14 +3,21 @@ import { mapModel, mapModels } from '../../../../libs/common';
 import { IUser } from '../../../../web.core/interfaces/models/IUser';
 import { IUserRepository } from '../../../../web.core/interfaces/gateways/data/IUserRepository';
 import { MemberFilterRequest } from '../../../../web.core/dtos/member/requests/MemberFilterRequest';
-import { PermissionSchema } from '../schemas/PermissionSchema';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
 import { User } from '../../../../web.core/models/User';
+import { UserActiveData } from '../../../../web.core/dtos/user/data/UserActiveData';
+import { UserArchiveData } from '../../../../web.core/dtos/user/data/UserArchiveData';
 import { UserCommonFilterRequest } from '../../../../web.core/dtos/user/requests/UserCommonFilterRequest';
+import { UserCreateData } from '../../../../web.core/dtos/user/data/UserCreateData';
 import { UserEntity } from '../entities/UserEntity';
 import { UserFilterRequest } from '../../../../web.core/dtos/user/requests/UserFilterRequest';
+import { UserForgotData } from '../../../../web.core/dtos/user/data/UserForgotData';
+import { UserResetPasswordData } from '../../../../web.core/dtos/user/data/UserResetPasswordData';
 import { UserSchema } from '../schemas/UserSchema';
+import { UserStatus } from '../../../../constants/Enums';
+import { UserUpdateData } from '../../../../web.core/dtos/user/data/UserUpdateData';
+import { UserUpdatePasswordData } from '../../../../web.core/dtos/user/data/UserUpdatePasswordData';
 
 @Service('user.repository')
 export class UserRepository implements IUserRepository {
@@ -19,12 +26,10 @@ export class UserRepository implements IUserRepository {
     async find(filter: UserFilterRequest): Promise<[User[], number]> {
         let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME);
+        query = query.andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.STATUS} = '${filter.status || UserStatus.ACTIVED}'`);
 
-        if (filter.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
-
-        if (filter.isActived != null)
-            query = query.andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS ${filter.isActived ? 'NOT' : ''} NULL`);
+        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
+            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
@@ -50,8 +55,8 @@ export class UserRepository implements IUserRepository {
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
 
-        if (filter.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} >= ${filter.level}`);
+        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
+            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} >= ${filter.userAuth.role.level}`);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
@@ -79,10 +84,10 @@ export class UserRepository implements IUserRepository {
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.AVATAR}`
             ])
             .innerJoin(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
-            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
+            .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.STATUS} = '${UserStatus.ACTIVED}'`);
 
-        if (filter.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.level}`);
+        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
+            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
@@ -121,7 +126,6 @@ export class UserRepository implements IUserRepository {
     async getByUserPassword(email: string, password: string): Promise<User | undefined> {
         const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
-            .leftJoinAndSelect(`${RoleSchema.TABLE_NAME}.${RoleSchema.RELATED_MANY.PERMISSIONS}`, PermissionSchema.TABLE_NAME)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.PASSWORD} = :password`, { password })
             .getOne();
@@ -149,17 +153,24 @@ export class UserRepository implements IUserRepository {
         return !!user;
     }
 
-    async create(user: User, queryRunner?: QueryRunner): Promise<number | undefined> {
+    async create(data: UserCreateData, queryRunner?: QueryRunner): Promise<number | undefined> {
         const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .insert()
-            .values(user.toData())
+            .values(data)
             .execute();
         return result.identifiers && result.identifiers.length && result.identifiers[0].id;
     }
 
-    async update(id: number, user: User, queryRunner?: QueryRunner): Promise<boolean> {
+    async update(id: number,
+        data: UserUpdateData |
+            UserActiveData |
+            UserForgotData |
+            UserUpdatePasswordData |
+            UserResetPasswordData |
+            UserArchiveData,
+        queryRunner?: QueryRunner): Promise<boolean> {
         const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
-            .update(user.toData())
+            .update(data)
             .whereInIds(id)
             .execute();
         return !!result.affected;
