@@ -24,7 +24,7 @@ export class UserEntity implements IUser {
     @Column({ name: UserSchema.COLUMNS.ROLE_ID })
     roleId: number;
 
-    @Column('enum', { name: UserSchema.COLUMNS.STATUS, enumName: 'user_status_enum', enum: UserStatus, default: UserStatus.INACTIVE })
+    @Column('enum', { name: UserSchema.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.INACTIVE })
     status: UserStatus;
 
     @Column({ name: UserSchema.COLUMNS.FIRST_NAME, length: 20 })
@@ -42,7 +42,7 @@ export class UserEntity implements IUser {
     @Column({ name: UserSchema.COLUMNS.AVATAR, length: 200, nullable: true })
     avatar?: string;
 
-    @Column('enum', { name: UserSchema.COLUMNS.GENDER, enumName: 'user_gender_enum', enum: GenderType, nullable: true })
+    @Column('enum', { name: UserSchema.COLUMNS.GENDER, enum: GenderType, nullable: true })
     gender?: GenderType;
 
     @Column('date', { name: UserSchema.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })

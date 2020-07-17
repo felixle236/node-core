@@ -12,9 +12,8 @@ import { Response } from 'request';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { Server } from 'http';
 import { User } from '../../web.core/models/User';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserBusiness } from '../../web.core/businesses/UserBusiness';
-import { UserPasswordUpdateRequest } from '../../web.core/dtos/user/requests/UserPasswordUpdateRequest';
 import { UserResponse } from '../../web.core/dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
 import { expect } from 'chai';
@@ -23,7 +22,7 @@ import { readFile } from '../../libs/file';
 
 const generateUserAuth = () => {
     const userAuth = new UserAuthenticated();
-    userAuth.id = 1;
+    userAuth.userId = 1;
     userAuth.role = new RoleResponse({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
     return userAuth;
@@ -119,14 +118,10 @@ describe('Me controller testing', () => {
     });
 
     it('Update password successfully', async () => {
-        const userPasswordUpdate = new UserPasswordUpdateRequest();
-        userPasswordUpdate.password = '123456';
-        userPasswordUpdate.newPassword = 'Nodecore@2';
-
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
         sandbox.stub(UserBusiness.prototype, 'updatePassword').resolves(true);
 
-        const { data } = await request.patch(url + '/password', { body: userPasswordUpdate });
+        const { data } = await request.patch(url + '/password', { body: { password: '123456', newPassword: 'Nodecore@2' } });
         expect(data).to.eq(true);
     });
 

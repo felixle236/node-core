@@ -44,34 +44,34 @@ export class MessageBusiness implements IMessageBusiness {
         if (!socket.userAuth)
             socket.disconnect(true);
         else {
-            const user = await this._userRepository.getById(socket.userAuth.id);
+            const user = await this._userRepository.getById(socket.userAuth.userId);
             if (!user)
                 return socket.disconnect(true) as ISocket;
 
-            await this._memberStatusRepository.addOnlineStatus(socket.userAuth.id);
-            socket.join(socket.userAuth.id.toString());
+            await this._memberStatusRepository.addOnlineStatus(socket.userAuth.userId);
+            socket.join(socket.userAuth.userId.toString());
             socket.join('0');
 
             if (user.role && user.role.id !== RoleId.SUPER_ADMIN)
-                socket.nsp.emit('online_status', { id: socket.userAuth.id, isOnline: true });
+                socket.nsp.emit('online_status', { id: socket.userAuth.userId, isOnline: true });
         }
         return socket;
     }
 
     async disconnect(socket: ISocket): Promise<void> {
         if (socket.userAuth) {
-            await this._memberStatusRepository.removeOnlineStatus(socket.userAuth.id);
+            await this._memberStatusRepository.removeOnlineStatus(socket.userAuth.userId);
             if (socket.userAuth.role.id !== RoleId.SUPER_ADMIN)
-                socket.nsp.emit('online_status', { id: socket.userAuth.id, isOnline: false });
+                socket.nsp.emit('online_status', { id: socket.userAuth.userId, isOnline: false });
         }
     }
 
     async find(socket: ISocket, filter: MessageFilterRequest): Promise<ResultListResponse<MessageResponse>> {
         if (filter.receiverId)
-            filter.room = Message.generateRoom(socket.userAuth.id, filter.receiverId);
+            filter.room = Message.generateRoom(socket.userAuth.userId, filter.receiverId);
 
         const [list, count] = await this._messageRepository.find(filter);
-        await this._memberStatusRepository.removeNewMessageStatus(socket.userAuth.id, filter.receiverId || 0);
+        await this._memberStatusRepository.removeNewMessageStatus(socket.userAuth.userId, filter.receiverId || 0);
         return filter.toResultList(mapModels(MessageResponse, list), count);
     }
 
@@ -87,7 +87,7 @@ export class MessageBusiness implements IMessageBusiness {
                 member.isOnline = true;
         });
 
-        const memberIds = await this._memberStatusRepository.getListNewMessageStatus(socket.userAuth.id);
+        const memberIds = await this._memberStatusRepository.getListNewMessageStatus(socket.userAuth.userId);
         memberIds.forEach(memberId => {
             const member = members.find(member => member.id === memberId);
             if (member)
@@ -99,7 +99,7 @@ export class MessageBusiness implements IMessageBusiness {
 
     async create(socket: ISocket, data: MessageCreateRequest): Promise<MessageResponse | undefined> {
         const message = new Message();
-        message.senderId = socket.userAuth.id;
+        message.senderId = socket.userAuth.userId;
         message.receiverId = data.receiverId;
         message.content = data.content;
 
@@ -117,7 +117,7 @@ export class MessageBusiness implements IMessageBusiness {
 
     async createByRoom(socket: ISocket, data: MessageRoomCreateRequest): Promise<MessageRoomResponse | undefined> {
         const message = new Message();
-        message.senderId = socket.userAuth.id;
+        message.senderId = socket.userAuth.userId;
         message.room = data.room;
         message.content = data.content;
 
@@ -137,6 +137,6 @@ export class MessageBusiness implements IMessageBusiness {
         if (room === undefined || room < 0)
             throw new SystemError(1002, 'room');
 
-        return await this._memberStatusRepository.removeNewMessageStatus(socket.userAuth.id, room);
+        return await this._memberStatusRepository.removeNewMessageStatus(socket.userAuth.userId, room);
     }
 }

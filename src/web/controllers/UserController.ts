@@ -2,7 +2,7 @@ import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } fr
 import { Inject, Service } from 'typedi';
 import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
 import { Response } from 'express';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
 
 @Service()

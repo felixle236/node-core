@@ -17,9 +17,9 @@ export class Initialize1594028861904 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('CREATE TABLE "role" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "name" character varying(50) NOT NULL, "level" smallint NOT NULL, CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_f4b4cd1c78eee453887e5baf01" ON "role" ("name", "deleted_at") ');
-        await queryRunner.query('CREATE TYPE "user_status_enum" AS ENUM(\'inactive\', \'actived\', \'archived\')');
-        await queryRunner.query('CREATE TYPE "user_gender_enum" AS ENUM(\'male\', \'female\')');
-        await queryRunner.query('CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "role_id" integer NOT NULL, "status" "user_status_enum" NOT NULL, "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "email" character varying(120) NOT NULL, "password" character varying(32) NOT NULL, "avatar" character varying(200), "gender" "user_gender_enum", "birthday" date, "phone" character varying(20), "address" character varying(200), "culture" character varying(5), "currency" character varying(3), "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, "forgot_key" character varying(64), "forgot_expire" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
+        await queryRunner.query('CREATE TYPE "users_status_enum" AS ENUM(\'inactive\', \'actived\', \'archived\')');
+        await queryRunner.query('CREATE TYPE "users_gender_enum" AS ENUM(\'male\', \'female\')');
+        await queryRunner.query('CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "role_id" integer NOT NULL, "status" "users_status_enum" NOT NULL DEFAULT \'inactive\', "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "email" character varying(120) NOT NULL, "password" character varying(32) NOT NULL, "avatar" character varying(200), "gender" "users_gender_enum", "birthday" date, "phone" character varying(20), "address" character varying(200), "culture" character varying(5), "currency" character varying(3), "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, "forgot_key" character varying(64), "forgot_expire" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_7116230c2cf23ab77fbab495b8" ON "users" ("active_key") ');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_55b530a739894009fd921a3ba0" ON "users" ("forgot_key") ');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_c5efd7db748b536d6a8bfa8ffc" ON "users" ("email", "deleted_at") ');
@@ -43,8 +43,8 @@ export class Initialize1594028861904 implements MigrationInterface {
         await queryRunner.query('DROP INDEX "IDX_55b530a739894009fd921a3ba0"');
         await queryRunner.query('DROP INDEX "IDX_7116230c2cf23ab77fbab495b8"');
         await queryRunner.query('DROP TABLE "users"');
-        await queryRunner.query('DROP TYPE "user_gender_enum"');
-        await queryRunner.query('DROP TYPE "user_status_enum"');
+        await queryRunner.query('DROP TYPE "users_gender_enum"');
+        await queryRunner.query('DROP TYPE "users_status_enum"');
         await queryRunner.query('DROP INDEX "IDX_f4b4cd1c78eee453887e5baf01"');
         await queryRunner.query('DROP TABLE "role"');
     }

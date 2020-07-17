@@ -6,7 +6,7 @@ import { IAuthenticationService } from '../interfaces/gateways/auth/IAuthenticat
 import { IRoleRepository } from '../interfaces/gateways/data/IRoleRepository';
 import { IUserRepository } from '../interfaces/gateways/data/IUserRepository';
 import { User } from '../models/User';
-import { UserAuthenticated } from '../dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../dtos/common/UserAuthenticated';
 import { UserLoginRequest } from '../dtos/user/requests/UserLoginRequest';
 import { UserLoginSucceedResponse } from '../dtos/user/responses/UserLoginSucceedResponse';
 import { UserStatus } from '../../constants/Enums';
@@ -46,7 +46,7 @@ export class AuthenticationBusiness implements IAuthenticationBusiness {
             throw new UnauthorizedError(3);
 
         const userAuth = new UserAuthenticated();
-        userAuth.id = Number(payload.sub);
+        userAuth.userId = Number(payload.sub);
         userAuth.accessToken = token;
 
         const roles = await this._roleRepository.getAll();

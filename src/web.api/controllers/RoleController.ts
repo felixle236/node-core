@@ -9,7 +9,7 @@ import { RoleFilterRequest } from '../../web.core/dtos/role/requests/RoleFilterR
 import { RoleId } from '../../constants/Enums';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 
 @Service()
 @JsonController('/roles')

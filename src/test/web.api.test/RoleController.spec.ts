@@ -16,12 +16,12 @@ import { RoleCreateRequest } from '../../web.core/dtos/role/requests/RoleCreateR
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { Server } from 'http';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { expect } from 'chai';
 
 const generateUserAuth = () => {
     const userAuth = new UserAuthenticated();
-    userAuth.id = 1;
+    userAuth.userId = 1;
     userAuth.role = new Role({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
     return userAuth;

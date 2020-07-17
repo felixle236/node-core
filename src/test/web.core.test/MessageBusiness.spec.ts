@@ -17,7 +17,7 @@ import { MessageRepository } from '../../web.infrastructure/data/typeorm/reposit
 import { MessageRoomCreateRequest } from '../../web.core/dtos/message/requests/MessageRoomCreateRequest';
 import { SystemError } from '../../web.core/dtos/common/Exception';
 import { User } from '../../web.core/models/User';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
 import { UserRepository } from '../../web.infrastructure/data/typeorm/repositories/UserRepository';
 import { createSandbox } from 'sinon';
@@ -40,7 +40,7 @@ const generateMessages = () => {
 
 const generateUserAuth = (user: User) => {
     const userAuth = new UserAuthenticated();
-    userAuth.id = user.id;
+    userAuth.userId = user.id;
     userAuth.role = user.role!;
     userAuth.accessToken = 'token';
     return userAuth;
@@ -145,7 +145,7 @@ describe('Message business testing', () => {
         sandbox.stub(MemberStatusRepository.prototype, 'removeOnlineStatus').resolves(true);
 
         socket.socketClient.on('online_status', userInfo => {
-            expect(userInfo.id).to.eq(socket.userAuth.id);
+            expect(userInfo.id).to.eq(socket.userAuth.userId);
         });
         await messageBusiness.disconnect(socket);
     });
@@ -192,7 +192,7 @@ describe('Message business testing', () => {
 
     it('Create message without sender id', async () => {
         const data = generateMessageCreate();
-        socket.userAuth.id = undefined;
+        socket.userAuth.userId = undefined;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1001, 'sender id').message);
@@ -201,7 +201,7 @@ describe('Message business testing', () => {
 
     it('Create message with an invalid sender id', async () => {
         const data = generateMessageCreate();
-        socket.userAuth.id = 0;
+        socket.userAuth.userId = 0;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1002, 'sender id').message);
@@ -251,7 +251,7 @@ describe('Message business testing', () => {
         sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
-        socket.userAuth.id = 100;
+        socket.userAuth.userId = 100;
         const data = generateMessageCreate();
         const result = await messageBusiness.create(socket, data);
         expect(result && result.id === message.id).to.eq(true);
@@ -263,7 +263,7 @@ describe('Message business testing', () => {
         sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
-        socket.userAuth.id = 10000;
+        socket.userAuth.userId = 10000;
         const data = generateMessageCreate();
         const result = await messageBusiness.create(socket, data);
         expect(result && result.id === message.id).to.eq(true);

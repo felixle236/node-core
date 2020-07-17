@@ -9,13 +9,13 @@ import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionRespons
 import { Response } from 'request';
 import { Role } from '../../web.core/models/Role';
 import { Server } from 'http';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserBusiness } from '../../web.core/businesses/UserBusiness';
 import { expect } from 'chai';
 
 const generateUserAuth = () => {
     const userAuth = new UserAuthenticated();
-    userAuth.id = 1;
+    userAuth.userId = 1;
     userAuth.role = new Role({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
     return userAuth;

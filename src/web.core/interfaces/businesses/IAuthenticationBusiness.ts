@@ -1,4 +1,4 @@
-import { UserAuthenticated } from '../../dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../dtos/common/UserAuthenticated';
 import { UserLoginRequest } from '../../dtos/user/requests/UserLoginRequest';
 import { UserLoginSucceedResponse } from '../../dtos/user/responses/UserLoginSucceedResponse';
 

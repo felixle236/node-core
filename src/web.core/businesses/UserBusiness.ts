@@ -14,12 +14,11 @@ import { IUserRepository } from '../interfaces/gateways/data/IUserRepository';
 import { ResultListResponse } from '../dtos/common/ResultListResponse';
 import { SystemError } from '../dtos/common/Exception';
 import { User } from '../models/User';
-import { UserAuthenticated } from '../dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../dtos/common/UserAuthenticated';
 import { UserCommonFilterRequest } from '../dtos/user/requests/UserCommonFilterRequest';
 import { UserCommonResponse } from '../dtos/user/responses/UserCommonResponse';
 import { UserCreateRequest } from '../dtos/user/requests/UserCreateRequest';
 import { UserFilterRequest } from '../dtos/user/requests/UserFilterRequest';
-import { UserPasswordUpdateRequest } from '../dtos/user/requests/UserPasswordUpdateRequest';
 import { UserRegisterRequest } from '../dtos/user/requests/UserRegisterRequest';
 import { UserResponse } from '../dtos/user/responses/UserResponse';
 import { UserUpdateRequest } from '../dtos/user/requests/UserUpdateRequest';
@@ -40,13 +39,13 @@ export class UserBusiness implements IUserBusiness {
     @Inject('storage.service')
     private readonly _storageService: IStorageService;
 
-    async find(filter: UserFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserResponse>> {
+    async find(filter: UserFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<UserResponse>> {
         filter.userAuth = userAuth;
         const [list, count] = await this._userRepository.find(filter);
         return filter.toResultList(mapModels(UserResponse, list), count);
     }
 
-    async findCommon(filter: UserCommonFilterRequest, userAuth?: UserAuthenticated): Promise<ResultListResponse<UserCommonResponse>> {
+    async findCommon(filter: UserCommonFilterRequest, userAuth: UserAuthenticated): Promise<ResultListResponse<UserCommonResponse>> {
         filter.userAuth = userAuth;
         const [list, count] = await this._userRepository.findCommon(filter);
         return filter.toResultList(mapModels(UserCommonResponse, list), count);
@@ -54,12 +53,12 @@ export class UserBusiness implements IUserBusiness {
 
     async getById(id: number, userAuth?: UserAuthenticated): Promise<UserResponse | undefined> {
         const user = await this._userRepository.getById(id);
-        if (user && userAuth && user.role && user.role.level <= userAuth.role.level)
+        if (!user || (userAuth && (!user.role || user.role.level <= userAuth.role.level)))
             return;
         return mapModel(UserResponse, user);
     }
 
-    async create(data: UserCreateRequest, userAuth?: UserAuthenticated): Promise<UserResponse | undefined> {
+    async create(data: UserCreateRequest, userAuth: UserAuthenticated): Promise<UserResponse | undefined> {
         const user = new User();
         user.roleId = data.roleId;
         user.status = UserStatus.ACTIVED;
@@ -81,7 +80,7 @@ export class UserBusiness implements IUserBusiness {
         if (!role)
             throw new SystemError(1002, 'role');
 
-        if (userAuth && role.level <= userAuth.role.level)
+        if (role.level <= userAuth.role.level)
             throw new SystemError(3);
 
         const createData = user.toCreateData();
@@ -98,7 +97,7 @@ export class UserBusiness implements IUserBusiness {
         if (!user)
             throw new SystemError(1004, 'user');
 
-        if (userAuth && user.role && user.role.level <= userAuth.role.level)
+        if (userAuth && (!user.role || user.role.level <= userAuth.role.level))
             throw new SystemError(3);
 
         user.firstName = data.firstName;
@@ -119,20 +118,17 @@ export class UserBusiness implements IUserBusiness {
         return mapModel(UserResponse, newData);
     }
 
-    async updatePassword(id: number, data: UserPasswordUpdateRequest, userAuth?: UserAuthenticated): Promise<boolean> {
+    async updatePassword(id: number, password: string, newPassword: string): Promise<boolean> {
         const user = await this._userRepository.getById(id);
-        if (!user || user.password !== user.hashPassword(data.password))
+        if (!user || user.password !== user.hashPassword(password))
             throw new SystemError(1003, 'password');
 
-        if (userAuth && user.role && user.role.level <= userAuth.role.level)
-            throw new SystemError(3);
-
-        user.password = data.newPassword;
+        user.password = newPassword;
         const updateData = user.toUpdatePasswordData();
         return await this._userRepository.update(id, updateData);
     }
 
-    async uploadAvatar(id: number, buffer: Buffer, userAuth?: UserAuthenticated): Promise<string> {
+    async uploadAvatar(id: number, buffer: Buffer): Promise<string> {
         const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
@@ -145,9 +141,6 @@ export class UserBusiness implements IUserBusiness {
 
         user.validateAvatarFormat(extension);
         user.validateAvatarSize(buffer.length);
-
-        if (userAuth && user.role && user.role.level <= userAuth.role.level)
-            throw new SystemError(3);
 
         const avatarPath = user.getAvatarPath(extension);
         const url = await this._storageService.upload(BUCKET_NAME, avatarPath, buffer);
@@ -250,12 +243,12 @@ export class UserBusiness implements IUserBusiness {
         return await this._userRepository.update(user.id, updateData);
     }
 
-    async archive(id: number, userAuth?: UserAuthenticated): Promise<boolean> {
+    async archive(id: number, userAuth: UserAuthenticated): Promise<boolean> {
         const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
 
-        if (userAuth && user.role && user.role.level <= userAuth.role.level)
+        if (!user.role || user.role.level <= userAuth.role.level)
             throw new SystemError(3);
 
         user.archive();
@@ -263,12 +256,12 @@ export class UserBusiness implements IUserBusiness {
         return await this._userRepository.update(id, updateData);
     }
 
-    async delete(id: number, userAuth?: UserAuthenticated): Promise<boolean> {
+    async delete(id: number, userAuth: UserAuthenticated): Promise<boolean> {
         const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(1004, 'user');
 
-        if (userAuth && user.role && user.role.level <= userAuth.role.level)
+        if (!user.role || user.role.level <= userAuth.role.level)
             throw new SystemError(3);
 
         return await this._userRepository.delete(id);

@@ -11,7 +11,7 @@ import { RoleFilterRequest } from '../../web.core/dtos/role/requests/RoleFilterR
 import { RoleRepository } from '../../web.infrastructure/data/typeorm/repositories/RoleRepository';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { SystemError } from '../../web.core/dtos/common/Exception';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 
@@ -21,6 +21,14 @@ const generateRoles = () => {
         new Role({ id: 2, createdAt: new Date(), updatedAt: new Date(), name: 'Role 2', level: 2 } as IRole),
         new Role({ id: 3, createdAt: new Date(), updatedAt: new Date(), name: 'Role 3', level: 3 } as IRole)
     ];
+};
+
+const generateUserAuth = () => {
+    const userAuth = new UserAuthenticated();
+    userAuth.userId = 1;
+    userAuth.role = new Role();
+    userAuth.role.level = 1;
+    return userAuth;
 };
 
 const generateRoleCreate = () => {
@@ -54,43 +62,46 @@ describe('Role business testing', () => {
 
     it('Find roles without param items', async () => {
         sandbox.stub(RoleRepository.prototype, 'find').resolves([list, 10]);
+        const userAuth = generateUserAuth();
 
-        const result = await roleBusiness.find(new RoleFilterRequest());
+        const result = await roleBusiness.find(new RoleFilterRequest(), userAuth);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
     it('Find roles with name param', async () => {
         sandbox.stub(RoleRepository.prototype, 'find').resolves([list, 10]);
+        const userAuth = generateUserAuth();
 
         const filter = new RoleFilterRequest();
         filter.keyword = 'role';
 
-        const result = await roleBusiness.find(filter);
+        const result = await roleBusiness.find(filter, userAuth);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
     it('Find common roles without param items', async () => {
         sandbox.stub(RoleRepository.prototype, 'findCommon').resolves([list, 10]);
+        const userAuth = generateUserAuth();
 
-        const result = await roleBusiness.findCommon(new RoleCommonFilterRequest());
+        const result = await roleBusiness.findCommon(new RoleCommonFilterRequest(), userAuth);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
     it('Find common roles with name param', async () => {
         sandbox.stub(RoleRepository.prototype, 'findCommon').resolves([list, 10]);
+        const userAuth = generateUserAuth();
 
         const filter = new RoleCommonFilterRequest();
         filter.keyword = 'role';
 
-        const result = await roleBusiness.findCommon(filter);
+        const result = await roleBusiness.findCommon(filter, userAuth);
         expect(Array.isArray(result.results) && result.results.length === list.length && result.pagination.total === 10).to.eq(true);
     });
 
     it('Get role by id with access denied', async () => {
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
+        const userAuth = generateUserAuth();
         userAuth.role.level = 2;
 
         const data = await roleBusiness.getById(item.id, userAuth);
@@ -98,71 +109,77 @@ describe('Role business testing', () => {
     });
 
     it('Get role by id', async () => {
-        const item = list[0];
+        const item = list[1];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
+        const userAuth = generateUserAuth();
 
-        const result = await roleBusiness.getById(item.id);
+        const result = await roleBusiness.getById(item.id, userAuth);
         expect(result && result.id === item.id).to.eq(true);
     });
 
     it('Create new role without name', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         roleCreate.name = '';
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1001, 'name').message);
         });
     });
 
     it('Create new role with an invalid name', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         roleCreate.name = 123 as any;
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1002, 'name').message);
         });
     });
 
     it('Create new role with length name greater than 50 characters', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         roleCreate.name = 'This is the name with length greater than 50 characters!';
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(2004, 'name', 50).message);
         });
     });
 
     it('Create new role without level', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         delete roleCreate.level;
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1001, 'level').message);
         });
     });
 
     it('Create new role with an invalid level', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         roleCreate.level = 0;
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1002, 'level').message);
         });
     });
 
     it('Create new role with level greater than 100', async () => {
+        const userAuth = generateUserAuth();
         const roleCreate = generateRoleCreate();
         roleCreate.level = 101;
 
-        await roleBusiness.create(roleCreate).catch((error: SystemError) => {
+        await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(2004, 'level', 100).message);
         });
     });
 
     it('Create new role with access denied', async () => {
         const roleCreate = generateRoleCreate();
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
+        const userAuth = generateUserAuth();
         userAuth.role.level = 3;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
@@ -171,10 +188,8 @@ describe('Role business testing', () => {
     });
 
     it('Create new role with name has exists', async () => {
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
-        userAuth.role.level = 1;
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(true);
+        const userAuth = generateUserAuth();
 
         const roleCreate = generateRoleCreate();
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
@@ -183,9 +198,7 @@ describe('Role business testing', () => {
     });
 
     it('Create new role with cannot save error', async () => {
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
-        userAuth.role.level = 1;
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(false);
         sandbox.stub(RoleRepository.prototype, 'create').resolves();
 
@@ -197,9 +210,7 @@ describe('Role business testing', () => {
 
     it('Create new role successfully', async () => {
         const role = list[0];
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
-        userAuth.role.level = 1;
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(false);
         sandbox.stub(RoleRepository.prototype, 'create').resolves(role.id);
         sandbox.stub(RoleRepository.prototype, 'clearCaching').resolves();
@@ -211,11 +222,12 @@ describe('Role business testing', () => {
     });
 
     it('Update role with id not exists', async () => {
+        const userAuth = generateUserAuth();
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(undefined);
 
         const roleUpdate = generateRoleUpdate();
-        await roleBusiness.update(item.id, roleUpdate).catch((error: SystemError) => {
+        await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1004, 'role').message);
         });
     });
@@ -223,8 +235,7 @@ describe('Role business testing', () => {
     it('Update role with access denied', async () => {
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
+        const userAuth = generateUserAuth();
         userAuth.role.level = 2;
 
         const roleUpdate = generateRoleUpdate();
@@ -234,70 +245,76 @@ describe('Role business testing', () => {
     });
 
     it('Update role without name', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
 
         const roleUpdate = generateRoleUpdate();
         roleUpdate.name = '';
 
-        await roleBusiness.update(item.id, roleUpdate).catch((error: SystemError) => {
+        await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1001, 'name').message);
         });
     });
 
     it('Update role with length name greater than 50 characters', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
 
         const roleUpdate = generateRoleUpdate();
         roleUpdate.name = 'This is the name with length greater than 50 characters!';
 
-        await roleBusiness.update(item.id, roleUpdate).catch((error: SystemError) => {
+        await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(2004, 'name', 50).message);
         });
     });
 
     it('Update role with name has exists', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(true);
 
         const roleUpdate = generateRoleUpdate();
         roleUpdate.name = item.name;
 
-        await roleBusiness.update(item.id, roleUpdate).catch((error: SystemError) => {
+        await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1005, 'name').message);
         });
     });
 
     it('Update role with cannot save error', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(false);
         sandbox.stub(RoleRepository.prototype, 'update').resolves(false);
 
         const roleUpdate = generateRoleUpdate();
-        await roleBusiness.update(item.id, roleUpdate).catch((error: SystemError) => {
+        await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(5).message);
         });
     });
 
     it('Update role successfully', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
         sandbox.stub(RoleRepository.prototype, 'checkNameExist').resolves(false);
         sandbox.stub(RoleRepository.prototype, 'update').resolves(true);
         sandbox.stub(RoleRepository.prototype, 'clearCaching').resolves();
 
         const roleUpdate = generateRoleUpdate();
-        const result = await roleBusiness.update(item.id, roleUpdate);
+        const result = await roleBusiness.update(item.id, roleUpdate, userAuth);
         expect(result && result.id === item.id).to.eq(true);
     });
 
     it('Delete role with id not exists', async () => {
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(undefined);
 
-        await roleBusiness.delete(10).catch((error: SystemError) => {
+        await roleBusiness.delete(10, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(1004, 'role').message);
         });
     });
@@ -305,8 +322,7 @@ describe('Role business testing', () => {
     it('Delete role with access denied', async () => {
         const item = list[0];
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
-        const userAuth = new UserAuthenticated();
-        userAuth.role = new Role();
+        const userAuth = generateUserAuth();
         userAuth.role.level = 2;
 
         await roleBusiness.delete(item.id, userAuth).catch((error: SystemError) => {
@@ -315,22 +331,24 @@ describe('Role business testing', () => {
     });
 
     it('Delete role with cannot save error', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
         sandbox.stub(RoleRepository.prototype, 'delete').resolves(false);
 
-        await roleBusiness.delete(item.id).catch((error: SystemError) => {
+        await roleBusiness.delete(item.id, userAuth).catch((error: SystemError) => {
             expect(error.message).to.eq(new SystemError(5).message);
         });
     });
 
     it('Delete role successfully', async () => {
-        const item = list[0];
+        const item = list[1];
+        const userAuth = generateUserAuth();
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(item);
         sandbox.stub(RoleRepository.prototype, 'delete').resolves(true);
         sandbox.stub(RoleRepository.prototype, 'clearCaching').resolves();
 
-        const hasSucceed = await roleBusiness.delete(item.id);
+        const hasSucceed = await roleBusiness.delete(item.id, userAuth);
         expect(hasSucceed).to.eq(true);
     });
 });

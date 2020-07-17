@@ -18,7 +18,7 @@ import { Role } from '../../web.core/models/Role';
 import { SocketIOEmitter } from 'socket.io-emitter';
 import { SocketService } from '../../web.socket/SocketService';
 import { User } from '../../web.core/models/User';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { expect } from 'chai';
 import { mapModels } from '../../libs/common';
 
@@ -62,7 +62,7 @@ describe('Message socket controller testing', () => {
         list = generateMessages();
         const users = generateUsers();
         const userAuth = new UserAuthenticated();
-        userAuth.id = users[0].id;
+        userAuth.userId = users[0].id;
         userAuth.role = new Role({ id: users[0].roleId } as IRole);
         userAuth.accessToken = 'token';
 

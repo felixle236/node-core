@@ -3,7 +3,7 @@ import { Inject, Service } from 'typedi';
 import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { RoleId } from '../../constants/Enums';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserCommonFilterRequest } from '../../web.core/dtos/user/requests/UserCommonFilterRequest';
 import { UserCommonResponse } from '../../web.core/dtos/user/responses/UserCommonResponse';
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';

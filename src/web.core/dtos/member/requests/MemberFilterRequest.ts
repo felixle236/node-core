@@ -1,5 +1,5 @@
 import { BaseFilterRequest } from '../../common/BaseFilterRequest';
-import { UserAuthenticated } from '../../user/UserAuthenticated';
+import { UserAuthenticated } from '../../common/UserAuthenticated';
 
 export class MemberFilterRequest extends BaseFilterRequest {
     keyword?: string;

@@ -1,6 +1,6 @@
 {
     "name": "node-core",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "description": "The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.",
     "license": "Felix Le",
     "readmeFilename": "README.md",
@@ -37,7 +37,7 @@
         "clean architecture"
     ],
     "dependencies": {
-        "aws-sdk": "^2.711.0",
+        "aws-sdk": "^2.714.2",
         "body-parser": "^1.19.0",
         "child-process-promise": "^2.2.1",
         "class-validator": "^0.12.2",
@@ -54,18 +54,18 @@
         "multer": "^1.4.2",
         "node-pushnotifications": "^1.4.0",
         "nodemailer": "^6.4.10",
-        "pg": "^8.2.2",
+        "pg": "^8.3.0",
         "redis": "^3.0.2",
         "reflect-metadata": "^0.1.13",
         "request": "^2.88.2",
         "routing-controllers": "^0.8.1",
         "s3-client": "^4.4.2",
-        "sib-api-v3-sdk": "^7.2.3",
+        "sib-api-v3-sdk": "^7.2.4",
         "socket-controllers": "0.0.5",
         "socket.io": "^2.3.0",
         "socket.io-emitter": "^3.1.1",
         "socket.io-redis": "^5.3.0",
-        "stripe": "^8.69.0",
+        "stripe": "^8.74.0",
         "typedi": "^0.8.0",
         "typeorm": "^0.2.25",
         "typeorm-typedi-extensions": "^0.2.3"
@@ -80,12 +80,12 @@
         "@types/jsonwebtoken": "^8.5.0",
         "@types/mailgen": "^2.0.3",
         "@types/minio": "^7.0.5",
-        "@types/mocha": "^7.0.2",
+        "@types/mocha": "^8.0.0",
         "@types/multer": "^1.4.3",
-        "@types/node": "^14.0.19",
+        "@types/node": "^14.0.23",
         "@types/node-pushnotifications": "^1.0.3",
         "@types/nodemailer": "^6.4.0",
-        "@types/redis": "^2.8.24",
+        "@types/redis": "^2.8.25",
         "@types/request-promise": "^4.1.46",
         "@types/sinon": "^9.0.4",
         "@types/socket.io": "^2.1.8",
@@ -94,8 +94,8 @@
         "@types/socket.io-redis": "^1.0.26",
         "@types/stripe": "^7.13.24",
         "@types/validator": "^13.1.0",
-        "@typescript-eslint/eslint-plugin": "^3.6.0",
-        "@typescript-eslint/parser": "^3.6.0",
+        "@typescript-eslint/eslint-plugin": "^3.6.1",
+        "@typescript-eslint/parser": "^3.6.1",
         "chai": "^4.2.0",
         "eslint": "^7.4.0",
         "eslint-config-standard": "^14.1.1",
@@ -115,6 +115,6 @@
         "sinon": "^9.0.2",
         "socket.io-mock": "^1.2.4",
         "ts-node": "^8.10.2",
-        "typescript": "^3.9.6"
+        "typescript": "^3.9.7"
     }
 }

@@ -130,7 +130,7 @@ describe('User auth business testing', () => {
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
 
         const result = await userAuthBusiness.authenticateUser(token, [role.id]);
-        expect(result && result.id === 2 && result.accessToken === token && result.role.id === role.id).to.eq(true);
+        expect(result && result.userId === 2 && result.accessToken === token && result.role.id === role.id).to.eq(true);
     });
 
     it('Login without email', async () => {

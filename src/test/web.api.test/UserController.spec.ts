@@ -14,7 +14,7 @@ import { ResultListResponse } from '../../web.core/dtos/common/ResultListRespons
 import { Role } from '../../web.core/models/Role';
 import { Server } from 'http';
 import { User } from '../../web.core/models/User';
-import { UserAuthenticated } from '../../web.core/dtos/user/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserBusiness } from '../../web.core/businesses/UserBusiness';
 import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
 import { UserRegisterRequest } from '../../web.core/dtos/user/requests/UserRegisterRequest';
@@ -24,7 +24,7 @@ import { expect } from 'chai';
 
 const generateUserAuth = () => {
     const userAuth = new UserAuthenticated();
-    userAuth.id = 1;
+    userAuth.userId = 1;
     userAuth.role = new Role({ id: 1 } as any);
     userAuth.accessToken = 'access-token';
     return userAuth;
@@ -217,7 +217,7 @@ describe('User controller testing', () => {
     it('Reset password', async () => {
         sandbox.stub(UserBusiness.prototype, 'resetPassword').resolves(true);
 
-        const { data } = await request.put(url + '/reset-password', { body: { confirmKey: 'confirm key', password: 'Nodecore@2' } });
+        const { data } = await request.post(url + '/reset-password', { body: { confirmKey: 'confirm key', password: 'Nodecore@2' } });
         expect(data).to.eq(true);
     });
 
