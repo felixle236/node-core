@@ -118,7 +118,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------------------ storage -------------------// File storage service.
 - |------------ messages
 - |------------------ mail ----------------------// Mail service.
-- |------------------ notification --------------// notification service.
+- |------------------ notification --------------// Notification service.
 - |------------------ sms -----------------------// Sms service.
 - |------------ payments
 - |------------------ payment -------------------// Payment service.
@@ -127,7 +127,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------ web.socket
 - |------------ controllers ---------------------// Navigate for requests.
 - |------------ SocketModule.ts
-- |------------ SocketService.ts -----------------// Initialize socket service
+- |------------ SocketService.ts ----------------// Initialize socket service
 - |------ app.ts --------------------------------// Main application.
 - |------ ModuleRegister.ts
 - |-- .dockerignore -----------------------------// Docker ignore configuration.
