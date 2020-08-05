@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { MailType, PaymentType, SmsType, StorageType } from './Enums';
+import { MailSenderType, PaymentSenderType, SmsSenderType, StorageType } from './Enums';
 dotenv.config();
 
 // SYSTEM ENVIRONMENT
@@ -69,7 +69,7 @@ export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY || '';
 
 // MAIL
 
-export const MAIL_TYPE: number = process.env.MAIL_TYPE ? Number(process.env.MAIL_TYPE) : MailType.LOGGING;
+export const MAIL_SENDER: number = process.env.MAIL_SENDER ? Number(process.env.MAIL_SENDER) : MailSenderType.LOGGING;
 export const MAIL_SENDER_NAME: string = process.env.MAIL_SENDER_NAME || '';
 export const MAIL_SENDER_EMAIL: string = process.env.MAIL_SENDER_EMAIL || '';
 
@@ -80,12 +80,12 @@ export const SENDINBLUE_API_KEY: string = process.env.SENDINBLUE_API_KEY || '';
 
 // SMS
 
-export const SMS_TYPE: number = process.env.SMS_TYPE ? Number(process.env.SMS_TYPE) : SmsType.LOGGING;
+export const SMS_SENDER: number = process.env.SMS_SENDER ? Number(process.env.SMS_SENDER) : SmsSenderType.LOGGING;
 export const SMS_SENDER_NAME: string = process.env.SMS_SENDER_NAME || '';
 
 // PAYMENT
 
-export const PAYMENT_TYPE: number = process.env.PAYMENT_TYPE ? Number(process.env.PAYMENT_TYPE) : PaymentType.LOGGING;
+export const PAYMENT_TYPE: number = process.env.PAYMENT_TYPE ? Number(process.env.PAYMENT_TYPE) : PaymentSenderType.LOGGING;
 export const STRIPE_KEY: string = process.env.STRIPE_KEY || '';
 export const PAYPAL_KEY: string = process.env.PAYPAL_KEY || '';
 

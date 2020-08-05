@@ -2,7 +2,7 @@ import { PAYMENT_TYPE, STRIPE_KEY } from '../../../constants/Environments';
 import { IPaymentParam } from '../../../web.core/interfaces/types/IPaymentParam';
 import { IPaymentService } from '../../../web.core/interfaces/gateways/payments/IPaymentService';
 import { LoggingFactory } from './providers/LoggingFactory';
-import { PaymentType } from '../../../constants/Enums';
+import { PaymentSenderType } from '../../../constants/Enums';
 import { PaypalFactory } from './providers/PaypalFactory';
 import { Service } from 'typedi';
 import { StripeFactory } from './providers/StripeFactory';
@@ -13,15 +13,15 @@ export class PaymentService implements IPaymentService {
 
     constructor() {
         switch (PAYMENT_TYPE) {
-        case PaymentType.STRIPE:
+        case PaymentSenderType.STRIPE:
             this._payment = new StripeFactory(STRIPE_KEY);
             break;
 
-        case PaymentType.PAYPAL:
+        case PaymentSenderType.PAYPAL:
             this._payment = new PaypalFactory();
             break;
 
-        case PaymentType.LOGGING:
+        case PaymentSenderType.LOGGING:
         default:
             this._payment = new LoggingFactory();
             break;

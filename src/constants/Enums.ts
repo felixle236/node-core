@@ -10,18 +10,18 @@ export enum StorageType {
     GOOGLE_STORAGE = 3
 }
 
-export enum MailType {
+export enum MailSenderType {
     LOGGING = 0,
     GOOGLE_SMTP = 1,
     SEND_IN_BLUE = 2
 }
 
-export enum SmsType {
+export enum SmsSenderType {
     LOGGING = 0,
     SEND_IN_BLUE = 1
 }
 
-export enum PaymentType {
+export enum PaymentSenderType {
     LOGGING = 0,
     STRIPE = 1,
     PAYPAL = 2

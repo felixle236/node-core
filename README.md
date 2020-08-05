@@ -277,7 +277,7 @@ npm test
 ### Send Mail Template
 
 - We are using `mailgen` package to generate the mail template. There are a lot of the mail template to use, refer to [mailgen](https://github.com/eladnava/mailgen).
-- We can use Google SMTP or SendInBlue to send mail by change the configuration of environment `SEND_MAIL_TYPE` in `.env`. Also you can integrate another service that you want to use.
+- We can use Google SMTP or SendInBlue to send mail by change the configuration of environment `SEND_MAIL_SENDER` in `.env`. Also you can integrate another service that you want to use.
 - Refer with values `GOOGLE_SMTP (1) - SEND_IN_BLUE (2) - LOGGING (empty)`.
 
 ### Common Type

@@ -1,24 +1,24 @@
-import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_TYPE, SENDINBLUE_API_KEY } from '../../../../constants/Environments';
+import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_SENDER, SENDINBLUE_API_KEY } from '../../../../constants/Environments';
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { IMailSender } from './interfaces/IMailSender';
 import { LoggingFactory } from './providers/LoggingFactory';
-import { MailType } from '../../../../constants/Enums';
+import { MailSenderType } from '../../../../constants/Enums';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 
 export class MailSender implements IMailSender {
     private readonly _mail: IMailSender;
 
     constructor() {
-        switch (MAIL_TYPE) {
-        case MailType.GOOGLE_SMTP:
+        switch (MAIL_SENDER) {
+        case MailSenderType.GOOGLE_SMTP:
             this._mail = new GoogleSmtpFactory(GOOGLE_SMTP_USERNAME, GOOGLE_SMTP_PASSWORD);
             break;
 
-        case MailType.SEND_IN_BLUE:
+        case MailSenderType.SEND_IN_BLUE:
             this._mail = new SendInBlueFactory(SENDINBLUE_API_KEY);
             break;
 
-        case MailType.LOGGING:
+        case MailSenderType.LOGGING:
         default:
             this._mail = new LoggingFactory();
             break;

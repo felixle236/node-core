@@ -48,7 +48,7 @@ sandbox.stub(process, 'env').value({
     S3_ACCESS_KEY: '',
     S3_SECRET_KEY: '',
 
-    MAIL_TYPE: 0,
+    MAIL_SENDER: 0,
     MAIL_SENDER_NAME: '',
     MAIL_SENDER_EMAIL: '',
 
@@ -57,7 +57,7 @@ sandbox.stub(process, 'env').value({
 
     SENDINBLUE_API_KEY: '',
 
-    SMS_TYPE: 0,
+    SMS_SENDER: 0,
     SMS_SENDER_NAME: '',
 
     PAYMENT_TYPE: 0,
