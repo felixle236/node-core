@@ -1,4 +1,4 @@
-import { IPaymentService } from '../../../../../web.core/usecase/boundaries/services/IPaymentService';
+import { IPaymentService } from '../../../../../web.core/interfaces/services/IPaymentService';
 
 export class PaypalFactory implements IPaymentService {
     pay(): any {}

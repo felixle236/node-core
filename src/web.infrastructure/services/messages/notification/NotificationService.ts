@@ -1,6 +1,6 @@
 import * as PushNotification from 'node-pushnotifications';
 import { ANDROID_KEY, IOS_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../../constants/Environments';
-import { INotificationService } from '../../../../web.core/usecase/boundaries/services/INotificationService';
+import { INotificationService } from '../../../../web.core/interfaces/services/INotificationService';
 import { Service } from 'typedi';
 
 @Service('notification.service')

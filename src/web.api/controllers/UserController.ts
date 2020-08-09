@@ -1,6 +1,6 @@
 import { Authorized, Body, BodyParam, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IUserInteractor } from '../../web.core/usecase/boundaries/interactors/IUserInteractor';
+import { IUserInteractor } from '../../web.core/interfaces/interactors/IUserInteractor';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';

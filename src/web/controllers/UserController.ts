@@ -1,6 +1,6 @@
 import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IUserInteractor } from '../../web.core/usecase/boundaries/interactors/IUserInteractor';
+import { IUserInteractor } from '../../web.core/interfaces/interactors/IUserInteractor';
 import { Response } from 'express';
 import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';

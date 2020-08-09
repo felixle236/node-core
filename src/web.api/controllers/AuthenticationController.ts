@@ -1,6 +1,6 @@
 import { Body, JsonController, Post } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IAuthenticationInteractor } from '../../web.core/usecase/boundaries/interactors/IAuthenticationInteractor';
+import { IAuthenticationInteractor } from '../../web.core/interfaces/interactors/IAuthenticationInteractor';
 import { UserLoginRequest } from '../../web.core/dtos/user/requests/UserLoginRequest';
 import { UserLoginSucceedResponse } from '../../web.core/dtos/user/responses/UserLoginSucceedResponse';
 

@@ -1,4 +1,4 @@
-import { IStorageService } from '../../../../../web.core/usecase/boundaries/services/IStorageService';
+import { IStorageService } from '../../../../../web.core/interfaces/services/IStorageService';
 
 export class GoogleStorageFactory implements IStorageService {
     getBuckets(): any { }

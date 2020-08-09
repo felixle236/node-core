@@ -1,5 +1,5 @@
 import { ENABLE_DATA_LOGGING } from '../../../../../constants/Environments';
-import { IPaymentService } from '../../../../../web.core/usecase/boundaries/services/IPaymentService';
+import { IPaymentService } from '../../../../../web.core/interfaces/services/IPaymentService';
 
 export class LoggingFactory implements IPaymentService {
     pay(data: any): Promise<any> {

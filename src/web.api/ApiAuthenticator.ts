@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Action } from 'routing-controllers';
-import { IAuthenticationInteractor } from '../web.core/usecase/boundaries/interactors/IAuthenticationInteractor';
+import { IAuthenticationInteractor } from '../web.core/interfaces/interactors/IAuthenticationInteractor';
 
 @Service('api.authenticator')
 export class ApiAuthenticator {

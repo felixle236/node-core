@@ -2,7 +2,7 @@ import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../../constants/Envir
 import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { IMailGenerator } from './sender/interfaces/IMailGenerator';
 import { IMailSender } from './sender/interfaces/IMailSender';
-import { IMailService } from '../../../../web.core/usecase/boundaries/services/IMailService';
+import { IMailService } from '../../../../web.core/interfaces/services/IMailService';
 import { MailGenerator } from './MailGenerator';
 import { MailSender } from './sender';
 import { Service } from 'typedi';

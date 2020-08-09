@@ -1,4 +1,4 @@
-import { IBucketItem, IStorageService } from '../../../../../web.core/usecase/boundaries/services/IStorageService';
+import { IBucketItem, IStorageService } from '../../../../../web.core/interfaces/services/IStorageService';
 import { ENABLE_DATA_LOGGING } from '../../../../../constants/Environments';
 
 export class LoggingFactory implements IStorageService {

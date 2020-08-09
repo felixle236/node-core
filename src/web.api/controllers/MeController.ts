@@ -1,7 +1,7 @@
 import * as multer from 'multer';
 import { Authorized, Body, BodyParam, CurrentUser, Get, JsonController, Patch, Post, Put, UploadOptions, UploadedFile } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IUserInteractor } from '../../web.core/usecase/boundaries/interactors/IUserInteractor';
+import { IUserInteractor } from '../../web.core/interfaces/interactors/IUserInteractor';
 import { User } from '../../web.core/domain/entities/User';
 import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserResponse } from '../../web.core/dtos/user/responses/UserResponse';

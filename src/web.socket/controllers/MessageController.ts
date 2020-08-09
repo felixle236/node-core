@@ -1,6 +1,6 @@
 import { ConnectedSocket, EmitOnFail, EmitOnSuccess, MessageBody, OnConnect, OnDisconnect, OnMessage, SkipEmitOnEmptyResult, SocketController, SocketQueryParam } from 'socket-controllers';
 import { Inject, Service } from 'typedi';
-import { IMessageInteractor } from '../../web.core/usecase/boundaries/interactors/IMessageInteractor';
+import { IMessageInteractor } from '../../web.core/interfaces/interactors/IMessageInteractor';
 import { ISocket } from '../../web.core/domain/common/ISocket';
 import { MemberFilterRequest } from '../../web.core/dtos/member/requests/MemberFilterRequest';
 import { MemberResponse } from '../../web.core/dtos/member/responses/MemberResponse';

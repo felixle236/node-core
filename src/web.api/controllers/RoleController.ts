@@ -1,6 +1,6 @@
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IRoleInteractor } from '../../web.core/usecase/boundaries/interactors/IRoleInteractor';
+import { IRoleInteractor } from '../../web.core/interfaces/interactors/IRoleInteractor';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { RoleCommonFilterRequest } from '../../web.core/dtos/role/requests/RoleCommonFilterRequest';
 import { RoleCommonResponse } from '../../web.core/dtos/role/responses/RoleCommonResponse';

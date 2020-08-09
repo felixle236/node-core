@@ -1,5 +1,5 @@
 import * as S3 from 'aws-sdk/clients/s3';
-import { IBucketItem, IStorageService } from '../../../../../web.core/usecase/boundaries/services/IStorageService';
+import { IBucketItem, IStorageService } from '../../../../../web.core/interfaces/services/IStorageService';
 
 export class AwsS3Factory implements IStorageService {
     private readonly _s3Client: S3;
