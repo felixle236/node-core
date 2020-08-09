@@ -1,24 +1,20 @@
 import { Inject, Service } from 'typedi';
 import { QueryRunner, getRepository } from 'typeorm';
-import { mapModel, mapModels } from '../../../../libs/common';
 import { DbContext } from '../DbContext';
-import { IRole } from '../../../../web.core/interfaces/models/IRole';
-import { IRoleRepository } from '../../../../web.core/interfaces/gateways/data/IRoleRepository';
-import { Role } from '../../../../web.core/models/Role';
-import { RoleCommonFilterRequest } from '../../../../web.core/dtos/role/requests/RoleCommonFilterRequest';
-import { RoleCreateData } from '../../../../web.core/dtos/role/data/RoleCreateData';
+import { IRoleCommonFilter } from '../../../../web.core/usecase/boundaries/filters/role/IRoleCommonFilter';
+import { IRoleFilter } from '../../../../web.core/usecase/boundaries/filters/role/IRoleFilter';
+import { IRoleRepository } from '../../../../web.core/usecase/boundaries/data/IRoleRepository';
+import { Role } from '../../../../web.core/domain/entities/Role';
 import { RoleEntity } from '../entities/RoleEntity';
-import { RoleFilterRequest } from '../../../../web.core/dtos/role/requests/RoleFilterRequest';
 import { RoleSchema } from '../schemas/RoleSchema';
-import { RoleUpdateData } from '../../../../web.core/dtos/role/data/RoleUpdateData';
-import { SortType } from '../../../../constants/Enums';
+import { SortType } from '../../../../web.core/domain/enums/SortType';
 
 @Service('role.repository')
 export class RoleRepository implements IRoleRepository {
     @Inject('database.context')
     private readonly _dbContext: DbContext;
 
-    private readonly _repository = getRepository<IRole>(RoleEntity);
+    private readonly _repository = getRepository(RoleEntity);
 
     async getAll(expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Role[]> {
         const list = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
@@ -26,10 +22,10 @@ export class RoleRepository implements IRoleRepository {
             .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
             .cache('roles', expireTimeCaching)
             .getMany();
-        return mapModels(Role, list);
+        return list.map(item => item.toEntity());
     }
 
-    async find(filter: RoleFilterRequest): Promise<[Role[], number]> {
+    async find(filter: IRoleFilter): Promise<[Role[], number]> {
         let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
@@ -47,10 +43,10 @@ export class RoleRepository implements IRoleRepository {
             .take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
-        return [mapModels(Role, list), count];
+        return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommon(filter: RoleCommonFilterRequest): Promise<[Role[], number]> {
+    async findCommon(filter: IRoleCommonFilter): Promise<[Role[], number]> {
         let query = this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .select([
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,
@@ -73,14 +69,14 @@ export class RoleRepository implements IRoleRepository {
             .take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
-        return [mapModels(Role, list), count];
+        return [list.map(item => item.toEntity()), count];
     }
 
     async getById(id: number): Promise<Role | undefined> {
-        const data = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
-        return mapModel(Role, data);
+        return result?.toEntity();
     }
 
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
@@ -90,21 +86,21 @@ export class RoleRepository implements IRoleRepository {
         if (excludeId)
             query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID} != :id`, { id: excludeId });
 
-        const role = await query.getOne();
-        return !!role;
+        const result = await query.getOne();
+        return !!result;
     }
 
-    async create(data: RoleCreateData, queryRunner?: QueryRunner): Promise<number | undefined> {
+    async create(data: Role, queryRunner?: QueryRunner): Promise<number | undefined> {
         const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME, queryRunner)
             .insert()
-            .values(data)
+            .values(new RoleEntity(data))
             .execute();
         return result.identifiers && result.identifiers.length && result.identifiers[0].id;
     }
 
-    async update(id: number, data: RoleUpdateData): Promise<boolean> {
+    async update(id: number, data: Role): Promise<boolean> {
         const result = await this._repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .update(data)
+            .update(new RoleEntity(data))
             .whereInIds(id)
             .execute();
         return !!result.affected;

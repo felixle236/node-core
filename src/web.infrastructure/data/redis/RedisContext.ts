@@ -1,7 +1,7 @@
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
 import { REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
-import { IRedisClient } from '../../../web.core/interfaces/types/IRedisClient';
+import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 import { Service } from 'typedi';
 
 @Service('redis.context')

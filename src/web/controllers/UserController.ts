@@ -1,6 +1,6 @@
 import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
+import { IUserInteractor } from '../../web.core/usecase/boundaries/interactors/IUserInteractor';
 import { Response } from 'express';
 import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
 import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
@@ -8,8 +8,8 @@ import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterR
 @Service()
 @Controller('/users')
 export class UserController {
-    @Inject('user.business')
-    private readonly _userBusiness: IUserBusiness;
+    @Inject('user.interactor')
+    private readonly _userInteractor: IUserInteractor;
 
     @Get('/')
     @Render('users/list')
@@ -18,7 +18,7 @@ export class UserController {
         if (!userAuth)
             return response.redirect('/');
 
-        const data = await this._userBusiness.find(filter, userAuth);
+        const data = await this._userInteractor.find(filter, userAuth);
         return {
             title: 'User List',
             userAuth,

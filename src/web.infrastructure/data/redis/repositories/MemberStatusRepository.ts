@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { IMemberStatusRepository } from '../../../../web.core/interfaces/gateways/data/IMemberStatusRepository';
+import { IMemberStatusRepository } from '../../../../web.core/usecase/boundaries/data/IMemberStatusRepository';
 import { RedisContext } from '../RedisContext';
 
 @Service('member.status.repository')

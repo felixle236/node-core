@@ -1,29 +1,27 @@
 import { Brackets, QueryRunner, getRepository } from 'typeorm';
-import { mapModel, mapModels } from '../../../../libs/common';
-import { IUser } from '../../../../web.core/interfaces/models/IUser';
-import { IUserRepository } from '../../../../web.core/interfaces/gateways/data/IUserRepository';
-import { MemberFilterRequest } from '../../../../web.core/dtos/member/requests/MemberFilterRequest';
+import { IMemberFilter } from '../../../../web.core/usecase/boundaries/filters/member/IMemberFilter';
+import { IUserCommonFilter } from '../../../../web.core/usecase/boundaries/filters/user/IUserCommonFilter';
+import { IUserFilter } from '../../../../web.core/usecase/boundaries/filters/user/IUserFilter';
+import { IUserRepository } from '../../../../web.core/usecase/boundaries/data/IUserRepository';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
-import { User } from '../../../../web.core/models/User';
+import { User } from '../../../../web.core/domain/entities/User';
 import { UserActiveData } from '../../../../web.core/dtos/user/data/UserActiveData';
 import { UserArchiveData } from '../../../../web.core/dtos/user/data/UserArchiveData';
-import { UserCommonFilterRequest } from '../../../../web.core/dtos/user/requests/UserCommonFilterRequest';
 import { UserCreateData } from '../../../../web.core/dtos/user/data/UserCreateData';
 import { UserEntity } from '../entities/UserEntity';
-import { UserFilterRequest } from '../../../../web.core/dtos/user/requests/UserFilterRequest';
 import { UserForgotData } from '../../../../web.core/dtos/user/data/UserForgotData';
 import { UserResetPasswordData } from '../../../../web.core/dtos/user/data/UserResetPasswordData';
 import { UserSchema } from '../schemas/UserSchema';
-import { UserStatus } from '../../../../constants/Enums';
+import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 import { UserUpdateData } from '../../../../web.core/dtos/user/data/UserUpdateData';
 import { UserUpdatePasswordData } from '../../../../web.core/dtos/user/data/UserUpdatePasswordData';
 
 @Service('user.repository')
 export class UserRepository implements IUserRepository {
-    private readonly _repository = getRepository<IUser>(UserEntity);
+    private readonly _repository = getRepository(UserEntity);
 
-    async find(filter: UserFilterRequest): Promise<[User[], number]> {
+    async find(filter: IUserFilter): Promise<[User[], number]> {
         let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME);
         query = query.andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.STATUS} = '${filter.status || UserStatus.ACTIVED}'`);
@@ -46,11 +44,11 @@ export class UserRepository implements IUserRepository {
             .skip(filter.skip)
             .take(filter.limit);
 
-        const [users, count] = await query.getManyAndCount();
-        return [mapModels(User, users), count];
+        const [list, count] = await query.getManyAndCount();
+        return [list.map(item => item.toEntity()), count];
     }
 
-    async findMembers(filter: MemberFilterRequest): Promise<[User[], number]> {
+    async findMembers(filter: IMemberFilter): Promise<[User[], number]> {
         let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVED_AT} IS NOT NULL`);
@@ -70,11 +68,11 @@ export class UserRepository implements IUserRepository {
             .skip(filter.skip)
             .take(filter.limit);
 
-        const [users, count] = await query.getManyAndCount();
-        return [mapModels(User, users), count];
+        const [list, count] = await query.getManyAndCount();
+        return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommon(filter: UserCommonFilterRequest): Promise<[User[], number]> {
+    async findCommon(filter: IUserCommonFilter): Promise<[User[], number]> {
         let query = this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .select([
                 `${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ID}`,
@@ -104,53 +102,53 @@ export class UserRepository implements IUserRepository {
             .skip(filter.skip)
             .take(filter.limit);
 
-        const [users, count] = await query.getManyAndCount();
-        return [mapModels(User, users), count];
+        const [list, count] = await query.getManyAndCount();
+        return [list.map(item => item.toEntity()), count];
     }
 
     async getById(id: number, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
-        return mapModel(User, user);
+        return result?.toEntity();
     }
 
     async getByEmail(email: string, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME, queryRunner)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
-        return mapModel(User, user);
+        return result?.toEntity();
     }
 
     async getByUserPassword(email: string, password: string): Promise<User | undefined> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .innerJoinAndSelect(`${UserSchema.TABLE_NAME}.${UserSchema.RELATED_ONE.ROLE}`, RoleSchema.TABLE_NAME)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .andWhere(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.PASSWORD} = :password`, { password })
             .getOne();
-        return mapModel(User, user);
+        return result?.toEntity();
     }
 
     async getByActiveKey(activeKey: string): Promise<User | undefined> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.ACTIVE_KEY} = :activeKey`, { activeKey })
             .getOne();
-        return mapModel(User, user);
+        return result?.toEntity();
     }
 
     async getByForgotKey(forgotKey: string): Promise<User | undefined> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.FORGOT_KEY} = :forgotKey`, { forgotKey })
             .getOne();
-        return mapModel(User, user);
+        return result?.toEntity();
     }
 
     async checkEmailExist(email: string): Promise<boolean> {
-        const user = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(UserSchema.TABLE_NAME)
             .where(`LOWER(${UserSchema.TABLE_NAME}.${UserSchema.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
-        return !!user;
+        return !!result;
     }
 
     async create(data: UserCreateData, queryRunner?: QueryRunner): Promise<number | undefined> {

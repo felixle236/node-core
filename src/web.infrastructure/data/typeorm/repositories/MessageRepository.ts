@@ -1,20 +1,18 @@
-import { mapModel, mapModels } from '../../../../libs/common';
-import { IMessage } from '../../../../web.core/interfaces/models/IMessage';
-import { IMessageRepository } from '../../../../web.core/interfaces/gateways/data/IMessageRepository';
-import { Message } from '../../../../web.core/models/Message';
+import { IMessageFilter } from '../../../../web.core/usecase/boundaries/filters/message/IMessageFilter';
+import { IMessageRepository } from '../../../../web.core/usecase/boundaries/data/IMessageRepository';
+import { Message } from '../../../../web.core/domain/entities/Message';
 import { MessageCreateData } from '../../../../web.core/dtos/message/data/MessageCreateData';
 import { MessageEntity } from '../entities/MessageEntity';
-import { MessageFilterRequest } from '../../../../web.core/dtos/message/requests/MessageFilterRequest';
 import { MessageSchema } from '../schemas/MessageSchema';
 import { Service } from 'typedi';
-import { SortType } from '../../../../constants/Enums';
+import { SortType } from '../../../../web.core/domain/enums/SortType';
 import { getRepository } from 'typeorm';
 
 @Service('message.repository')
 export class MessageRepository implements IMessageRepository {
-    private readonly _repository = getRepository<IMessage>(MessageEntity);
+    private readonly _repository = getRepository(MessageEntity);
 
-    async find(filter: MessageFilterRequest): Promise<[Message[], number]> {
+    async find(filter: IMessageFilter): Promise<[Message[], number]> {
         let query = this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .andWhere(`${MessageSchema.TABLE_NAME}.${MessageSchema.COLUMNS.ROOM} = :room`, { room: filter.room });
 
@@ -27,15 +25,15 @@ export class MessageRepository implements IMessageRepository {
             .skip(filter.skip)
             .take(filter.limit);
 
-        const [messages, count] = await query.getManyAndCount();
-        return [mapModels(Message, messages), count];
+        const [list, count] = await query.getManyAndCount();
+        return [list.map(item => item.toEntity()), count];
     }
 
     async getById(id: number): Promise<Message | undefined> {
-        const message = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
+        const result = await this._repository.createQueryBuilder(MessageSchema.TABLE_NAME)
             .whereInIds(id)
             .getOne();
-        return mapModel(Message, message);
+        return result?.toEntity();
     }
 
     async create(data: MessageCreateData): Promise<number | undefined> {

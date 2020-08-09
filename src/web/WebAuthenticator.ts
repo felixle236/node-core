@@ -1,16 +1,16 @@
 import { Inject, Service } from 'typedi';
 import { Action } from 'routing-controllers';
-import { IAuthenticationBusiness } from '../web.core/interfaces/businesses/IAuthenticationBusiness';
+import { IAuthenticationInteractor } from '../web.core/usecase/boundaries/interactors/IAuthenticationInteractor';
 
 @Service('web.authenticator')
 export class WebAuthenticator {
-    @Inject('authentication.business')
-    private readonly _authBusiness: IAuthenticationBusiness;
+    @Inject('authentication.interactor')
+    private readonly _authInteractor: IAuthenticationInteractor;
 
     authorizationHttpChecker = async (action: Action, roleIds: number[]): Promise<boolean> => {
         const token = action.request.cookies && action.request.cookies.token;
         if (token)
-            action.request.userAuth = await this._authBusiness.authenticateUser(token, roleIds);
+            action.request.userAuth = await this._authInteractor.authenticateUser(token, roleIds);
         return true;
     }
 

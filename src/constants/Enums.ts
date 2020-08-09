@@ -1,7 +1,3 @@
-export enum SortType {
-    ASC = 'ASC',
-    DESC = 'DESC'
-}
 
 export enum StorageType {
     LOGGING = 0,
@@ -25,20 +21,4 @@ export enum PaymentSenderType {
     LOGGING = 0,
     STRIPE = 1,
     PAYPAL = 2
-}
-
-export enum RoleId {
-    SUPER_ADMIN = 1,
-    COMMON_USER = 2
-}
-
-export enum UserStatus {
-    INACTIVE = 'inactive',
-    ACTIVED = 'actived',
-    ARCHIVED = 'archived'
-}
-
-export enum GenderType {
-    MALE = 'male',
-    FEMALE = 'female'
 }

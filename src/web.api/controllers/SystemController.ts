@@ -2,20 +2,20 @@ import * as path from 'path';
 import { Authorized, ContentType, Get, JsonController, Post, Res } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
 import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
-import { IUserBusiness } from '../../web.core/interfaces/businesses/IUserBusiness';
-import { RoleId } from '../../constants/Enums';
+import { IUserInteractor } from '../../web.core/usecase/boundaries/interactors/IUserInteractor';
+import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { readFile } from '../../libs/file';
 
 @Service()
 @JsonController('/systems')
 export class SystemController {
-    @Inject('user.business')
-    private readonly _userBusiness: IUserBusiness;
+    @Inject('user.interactor')
+    private readonly _userInteractor: IUserInteractor;
 
     @Post('/sample-data')
     @Authorized(RoleId.SUPER_ADMIN)
     async createSampleData(): Promise<BulkActionResponse> {
-        return await this._userBusiness.createSampleData();
+        return await this._userInteractor.createSampleData();
     }
 
     // Demo API download file binary

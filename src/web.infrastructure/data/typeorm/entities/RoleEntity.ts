@@ -1,11 +1,16 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { IRole } from '../../../../web.core/interfaces/models/IRole';
+import { IRole } from '../../../../web.core/domain/types/IRole';
+import { Role } from '../../../../web.core/domain/entities/Role';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { UserEntity } from './UserEntity';
 
 @Entity(RoleSchema.TABLE_NAME)
 @Index((role: RoleEntity) => [role.name, role.deletedAt], { unique: true })
 export class RoleEntity implements IRole {
+    constructor(entity?: Role) {
+        this.fromEntity(entity);
+    }
+
     @PrimaryGeneratedColumn({ name: RoleSchema.COLUMNS.ID })
     id: number;
 
@@ -28,4 +33,26 @@ export class RoleEntity implements IRole {
 
     @OneToMany(() => UserEntity, user => user.role)
     users: UserEntity[];
+
+    /* handlers */
+
+    toEntity(): Role {
+        return new Role(this);
+    }
+
+    fromEntity(entity?: Role): this | undefined {
+        if (!entity)
+            return;
+
+        if (entity.id !== undefined)
+            this.id = entity.id;
+
+        if (entity.name !== undefined)
+            this.name = entity.name;
+
+        if (entity.level !== undefined)
+            this.level = entity.level;
+
+        return this;
+    }
 }

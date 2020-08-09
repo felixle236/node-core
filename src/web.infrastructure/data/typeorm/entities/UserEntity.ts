@@ -1,14 +1,20 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { GenderType, UserStatus } from '../../../../constants/Enums';
 import { DateTransformer } from '../transformers/DateTransformer';
-import { IUser } from '../../../../web.core/interfaces/models/IUser';
+import { GenderType } from '../../../../web.core/domain/enums/GenderType';
+import { IUser } from '../../../../web.core/domain/types/IUser';
 import { MessageEntity } from './MessageEntity';
 import { RoleEntity } from './RoleEntity';
+import { User } from '../../../../web.core/domain/entities/User';
 import { UserSchema } from '../schemas/UserSchema';
+import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 
 @Entity(UserSchema.TABLE_NAME)
 @Index((user: UserEntity) => [user.email, user.deletedAt], { unique: true })
 export class UserEntity implements IUser {
+    constructor(entity?: User) {
+        this.fromEntity(entity);
+    }
+
     @PrimaryGeneratedColumn({ name: UserSchema.COLUMNS.ID })
     id: number;
 
@@ -91,4 +97,77 @@ export class UserEntity implements IUser {
 
     @OneToMany(() => MessageEntity, message => message.receiver)
     messageReceivers: MessageEntity[];
+
+    /* handlers */
+
+    toEntity(): User {
+        return new User(this);
+    }
+
+    fromEntity(entity?: User): this | undefined {
+        if (!entity)
+            return;
+
+        if (entity.id !== undefined)
+            this.id = entity.id;
+
+        if (entity.roleId !== undefined)
+            this.roleId = entity.roleId;
+
+        if (entity.status !== undefined)
+            this.status = entity.status;
+
+        if (entity.firstName !== undefined)
+            this.firstName = entity.firstName;
+
+        if (entity.lastName !== undefined)
+            this.lastName = entity.lastName;
+
+        if (entity.email !== undefined)
+            this.email = entity.email;
+
+        if (entity.password !== undefined)
+            this.password = entity.password;
+
+        if (entity.avatar !== undefined)
+            this.avatar = entity.avatar;
+
+        if (entity.gender !== undefined)
+            this.gender = entity.gender;
+
+        if (entity.birthday !== undefined)
+            this.birthday = entity.birthday;
+
+        if (entity.phone !== undefined)
+            this.phone = entity.phone;
+
+        if (entity.address !== undefined)
+            this.address = entity.address;
+
+        if (entity.culture !== undefined)
+            this.culture = entity.culture;
+
+        if (entity.currency !== undefined)
+            this.currency = entity.currency;
+
+        if (entity.activeKey !== undefined)
+            this.activeKey = entity.activeKey;
+
+        if (entity.activeExpire !== undefined)
+            this.activeExpire = entity.activeExpire;
+
+        if (entity.activedAt !== undefined)
+            this.activedAt = entity.activedAt;
+
+        if (entity.archivedAt !== undefined)
+            this.archivedAt = entity.archivedAt;
+
+        if (entity.forgotKey !== undefined)
+            this.forgotKey = entity.forgotKey;
+
+        if (entity.forgotExpire !== undefined)
+            this.forgotExpire = entity.forgotExpire;
+
+        return this;
+    }
 }
