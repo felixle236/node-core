@@ -1,11 +1,11 @@
 import { Inject, Service } from 'typedi';
 import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { IUseCaseHandler } from '../../domain/common/IUseCaseHandler';
+import { IUseCase } from '../../domain/common/IUseCase';
 import { Role } from '../../domain/entities/Role';
 import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
 
 @Service()
-export class GetRoleByIdHandler implements IUseCaseHandler {
+export class GetRoleByIdUseCase implements IUseCase {
     id: number;
     userAuth: UserAuthenticated;
 

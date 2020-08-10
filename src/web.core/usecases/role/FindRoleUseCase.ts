@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { IRoleCommonFilter } from '../../interfaces/models/role/IRoleCommonFilter';
+import { IRoleFilter } from '../../interfaces/models/role/IRoleFilter';
 import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { IUseCaseHandler } from '../../domain/common/IUseCaseHandler';
+import { IUseCase } from '../../d../../domain/common/IUseCase';
 import { Role } from '../../domain/entities/Role';
 import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
 
 @Service()
-export class FindRoleCommonHandler implements IUseCaseHandler {
-    filter: IRoleCommonFilter;
+export class FindRoleUseCase implements IUseCase {
+    filter: IRoleFilter;
     userAuth: UserAuthenticated;
 
     @Inject('role.repository')
@@ -15,6 +15,6 @@ export class FindRoleCommonHandler implements IUseCaseHandler {
 
     async execute(): Promise<[Role[], number]> {
         this.filter.userAuth = this.userAuth;
-        return await this._roleRepository.findCommon(this.filter);
+        return await this._roleRepository.find(this.filter);
     }
 }

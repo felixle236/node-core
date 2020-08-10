@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { IUseCaseHandler } from '../../domain/common/IUseCaseHandler';
+import { IUseCase } from '../../domain/common/IUseCase';
 import { Role } from '../../domain/entities/Role';
 import { SystemError } from '../../domain/common/exceptions';
 import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
 
 @Service()
-export class CreateRoleHandler implements IUseCaseHandler {
+export class CreateRoleUseCase implements IUseCase {
     data: Role;
     userAuth: UserAuthenticated;
 

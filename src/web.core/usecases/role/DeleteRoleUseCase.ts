@@ -1,11 +1,11 @@
 import { Inject, Service } from 'typedi';
 import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { IUseCaseHandler } from '../../domain/common/IUseCaseHandler';
+import { IUseCase } from '../../domain/common/IUseCase';
 import { SystemError } from '../../domain/common/exceptions';
 import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
 
 @Service()
-export class DeleteRoleHandler implements IUseCaseHandler {
+export class DeleteRoleUseCase implements IUseCase {
     id: number;
     userAuth: UserAuthenticated;
 

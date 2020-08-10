@@ -10,17 +10,27 @@ import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
 import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
+import { FindRoleUseCase } from '../../web.core/usecases/role/FindRoleUseCase';
+import { FindRoleCommonUseCase } from '../../web.core/usecases/role/FindRoleCommonUseCase';
+import { CreateRoleUseCase } from '../../web.core/usecases/role/CreateRoleUseCase';
+import { UpdateRoleUseCase } from '../../web.core/usecases/role/UpdateRoleUseCase';
+import { DeleteRoleUseCase } from '../../web.core/usecases/role/DeleteRoleUseCase';
 
 @Service()
 @JsonController('/roles')
 export class RoleController {
-    @Inject('role.interactor')
-    private readonly _roleInteractor: IRoleInteractor;
+    constructor(
+        private readonly _findRoleUseCase: FindRoleUseCase,
+        private readonly _findRoleCommonUseCase: FindRoleCommonUseCase,
+        private readonly _createRoleUseCase: CreateRoleUseCase,
+        private readonly _updateRoleUseCase: UpdateRoleUseCase,
+        private readonly _deleteRoleUseCase: DeleteRoleUseCase
+    ) {}
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
     async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleFilterRequest): Promise<ResultListResponse<RoleResponse>> {
-        return await this._roleInteractor.find(filter, userAuth);
+        return await this._findRoleUseCase.find(filter, userAuth);
     }
 
     @Get('/common')
