@@ -1,6 +1,6 @@
 import { Repository, getRepository } from 'typeorm';
 import { DbContext } from '../../DbContext';
-import { IFilterModel } from '../../../../../web.core/domain/common/inputs/IFilterModel';
+import { IFilter } from '../../../../../web.core/domain/common/inputs/IFilter';
 import { IRead } from '../../../../../web.core/domain/common/persistence/IRead';
 import { IWrite } from '../../../../../web.core/domain/common/persistence/IWrite';
 
@@ -13,7 +13,7 @@ export class BaseRepository<TEntity, TDbEntity, TIdentityType> implements IRead<
         this.repository = getRepository(_type);
     }
 
-    async find(_filters: IFilterModel): Promise<[TEntity[], number]> {
+    async find(_filter: IFilter): Promise<[TEntity[], number]> {
         throw new Error();
     }
 

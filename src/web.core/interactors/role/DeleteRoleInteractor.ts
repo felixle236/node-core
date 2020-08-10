@@ -1,26 +1,23 @@
 import { Inject, Service } from 'typedi';
+import { IInteractor } from '../../domain/common/IInteractor';
 import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { IUseCase } from '../../domain/common/IUseCase';
 import { SystemError } from '../../domain/common/exceptions';
 import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
 
 @Service()
-export class DeleteRoleUseCase implements IUseCase {
-    id: number;
-    userAuth: UserAuthenticated;
-
+export class DeleteRoleInteractor implements IInteractor<number, boolean> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async execute(): Promise<boolean> {
-        const role = await this._roleRepository.getById(this.id);
+    async execute(id: number, userAuth: UserAuthenticated): Promise<boolean> {
+        const role = await this._roleRepository.getById(id);
         if (!role)
             throw new SystemError(1004, 'role');
 
-        if (role.level <= this.userAuth.role.level)
+        if (role.level <= userAuth.role.level)
             throw new SystemError(3);
 
-        const hasSucceed = await this._roleRepository.delete(this.id);
+        const hasSucceed = await this._roleRepository.delete(id);
         if (!hasSucceed)
             throw new SystemError(5);
 

@@ -1,7 +1,6 @@
-import { IFilterModel } from './IFilterModel';
-import { ResultList } from '../outputs/ResultList';
+import { IFilter } from './IFilter';
 
-export class BaseFilter implements IFilterModel {
+export class BaseFilter implements IFilter {
     private readonly _limitDefault = 10;
     private readonly _maxLimitDefault = 30;
 
@@ -59,9 +58,5 @@ export class BaseFilter implements IFilterModel {
             val = this._maxLimitDefault;
 
         this._maxLimit = val;
-    }
-
-    toResultList<T>(list: T[], total: number): ResultList<T> {
-        return new ResultList(list, total, this.skip, this.limit);
     }
 }

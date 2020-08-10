@@ -1,8 +1,8 @@
-import { IRoleCommonFilter } from '../models/role/IRoleCommonFilter';
-import { QueryRunner } from 'typeorm';
-import { Role } from '../../domain/entities/Role';
 import { IRead } from '../../domain/common/persistence/IRead';
 import { IWrite } from '../../domain/common/persistence/IWrite';
+import { QueryRunner } from 'typeorm';
+import { Role } from '../../domain/entities/Role';
+import { RoleCommonFilter } from '../../interactors/role/FindRoleCommonInteractor';
 
 export interface IRoleRepository extends IRead<Role, number>, IWrite<Role, number> {
     /**
@@ -16,7 +16,7 @@ export interface IRoleRepository extends IRead<Role, number>, IWrite<Role, numbe
      */
     getAll(expireTimeCaching: number): Promise<Role[]>;
 
-    findCommon(filter: IRoleCommonFilter): Promise<[Role[], number]>;
+    findCommon(filter: RoleCommonFilter): Promise<[Role[], number]>;
 
     checkNameExist(name: string): Promise<boolean>;
     checkNameExist(name: string, excludeId: number): Promise<boolean>;

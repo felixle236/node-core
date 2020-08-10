@@ -1,16 +1,18 @@
 import { BaseRepository } from './base/BaseRepository';
-import { IRoleCommonFilter } from '../../../../web.core/interfaces/models/role/IRoleCommonFilter';
-import { IRoleFilter } from '../../../../web.core/interfaces/models/role/IRoleFilter';
 import { IRoleRepository } from '../../../../web.core/interfaces/repositories/IRoleRepository';
 import { QueryRunner } from 'typeorm';
 import { Role } from '../../../../web.core/domain/entities/Role';
+import { RoleCommonFilter } from '../../../../web.core/interactors/role/FindRoleCommonInteractor';
 import { RoleDbEntity } from '../entities/RoleDbEntity';
+import { RoleFilter } from '../../../../web.core/interactors/role/FindRoleInteractor';
 import { RoleSchema } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
 import { SortType } from '../../../../web.core/domain/enums/SortType';
 
 @Service('role.repository')
 export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> implements IRoleRepository {
+    private readonly _roleListCacheId = 'roles';
+
     constructor() {
         super(RoleDbEntity);
     }
@@ -19,12 +21,12 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
         const list = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
             .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
-            .cache('roles', expireTimeCaching)
+            .cache(this._roleListCacheId, expireTimeCaching)
             .getMany();
         return list.map(item => item.toEntity());
     }
 
-    async find(filter: IRoleFilter): Promise<[Role[], number]> {
+    async find(filter: RoleFilter): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
@@ -45,12 +47,11 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommon(filter: IRoleCommonFilter): Promise<[Role[], number]> {
+    async findCommon(filter: RoleCommonFilter): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
             .select([
                 `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,
-                `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`,
-                `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`
+                `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`
             ]);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
@@ -114,6 +115,6 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
     }
 
     async clearCaching(): Promise<void> {
-        await this.dbContext.clearCaching('roles');
+        await this.dbContext.clearCaching(this._roleListCacheId);
     }
 }

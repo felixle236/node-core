@@ -1,6 +1,6 @@
-import { IFilterModel } from '../inputs/IFilterModel';
+import { IFilter } from '../inputs/IFilter';
 
 export interface IRead<TEntity, TIdentityType> {
-    find(filters: IFilterModel): Promise<[TEntity[], number]>;
+    find(filter: IFilter): Promise<[TEntity[], number]>;
     getById(id: TIdentityType): Promise<TEntity | undefined>;
 }

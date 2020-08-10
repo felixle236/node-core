@@ -61,7 +61,7 @@
         "emitDecoratorMetadata": true,            /* Enables experimental support for emitting type metadata for decorators. */
         "skipLibCheck": true                      /* Skip type checking of all declaration files (*.d.ts). */
     },
-    "include": ["./src/**/*.ts"],
+    "include": ["./src/**/*.ts", "src/web.core/usecases/role/GetRoleByIdInteractorts"],
     "exclude": [
         "./node_modules/*"
     ]
