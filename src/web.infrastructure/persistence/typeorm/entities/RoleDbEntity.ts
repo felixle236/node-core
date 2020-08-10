@@ -37,10 +37,7 @@ export class RoleDbEntity implements IRole, IDbEntity<Role> {
         return new Role(this);
     }
 
-    fromEntity(entity?: Role): this | undefined {
-        if (!entity)
-            return;
-
+    fromEntity(entity: Role): this {
         if (entity.id !== undefined)
             this.id = entity.id;
 
