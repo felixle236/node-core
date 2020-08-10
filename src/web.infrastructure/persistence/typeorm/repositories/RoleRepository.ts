@@ -10,7 +10,7 @@ import { Service } from 'typedi';
 import { SortType } from '../../../../web.core/domain/enums/SortType';
 
 @Service('role.repository')
-export class RoleRepository extends BaseRepository<Role, RoleDbEntity> implements IRoleRepository {
+export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> implements IRoleRepository {
     constructor() {
         super(RoleDbEntity);
     }

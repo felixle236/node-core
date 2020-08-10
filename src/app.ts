@@ -9,7 +9,7 @@ import { RedisContext } from './web.infrastructure/data/redis/RedisContext';
 import { SocketService } from './web.socket/SocketService';
 import { WebService } from './web/WebService';
 
-const dbContext = Container.get<DbContext>('database.context');
+const dbContext = new DbContext();
 const redisContext = Container.get<RedisContext>('redis.context');
 
 const startApplication = async () => {

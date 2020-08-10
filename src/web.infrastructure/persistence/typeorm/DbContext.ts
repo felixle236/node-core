@@ -1,10 +1,8 @@
 import * as path from 'path';
 import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENABLE_QUERY_LOGGING, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
-import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/dtos/common/Exception';
 
-@Service('database.context')
 export class DbContext {
     getConnection(): Connection {
         let connection: Connection | undefined;
