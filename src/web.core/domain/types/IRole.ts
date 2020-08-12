@@ -1,10 +1,8 @@
+import { IEntity } from './base/IEntity';
 import { IUser } from './IUser';
 
-export interface IRole {
+export interface IRole extends IEntity {
     id: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
     name: string;
     level: number;
 

@@ -1,11 +1,10 @@
-export class UserSchema {
-    static TABLE_NAME = 'users';
+import { BASE_SCHEMA } from './base/BaseSchema';
 
-    static COLUMNS = {
+export const USER_SCHEMA = {
+    TABLE_NAME: 'users',
+    COLUMNS: {
+        ...BASE_SCHEMA.COLUMNS,
         ID: 'id',
-        CREATED_AT: 'created_at',
-        UPDATED_AT: 'updated_at',
-        DELETED_AT: 'deleted_at',
         ROLE_ID: 'role_id',
         STATUS: 'status',
         FIRST_NAME: 'first_name',
@@ -25,14 +24,12 @@ export class UserSchema {
         ARCHIVED_AT: 'archived_at',
         FORGOT_KEY: 'forgot_key',
         FORGOT_EXPIRE: 'forgot_expire'
-    };
-
-    static RELATED_ONE = {
+    },
+    RELATED_ONE: {
         ROLE: 'role'
-    };
-
-    static RELATED_MANTY = {
+    },
+    RELATED_MANY: {
         SENDERS: 'senders',
         RECEIVERS: 'receivers'
-    };
-}
+    }
+};

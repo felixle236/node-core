@@ -1,45 +1,44 @@
 import { BaseRepository } from './base/BaseRepository';
+import { FindRoleCommonFilter } from '../../../../web.core/interactors/role/find-role-common/Filter';
+import { FindRoleFilter } from '../../../../web.core/interactors/role/find-role/Filter';
 import { IRoleRepository } from '../../../../web.core/interfaces/repositories/IRoleRepository';
-import { QueryRunner } from 'typeorm';
+import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Role } from '../../../../web.core/domain/entities/Role';
-import { RoleCommonFilter } from '../../../../web.core/interactors/role/FindRoleCommonInteractor';
 import { RoleDbEntity } from '../entities/RoleDbEntity';
-import { RoleFilter } from '../../../../web.core/interactors/role/FindRoleInteractor';
-import { RoleSchema } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
 import { SortType } from '../../../../web.core/domain/enums/SortType';
 
 @Service('role.repository')
 export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> implements IRoleRepository {
-    private readonly _roleListCacheId = 'roles';
+    private readonly _roleListCacheKey = 'roles';
 
     constructor() {
-        super(RoleDbEntity);
+        super(RoleDbEntity, ROLE_SCHEMA);
     }
 
     async getAll(expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Role[]> {
-        const list = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
-            .cache(this._roleListCacheId, expireTimeCaching)
+        const list = await this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
+            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
+            .cache(this._roleListCacheKey, expireTimeCaching)
             .getMany();
         return list.map(item => item.toEntity());
     }
 
-    async find(filter: RoleFilter): Promise<[Role[], number]> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME);
+    async findAndCount(filter: FindRoleFilter): Promise<[Role[], number]> {
+        let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: filter.userAuth.role.level });
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME} ilike :keyword`, { keyword });
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
         }
 
         query = query
-            .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
+            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
             .skip(filter.skip)
             .take(filter.limit);
 
@@ -47,24 +46,24 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommon(filter: RoleCommonFilter): Promise<[Role[], number]> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
+    async findCommonAndCount(filter: FindRoleCommonFilter): Promise<[Role[], number]> {
+        let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
             .select([
-                `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID}`,
-                `${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`
+                `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.ID}`,
+                `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`
             ]);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL} > ${filter.userAuth.role.level}`);
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: filter.userAuth.role.level });
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME} ilike :keyword`, { keyword });
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
         }
 
         query = query
-            .orderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}`, SortType.ASC)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
+            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
             .skip(filter.skip)
             .take(filter.limit);
 
@@ -72,49 +71,18 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async getById(id: number): Promise<Role | undefined> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .whereInIds(id)
-            .getOne();
-        return result?.toEntity();
-    }
-
     async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
-        let query = this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .where(`lower(${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.NAME}) = lower(:name)`, { name });
+        let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
+            .where(`lower(${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
-            query = query.andWhere(`${RoleSchema.TABLE_NAME}.${RoleSchema.COLUMNS.ID} != :id`, { id: excludeId });
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
 
         const result = await query.getOne();
         return !!result;
     }
 
-    async create(data: Role, queryRunner?: QueryRunner): Promise<number | undefined> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME, queryRunner)
-            .insert()
-            .values(new RoleDbEntity().fromEntity(data))
-            .execute();
-        return result.identifiers && result.identifiers.length && result.identifiers[0].id;
-    }
-
-    async update(id: number, data: Role): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .update(new RoleDbEntity().fromEntity(data))
-            .whereInIds(id)
-            .execute();
-        return !!result.affected;
-    }
-
-    async delete(id: number): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(RoleSchema.TABLE_NAME)
-            .softDelete()
-            .whereInIds(id)
-            .execute();
-        return !!result.affected;
-    }
-
     async clearCaching(): Promise<void> {
-        await this.dbContext.clearCaching(this._roleListCacheId);
+        await this.dbContext.clearCaching(this._roleListCacheKey);
     }
 }

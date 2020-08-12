@@ -1,42 +1,36 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { IDbEntity } from '../IDbEntity';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseDbEntity } from './base/BaseDbEntity';
 import { IMessage } from '../../../../web.core/domain/types/IMessage';
+import { MESSAGE_SCHEMA } from '../schemas/MessageSchema';
 import { Message } from '../../../../web.core/domain/entities/Message';
-import { MessageSchema } from '../schemas/MessageSchema';
 import { UserDbEntity } from './UserDbEntity';
 
-@Entity(MessageSchema.TABLE_NAME)
-export class MessageDbEntity implements IMessage, IDbEntity<Message> {
-    @PrimaryGeneratedColumn({ name: MessageSchema.COLUMNS.ID })
+@Entity(MESSAGE_SCHEMA.TABLE_NAME)
+export class MessageDbEntity extends BaseDbEntity<Message> implements IMessage {
+    @PrimaryGeneratedColumn({ name: MESSAGE_SCHEMA.COLUMNS.ID })
     id: number;
 
-    @CreateDateColumn({ name: MessageSchema.COLUMNS.CREATED_AT, type: 'timestamptz' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ name: MessageSchema.COLUMNS.UPDATED_AT, type: 'timestamptz' })
-    updatedAt: Date;
-
-    @Column({ name: MessageSchema.COLUMNS.SENDER_ID })
+    @Column({ name: MESSAGE_SCHEMA.COLUMNS.SENDER_ID })
     senderId: number;
 
-    @Column({ name: MessageSchema.COLUMNS.RECEIVER_ID, nullable: true })
+    @Column({ name: MESSAGE_SCHEMA.COLUMNS.RECEIVER_ID, nullable: true })
     receiverId?: number;
 
-    @Column({ name: MessageSchema.COLUMNS.ROOM })
+    @Column({ name: MESSAGE_SCHEMA.COLUMNS.ROOM })
     @Index()
     room: number;
 
-    @Column({ name: MessageSchema.COLUMNS.CONTENT, length: 2000 })
+    @Column({ name: MESSAGE_SCHEMA.COLUMNS.CONTENT, length: 2000 })
     content: string;
 
     /* Relationship */
 
     @ManyToOne(() => UserDbEntity, user => user.messageSenders)
-    @JoinColumn({ name: MessageSchema.COLUMNS.SENDER_ID })
+    @JoinColumn({ name: MESSAGE_SCHEMA.COLUMNS.SENDER_ID })
     sender: UserDbEntity;
 
     @ManyToOne(() => UserDbEntity, user => user.messageReceivers)
-    @JoinColumn({ name: MessageSchema.COLUMNS.RECEIVER_ID })
+    @JoinColumn({ name: MESSAGE_SCHEMA.COLUMNS.RECEIVER_ID })
     receiver: UserDbEntity;
 
     /* handlers */
@@ -45,24 +39,23 @@ export class MessageDbEntity implements IMessage, IDbEntity<Message> {
         return new Message(this);
     }
 
-    fromEntity(entity?: Message): this | undefined {
-        if (!entity)
-            return;
+    fromEntity(entity: Message): this {
+        const data = entity.toData();
 
-        if (entity.id !== undefined)
-            this.id = entity.id;
+        if (data.id !== undefined)
+            this.id = data.id;
 
-        if (entity.senderId !== undefined)
-            this.senderId = entity.senderId;
+        if (data.senderId !== undefined)
+            this.senderId = data.senderId;
 
-        if (entity.receiverId !== undefined)
-            this.receiverId = entity.receiverId;
+        if (data.receiverId !== undefined)
+            this.receiverId = data.receiverId;
 
-        if (entity.room !== undefined)
-            this.room = entity.room;
+        if (data.room !== undefined)
+            this.room = data.room;
 
-        if (entity.content !== undefined)
-            this.content = entity.content;
+        if (data.content !== undefined)
+            this.content = data.content;
 
         return this;
     }

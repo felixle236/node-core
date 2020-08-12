@@ -1,97 +1,92 @@
 import * as validator from 'class-validator';
+import { BaseEntity } from './base/BaseEntity';
 import { IMessage } from '../types/IMessage';
 import { SystemError } from '../common/exceptions/SystemError';
 import { User } from './user';
 
-export class Message implements IMessage {
-    constructor(private readonly _data = {} as IMessage) { }
+export class Message extends BaseEntity<IMessage> implements IMessage {
+    constructor(data?: IMessage) {
+        super(data);
+    }
 
     get id(): number {
-        return this._data.id;
-    }
-
-    get createdAt(): Date {
-        return this._data.createdAt;
-    }
-
-    get updatedAt(): Date {
-        return this._data.updatedAt;
+        return this.data.id;
     }
 
     get senderId(): number {
-        return this._data.senderId;
+        return this.data.senderId;
     }
 
     set senderId(val: number) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'sender id');
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'sender id');
-        this._data.senderId = val;
+        this.data.senderId = val;
         this._updateRoom();
     }
 
     get receiverId(): number | undefined {
-        return this._data.receiverId;
+        return this.data.receiverId;
     }
 
     set receiverId(val: number | undefined) {
-        if (!validator.isEmpty(val)) {
+        if (val) {
             if (!validator.isPositive(val))
                 throw new SystemError(1002, 'receiver id');
         }
 
-        this._data.receiverId = val;
+        this.data.receiverId = val;
         this._updateRoom();
     }
 
     get room(): number {
-        return this._data.room;
+        return this.data.room;
     }
 
     set room(val: number) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'room');
         if (!validator.isInt(val) || validator.isNegative(val))
             throw new SystemError(1002, 'room');
         if (val !== 0)
             throw new SystemError(1004, 'room');
 
-        if (this._data.receiverId)
-            this._data.receiverId = undefined;
-        this._data.room = val;
+        if (this.data.receiverId)
+            this.data.receiverId = undefined;
+        this.data.room = val;
     }
 
     get content(): string {
-        return this._data.content;
+        return this.data.content;
     }
 
     set content(val: string) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'content');
         if (!validator.isString(val))
             throw new SystemError(1002, 'content');
         if (val.length > 2000)
             throw new SystemError(2004, 'content', 2000);
 
-        this._data.content = val;
+        this.data.content = val;
     }
 
     /* Relationship */
 
     get sender(): User | undefined {
-        return this._data.sender && new User(this._data.sender);
+        return this.data.sender && new User(this.data.sender);
     }
 
     get receiver(): User | undefined {
-        return this._data.receiver && new User(this._data.receiver);
+        return this.data.receiver && new User(this.data.receiver);
     }
 
     /* handlers */
 
     private _updateRoom() {
-        if (this._data.senderId && this._data.receiverId)
-            this._data.room = Message.generateRoom(this._data.senderId, this._data.receiverId);
+        if (this.data.senderId && this.data.receiverId)
+            this.data.room = Message.generateRoom(this.data.senderId, this.data.receiverId);
     }
 
     static generateRoom(senderId: number, receiverId: number): number {

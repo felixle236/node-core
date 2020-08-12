@@ -1,11 +1,7 @@
-import { IMessageFilter } from '../filters/message/IMessageFilter';
+import { IRead } from '../../domain/common/persistence/IRead';
+import { IWrite } from '../../domain/common/persistence/IWrite';
 import { Message } from '../../domain/entities/Message';
-import { MessageCreateData } from '../../dtos/message/data/MessageCreateData';
 
-export interface IMessageRepository {
-    find(filter: IMessageFilter): Promise<[Message[], number]>;
+export interface IMessageRepository extends IRead<Message, number>, IWrite<Message, number> {
 
-    getById(id: number): Promise<Message | undefined>;
-
-    create(message: MessageCreateData): Promise<number | undefined>;
 }

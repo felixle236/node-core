@@ -1,22 +1,18 @@
 import { Inject, Service } from 'typedi';
-import { IInteractor } from '../../domain/common/IInteractor';
-import { IRoleRepository } from '../../interfaces/repositories/IRoleRepository';
-import { Role } from '../../domain/entities/Role';
-import { SystemError } from '../../domain/common/exceptions';
-import { UserAuthenticated } from '../../domain/common/UserAuthenticated';
-
-export class RoleUpdate {
-    id: number;
-    name: string;
-    level: number;
-}
+import { IInteractor } from '../../../domain/common/IInteractor';
+import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
+import { Role } from '../../../domain/entities/Role';
+import { SystemError } from '../../../domain/common/exceptions';
+import { UpdateRoleInput } from './Input';
+import { UpdateRoleOutput } from './Output';
+import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class UpdateRoleInteractor implements IInteractor<RoleUpdate, boolean> {
+export class UpdateRoleInteractor implements IInteractor<UpdateRoleInput, UpdateRoleOutput> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async execute(param: RoleUpdate, userAuth: UserAuthenticated): Promise<boolean> {
+    async handle(param: UpdateRoleInput, userAuth: UserAuthenticated): Promise<UpdateRoleOutput> {
         const id = param.id;
         const data = new Role();
         data.name = param.name;
@@ -37,6 +33,6 @@ export class UpdateRoleInteractor implements IInteractor<RoleUpdate, boolean> {
             throw new SystemError(5);
 
         await this._roleRepository.clearCaching();
-        return hasSucceed;
+        return new UpdateRoleOutput(hasSucceed);
     }
 }

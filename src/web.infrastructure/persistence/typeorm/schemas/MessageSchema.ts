@@ -1,7 +1,9 @@
-export class MessageSchema {
-    static TABLE_NAME = 'message';
+import { BASE_SCHEMA } from './base/BaseSchema';
 
-    static COLUMNS = {
+export const MESSAGE_SCHEMA = {
+    TABLE_NAME: 'message',
+    COLUMNS: {
+        ...BASE_SCHEMA.COLUMNS,
         ID: 'id',
         CREATED_AT: 'created_at',
         UPDATED_AT: 'updated_at',
@@ -9,10 +11,9 @@ export class MessageSchema {
         RECEIVER_ID: 'receiver_id',
         ROOM: 'room',
         CONTENT: 'content'
-    };
-
-    static RELATED_ONE = {
+    },
+    RELATED_ONE: {
         SENDER: 'sender',
         RECEIVER: 'receiver'
-    };
-}
+    }
+};

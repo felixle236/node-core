@@ -24,7 +24,7 @@ export class MemberResponse {
         this.firstName = model.firstName;
         this.lastName = model.lastName;
         this.email = model.email;
-        this.avatar = model.avatar && storageService.mapUrl(model.avatar);
+        this.avatar = model.avatar;
         this.gender = model.gender;
         this.birthday = model.birthday;
         this.phone = model.phone;

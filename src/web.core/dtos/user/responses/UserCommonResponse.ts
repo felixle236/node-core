@@ -17,6 +17,6 @@ export class UserCommonResponse {
         this.lastName = model.lastName;
         this.fullName = model.fullName;
         this.email = model.email;
-        this.avatar = model.avatar && storageService.mapUrl(model.avatar);
+        this.avatar = model.avatar;
     }
 }

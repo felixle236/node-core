@@ -1,9 +1,8 @@
+import { IEntity } from './base/IEntity';
 import { IUser } from './IUser';
 
-export interface IMessage {
+export interface IMessage extends IEntity {
     id: number;
-    createdAt: Date;
-    updatedAt: Date;
     senderId: number;
     receiverId?: number;
     room: number;

@@ -1,6 +1,9 @@
 import * as crypto from 'crypto';
 import * as validator from 'class-validator';
+import { BaseEntity } from './base/BaseEntity';
+import { Container } from 'typedi';
 import { GenderType } from '../enums/GenderType';
+import { IStorageService } from '../../interfaces/services/IStorageService';
 import { IUser } from '../types/IUser';
 import { Role } from './Role';
 import { SystemError } from '../common/exceptions/SystemError';
@@ -8,92 +11,80 @@ import { UserStatus } from '../enums/UserStatus';
 import { addSeconds } from '../../../libs/date';
 import { hashMD5 } from '../../../libs/crypt';
 
-export class User implements IUser {
-    constructor(private readonly _entity = {} as IUser) { }
+export class User extends BaseEntity<IUser> implements IUser {
+    private readonly _storageService: IStorageService = Container.get('storage.service');
+
+    constructor(data?: IUser) {
+        super(data);
+    }
 
     get id(): number {
-        return this._entity.id;
-    }
-
-    get createdAt(): Date {
-        return this._entity.createdAt;
-    }
-
-    get updatedAt(): Date {
-        return this._entity.updatedAt;
-    }
-
-    get deletedAt(): Date | undefined {
-        return this._entity.deletedAt;
+        return this.data.id;
     }
 
     get roleId(): number {
-        return this._entity.roleId;
+        return this.data.roleId;
     }
 
     set roleId(val: number) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'role id');
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'role id');
-        this._entity.roleId = val;
+        this.data.roleId = val;
     }
 
     get status(): UserStatus {
-        return this._entity.status;
+        return this.data.status;
     }
 
     set status(val: UserStatus) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'status');
         if (!validator.isEnum(val, UserStatus))
             throw new SystemError(1002, 'status');
 
-        this._entity.status = val;
+        this.data.status = val;
     }
 
     get firstName(): string {
-        return this._entity.firstName;
+        return this.data.firstName;
     }
 
     set firstName(val: string) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'first name');
         if (!validator.isString(val))
             throw new SystemError(1002, 'first name');
         if (val.length > 20)
             throw new SystemError(2004, 'first name', 20);
 
-        this._entity.firstName = val;
+        this.data.firstName = val;
     }
 
     get lastName(): string | undefined {
-        return this._entity.lastName;
+        return this.data.lastName;
     }
 
     set lastName(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'last name');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length > 20)
                 throw new SystemError(2004, 'last name', 20);
         }
 
-        this._entity.lastName = val;
-    }
-
-    get fullName(): string {
-        return this._entity.firstName + (this._entity.lastName ? ' ' + this._entity.lastName : '');
+        this.data.lastName = val;
     }
 
     get email(): string {
-        return this._entity.email;
+        return this.data.email;
     }
 
     set email(val: string) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'email');
         if (!validator.isString(val))
             throw new SystemError(1002, 'email');
@@ -105,15 +96,15 @@ export class User implements IUser {
         if (val.length > 120)
             throw new SystemError(2004, 'email', 120);
 
-        this._entity.email = val;
+        this.data.email = val;
     }
 
     get password(): string {
-        return this._entity.password;
+        return this.data.password;
     }
 
     set password(val: string) {
-        if (validator.isEmpty(val))
+        if (!val)
             throw new SystemError(1001, 'password');
         if (!validator.isString(val))
             throw new SystemError(1002, 'password');
@@ -124,161 +115,169 @@ export class User implements IUser {
         if (!regExp.test(val))
             throw new SystemError(3002, 'password', 6, 20);
 
-        this._entity.password = this.hashPassword(val);
+        this.data.password = this._hashPassword(val);
     }
 
     get avatar(): string | undefined {
-        return this._entity.avatar;
+        return this.data.avatar && this._storageService.mapUrl(this.data.avatar);
     }
 
     set avatar(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'avatar');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length > 200)
                 throw new SystemError(2004, 'avatar', 200);
         }
 
-        this._entity.avatar = val;
+        this.data.avatar = val;
     }
 
     get gender(): GenderType | undefined {
-        return this._entity.gender;
+        return this.data.gender;
     }
 
     set gender(val: GenderType | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isEnum(val, GenderType))
                 throw new SystemError(1002, 'gender');
         }
 
-        this._entity.gender = val;
+        this.data.gender = val;
     }
 
     get birthday(): Date | undefined {
-        return this._entity.birthday;
+        return this.data.birthday;
     }
 
     set birthday(val: Date | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isDate(val))
                 throw new SystemError(1002, 'birthday');
 
-            val = new Date(val!.getFullYear(), val!.getMonth(), val!.getDate());
+            val = new Date(val.getFullYear(), val.getMonth(), val.getDate());
             const now = new Date();
-            if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime())
+            if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() || now.getFullYear() - val.getFullYear() > 100)
                 throw new SystemError(1002, 'birthday');
         }
 
-        this._entity.birthday = val;
+        this.data.birthday = val;
+    }
+
+    get birthdayDisplay(): string | undefined {
+        return this.data.birthday && `${this.data.birthday.getFullYear()}-${this.data.birthday.getMonth() + 1}-${this.data.birthday.getDate()}`;
     }
 
     get phone(): string | undefined {
-        return this._entity.phone;
+        return this.data.phone;
     }
 
     set phone(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'phone');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length > 20)
                 throw new SystemError(2004, 'phone', 20);
         }
 
-        this._entity.phone = val;
+        this.data.phone = val;
     }
 
     get address(): string | undefined {
-        return this._entity.address;
+        return this.data.address;
     }
 
     set address(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'address');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length > 200)
                 throw new SystemError(2004, 'address', 200);
         }
 
-        this._entity.address = val;
+        this.data.address = val;
     }
 
     get culture(): string | undefined {
-        return this._entity.culture;
+        return this.data.culture;
     }
 
     set culture(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'culture');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length !== 5)
                 throw new SystemError(2001, 'culture', 5);
         }
 
-        this._entity.culture = val;
+        this.data.culture = val;
     }
 
     get currency(): string | undefined {
-        return this._entity.currency;
+        return this.data.currency;
     }
 
     set currency(val: string | undefined) {
-        if (validator.isNotEmpty(val)) {
+        if (val) {
             if (!validator.isString(val))
                 throw new SystemError(1002, 'currency');
 
-            val = val!.trim();
+            val = val.trim();
             if (val.length !== 3)
                 throw new SystemError(2001, 'currency', 3);
         }
 
-        this._entity.currency = val;
+        this.data.currency = val;
     }
 
     get activeKey(): string | undefined {
-        return this._entity.activeKey;
+        return this.data.activeKey;
     }
 
     get activeExpire(): Date | undefined {
-        return this._entity.activeExpire;
+        return this.data.activeExpire;
     }
 
     get activedAt(): Date | undefined {
-        return this._entity.activedAt;
+        return this.data.activedAt;
     }
 
     get archivedAt(): Date | undefined {
-        return this._entity.archivedAt;
+        return this.data.archivedAt;
     }
 
     get forgotKey(): string | undefined {
-        return this._entity.forgotKey;
+        return this.data.forgotKey;
     }
 
     get forgotExpire(): Date | undefined {
-        return this._entity.forgotExpire;
+        return this.data.forgotExpire;
     }
 
     /* Relationship */
 
     get role(): Role | undefined {
-        return this._entity.role && new Role(this._entity.role);
+        return this.data.role && new Role(this.data.role);
     }
 
     /* handlers */
 
-    hashPassword(password: string): string {
+    private _hashPassword(password: string): string {
         if (password)
             password = hashMD5(password, '$$88');
         return password;
+    }
+
+    comparePassword(password: string): boolean {
+        return this.password === this._hashPassword(password);
     }
 
     static getMaxAvatarSize(): number {
@@ -305,8 +304,8 @@ export class User implements IUser {
      */
     createActiveKey(): string {
         const activeKey = crypto.randomBytes(32).toString('hex');
-        this._entity.activeKey = activeKey;
-        this._entity.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+        this.data.activeKey = activeKey;
+        this.data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
         return activeKey;
     }
 
@@ -316,26 +315,26 @@ export class User implements IUser {
      */
     createForgotKey(): string {
         const forgotKey = crypto.randomBytes(32).toString('hex');
-        this._entity.forgotKey = forgotKey;
-        this._entity.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+        this.data.forgotKey = forgotKey;
+        this.data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
         return forgotKey;
     }
 
     resetPassword(password: string): void {
         this.password = password;
-        this._entity.forgotKey = undefined;
-        this._entity.forgotExpire = undefined;
+        this.data.forgotKey = undefined;
+        this.data.forgotExpire = undefined;
     }
 
     active(): void {
-        this._entity.status = UserStatus.ACTIVED;
-        this._entity.activeKey = undefined;
-        this._entity.activeExpire = undefined;
-        this._entity.activedAt = new Date();
+        this.data.status = UserStatus.ACTIVED;
+        this.data.activeKey = undefined;
+        this.data.activeExpire = undefined;
+        this.data.activedAt = new Date();
     }
 
     archive(): void {
-        this._entity.status = UserStatus.ARCHIVED;
-        this._entity.archivedAt = new Date();
+        this.data.status = UserStatus.ARCHIVED;
+        this.data.archivedAt = new Date();
     }
 }

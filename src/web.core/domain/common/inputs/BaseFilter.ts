@@ -1,6 +1,6 @@
 import { IFilter } from './IFilter';
 
-export class BaseFilter implements IFilter {
+export abstract class BaseFilter implements IFilter {
     private readonly _limitDefault = 10;
     private readonly _maxLimitDefault = 30;
 

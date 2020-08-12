@@ -1,16 +1,14 @@
-export class RoleSchema {
-    static TABLE_NAME = 'role';
+import { BASE_SCHEMA } from './base/BaseSchema';
 
-    static COLUMNS = {
+export const ROLE_SCHEMA = {
+    TABLE_NAME: 'role',
+    COLUMNS: {
+        ...BASE_SCHEMA.COLUMNS,
         ID: 'id',
-        CREATED_AT: 'created_at',
-        UPDATED_AT: 'updated_at',
-        DELETED_AT: 'deleted_at',
         NAME: 'name',
         LEVEL: 'level'
-    };
-
-    static RELATED_MANY = {
+    },
+    RELATED_MANY: {
         USERS: 'users'
-    };
-}
+    }
+};
