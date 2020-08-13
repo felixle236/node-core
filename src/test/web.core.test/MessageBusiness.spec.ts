@@ -9,7 +9,7 @@ import { IMessage } from '../../web.core/interfaces/models/IMessage';
 import { IMessageBusiness } from '../../web.core/interfaces/businesses/IMessageBusiness';
 import { IRole } from '../../web.core/interfaces/models/IRole';
 import { IUser } from '../../web.core/interfaces/models/IUser';
-import { MemberStatusRepository } from '../../web.infrastructure/data/redis/repositories/MemberStatusRepository';
+import { ContactStatusRepository } from '../../web.infrastructure/data/redis/repositories/ContactStatusRepository';
 import { Message } from '../../web.core/models/Message';
 import { MessageCreateRequest } from '../../web.core/dtos/message/requests/MessageCreateRequest';
 import { MessageFilterRequest } from '../../web.core/dtos/message/requests/MessageFilterRequest';
@@ -120,7 +120,7 @@ describe('Message business testing', () => {
         socket.userAuth = undefined;
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
         sandbox.stub(UserRepository.prototype, 'getById').resolves(user);
-        sandbox.stub(MemberStatusRepository.prototype, 'addOnlineStatus').resolves();
+        sandbox.stub(ContactStatusRepository.prototype, 'addOnlineStatus').resolves();
 
         await messageBusiness.connect(socket, 'access-token');
         expect(!!socket.userAuth).to.eq(true);
@@ -133,7 +133,7 @@ describe('Message business testing', () => {
         socket.userAuth = undefined;
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
         sandbox.stub(UserRepository.prototype, 'getById').resolves(user);
-        sandbox.stub(MemberStatusRepository.prototype, 'addOnlineStatus').resolves();
+        sandbox.stub(ContactStatusRepository.prototype, 'addOnlineStatus').resolves();
 
         socket.socketClient.on('online_status', userInfo => {
             expect(userInfo.id === user.id && userInfo.isOnline === true).to.eq(true);
@@ -142,7 +142,7 @@ describe('Message business testing', () => {
     });
 
     it('Disconnect socket successfully', async () => {
-        sandbox.stub(MemberStatusRepository.prototype, 'removeOnlineStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'removeOnlineStatus').resolves(true);
 
         socket.socketClient.on('online_status', userInfo => {
             expect(userInfo.id).to.eq(socket.userAuth.userId);
@@ -153,7 +153,7 @@ describe('Message business testing', () => {
     it('Find messages directly successfully', async () => {
         const users = generateUsers();
         sandbox.stub(MessageRepository.prototype, 'find').resolves([list, 3]);
-        sandbox.stub(MemberStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
 
         const filter = new MessageFilterRequest();
         filter.keyword = '';
@@ -165,7 +165,7 @@ describe('Message business testing', () => {
 
     it('Find messages room successfully', async () => {
         sandbox.stub(MessageRepository.prototype, 'find').resolves([list, 3]);
-        sandbox.stub(MemberStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
 
         const filter = new MessageFilterRequest();
         filter.keyword = '';
@@ -180,8 +180,8 @@ describe('Message business testing', () => {
         socket.connected = true;
         socket.nsp.sockets = { key: socket };
         sandbox.stub(UserRepository.prototype, 'findMembers').resolves([users, 2]);
-        sandbox.stub(MemberStatusRepository.prototype, 'getListOnlineStatus').resolves([users[1].id]);
-        sandbox.stub(MemberStatusRepository.prototype, 'getListNewMessageStatus').resolves([users[1].id]);
+        sandbox.stub(ContactStatusRepository.prototype, 'getListOnlineStatus').resolves([users[1].id]);
+        sandbox.stub(ContactStatusRepository.prototype, 'getListNewMessageStatus').resolves([users[1].id]);
 
         const filter = new UserFilterRequest();
         filter.keyword = '';
@@ -248,7 +248,7 @@ describe('Message business testing', () => {
     it('Create message with sender id greater than receiver id', async () => {
         const message = list[0];
         sandbox.stub(MessageRepository.prototype, 'create').resolves(message.id);
-        sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
         socket.userAuth.userId = 100;
@@ -260,7 +260,7 @@ describe('Message business testing', () => {
     it('Create message with sender id has string length greater than 4 characters', async () => {
         const message = list[0];
         sandbox.stub(MessageRepository.prototype, 'create').resolves(message.id);
-        sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
         socket.userAuth.userId = 10000;
@@ -281,7 +281,7 @@ describe('Message business testing', () => {
     it('Create message successfully', async () => {
         const message = list[0];
         sandbox.stub(MessageRepository.prototype, 'create').resolves(message.id);
-        sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
         const data = generateMessageCreate();
@@ -330,7 +330,7 @@ describe('Message business testing', () => {
     it('Create message room successfully', async () => {
         const message = list[0];
         sandbox.stub(MessageRepository.prototype, 'create').resolves(message.id);
-        sandbox.stub(MemberStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'addNewMessageStatus').resolves(true);
         sandbox.stub(MessageRepository.prototype, 'getById').resolves(message);
 
         const data = generateMessageRoomCreate();
@@ -347,7 +347,7 @@ describe('Message business testing', () => {
     });
 
     it('Update new message status successfully', async () => {
-        sandbox.stub(MemberStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
+        sandbox.stub(ContactStatusRepository.prototype, 'removeNewMessageStatus').resolves(true);
 
         const hasSucceed = await messageBusiness.updateNewMessageStatus(socket, 0);
         expect(hasSucceed).to.eq(true);

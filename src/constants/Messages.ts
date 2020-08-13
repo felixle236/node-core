@@ -17,6 +17,7 @@ export class MessageError {
     static ERR_1008 = 'The {0} has expired!';
     static ERR_1009 = 'The {0} has not been verified!';
     static ERR_1010 = 'The {0} was not found!';
+    static ERR_1011 = 'The {0} is not supported!';
 
     static ERR_2001 = 'The {0} must be {1} characters!';
     static ERR_2002 = 'The {0} must be at least {1} characters!';

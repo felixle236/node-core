@@ -1,6 +1,4 @@
 import { ConnectedSocket, EmitOnFail, EmitOnSuccess, MessageBody, OnConnect, OnDisconnect, OnMessage, SkipEmitOnEmptyResult, SocketController, SocketQueryParam } from 'socket-controllers';
-import { Inject, Service } from 'typedi';
-import { IMessageInteractor } from '../../web.core/interfaces/interactors/IMessageInteractor';
 import { ISocket } from '../../web.core/domain/common/ISocket';
 import { MemberFilterRequest } from '../../web.core/dtos/member/requests/MemberFilterRequest';
 import { MemberResponse } from '../../web.core/dtos/member/responses/MemberResponse';
@@ -10,13 +8,12 @@ import { MessageResponse } from '../../web.core/dtos/message/responses/MessageRe
 import { MessageRoomCreateRequest } from '../../web.core/dtos/message/requests/MessageRoomCreateRequest';
 import { MessageRoomResponse } from '../../web.core/dtos/message/responses/MessageRoomResponse';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
+import { Service } from 'typedi';
+import { SocketNamespace } from '../../web.core/domain/common/SocketNamespace';
 
 @Service()
-@SocketController('/messages')
+@SocketController('/' + SocketNamespace.MESSAGES)
 export default class MessageController {
-    @Inject('message.interactor')
-    private readonly _messageInteractor: IMessageInteractor;
-
     @OnConnect()
     async connect(@ConnectedSocket() socket: ISocket, @SocketQueryParam('token') token: string): Promise<void> {
         await this._messageInteractor.connect(socket, token);

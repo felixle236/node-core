@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
-import { IMemberStatusRepository } from '../../../../web.core/interfaces/data/IMemberStatusRepository';
+import { IContactStatusRepository } from '../../../../web.core/interfaces/data/IContactStatusRepository';
 import { RedisContext } from '../RedisContext';
 
-@Service('member.status.repository')
-export class MemberStatusRepository implements IMemberStatusRepository {
+@Service('contact.status.repository')
+export class ContactStatusRepository implements IContactStatusRepository {
     @Inject('redis.context')
     private readonly _redisContext: RedisContext;
 

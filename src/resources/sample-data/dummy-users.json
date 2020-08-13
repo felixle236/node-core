@@ -1,0 +1,73 @@
+[{
+    "roleId": 2,
+    "firstName": "Turtle",
+    "lastName": "",
+    "email": "turtle@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/turtle-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Chicken",
+    "lastName": "",
+    "email": "chicken@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/chicken-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Crab",
+    "lastName": "",
+    "email": "crab@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/crab-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Frog",
+    "lastName": "",
+    "email": "frog@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/frog-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Mouse",
+    "lastName": "",
+    "email": "mouse@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/mouse-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Sheep",
+    "lastName": "",
+    "email": "sheep@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/sheep-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Dog",
+    "lastName": "",
+    "email": "dog@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/dog-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Bird",
+    "lastName": "",
+    "email": "bird@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/bird-icon.png"
+}, {
+    "roleId": 2,
+    "firstName": "Shark",
+    "lastName": "",
+    "email": "shark@localhost.com",
+    "password": "Nodecore@2",
+    "gender": "male",
+    "avatar": "../../../../../resources/images/shark-icon.png"
+}]

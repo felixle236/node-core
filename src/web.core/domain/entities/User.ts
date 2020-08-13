@@ -31,6 +31,7 @@ export class User extends BaseEntity<IUser> implements IUser {
             throw new SystemError(1001, 'role id');
         if (!validator.isPositive(val))
             throw new SystemError(1002, 'role id');
+
         this.data.roleId = val;
     }
 
@@ -54,8 +55,8 @@ export class User extends BaseEntity<IUser> implements IUser {
     set firstName(val: string) {
         if (!val)
             throw new SystemError(1001, 'first name');
-        if (!validator.isString(val))
-            throw new SystemError(1002, 'first name');
+
+        val = val.trim();
         if (val.length > 20)
             throw new SystemError(2004, 'first name', 20);
 
@@ -68,14 +69,10 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set lastName(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'last name');
-
             val = val.trim();
             if (val.length > 20)
                 throw new SystemError(2004, 'last name', 20);
         }
-
         this.data.lastName = val;
     }
 
@@ -86,8 +83,6 @@ export class User extends BaseEntity<IUser> implements IUser {
     set email(val: string) {
         if (!val)
             throw new SystemError(1001, 'email');
-        if (!validator.isString(val))
-            throw new SystemError(1002, 'email');
 
         val = val.trim().toLowerCase();
 
@@ -106,8 +101,6 @@ export class User extends BaseEntity<IUser> implements IUser {
     set password(val: string) {
         if (!val)
             throw new SystemError(1001, 'password');
-        if (!validator.isString(val))
-            throw new SystemError(1002, 'password');
         if (val.length > 20)
             throw new SystemError(2004, 'password', 20);
 
@@ -124,14 +117,10 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set avatar(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'avatar');
-
             val = val.trim();
             if (val.length > 200)
                 throw new SystemError(2004, 'avatar', 200);
         }
-
         this.data.avatar = val;
     }
 
@@ -140,11 +129,8 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     set gender(val: GenderType | undefined) {
-        if (val) {
-            if (!validator.isEnum(val, GenderType))
-                throw new SystemError(1002, 'gender');
-        }
-
+        if (val && !validator.isEnum(val, GenderType))
+            throw new SystemError(1002, 'gender');
         this.data.gender = val;
     }
 
@@ -154,15 +140,11 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set birthday(val: Date | undefined) {
         if (val) {
-            if (!validator.isDate(val))
-                throw new SystemError(1002, 'birthday');
-
             val = new Date(val.getFullYear(), val.getMonth(), val.getDate());
             const now = new Date();
             if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() || now.getFullYear() - val.getFullYear() > 100)
                 throw new SystemError(1002, 'birthday');
         }
-
         this.data.birthday = val;
     }
 
@@ -176,9 +158,6 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set phone(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'phone');
-
             val = val.trim();
             if (val.length > 20)
                 throw new SystemError(2004, 'phone', 20);
@@ -193,9 +172,6 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set address(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'address');
-
             val = val.trim();
             if (val.length > 200)
                 throw new SystemError(2004, 'address', 200);
@@ -210,9 +186,6 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set culture(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'culture');
-
             val = val.trim();
             if (val.length !== 5)
                 throw new SystemError(2001, 'culture', 5);
@@ -227,9 +200,6 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set currency(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
-                throw new SystemError(1002, 'currency');
-
             val = val.trim();
             if (val.length !== 3)
                 throw new SystemError(2001, 'currency', 3);
@@ -242,24 +212,52 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.data.activeKey;
     }
 
+    set activeKey(val: string | undefined) {
+        if (val && val.length > 128)
+            throw new SystemError(2004, 'active key', 128);
+        this.data.activeKey = val;
+    }
+
     get activeExpire(): Date | undefined {
         return this.data.activeExpire;
+    }
+
+    set activeExpire(val: Date | undefined) {
+        this.data.activeExpire = val;
     }
 
     get activedAt(): Date | undefined {
         return this.data.activedAt;
     }
 
+    set activedAt(val: Date | undefined) {
+        this.data.activedAt = val;
+    }
+
     get archivedAt(): Date | undefined {
         return this.data.archivedAt;
+    }
+
+    set archivedAt(val: Date | undefined) {
+        this.data.archivedAt = val;
     }
 
     get forgotKey(): string | undefined {
         return this.data.forgotKey;
     }
 
+    set forgotKey(val: string | undefined) {
+        if (val && val.length > 128)
+            throw new SystemError(2004, 'forgot key', 128);
+        this.data.forgotKey = val;
+    }
+
     get forgotExpire(): Date | undefined {
         return this.data.forgotExpire;
+    }
+
+    set forgotExpire(val: Date | undefined) {
+        this.data.forgotExpire = val;
     }
 
     /* Relationship */
@@ -298,39 +296,10 @@ export class User extends BaseEntity<IUser> implements IUser {
         return `images/avatar/${this.id}.${extension}`;
     }
 
-    /**
-     * Generate active key with expire time.
-     * Use to active/re-active user feature.
-     */
-    createActiveKey(): string {
-        const activeKey = crypto.randomBytes(32).toString('hex');
-        this.data.activeKey = activeKey;
-        this.data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return activeKey;
-    }
-
-    /**
-     * Generate forgot key with expire time.
-     * Use to reset password feature.
-     */
-    createForgotKey(): string {
-        const forgotKey = crypto.randomBytes(32).toString('hex');
-        this.data.forgotKey = forgotKey;
-        this.data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        return forgotKey;
-    }
-
     resetPassword(password: string): void {
         this.password = password;
         this.data.forgotKey = undefined;
         this.data.forgotExpire = undefined;
-    }
-
-    active(): void {
-        this.data.status = UserStatus.ACTIVED;
-        this.data.activeKey = undefined;
-        this.data.activeExpire = undefined;
-        this.data.activedAt = new Date();
     }
 
     archive(): void {

@@ -1,35 +1,17 @@
-import * as path from 'path';
-import * as socketIO from 'socket.io';
-import * as socketIOEmitter from 'socket.io-emitter';
-import * as socketIORedis from 'socket.io-redis';
 import { REDIS_CONFIG_HOST, REDIS_CONFIG_PORT, SOCKET_PORT } from '../constants/Environments';
-import { Container } from 'typedi';
-import { createSocketServer } from 'socket-controllers';
+import { WebSocketOptions, WebSocketRedisAdapter } from '../web.infrastructure/socket/WebSocketOptions';
+import { controllerPath, middlewarePath } from './SocketModule';
+import { WebSocket } from '../web.infrastructure/socket/WebSocket';
 
 export class SocketService {
-    static start(): socketIO.Server {
-        const socketServer: socketIO.Server = createSocketServer(SOCKET_PORT, {
-            controllers: [path.join(__dirname, './controllers/*{.js,.ts}')],
-            middlewares: [path.join(__dirname, './middlewares/*{.js,.ts}')]
-        });
+    setup() {
+        const webSocketOptions = new WebSocketOptions();
+        webSocketOptions.port = SOCKET_PORT;
+        webSocketOptions.redisAdapter = new WebSocketRedisAdapter(REDIS_CONFIG_HOST, REDIS_CONFIG_PORT);
+        webSocketOptions.controllerPaths = [controllerPath];
+        webSocketOptions.middlewarePaths = [middlewarePath];
 
-        SocketService.initAdapter(socketServer);
-        const socketEmitter = SocketService.initEmitter();
-        Container.set('socket.io-emitter', socketEmitter);
-        return socketServer;
-    }
-
-    static initAdapter(socketServer: socketIO.Server) {
-        return socketServer.adapter(socketIORedis({
-            host: REDIS_CONFIG_HOST,
-            port: REDIS_CONFIG_PORT
-        }));
-    }
-
-    static initEmitter() {
-        return socketIOEmitter({
-            host: REDIS_CONFIG_HOST,
-            port: REDIS_CONFIG_PORT
-        });
+        const webSocket = new WebSocket();
+        return webSocket.start(webSocketOptions);
     }
 }

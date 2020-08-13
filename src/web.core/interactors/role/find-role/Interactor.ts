@@ -3,20 +3,20 @@ import { FindRoleFilter } from './Filter';
 import { FindRoleOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
-import { ResultList } from '../../../domain/common/outputs/ResultList';
+import { PaginationResult } from '../../../domain/common/outputs/PaginationResult';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class FindRoleInteractor implements IInteractor<FindRoleFilter, ResultList<FindRoleOutput>> {
+export class FindRoleInteractor implements IInteractor<FindRoleFilter, PaginationResult<FindRoleOutput>> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(filter: FindRoleFilter, userAuth: UserAuthenticated): Promise<ResultList<FindRoleOutput>> {
+    async handle(filter: FindRoleFilter, userAuth: UserAuthenticated): Promise<PaginationResult<FindRoleOutput>> {
         filter.userAuth = userAuth;
 
         const [roles, count] = await this._roleRepository.findAndCount(filter);
         const list = roles.map(role => new FindRoleOutput(role));
 
-        return new ResultList(list, count, filter.skip, filter.limit);
+        return new PaginationResult(list, count, filter.skip, filter.limit);
     }
 }

@@ -1,20 +1,26 @@
 import { Inject, Service } from 'typedi';
 import { CreateMessageInput } from './Input';
 import { CreateMessageOutput } from './Output';
+import { IContactStatusRepository } from '../../../interfaces/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IMemberStatusRepository } from '../../../interfaces/repositories/IMemberStatusRepository';
 import { IMessageRepository } from '../../../interfaces/repositories/IMessageRepository';
 import { Message } from '../../../domain/entities/Message';
+import { SocketIOEmitter } from 'socket.io-emitter';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
+import { sendByEmitter } from '../../../../libs/socket';
+import { socketNamespace } from '../../../domain/common/SocketNamespace';
 
 @Service()
 export class CreateMessageInteractor implements IInteractor<CreateMessageInput, CreateMessageOutput> {
     @Inject('message.repository')
     private readonly _messageRepository: IMessageRepository;
 
-    @Inject('member.status.repository')
-    private readonly _memberStatusRepository: IMemberStatusRepository;
+    @Inject('contact.status.repository')
+    private readonly _contactStatusRepository: IContactStatusRepository;
+
+    @Inject('socket.io-emitter')
+    private readonly _socketEmitter: SocketIOEmitter;
 
     async handle(param: CreateMessageInput, userAuth: UserAuthenticated): Promise<CreateMessageOutput> {
         const message = new Message();
@@ -26,10 +32,13 @@ export class CreateMessageInteractor implements IInteractor<CreateMessageInput, 
         if (!id)
             throw new SystemError(5);
 
-        await this._memberStatusRepository.addNewMessageStatus(message.senderId, message.receiverId);
+        await this._contactStatusRepository.addNewMessageStatus(message.senderId, message.receiverId);
         const newMessage = await this._messageRepository.getById(id);
-        if (newMessage)
-            sendWithSender(socket, 'message_directly', newMessage.receiverId!.toString(), new MessageResponse(newMessage));
-        return new CreateMessageOutput(id);
+        if (!newMessage)
+            throw new SystemError(5);
+
+        const output = new CreateMessageOutput(newMessage);
+        sendByEmitter(this._socketEmitter, socketNamespace.message.name, socketNamespace.message.events.messageDirectly, newMessage.receiverId!.toString(), output);
+        return output;
     }
 }

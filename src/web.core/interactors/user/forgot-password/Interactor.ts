@@ -1,0 +1,40 @@
+import * as crypto from 'crypto';
+import * as validator from 'class-validator';
+import { Inject, Service } from 'typedi';
+import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
+import { IInteractor } from '../../../domain/common/IInteractor';
+import { IMailService } from '../../../interfaces/services/IMailService';
+import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { SystemError } from '../../../domain/common/exceptions';
+import { User } from '../../../domain/entities/User';
+import { UserStatus } from '../../../domain/enums/UserStatus';
+import { addSeconds } from '../../../../libs/date';
+
+@Service()
+export class ForgotPasswordInteractor implements IInteractor<string, BooleanResult> {
+    @Inject('user.repository')
+    private readonly _userRepository: IUserRepository;
+
+    @Inject('mail.service')
+    private readonly _mailService: IMailService;
+
+    async handle(email: string): Promise<BooleanResult> {
+        if (!validator.isEmail(email))
+            throw new SystemError(1002, 'email');
+
+        const user = await this._userRepository.getByEmail(email);
+        if (!user || user.status !== UserStatus.ACTIVED)
+            throw new SystemError();
+
+        const data = new User();
+        data.forgotKey = crypto.randomBytes(32).toString('hex');
+        data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+
+        const hasSucceed = await this._userRepository.update(user.id, data);
+        if (!hasSucceed)
+            throw new SystemError(5);
+
+        await this._mailService.sendForgotPassword(user);
+        return new BooleanResult(hasSucceed);
+    }
+}

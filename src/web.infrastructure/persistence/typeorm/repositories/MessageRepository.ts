@@ -5,7 +5,7 @@ import { MESSAGE_SCHEMA } from '../schemas/MessageSchema';
 import { Message } from '../../../../web.core/domain/entities/Message';
 import { MessageDbEntity } from '../entities/MessageDbEntity';
 import { Service } from 'typedi';
-import { SortType } from '../../../../web.core/domain/enums/SortType';
+import { SortType } from '../../../../web.core/domain/common/persistence/SortType';
 
 @Service('message.repository')
 export class MessageRepository extends BaseRepository<Message, MessageDbEntity, number> implements IMessageRepository {

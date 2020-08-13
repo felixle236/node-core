@@ -1,7 +1,8 @@
-import { IBucketItem, IStorageService } from '../../../../web.core/interfaces/services/IStorageService';
 import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_TYPE } from '../../../../constants/Environments';
 import { AwsS3Factory } from './providers/AwsS3Factory';
 import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
+import { IBucketItem } from '../../../../web.core/interfaces/models/storage/IBucketItem';
+import { IStorageService } from '../../../../web.core/interfaces/services/IStorageService';
 import { LoggingFactory } from './providers/LoggingFactory';
 import { MinioFactory } from './providers/MinioFactory';
 import { Service } from 'typedi';

@@ -9,7 +9,7 @@ import { User } from '../../../domain/entities/User';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 
 @Service()
-export class SignupInteractor implements IInteractor<SigninInput, SigninOutput> {
+export class SigninInteractor implements IInteractor<SigninInput, SigninOutput> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 

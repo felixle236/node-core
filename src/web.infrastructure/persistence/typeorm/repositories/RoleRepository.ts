@@ -6,7 +6,7 @@ import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Role } from '../../../../web.core/domain/entities/Role';
 import { RoleDbEntity } from '../entities/RoleDbEntity';
 import { Service } from 'typedi';
-import { SortType } from '../../../../web.core/domain/enums/SortType';
+import { SortType } from '../../../../web.core/domain/common/persistence/SortType';
 
 @Service('role.repository')
 export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> implements IRoleRepository {
@@ -83,6 +83,6 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
     }
 
     async clearCaching(): Promise<void> {
-        await this.dbContext.clearCaching(this._roleListCacheKey);
+        await this.dbContext.getConnection().clearCaching(this._roleListCacheKey);
     }
 }

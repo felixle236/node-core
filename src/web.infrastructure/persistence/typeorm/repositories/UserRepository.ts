@@ -1,7 +1,8 @@
 import { Brackets, QueryRunner } from 'typeorm';
 import { BaseRepository } from './base/BaseRepository';
-import { FindMemberFilter } from '../../../../web.core/interactors/member/find-member/Filter';
+import { FindContactFilter } from '../../../../web.core/interactors/contact/find-contact/Filter';
 import { FindUserFilter } from '../../../../web.core/interactors/user/find-user/Filter';
+import { IDbQueryRunner } from '../../../../web.core/domain/common/persistence/IDbQueryRunner';
 import { IUserRepository } from '../../../../web.core/interfaces/repositories/IUserRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
@@ -43,7 +44,7 @@ export class UserRepository extends BaseRepository<User, UserDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async findMemberAndCount(filter: FindMemberFilter): Promise<[User[], number]> {
+    async findContactAndCount(filter: FindContactFilter): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: UserStatus.ACTIVED });
@@ -67,16 +68,16 @@ export class UserRepository extends BaseRepository<User, UserDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async getById(id: number, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner)
+    async getById(id: number, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
+        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .whereInIds(id)
             .getOne();
         return result?.toEntity();
     }
 
-    async getByEmail(email: string, queryRunner?: QueryRunner): Promise<User | undefined> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner)
+    async getByEmail(email: string, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
+        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return result?.toEntity();

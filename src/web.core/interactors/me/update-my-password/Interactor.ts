@@ -1,18 +1,18 @@
 import { Inject, Service } from 'typedi';
+import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UpdateMyPasswordInput } from './Input';
-import { UpdateMyPasswordOutput } from './Output';
 import { User } from '../../../domain/entities/User';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class UpdateMyPasswordInteractor implements IInteractor<UpdateMyPasswordInput, UpdateMyPasswordOutput> {
+export class UpdateMyPasswordInteractor implements IInteractor<UpdateMyPasswordInput, BooleanResult> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: UpdateMyPasswordInput, userAuth: UserAuthenticated): Promise<UpdateMyPasswordOutput> {
+    async handle(param: UpdateMyPasswordInput, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const id = userAuth.userId;
         const data = new User();
         data.password = param.newPassword;
@@ -24,6 +24,6 @@ export class UpdateMyPasswordInteractor implements IInteractor<UpdateMyPasswordI
         const hasSucceed = await this._userRepository.update(id, data);
         if (!hasSucceed)
             throw new SystemError(5);
-        return new UpdateMyPasswordOutput(hasSucceed);
+        return new BooleanResult(hasSucceed);
     }
 }

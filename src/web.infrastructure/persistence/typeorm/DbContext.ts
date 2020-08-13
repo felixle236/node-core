@@ -1,32 +1,37 @@
 import * as path from 'path';
-import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
+import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENABLE_QUERY_LOGGING, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
+import { DbConnection } from './DbConnection';
+import { IDbConnection } from '../../../web.core/domain/common/persistence/IDbConnection';
+import { IDbContext } from '../../../web.core/domain/common/persistence/IDbContext';
+import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/dtos/common/Exception';
 
-export class DbContext {
-    getConnection(): Connection {
-        let connection: Connection | undefined;
+@Service('db.context')
+export class DbContext implements IDbContext {
+    getConnection(connectionName?: string): IDbConnection {
+        let connection: DbConnection | undefined;
         try {
-            connection = getConnection();
+            connection = getConnection(connectionName) as DbConnection;
         }
         catch { }
         if (!connection || !connection.isConnected)
-            throw new Error('The database connection is not exists!');
+            throw new SystemError(1004, 'database connection');
         return connection;
     }
 
-    async createConnection(): Promise<Connection> {
-        let connection: Connection | undefined;
+    async createConnection(connectionName?: string): Promise<IDbConnection> {
+        let connection: DbConnection | undefined;
         try {
-            connection = getConnection();
+            connection = getConnection(connectionName) as DbConnection;
         }
         catch { }
         if (connection && connection.isConnected)
             return connection;
 
         return await createConnection({
-            name: 'default',
-            type: DB_TYPE as any,
+            name: connectionName,
+            type: DB_TYPE,
             host: DB_HOST,
             port: DB_PORT,
             database: DB_NAME,
@@ -50,17 +55,6 @@ export class DbContext {
             subscribers: [
                 path.join(__dirname, './subscribers/*{.js,.ts}')
             ]
-        } as ConnectionOptions);
-    }
-
-    async clearCaching(keyCaching: string): Promise<void> {
-        if (!keyCaching)
-            throw new SystemError(1001, 'key caching');
-
-        const connection = getConnection();
-        if (!connection.queryResultCache)
-            throw new Error('The database caching is disabled!');
-
-        await connection.queryResultCache.remove([keyCaching]);
+        } as ConnectionOptions) as DbConnection;
     }
 }

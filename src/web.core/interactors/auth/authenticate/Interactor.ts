@@ -17,7 +17,7 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
 
     async handle(param: AuthenticateInput): Promise<UserAuthenticated> {
         const parts = (param.accessToken || '').split(' ');
-        const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
+        const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : (parts.length === 1 ? parts[0] : '');
         const roleIds = param.roleIds;
 
         if (!validator.isJWT(token))

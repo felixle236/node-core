@@ -1,14 +1,14 @@
-import { FindMemberFilter } from '../../interactors/member/find-member/Filter';
+import { FindContactFilter } from '../../interactors/contact/find-contact/Filter';
+import { IDbQueryRunner } from '../../domain/common/persistence/IDbQueryRunner';
 import { IRead } from '../../domain/common/persistence/IRead';
 import { IWrite } from '../../domain/common/persistence/IWrite';
-import { QueryRunner } from 'typeorm';
 import { User } from '../../domain/entities/User';
 
 export interface IUserRepository extends IRead<User, number>, IWrite<User, number> {
-    findMemberAndCount(filter: FindMemberFilter): Promise<[User[], number]>;
+    findContactAndCount(filter: FindContactFilter): Promise<[User[], number]>;
 
     getByEmail(email: string): Promise<User | undefined>;
-    getByEmail(email: string, queryRunner: QueryRunner): Promise<User | undefined>;
+    getByEmail(email: string, queryRunner: IDbQueryRunner): Promise<User | undefined>;
 
     getByUserPassword(email: string, password: string): Promise<User | undefined>;
 

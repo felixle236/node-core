@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { Inject, Service } from 'typedi';
 import { IAuthenticationService } from '../../../interfaces/services/IAuthenticationService';
 import { IInteractor } from '../../../domain/common/IInteractor';
@@ -10,6 +11,7 @@ import { SignupOutput } from './Output';
 import { SystemError } from '../../../domain/common/exceptions';
 import { User } from '../../../domain/entities/User';
 import { UserStatus } from '../../../domain/enums/UserStatus';
+import { addSeconds } from '../../../../libs/date';
 
 @Service()
 export class SignupInteractor implements IInteractor<SignupInput, SignupOutput> {
@@ -41,7 +43,8 @@ export class SignupInteractor implements IInteractor<SignupInput, SignupOutput> 
 
         data.roleId = role.id;
         data.status = UserStatus.INACTIVE;
-        data.createActiveKey();
+        data.activeKey = crypto.randomBytes(32).toString('hex');
+        data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
         const id = await this._userRepository.create(data);
         if (!id)

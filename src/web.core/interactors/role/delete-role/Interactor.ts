@@ -1,16 +1,16 @@
 import { Inject, Service } from 'typedi';
-import { DeleteRoleOutput } from './Output';
+import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class DeleteRoleInteractor implements IInteractor<number, DeleteRoleOutput> {
+export class DeleteRoleInteractor implements IInteractor<number, BooleanResult> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(id: number, userAuth: UserAuthenticated): Promise<DeleteRoleOutput> {
+    async handle(id: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const role = await this._roleRepository.getById(id);
         if (!role)
             throw new SystemError(1004, 'role');
@@ -23,6 +23,6 @@ export class DeleteRoleInteractor implements IInteractor<number, DeleteRoleOutpu
             throw new SystemError(5);
 
         await this._roleRepository.clearCaching();
-        return new DeleteRoleOutput(hasSucceed);
+        return new BooleanResult(hasSucceed);
     }
 }

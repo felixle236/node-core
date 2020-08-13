@@ -5,7 +5,7 @@ import { FindRoleInteractor, RoleFilter, RoleView } from '../../web.core/interac
 import { GetRoleByIdInteractor, RoleDetailView } from '../../web.core/interactors/role/get-role-by-id/Interactor';
 import { RoleUpdate, UpdateRoleInteractor } from '../../web.core/interactors/role/update-role/Interactor';
 import { DeleteRoleInteractor } from '../../web.core/interactors/role/delete-role/Interactor';
-import { ResultList } from '../../web.core/domain/common/outputs/ResultList';
+import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
@@ -24,13 +24,13 @@ export class RoleController {
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@QueryParams() filter: RoleFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<ResultList<RoleView>> {
+    async find(@QueryParams() filter: RoleFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<RoleView>> {
         return await this._findRoleInteractor.handle(filter, userAuth);
     }
 
     @Get('/common')
     @Authorized(RoleId.SUPER_ADMIN)
-    async findCommon(@QueryParams() filter: RoleCommonFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<ResultList<RoleCommonView>> {
+    async findCommon(@QueryParams() filter: RoleCommonFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<RoleCommonView>> {
         return await this._findRoleCommonInteractor.handle(filter, userAuth);
     }
 

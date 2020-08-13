@@ -1,18 +1,18 @@
 import { Inject, Service } from 'typedi';
+import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UpdateUserInput } from './Input';
-import { UpdateUserOutput } from './Output';
 import { User } from '../../../domain/entities/User';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class UpdateUserInteractor implements IInteractor<UpdateUserInput, UpdateUserOutput> {
+export class UpdateUserInteractor implements IInteractor<UpdateUserInput, BooleanResult> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: UpdateUserInput, userAuth: UserAuthenticated): Promise<UpdateUserOutput> {
+    async handle(param: UpdateUserInput, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const id = param.id;
         const data = new User();
         data.firstName = param.firstName;
@@ -38,6 +38,6 @@ export class UpdateUserInteractor implements IInteractor<UpdateUserInput, Update
         if (!hasSucceed)
             throw new SystemError(5);
 
-        return new UpdateUserOutput(hasSucceed);
+        return new BooleanResult(hasSucceed);
     }
 }
