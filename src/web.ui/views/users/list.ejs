@@ -5,7 +5,7 @@
 <% data.results.forEach(user => { %>
 <p style="margin-top: 20px;">
     <img src="<%= user.avatar %>" width="44" height="44" style="float: left; margin-top: -4px; margin-right: 8px;" />
-    <span><%= user.fullName %></span><br />
+    <span><%= user.firstName + ' ' + user.lastName %></span><br />
     <span><%= user.email %></span>
 </p>
 <% }) %>

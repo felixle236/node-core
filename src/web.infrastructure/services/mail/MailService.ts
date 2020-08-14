@@ -1,0 +1,37 @@
+import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../constants/Environments';
+import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
+import { IMailService } from '../../../web.core/gateways/services/IMailService';
+import { IUser } from '../../../web.core/domain/types/IUser';
+import { MailGenerator } from './MailGenerator';
+import { MailSender } from './MailSender';
+import { Service } from 'typedi';
+import { UserActivationTemplate } from './templates/UserActivationTemplate';
+
+@Service('mail.service')
+export class MailService implements IMailService {
+    private readonly _sender: MailSender;
+    private readonly _generator: MailGenerator;
+
+    constructor() {
+        this._sender = new MailSender();
+        this._generator = new MailGenerator();
+    }
+
+    async sendUserActivation(user: IUser): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(user);
+        const content = this._generator.generateHtmlContent(template);
+        await this._sender.sendHtml(MAIL_SENDER_EMAIL, MAIL_SENDER_NAME, user.email, 'Account Activation', content);
+    }
+
+    async resendUserActivation(user: IUser): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(user);
+        const content = this._generator.generateHtmlContent(template);
+        await this._sender.sendHtml(MAIL_SENDER_EMAIL, MAIL_SENDER_NAME, user.email, 'Re-Sending Account Activation', content);
+    }
+
+    async sendForgotPassword(user: IUser): Promise<void> {
+        const template = ForgotPasswordTemplate.getTemplate(user);
+        const content = this._generator.generateHtmlContent(template);
+        await this._sender.sendHtml(MAIL_SENDER_EMAIL, MAIL_SENDER_NAME, user.email, 'Forgot Your Password', content);
+    }
+}

@@ -3,9 +3,9 @@ import * as path from 'path';
 import { API_PORT } from '../constants/Environments';
 import { ApiAuthenticator } from './ApiAuthenticator';
 import { Container } from 'typedi';
+import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
 import { Server } from 'http';
-import { WebServer } from '../web.infrastructure/web/WebServer';
 
 export class ApiService {
     setup(callback?: any): Server {
@@ -31,13 +31,13 @@ export class ApiService {
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
         };
-        const webServer = new WebServer(options);
+        const httpServer = new HttpServer(options);
 
-        webServer.app.get('/healthz', (_req, res) => {
+        httpServer.app.get('/healthz', (_req, res) => {
             res.status(200).end('ok');
         });
 
-        webServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
-        return webServer.start(API_PORT, callback);
+        httpServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
+        return httpServer.start(API_PORT, callback);
     }
 }

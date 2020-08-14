@@ -37,7 +37,7 @@ const generateMessages = () => {
     ];
 };
 
-const generateUserAuth = (user: User) => {
+const generateUserAuth = (user: IUser) => {
     const userAuth = new UserAuthenticated();
     userAuth.userId = user.id;
     userAuth.role = user.role!;

@@ -1,4 +1,4 @@
-import './ModuleRegister';
+import './web.infrastructure/SingletonRegister';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
@@ -42,10 +42,9 @@ const showServiceStatus = () => {
 
 if (IS_DEVELOPMENT) {
     console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode....\n');
-    startApplication().then(async () => {
-        await runMigrations();
-        showServiceStatus();
-    }).catch(error => console.log('\x1b[31m', error.message, '\x1b[0m'));
+    await startApplication();
+    await runMigrations();
+    showServiceStatus();
 }
 else {
     if (cluster.isMaster) {

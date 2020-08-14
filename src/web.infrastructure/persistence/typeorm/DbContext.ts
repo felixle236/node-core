@@ -8,14 +8,12 @@ import { IDbContext } from '../../../web.core/domain/common/persistence/IDbConte
 import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/domain/common/exceptions';
 
+// Map singleton instances.
+const folder = path.join(__dirname, './repositories');
+fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
+
 @Service('db.context')
 export class DbContext implements IDbContext {
-    constructor() {
-        // Load singleton
-        const folder = path.join(__dirname, './repositories');
-        fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
-    }
-
     getConnection(connectionName?: string): IDbConnection {
         let connection: DbConnection | undefined;
         try {

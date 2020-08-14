@@ -7,15 +7,16 @@ import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/domain/common/exceptions';
 
+// Map singleton instances.
+const folder = path.join(__dirname, './repositories');
+fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
+
 @Service('redis.context')
 export class RedisContext {
     private _connection: IRedisClient;
 
     constructor(connection?: IRedisClient) {
         if (connection) this._connection = connection;
-
-        const folder = path.join(__dirname, './repositories');
-        fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
     }
 
     get redisClient(): IRedisClient {

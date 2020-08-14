@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import './services/ServiceRegister';
 import * as routingController from 'routing-controllers';
 import * as socketController from 'socket-controllers';
 import * as typedi from 'typedi';

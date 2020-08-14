@@ -1,12 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SECRET_OR_PUBLIC_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../constants/Environments';
 import { IAuthenticationService, IJwtPayloadExtend } from '../../../web.core/gateways/services/IAuthenticationService';
+import { IUser } from '../../../web.core/domain/types/IUser';
 import { Service } from 'typedi';
-import { User } from '../../../web.core/domain/entities/User';
 
 @Service('authentication.service')
 export class AuthenticationService implements IAuthenticationService {
-    sign(user: User): string {
+    sign(user: IUser): string {
         return jwt.sign({
             roleId: user.roleId
         }, AUTH_SECRET_OR_PRIVATE_KEY, {

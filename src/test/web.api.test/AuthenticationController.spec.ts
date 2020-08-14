@@ -36,7 +36,7 @@ describe('Authentication controller testing', () => {
     const headers = {};
     headers['Content-Type'] = 'application/json';
     const request = requestPromise.defaults({ headers, json: true });
-    let user: User;
+    let user: IUser;
 
     before(function(done) {
         this.timeout(10000);

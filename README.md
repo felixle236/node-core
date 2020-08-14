@@ -439,7 +439,6 @@ HTTP/1.1 200 OK
          "roleId": 1,
          "firstName": "Super",
          "lastName": "Admin",
-         "fullName": "Super Admin",
          "email": "admin@localhost.com",
          "avatar": null,
          "gender": "male",
