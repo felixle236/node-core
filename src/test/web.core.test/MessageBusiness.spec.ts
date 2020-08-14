@@ -4,7 +4,6 @@ import '../../ModuleRegister';
 import * as SocketMock from 'socket.io-mock';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
 import { Container } from 'typedi';
-import { GenderType } from '../../constants/Enums';
 import { IMessage } from '../../web.core/gateways/models/IMessage';
 import { IMessageBusiness } from '../../web.core/gateways/businesses/IMessageBusiness';
 import { IRole } from '../../web.core/gateways/models/IRole';

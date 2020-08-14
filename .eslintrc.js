@@ -21,57 +21,57 @@ module.exports = {
             '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
             '@typescript-eslint/no-array-constructor': 'error',
             '@typescript-eslint/type-annotation-spacing': ['error', { before: false, after: true }],
-            "@typescript-eslint/naming-convention": [
-                "error",
+            '@typescript-eslint/naming-convention': [
+                'error',
                 {
-                    "selector": "default",
-                    "format": ["camelCase"]
+                    'selector': 'default',
+                    'format': ['camelCase']
                 },
                 {
-                    "selector": "memberLike",
-                    "modifiers": ["private"],
-                    "format": ["camelCase"],
-                    "leadingUnderscore": "require"
+                    'selector': 'memberLike',
+                    'modifiers': ['private'],
+                    'format': ['camelCase'],
+                    'leadingUnderscore': 'require'
                 },
                 {
-                    "selector": "memberLike",
-                    "format": ["camelCase", "UPPER_CASE"]
+                    'selector': 'memberLike',
+                    'format': ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    "selector": "parameter",
-                    "format": ["camelCase"],
-                    "leadingUnderscore": "allow"
+                    'selector': 'parameter',
+                    'format': ['camelCase'],
+                    'leadingUnderscore': 'allow'
                 },
                 {
-                    "selector": "variableLike",
-                    "format": ["camelCase", "UPPER_CASE"]
+                    'selector': 'variableLike',
+                    'format': ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    "selector": "variable",
-                    "format": ["camelCase", "UPPER_CASE"]
+                    'selector': 'variable',
+                    'format': ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    "selector": "variable",
-                    "types": ["boolean"],
-                    "format": ["PascalCase", "UPPER_CASE"],
-                    "prefix": ["is", "should", "has", "can", "did", "will", "enable", "IS_", "SHOULD_", "HAS_", "CAN_", "DID_", "WILL_", "ENABLE_"]
+                    'selector': 'variable',
+                    'types': ['boolean'],
+                    'format': ['PascalCase', 'UPPER_CASE'],
+                    'prefix': ['is', 'should', 'has', 'can', 'did', 'will', 'enable', 'IS_', 'SHOULD_', 'HAS_', 'CAN_', 'DID_', 'WILL_', 'ENABLE_']
                 },
                 {
-                    "selector": "typeParameter",
-                    "format": ["PascalCase"],
-                    "prefix": ["T"]
+                    'selector': 'typeParameter',
+                    'format': ['PascalCase'],
+                    'prefix': ['T']
                 },
                 {
-                    "selector": "interface",
-                    "format": ["PascalCase"],
-                    "custom": {
-                        "regex": "^I[A-Z]",
-                        "match": true
+                    'selector': 'interface',
+                    'format': ['PascalCase'],
+                    'custom': {
+                        'regex': '^I[A-Z]',
+                        'match': true
                     }
                 },
                 {
-                    "selector": "typeLike",
-                    "format": ["PascalCase"]
+                    'selector': 'typeLike',
+                    'format': ['PascalCase']
                 }
             ]
         }

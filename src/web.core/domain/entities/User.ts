@@ -1,4 +1,3 @@
-import * as crypto from 'crypto';
 import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { Container } from 'typedi';
@@ -8,7 +7,6 @@ import { IUser } from '../types/IUser';
 import { Role } from './Role';
 import { SystemError } from '../common/exceptions/SystemError';
 import { UserStatus } from '../enums/UserStatus';
-import { addSeconds } from '../../../libs/date';
 import { hashMD5 } from '../../../libs/crypt';
 
 export class User extends BaseEntity<IUser> implements IUser {
@@ -294,16 +292,5 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     getAvatarPath(extension: string): string {
         return `images/avatar/${this.id}.${extension}`;
-    }
-
-    resetPassword(password: string): void {
-        this.password = password;
-        this.data.forgotKey = undefined;
-        this.data.forgotExpire = undefined;
-    }
-
-    archive(): void {
-        this.data.status = UserStatus.ARCHIVED;
-        this.data.archivedAt = new Date();
     }
 }

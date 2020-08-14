@@ -1,17 +1,21 @@
-import { Authorized, Body, BodyParam, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
+import { ArchiveUserInteractor } from '../../web.core/interactors/user/archive-user/Interactor';
+import { BooleanResult } from '../../web.core/domain/common/outputs/BooleanResult';
+import { CreateUserInput } from '../../web.core/interactors/user/create-user/Input';
+import { CreateUserInteractor } from '../../web.core/interactors/user/create-user/Interactor';
+import { DeleteUserInteractor } from '../../web.core/interactors/user/delete-user/Interactor';
+import { FindUserFilter } from '../../web.core/interactors/user/find-user/Filter';
+import { FindUserInteractor } from '../../web.core/interactors/user/find-user/Interactor';
+import { FindUserOutput } from '../../web.core/interactors/user/find-user/Output';
+import { GetUserByIdInteractor } from '../../web.core/interactors/user/get-user-by-id/Interactor';
+import { GetUserByIdOutput } from '../../web.core/interactors/user/get-user-by-id/Output';
+import { IdentityResult } from '../../web.core/domain/common/outputs/IdentityResult';
+import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
-import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
-import { FindUserInteractor } from '../../web.core/interactors/user/find-user/Interactor';
-import { GetUserByIdInteractor } from '../../web.core/interactors/user/get-user-by-id/Interactor';
-import { CreateUserInteractor } from '../../web.core/interactors/user/create-user/Interactor';
+import { UpdateUserInput } from '../../web.core/interactors/user/update-user/Input';
 import { UpdateUserInteractor } from '../../web.core/interactors/user/update-user/Interactor';
-import { SignupInteractor } from '../../web.core/interactors/user/signup/Interactor';
-import { ActiveUserInteractor } from '../../web.core/interactors/user/active-user/Interactor';
-import { ResendActivationInteractor } from '../../web.core/interactors/user/resend-activation/Interactor';
-import { ForgotPasswordInteractor } from '../../web.core/interactors/user/forgot-password/Interactor';
-import { ArchiveUserInteractor } from '../../web.core/interactors/user/archive-user/Interactor';
-import { DeleteUserInteractor } from '../../web.core/interactors/user/delete-user/Interactor';
+import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/users')
@@ -21,72 +25,44 @@ export class UserController {
         private _getUserByIdInteractor: GetUserByIdInteractor,
         private _createUserInteractor: CreateUserInteractor,
         private _updateUserInteractor: UpdateUserInteractor,
-        private _signupInteractor: SignupInteractor,
-        private _activeUserInteractor: ActiveUserInteractor,
-        private _resendActivationInteractor: ResendActivationInteractor,
-        private _forgotPasswordInteractor: ForgotPasswordInteractor,
         private _archiveUserInteractor: ArchiveUserInteractor,
         private _deleteUserInteractor: DeleteUserInteractor
     ) {}
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserFilterRequest): Promise<ResultListResponse<UserResponse>> {
-        return await this._userInteractor.find(filter, userAuth);
+    async find(@QueryParams() filter: FindUserFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindUserOutput>> {
+        return await this._findUserInteractor.handle(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<UserResponse | undefined> {
-        return await this._userInteractor.getById(id, userAuth);
+    async getById(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdOutput> {
+        return await this._getUserByIdInteractor.handle(id, userAuth);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@CurrentUser() userAuth: UserAuthenticated, @Body() data: UserCreateRequest): Promise<UserResponse | undefined> {
-        return await this._userInteractor.create(data, userAuth);
+    async create(@Body() data: CreateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
+        return await this._createUserInteractor.handle(data, userAuth);
     }
 
     @Put('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number, @Body() data: UserUpdateRequest): Promise<UserResponse | undefined> {
-        return await this._userInteractor.update(id, data, userAuth);
-    }
-
-    @Post('/register')
-    async register(@Body() data: UserRegisterRequest): Promise<UserResponse | undefined> {
-        return await this._userInteractor.register(data);
-    }
-
-    @Post('/active')
-    async active(@BodyParam('confirmKey') confirmKey: string): Promise<boolean> {
-        return await this._userInteractor.active(confirmKey);
-    }
-
-    @Post('/resend-activation')
-    async resendActivation(@BodyParam('email') email: string): Promise<boolean> {
-        return await this._userInteractor.resendActivation(email);
-    }
-
-    @Post('/forgot-password')
-    async forgotPassword(@BodyParam('email') email: string): Promise<boolean> {
-        return await this._userInteractor.forgotPassword(email);
-    }
-
-    @Post('/reset-password')
-    async resetPassword(@BodyParam('confirmKey') confirmKey: string, @BodyParam('password') password: string): Promise<boolean> {
-        return await this._userInteractor.resetPassword(confirmKey, password);
+    async update(@Param('id') id: number, @Body() data: UpdateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+        data.id = id;
+        return await this._updateUserInteractor.handle(data, userAuth);
     }
 
     @Post('/:id([0-9]+)/archive')
     @Authorized(RoleId.SUPER_ADMIN)
-    async archive(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this._userInteractor.archive(id, userAuth);
+    async archive(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+        return await this._archiveUserInteractor.handle(id, userAuth);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this._userInteractor.delete(id, userAuth);
+    async delete(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+        return await this._deleteUserInteractor.handle(id, userAuth);
     }
 }
