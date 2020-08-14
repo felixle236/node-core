@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UpdateMyPasswordInput } from './Input';
 import { User } from '../../../domain/entities/User';

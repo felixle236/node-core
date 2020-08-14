@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { IContactStatusRepository } from '../../../../web.core/interfaces/data/IContactStatusRepository';
+import { IContactStatusRepository } from '../../../../web.core/gateways/repositories/IContactStatusRepository';
 import { RedisContext } from '../RedisContext';
 
 @Service('contact.status.repository')

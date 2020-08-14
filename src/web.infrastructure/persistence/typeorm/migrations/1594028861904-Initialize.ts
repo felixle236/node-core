@@ -1,10 +1,10 @@
 import { GenderType, RoleId, UserStatus } from '../../../../constants/Enums';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { BUCKET_NAME } from '../../../../constants/Environments';
-import { IRole } from '../../../../web.core/interfaces/models/IRole';
-import { IRoleRepository } from '../../../../web.core/interfaces/gateways/data/IRoleRepository';
-import { IStorageService } from '../../../../web.core/interfaces/gateways/medias/IStorageService';
-import { IUserRepository } from '../../../../web.core/interfaces/gateways/data/IUserRepository';
+import { IRole } from '../../../../web.core/gateways/models/IRole';
+import { IRoleRepository } from '../../../../web.core/gateways/gateways/data/IRoleRepository';
+import { IStorageService } from '../../../../web.core/gateways/gateways/medias/IStorageService';
+import { IUserRepository } from '../../../../web.core/gateways/gateways/data/IUserRepository';
 import { Role } from '../../../../web.core/models/Role';
 import { RoleRepository } from '../repositories/RoleRepository';
 import { StorageService } from '../../../medias/storage/StorageService';

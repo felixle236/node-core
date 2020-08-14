@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ILogService } from '../../../../../web.core/interfaces/services/ILogService';
+import { ILogService } from '../../../../../web.core/gateways/services/ILogService';
 import { appendFile } from '../../../../../libs/file';
 
 export class FileLogFactory implements ILogService {

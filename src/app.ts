@@ -4,23 +4,23 @@ import * as os from 'os';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
 import { ApiService } from './web.api/ApiService';
 import { Container } from 'typedi';
-import { DbContext } from './web.infrastructure/data/typeorm/DbContext';
-import { RedisContext } from './web.infrastructure/data/redis/RedisContext';
+import { DbContext } from './web.infrastructure/persistence/typeorm/DbContext';
+import { RedisContext } from './web.infrastructure/persistence/redis/RedisContext';
 import { SocketService } from './web.socket/SocketService';
-import { WebService } from './web/WebService';
+import { WebService } from './web.ui/WebService';
 
-const dbContext = new DbContext();
+const dbContext = Container.get<DbContext>('db.context');
 const redisContext = Container.get<RedisContext>('redis.context');
 
 const startApplication = async () => {
     redisContext.createConnection();
     await dbContext.createConnection();
     if (ENABLE_API_SERVICE)
-        ApiService.start();
+        new ApiService().setup();
     if (ENABLE_WEB_SERVICE)
-        WebService.start();
+        new WebService().setup();
     if (ENABLE_SOCKET_SERVICE)
-        SocketService.start();
+        new SocketService().setup();
 };
 
 const runMigrations = async () => {

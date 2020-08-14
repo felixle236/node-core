@@ -1,5 +1,5 @@
 import { SENDINBLUE_API_KEY, SMS_SENDER } from '../../../../../constants/Environments';
-import { ISmsSender } from './interfaces/ISmsSender';
+import { ISmsSender } from './gateways/ISmsSender';
 import { LoggingFactory } from './providers/LoggingFactory';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 import { SmsSenderType } from '../../../../../constants/Enums';

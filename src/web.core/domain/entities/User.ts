@@ -3,7 +3,7 @@ import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { Container } from 'typedi';
 import { GenderType } from '../enums/GenderType';
-import { IStorageService } from '../../interfaces/services/IStorageService';
+import { IStorageService } from '../../gateways/services/IStorageService';
 import { IUser } from '../types/IUser';
 import { Role } from './Role';
 import { SystemError } from '../common/exceptions/SystemError';

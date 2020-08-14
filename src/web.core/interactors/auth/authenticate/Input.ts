@@ -1,4 +1,6 @@
 export class AuthenticateInput {
-    accessToken: string;
-    roleIds: number[];
+    constructor(
+        public token: string,
+        public roleIds?: number[]
+    ) {}
 }

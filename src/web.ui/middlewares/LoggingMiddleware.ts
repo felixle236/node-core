@@ -4,8 +4,7 @@ import { ENABLE_DATA_LOGGING } from '../../constants/Environments';
 
 @Middleware({ type: 'before' })
 export class LoggingMiddleware implements ExpressMiddlewareInterface {
-    // @ts-ignore
-    use(req: Request, res: Response, next: NextFunction): void {
+    use(req: Request, _res: Response, next: NextFunction): void {
         if (ENABLE_DATA_LOGGING) {
             console.log('\nRequest Web Service:');
             console.log('• URL:', '\x1b[35m', req.originalUrl, '\x1b[0m');

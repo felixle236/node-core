@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { GetRoleByIdOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 

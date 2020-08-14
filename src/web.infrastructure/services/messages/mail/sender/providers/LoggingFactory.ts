@@ -1,5 +1,5 @@
 import { ENABLE_DATA_LOGGING } from '../../../../../../constants/Environments';
-import { IMailSender } from '../interfaces/IMailSender';
+import { IMailSender } from '../gateways/IMailSender';
 
 export class LoggingFactory implements IMailSender {
     send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {

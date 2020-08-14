@@ -1,13 +1,22 @@
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
-import { CreateRoleInteractor, RoleCreate } from '../../web.core/interactors/role/create-role/Interactor';
-import { FindRoleCommonInteractor, RoleCommonFilter, RoleCommonView } from '../../web.core/interactors/role/find-role-common/Interactor';
-import { FindRoleInteractor, RoleFilter, RoleView } from '../../web.core/interactors/role/find-role/Interactor';
-import { GetRoleByIdInteractor, RoleDetailView } from '../../web.core/interactors/role/get-role-by-id/Interactor';
-import { RoleUpdate, UpdateRoleInteractor } from '../../web.core/interactors/role/update-role/Interactor';
+import { BooleanResult } from '../../web.core/domain/common/outputs/BooleanResult';
+import { CreateRoleInput } from '../../web.core/interactors/role/create-role/Input';
+import { CreateRoleInteractor } from '../../web.core/interactors/role/create-role/Interactor';
 import { DeleteRoleInteractor } from '../../web.core/interactors/role/delete-role/Interactor';
+import { FindRoleCommonFilter } from '../../web.core/interactors/role/find-role-common/Filter';
+import { FindRoleCommonInteractor } from '../../web.core/interactors/role/find-role-common/Interactor';
+import { FindRoleCommonOutput } from '../../web.core/interactors/role/find-role-common/Output';
+import { FindRoleFilter } from '../../web.core/interactors/role/find-role/Filter';
+import { FindRoleInteractor } from '../../web.core/interactors/role/find-role/Interactor';
+import { FindRoleOutput } from '../../web.core/interactors/role/find-role/Output';
+import { GetRoleByIdInteractor } from '../../web.core/interactors/role/get-role-by-id/Interactor';
+import { GetRoleByIdOutput } from '../../web.core/interactors/role/get-role-by-id/Output';
+import { IdentityResult } from '../../web.core/domain/common/outputs/IdentityResult';
 import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
+import { UpdateRoleInput } from '../../web.core/interactors/role/update-role/Input';
+import { UpdateRoleInteractor } from '../../web.core/interactors/role/update-role/Interactor';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
@@ -24,38 +33,38 @@ export class RoleController {
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@QueryParams() filter: RoleFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<RoleView>> {
+    async find(@QueryParams() filter: FindRoleFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindRoleOutput>> {
         return await this._findRoleInteractor.handle(filter, userAuth);
     }
 
     @Get('/common')
     @Authorized(RoleId.SUPER_ADMIN)
-    async findCommon(@QueryParams() filter: RoleCommonFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<RoleCommonView>> {
+    async findCommon(@QueryParams() filter: FindRoleCommonFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindRoleCommonOutput>> {
         return await this._findRoleCommonInteractor.handle(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<RoleDetailView> {
+    async getById(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
         return await this._getRoleByIdInteractor.handle(id, userAuth);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@Body() data: RoleCreate, @CurrentUser() userAuth: UserAuthenticated): Promise<number> {
+    async create(@Body() data: CreateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
         return await this._createRoleInteractor.handle(data, userAuth);
     }
 
     @Put('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@Param('id') id: number, @Body() data: RoleUpdate, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+    async update(@Param('id') id: number, @Body() data: UpdateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         data.id = id;
         return await this._updateRoleInteractor.handle(data, userAuth);
     }
 
     @Delete('/:id([0-9]+)')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+    async delete(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         return await this._deleteRoleInteractor.handle(id, userAuth);
     }
 }

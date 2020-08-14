@@ -1,5 +1,5 @@
-import { ISmsSender } from './sender/interfaces/ISmsSender';
-import { ISmsService } from '../../../../web.core/interfaces/services/ISmsService';
+import { ISmsSender } from './sender/gateways/ISmsSender';
+import { ISmsService } from '../../../../web.core/gateways/services/ISmsService';
 import { SMS_SENDER_NAME } from '../../../../constants/Environments';
 import { Service } from 'typedi';
 import { SmsSender } from './sender';

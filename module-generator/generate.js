@@ -12,8 +12,8 @@ const pascalName = moduleName.substr(0, 1).toUpperCase() + moduleName.substr(1);
 
 // web.core
 
-const modelInterfacePath = path.join(__dirname, `../src/web.core/interfaces/models/I${pascalName}.ts`);
-const modelInterface = getFileContent(path.join(__dirname, './web.core/interfaces/IModel.tmp'), camelName, pascalName);
+const modelInterfacePath = path.join(__dirname, `../src/web.core/gateways/models/I${pascalName}.ts`);
+const modelInterface = getFileContent(path.join(__dirname, './web.core/gateways/IModel.tmp'), camelName, pascalName);
 
 const modelPath = path.join(__dirname, `../src/web.core/models/${pascalName}.ts`);
 const model = getFileContent(path.join(__dirname, './web.core/Model.tmp'), camelName, pascalName);
@@ -41,11 +41,11 @@ const dtoUpdateRequest = getFileContent(path.join(__dirname, './web.core/dtos/re
 const dtoResponsePath = path.join(__dirname, `../src/web.core/dtos/${camelName}/responses/${pascalName}Response.ts`);
 const dtoResponse = getFileContent(path.join(__dirname, './web.core/dtos/responses/Response.tmp'), camelName, pascalName);
 
-const repositoryInterfacePath = path.join(__dirname, `../src/web.core/interfaces/gateways/data/I${pascalName}Repository.ts`);
-const repositoryInterface = getFileContent(path.join(__dirname, './web.core/interfaces/IRepository.tmp'), camelName, pascalName);
+const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/gateways/data/I${pascalName}Repository.ts`);
+const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'), camelName, pascalName);
 
-const businessInterfacePath = path.join(__dirname, `../src/web.core/interfaces/businesses/I${pascalName}Business.ts`);
-const businessInterface = getFileContent(path.join(__dirname, './web.core/interfaces/IBusiness.tmp'), camelName, pascalName);
+const businessInterfacePath = path.join(__dirname, `../src/web.core/gateways/businesses/I${pascalName}Business.ts`);
+const businessInterface = getFileContent(path.join(__dirname, './web.core/gateways/IBusiness.tmp'), camelName, pascalName);
 
 const businessPath = path.join(__dirname, `../src/web.core/businesses/${pascalName}Business.ts`);
 const business = getFileContent(path.join(__dirname, './web.core/Business.tmp'), camelName, pascalName);

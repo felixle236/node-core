@@ -8,7 +8,7 @@ import { IMailSender } from '../interfaces/IMailSender';
  */
 
 export class GoogleSmtpFactory implements IMailSender {
-    private _transporter: nodeMailer.Transporter;
+    private readonly _transporter: nodeMailer.Transporter;
 
     constructor(userName: string, password: string) {
         this._transporter = nodeMailer.createTransport({

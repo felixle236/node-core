@@ -1,5 +1,3 @@
-import { IBucketItem } from '../models/storage/IBucketItem';
-
 export interface IStorageService {
     getBuckets();
 
@@ -23,4 +21,12 @@ export interface IStorageService {
     download(bucketName: string, objectName: string): Promise<Buffer>;
 
     mapUrl(url: string): string;
+}
+
+export interface IBucketItem {
+    name: string;
+    prefix: string;
+    size: number;
+    etag: string;
+    lastModified: Date;
 }

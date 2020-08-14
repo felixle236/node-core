@@ -1,5 +1,5 @@
 import * as minio from 'minio';
-import { IBucketItem, IStorageService } from '../../../../../web.core/interfaces/services/IStorageService';
+import { IBucketItem, IStorageService } from '../../../../../web.core/gateways/services/IStorageService';
 
 export class MinioFactory implements IStorageService {
     private readonly _minioClient: minio.Client;

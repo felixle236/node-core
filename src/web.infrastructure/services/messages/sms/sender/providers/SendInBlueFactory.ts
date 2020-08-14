@@ -1,4 +1,4 @@
-import { ISmsSender } from '../interfaces/ISmsSender';
+import { ISmsSender } from '../gateways/ISmsSender';
 const sibApiV3Sdk = require('sib-api-v3-sdk');
 
 /**

@@ -1,10 +1,10 @@
 import * as crypto from 'crypto';
 import { Inject, Service } from 'typedi';
-import { IAuthenticationService } from '../../../interfaces/services/IAuthenticationService';
+import { IAuthenticationService } from '../../../gateways/services/IAuthenticationService';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IMailService } from '../../../interfaces/services/IMailService';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IMailService } from '../../../gateways/services/IMailService';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { RoleId } from '../../../domain/enums/RoleId';
 import { SignupInput } from './Input';
 import { SignupOutput } from './Output';

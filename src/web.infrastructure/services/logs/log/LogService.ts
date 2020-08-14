@@ -1,5 +1,5 @@
 import { FileLogFactory } from './providers/FileLogFactory';
-import { ILogService } from '../../../../web.core/interfaces/services/ILogService';
+import { ILogService } from '../../../../web.core/gateways/services/ILogService';
 import { Service } from 'typedi';
 
 @Service('log.service')

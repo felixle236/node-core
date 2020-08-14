@@ -6,7 +6,7 @@ import { SinonSandbox, createSandbox } from 'sinon';
 import { ApiService } from '../../web.api/ApiService';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
 import { GenderType } from '../../constants/Enums';
-import { IUser } from '../../web.core/interfaces/models/IUser';
+import { IUser } from '../../web.core/gateways/models/IUser';
 import { Server } from 'http';
 import { User } from '../../web.core/models/User';
 import { UserLoginRequest } from '../../web.core/dtos/user/requests/UserLoginRequest';

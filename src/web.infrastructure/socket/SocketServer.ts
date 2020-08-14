@@ -2,13 +2,13 @@ import * as socketIOEmitter from 'socket.io-emitter';
 import * as socketIORedis from 'socket.io-redis';
 import { Container } from 'typedi';
 import { Server } from 'socket.io';
-import { WebSocketOptions } from './WebSocketOptions';
+import { SocketServerOptions } from './SocketServerOptions';
 import { createSocketServer } from 'socket-controllers';
 
-export class WebSocket {
+export class SocketServer {
     server: Server;
 
-    start(options: WebSocketOptions): Server {
+    start(options: SocketServerOptions): Server {
         this.server = createSocketServer(options.port, {
             controllers: options.controllerPaths,
             middlewares: options.middlewarePaths

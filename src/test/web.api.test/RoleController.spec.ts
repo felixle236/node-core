@@ -6,7 +6,7 @@ import { SinonSandbox, createSandbox } from 'sinon';
 import { mapModel, mapModels } from '../../libs/common';
 import { ApiService } from '../../web.api/ApiService';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
-import { IRole } from '../../web.core/interfaces/models/IRole';
+import { IRole } from '../../web.core/gateways/models/IRole';
 import { Response } from 'request';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { Role } from '../../web.core/models/Role';

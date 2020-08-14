@@ -1,9 +1,9 @@
 import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { AuthenticateInput } from './Input';
-import { IAuthenticationService } from '../../../interfaces/services/IAuthenticationService';
+import { IAuthenticationService } from '../../../gateways/services/IAuthenticationService';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { UnauthorizedError } from '../../../domain/common/exceptions';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
@@ -16,7 +16,7 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
     private readonly _authenticationService: IAuthenticationService;
 
     async handle(param: AuthenticateInput): Promise<UserAuthenticated> {
-        const parts = (param.accessToken || '').split(' ');
+        const parts = (param.token || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : (parts.length === 1 ? parts[0] : '');
         const roleIds = param.roleIds;
 

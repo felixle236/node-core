@@ -1,6 +1,6 @@
 import { Authorized, Controller, CurrentUser, Get, Render } from 'routing-controllers';
 import { Service } from 'typedi';
-import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
+import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @Controller()

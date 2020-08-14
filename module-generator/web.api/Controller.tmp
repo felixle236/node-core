@@ -4,7 +4,7 @@ import { {PascalName}CreateRequest } from '../../web.core/dtos/{camelName}/reque
 import { {PascalName}FilterRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}FilterRequest';
 import { {PascalName}Response } from '../../web.core/dtos/{camelName}/responses/{PascalName}Response';
 import { {PascalName}UpdateRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}UpdateRequest';
-import { I{PascalName}Business } from '../../web.core/interfaces/businesses/I{PascalName}Business';
+import { I{PascalName}Business } from '../../web.core/gateways/businesses/I{PascalName}Business';
 import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 
 @Service()

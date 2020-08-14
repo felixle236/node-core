@@ -5,8 +5,8 @@ import { {PascalName}CreateRequest } from '../dtos/{camelName}/requests/{PascalN
 import { {PascalName}FilterRequest } from '../dtos/{camelName}/requests/{PascalName}FilterRequest';
 import { {PascalName}Response } from '../dtos/{camelName}/responses/{PascalName}Response';
 import { {PascalName}UpdateRequest } from '../dtos/{camelName}/requests/{PascalName}UpdateRequest';
-import { I{PascalName}Business } from '../interfaces/businesses/I{PascalName}Business';
-import { I{PascalName}Repository } from '../interfaces/gateways/data/I{PascalName}Repository';
+import { I{PascalName}Business } from '../gateways/businesses/I{PascalName}Business';
+import { I{PascalName}Repository } from '../gateways/gateways/data/I{PascalName}Repository';
 import { ResultListResponse } from '../dtos/common/ResultListResponse';
 import { SystemError } from '../dtos/common/Exception';
 

@@ -1,23 +1,23 @@
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from './Input';
-import { CreateUserOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
+import { IdentityResult } from '../../../domain/common/outputs/IdentityResult';
 import { SystemError } from '../../../domain/common/exceptions';
 import { User } from '../../../domain/entities/User';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 
 @Service()
-export class CreateUserInteractor implements IInteractor<CreateUserInput, CreateUserOutput> {
+export class CreateUserInteractor implements IInteractor<CreateUserInput, IdentityResult<number>> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: CreateUserInput, userAuth: UserAuthenticated): Promise<CreateUserOutput> {
+    async handle(param: CreateUserInput, userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
         const data = new User();
         data.roleId = param.roleId;
         data.status = UserStatus.ACTIVED;
@@ -48,6 +48,6 @@ export class CreateUserInteractor implements IInteractor<CreateUserInput, Create
         const id = await this._userRepository.create(data);
         if (!id)
             throw new SystemError(5);
-        return new CreateUserOutput(id);
+        return new IdentityResult(id);
     }
 }

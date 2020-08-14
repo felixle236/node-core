@@ -1,8 +1,11 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
 import { REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
 import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 import { Service } from 'typedi';
+import { SystemError } from '../../../web.core/domain/common/exceptions';
 
 @Service('redis.context')
 export class RedisContext {
@@ -10,11 +13,14 @@ export class RedisContext {
 
     constructor(connection?: IRedisClient) {
         if (connection) this._connection = connection;
+
+        const folder = path.join(__dirname, './repositories');
+        fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
     }
 
     get redisClient(): IRedisClient {
         if (!this._connection)
-            throw new Error('The redis connection is not exists!');
+            throw new SystemError(1004, 'redis connection');
         return this._connection;
     }
 
@@ -31,7 +37,7 @@ export class RedisContext {
     }
 }
 
-export const promisifyRedis = (redis) => {
+const promisifyRedis = (redis) => {
     const mlproto = redis.Multi.prototype;
     const clproto = redis.RedisClient.prototype;
 

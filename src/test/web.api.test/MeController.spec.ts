@@ -7,7 +7,7 @@ import { SinonSandbox, createSandbox } from 'sinon';
 import { ApiService } from '../../web.api/ApiService';
 import { AuthenticationBusiness } from '../../web.core/businesses/AuthenticationBusiness';
 import { GenderType } from '../../constants/Enums';
-import { IUser } from '../../web.core/interfaces/models/IUser';
+import { IUser } from '../../web.core/gateways/models/IUser';
 import { Response } from 'request';
 import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
 import { Server } from 'http';

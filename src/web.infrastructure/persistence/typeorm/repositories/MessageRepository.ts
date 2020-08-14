@@ -1,6 +1,6 @@
 import { BaseRepository } from './base/BaseRepository';
 import { FindMessageFilter } from '../../../../web.core/interactors/message/find-message/Filter';
-import { IMessageRepository } from '../../../../web.core/interfaces/repositories/IMessageRepository';
+import { IMessageRepository } from '../../../../web.core/gateways/repositories/IMessageRepository';
 import { MESSAGE_SCHEMA } from '../schemas/MessageSchema';
 import { Message } from '../../../../web.core/domain/entities/Message';
 import { MessageDbEntity } from '../entities/MessageDbEntity';

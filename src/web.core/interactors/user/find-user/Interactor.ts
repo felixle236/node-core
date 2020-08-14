@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { FindUserFilter } from './Filter';
 import { FindUserOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { PaginationResult } from '../../../domain/common/outputs/PaginationResult';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 

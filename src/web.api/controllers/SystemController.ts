@@ -1,21 +1,25 @@
 import * as path from 'path';
 import { Authorized, ContentType, Get, JsonController, Post, Res } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
-import { IUserInteractor } from '../../web.core/interfaces/interactors/IUserInteractor';
+import { BulkActionResult } from '../../web.core/domain/common/outputs/BulkActionResult';
+import { CreateDummyUserInput } from '../../web.core/interactors/user/create-dummy-user/Input';
+import { CreateDummyUserInteractor } from '../../web.core/interactors/user/create-dummy-user/Interactor';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
+import { Service } from 'typedi';
 import { readFile } from '../../libs/file';
 
 @Service()
 @JsonController('/systems')
 export class SystemController {
-    @Inject('user.interactor')
-    private readonly _userInteractor: IUserInteractor;
+    constructor(
+        private _createDummyUserInteractor: CreateDummyUserInteractor
+    ) {}
 
-    @Post('/sample-data')
+    @Post('/dummy-user')
     @Authorized(RoleId.SUPER_ADMIN)
-    async createSampleData(): Promise<BulkActionResponse> {
-        return await this._userInteractor.createSampleData();
+    async createDummyUser(): Promise<BulkActionResult> {
+        const param = new CreateDummyUserInput();
+        param.users = require('../../resources/sample-data/users.json');
+        return await this._createDummyUserInteractor.handle(param);
     }
 
     // Demo API download file binary

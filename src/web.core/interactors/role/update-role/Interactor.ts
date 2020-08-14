@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { Role } from '../../../domain/entities/Role';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UpdateRoleInput } from './Input';

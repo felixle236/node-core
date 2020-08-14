@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { {PascalName}Schema } from '../schemas/{PascalName}Schema';
-import { I{PascalName} } from '../../../../web.core/interfaces/models/I{PascalName}';
+import { I{PascalName} } from '../../../../web.core/gateways/models/I{PascalName}';
 
 @Entity({PascalName}Schema.TABLE_NAME)
 @Index(({camelName}: {PascalName}Entity) => [{camelName}.name, {camelName}.deletedAt], { unique: true })

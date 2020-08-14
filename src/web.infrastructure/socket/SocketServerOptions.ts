@@ -1,11 +1,11 @@
-export class WebSocketOptions {
+export class SocketServerOptions {
     port: number;
-    redisAdapter: WebSocketRedisAdapter;
+    redisAdapter: SocketServerRedisAdapter;
 
     controllerPaths: string[];
     middlewarePaths: string[];
 }
 
-export class WebSocketRedisAdapter {
+export class SocketServerRedisAdapter {
     constructor(public host: string, public port: number) {}
 }

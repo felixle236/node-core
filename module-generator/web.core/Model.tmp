@@ -1,7 +1,7 @@
 import * as validator from 'class-validator';
 import { {PascalName}CreateData } from '../dtos/{camelName}/data/{PascalName}CreateData';
 import { {PascalName}UpdateData } from '../dtos/{camelName}/data/{PascalName}UpdateData';
-import { I{PascalName} } from '../interfaces/models/I{PascalName}';
+import { I{PascalName} } from '../gateways/models/I{PascalName}';
 import { SystemError } from '../dtos/common/Exception';
 
 export class {PascalName} implements I{PascalName} {

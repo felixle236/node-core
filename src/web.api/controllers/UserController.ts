@@ -1,33 +1,38 @@
 import { Authorized, Body, BodyParam, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import { IUserInteractor } from '../../web.core/interfaces/interactors/IUserInteractor';
-import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
-import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
-import { UserCommonFilterRequest } from '../../web.core/dtos/user/requests/UserCommonFilterRequest';
-import { UserCommonResponse } from '../../web.core/dtos/user/responses/UserCommonResponse';
-import { UserCreateRequest } from '../../web.core/dtos/user/requests/UserCreateRequest';
-import { UserFilterRequest } from '../../web.core/dtos/user/requests/UserFilterRequest';
-import { UserRegisterRequest } from '../../web.core/dtos/user/requests/UserRegisterRequest';
-import { UserResponse } from '../../web.core/dtos/user/responses/UserResponse';
-import { UserUpdateRequest } from '../../web.core/dtos/user/requests/UserUpdateRequest';
+import { Service } from 'typedi';
+import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
+import { FindUserInteractor } from '../../web.core/interactors/user/find-user/Interactor';
+import { GetUserByIdInteractor } from '../../web.core/interactors/user/get-user-by-id/Interactor';
+import { CreateUserInteractor } from '../../web.core/interactors/user/create-user/Interactor';
+import { UpdateUserInteractor } from '../../web.core/interactors/user/update-user/Interactor';
+import { SignupInteractor } from '../../web.core/interactors/user/signup/Interactor';
+import { ActiveUserInteractor } from '../../web.core/interactors/user/active-user/Interactor';
+import { ResendActivationInteractor } from '../../web.core/interactors/user/resend-activation/Interactor';
+import { ForgotPasswordInteractor } from '../../web.core/interactors/user/forgot-password/Interactor';
+import { ArchiveUserInteractor } from '../../web.core/interactors/user/archive-user/Interactor';
+import { DeleteUserInteractor } from '../../web.core/interactors/user/delete-user/Interactor';
 
 @Service()
 @JsonController('/users')
 export class UserController {
-    @Inject('user.interactor')
-    private readonly _userInteractor: IUserInteractor;
+    constructor(
+        private _findUserInteractor: FindUserInteractor,
+        private _getUserByIdInteractor: GetUserByIdInteractor,
+        private _createUserInteractor: CreateUserInteractor,
+        private _updateUserInteractor: UpdateUserInteractor,
+        private _signupInteractor: SignupInteractor,
+        private _activeUserInteractor: ActiveUserInteractor,
+        private _resendActivationInteractor: ResendActivationInteractor,
+        private _forgotPasswordInteractor: ForgotPasswordInteractor,
+        private _archiveUserInteractor: ArchiveUserInteractor,
+        private _deleteUserInteractor: DeleteUserInteractor
+    ) {}
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
     async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserFilterRequest): Promise<ResultListResponse<UserResponse>> {
         return await this._userInteractor.find(filter, userAuth);
-    }
-
-    @Get('/common')
-    @Authorized(RoleId.SUPER_ADMIN)
-    async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: UserCommonFilterRequest): Promise<ResultListResponse<UserCommonResponse>> {
-        return await this._userInteractor.findCommon(filter, userAuth);
     }
 
     @Get('/:id([0-9]+)')

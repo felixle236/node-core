@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { GetUserByIdOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { SystemError } from '../../../domain/common/exceptions';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 

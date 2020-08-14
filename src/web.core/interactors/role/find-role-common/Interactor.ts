@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { FindRoleCommonFilter } from './Filter';
 import { FindRoleCommonOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { PaginationResult } from '../../../domain/common/outputs/PaginationResult';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 

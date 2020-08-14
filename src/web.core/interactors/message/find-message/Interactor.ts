@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { FindMessageFilter } from './Filter';
 import { FindMessageOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IMessageRepository } from '../../../interfaces/repositories/IMessageRepository';
+import { IMessageRepository } from '../../../gateways/repositories/IMessageRepository';
 import { PaginationResult } from '../../../domain/common/outputs/PaginationResult';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
@@ -15,8 +15,8 @@ export class FindMessageInteractor implements IInteractor<FindMessageFilter, Pag
         filter.userAuth = userAuth;
 
         const [messages, count] = await this._messageRepository.findAndCount(filter);
-        const messageViews = messages.map(message => new FindMessageOutput(message));
+        const list = messages.map(message => new FindMessageOutput(message));
 
-        return new PaginationResult(messageViews, count, filter.skip, filter.limit);
+        return new PaginationResult(list, count, filter.skip, filter.limit);
     }
 }

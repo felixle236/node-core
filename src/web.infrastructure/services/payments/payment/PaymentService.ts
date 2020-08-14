@@ -1,4 +1,4 @@
-import { IPaymentParam, IPaymentService } from '../../../../web.core/interfaces/services/IPaymentService';
+import { IPaymentParam, IPaymentService } from '../../../../web.core/gateways/services/IPaymentService';
 import { PAYMENT_TYPE, STRIPE_KEY } from '../../../../constants/Environments';
 import { LoggingFactory } from './providers/LoggingFactory';
 import { PaymentSenderType } from '../../../../constants/Enums';

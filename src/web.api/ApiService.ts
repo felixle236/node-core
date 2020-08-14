@@ -1,16 +1,16 @@
 import * as compression from 'compression';
-import * as express from 'express';
-import * as http from 'http';
 import * as path from 'path';
 import { API_PORT } from '../constants/Environments';
 import { ApiAuthenticator } from './ApiAuthenticator';
 import { Container } from 'typedi';
-import { createExpressServer } from 'routing-controllers';
+import { RoutingControllersOptions } from 'routing-controllers';
+import { Server } from 'http';
+import { WebServer } from '../web.infrastructure/web/WebServer';
 
 export class ApiService {
-    static start(callback?: any): http.Server {
-        const authenticator = Container.get<ApiAuthenticator>('api.authenticator');
-        const app: express.Express = createExpressServer({
+    setup(callback?: any): Server {
+        const authenticator = Container.get(ApiAuthenticator);
+        const options: RoutingControllersOptions = {
             cors: {
                 origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -26,20 +26,18 @@ export class ApiService {
             middlewares: [
                 path.join(__dirname, './middlewares/*{.js,.ts}')
             ],
-            interceptors: [
-                path.join(__dirname, './interceptors/*{.js,.ts}')
-            ],
             validation: false,
             defaultErrorHandler: false,
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
-        });
+        };
+        const webServer = new WebServer(options);
 
-        app.get('/healthz', (_req, res) => {
+        webServer.app.get('/healthz', (_req, res) => {
             res.status(200).end('ok');
         });
 
-        app.use(compression({ filter: /* istanbul ignore next */ (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
-        return app.listen(API_PORT, '0.0.0.0', callback);
+        webServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
+        return webServer.start(API_PORT, callback);
     }
 }

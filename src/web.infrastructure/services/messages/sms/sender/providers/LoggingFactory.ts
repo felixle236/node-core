@@ -1,5 +1,5 @@
 import { ENABLE_DATA_LOGGING } from '../../../../../../constants/Environments';
-import { ISmsSender } from '../interfaces/ISmsSender';
+import { ISmsSender } from '../gateways/ISmsSender';
 
 export class LoggingFactory implements ISmsSender {
     sendSMS(senderName: string, phoneNumber: string, content: string): Promise<any> {

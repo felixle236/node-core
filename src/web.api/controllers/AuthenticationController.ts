@@ -11,14 +11,13 @@ import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticate
 @JsonController('/auth')
 export class AuthenticationController {
     constructor(
-        private _authenticateInteractor: AuthenticateInteractor,
-        private _signinInteractor: SigninInteractor
+        private readonly _authenticateInteractor: AuthenticateInteractor,
+        private readonly _signinInteractor: SigninInteractor
     ) {}
 
     @Post('/')
     async authenticate(@HeaderParam('authorization') token: string): Promise<UserAuthenticated> {
-        const param = new AuthenticateInput();
-        param.accessToken = token;
+        const param = new AuthenticateInput(token);
         return await this._authenticateInteractor.handle(param);
     }
 

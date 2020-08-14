@@ -1,8 +1,8 @@
 import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../../constants/Environments';
 import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
-import { IMailGenerator } from './sender/interfaces/IMailGenerator';
-import { IMailSender } from './sender/interfaces/IMailSender';
-import { IMailService } from '../../../../web.core/interfaces/services/IMailService';
+import { IMailGenerator } from './sender/gateways/IMailGenerator';
+import { IMailSender } from './sender/gateways/IMailSender';
+import { IMailService } from '../../../../web.core/gateways/services/IMailService';
 import { MailGenerator } from './MailGenerator';
 import { MailSender } from './sender';
 import { Service } from 'typedi';

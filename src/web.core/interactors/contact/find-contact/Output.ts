@@ -11,6 +11,8 @@ export class FindContactOutput {
     birthday?: string;
     phone?: string;
     address?: string;
+    isOnline: boolean = false;
+    hasNewMessage: boolean = false;
 
     constructor(data: User) {
         this.id = data.id;

@@ -1,4 +1,4 @@
-import { IPaymentParam, IPaymentService } from '../../../../../web.core/interfaces/services/IPaymentService';
+import { IPaymentParam, IPaymentService } from '../../../../../web.core/gateways/services/IPaymentService';
 import { Stripe } from 'stripe';
 
 export class StripeFactory implements IPaymentService {

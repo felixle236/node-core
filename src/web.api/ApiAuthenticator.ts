@@ -1,16 +1,19 @@
-import { Inject, Service } from 'typedi';
 import { Action } from 'routing-controllers';
-import { IAuthenticationInteractor } from '../web.core/interfaces/interactors/IAuthenticationInteractor';
+import { AuthenticateInput } from '../web.core/interactors/auth/authenticate/Input';
+import { AuthenticateInteractor } from '../web.core/interactors/auth/authenticate/Interactor';
+import { Service } from 'typedi';
 
-@Service('api.authenticator')
+@Service()
 export class ApiAuthenticator {
-    @Inject('authentication.interactor')
-    private readonly _authInteractor: IAuthenticationInteractor;
+    constructor(
+        private readonly _authenticateInteractor: AuthenticateInteractor
+    ) {}
 
     authorizationHttpChecker = async (action: Action, roleIds: number[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
-        action.request.userAuth = await this._authInteractor.authenticateUser(token, roleIds);
+        const param = new AuthenticateInput(token, roleIds);
+        action.request.userAuth = await this._authenticateInteractor.handle(param);
         return !!action.request.userAuth;
     }
 

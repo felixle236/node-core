@@ -1,4 +1,4 @@
-import { IMailSender } from '../interfaces/IMailSender';
+import { IMailSender } from '../gateways/IMailSender';
 const sibApiV3Sdk = require('sib-api-v3-sdk');
 
 /**

@@ -6,9 +6,9 @@ import { BulkActionResult } from '../../../domain/common/outputs/BulkActionResul
 import { CreateDummyUserInput } from './Input';
 import { IDbContext } from '../../../domain/common/persistence/IDbContext';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IRoleRepository } from '../../../interfaces/repositories/IRoleRepository';
-import { IStorageService } from '../../../interfaces/services/IStorageService';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
+import { IStorageService } from '../../../gateways/services/IStorageService';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { User } from '../../../domain/entities/User';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 import { readFile } from '../../../../libs/file';

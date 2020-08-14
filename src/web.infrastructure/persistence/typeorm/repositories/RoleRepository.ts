@@ -1,7 +1,7 @@
 import { BaseRepository } from './base/BaseRepository';
 import { FindRoleCommonFilter } from '../../../../web.core/interactors/role/find-role-common/Filter';
 import { FindRoleFilter } from '../../../../web.core/interactors/role/find-role/Filter';
-import { IRoleRepository } from '../../../../web.core/interfaces/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Role } from '../../../../web.core/domain/entities/Role';
 import { RoleDbEntity } from '../entities/RoleDbEntity';

@@ -1,14 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { AuthenticateInput } from '../../auth/authenticate/Input';
 import { AuthenticateInteractor } from '../../auth/authenticate/Interactor';
-import { IContactStatusRepository } from '../../../interfaces/repositories/IContactStatusRepository';
+import { IContactStatusRepository } from '../../../gateways/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { RoleId } from '../../../domain/enums/RoleId';
 import { SocketInput } from '../../../domain/common/inputs/SocketInput';
 
 @Service()
-export class ConnectInteractor implements IInteractor<SocketInput<string>, void> {
+export class ConnectSocketInteractor implements IInteractor<SocketInput<string>, void> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
@@ -21,8 +21,7 @@ export class ConnectInteractor implements IInteractor<SocketInput<string>, void>
     async handle(param: SocketInput<string>): Promise<void> {
         const socket = param.socket;
         try {
-            const authenticateInput = new AuthenticateInput();
-            authenticateInput.accessToken = param.data;
+            const authenticateInput = new AuthenticateInput(param.data);
             socket.userAuth = await this._authenticateInteractor.handle(authenticateInput);
         }
         catch (error) {

@@ -1,6 +1,6 @@
 import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_SENDER, SENDINBLUE_API_KEY } from '../../../../../constants/Environments';
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
-import { IMailSender } from './interfaces/IMailSender';
+import { IMailSender } from './gateways/IMailSender';
 import { LoggingFactory } from './providers/LoggingFactory';
 import { MailSenderType } from '../../../../../constants/Enums';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';

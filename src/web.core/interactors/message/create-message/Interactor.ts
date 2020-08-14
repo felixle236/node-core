@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { CreateMessageInput } from './Input';
 import { CreateMessageOutput } from './Output';
-import { IContactStatusRepository } from '../../../interfaces/repositories/IContactStatusRepository';
+import { IContactStatusRepository } from '../../../gateways/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IMessageRepository } from '../../../interfaces/repositories/IMessageRepository';
+import { IMessageRepository } from '../../../gateways/repositories/IMessageRepository';
 import { Message } from '../../../domain/entities/Message';
 import { SocketIOEmitter } from 'socket.io-emitter';
 import { SystemError } from '../../../domain/common/exceptions';
@@ -38,7 +38,7 @@ export class CreateMessageInteractor implements IInteractor<CreateMessageInput, 
             throw new SystemError(5);
 
         const output = new CreateMessageOutput(newMessage);
-        sendByEmitter(this._socketEmitter, socketNamespace.message.name, socketNamespace.message.events.messageDirectly, newMessage.receiverId!.toString(), output);
+        sendByEmitter(this._socketEmitter, socketNamespace.message.name, socketNamespace.message.events.messageDirectly, message.receiverId.toString(), output);
         return output;
     }
 }

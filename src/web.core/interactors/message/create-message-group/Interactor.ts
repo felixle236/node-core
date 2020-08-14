@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { CreateMessageGroupInput } from './Input';
 import { CreateMessageGroupOutput } from './Output';
-import { IContactStatusRepository } from '../../../interfaces/repositories/IContactStatusRepository';
+import { IContactStatusRepository } from '../../../gateways/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IMessageRepository } from '../../../interfaces/repositories/IMessageRepository';
+import { IMessageRepository } from '../../../gateways/repositories/IMessageRepository';
 import { Message } from '../../../domain/entities/Message';
 import { SocketIOEmitter } from 'socket.io-emitter';
 import { SystemError } from '../../../domain/common/exceptions';

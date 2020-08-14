@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
-import { IAuthenticationService } from '../../../interfaces/services/IAuthenticationService';
+import { IAuthenticationService } from '../../../gateways/services/IAuthenticationService';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { IUserRepository } from '../../../interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { SigninInput } from './Input';
 import { SigninOutput } from './Output';
 import { SystemError } from '../../../domain/common/exceptions';

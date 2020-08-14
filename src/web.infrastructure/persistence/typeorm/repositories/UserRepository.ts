@@ -3,7 +3,7 @@ import { BaseRepository } from './base/BaseRepository';
 import { FindContactFilter } from '../../../../web.core/interactors/contact/find-contact/Filter';
 import { FindUserFilter } from '../../../../web.core/interactors/user/find-user/Filter';
 import { IDbQueryRunner } from '../../../../web.core/domain/common/persistence/IDbQueryRunner';
-import { IUserRepository } from '../../../../web.core/interfaces/repositories/IUserRepository';
+import { IUserRepository } from '../../../../web.core/gateways/repositories/IUserRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
 import { USER_SCHEMA } from '../schemas/UserSchema';

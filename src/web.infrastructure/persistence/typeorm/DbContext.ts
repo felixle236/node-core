@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENABLE_QUERY_LOGGING, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../constants/Environments';
@@ -5,10 +6,16 @@ import { DbConnection } from './DbConnection';
 import { IDbConnection } from '../../../web.core/domain/common/persistence/IDbConnection';
 import { IDbContext } from '../../../web.core/domain/common/persistence/IDbContext';
 import { Service } from 'typedi';
-import { SystemError } from '../../../web.core/dtos/common/Exception';
+import { SystemError } from '../../../web.core/domain/common/exceptions';
 
 @Service('db.context')
 export class DbContext implements IDbContext {
+    constructor() {
+        // Load singleton
+        const folder = path.join(__dirname, './repositories');
+        fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
+    }
+
     getConnection(connectionName?: string): IDbConnection {
         let connection: DbConnection | undefined;
         try {

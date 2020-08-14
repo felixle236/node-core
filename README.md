@@ -572,14 +572,14 @@ DELETE http://localhost/api/v1/users/1
 
 - Order of development:
    - Web Core:
-      - Model interface (src/web.core/interfaces/models)
+      - Model interface (src/web.core/gateways/models)
       - Model (src/web.core/models)
       - Dtos (src/web.core/dtos)
          - Data
          - Responses
          - Requests
-      - Gateway interface (src/web.core/interfaces/gateways(/data))
-      - Business interface (src/web.core/interfaces/businesses)
+      - Gateway interface (src/web.core/gateways/gateways(/data))
+      - Business interface (src/web.core/gateways/businesses)
       - Business (src/web.core/businesses)
    - Web Infrastructure (data)
       - Schema (src/web.infrastructure/data/typeorm/schemas)

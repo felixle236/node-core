@@ -1,17 +1,16 @@
 import { ENABLE_DATA_LOGGING, ENABLE_WRITE_LOG, IS_DEVELOPMENT } from '../../constants/Environments';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
-import { NextFunction, Request, Response } from 'express';
-import { ILogService } from '../../web.core/interfaces/gateways/logs/ILogService';
+import { Request, Response } from 'express';
+import { ILogService } from '../../web.core/gateways/services/ILogService';
 import { Inject } from 'typedi';
-import { SystemError } from '../../web.core/dtos/common/Exception';
+import { SystemError } from '../../web.core/domain/common/exceptions';
 
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
     @Inject('log.service')
     private readonly _logService: ILogService;
 
-    // @ts-ignore
-    error(err: SystemError, req: Request, res: Response, next: NextFunction) {
+    error(err: SystemError, _req: Request, res: Response) {
         if (ENABLE_DATA_LOGGING)
             console.error({ ...err, stack: err.stack });
 

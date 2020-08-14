@@ -1,26 +1,18 @@
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
-import * as http from 'http';
 import * as path from 'path';
 import { Container } from 'typedi';
+import { RoutingControllersOptions } from 'routing-controllers';
+import { Server } from 'http';
 import { WEB_PORT } from '../constants/Environments';
 import { WebAuthenticator } from './WebAuthenticator';
-import { useExpressServer } from 'routing-controllers';
+import { WebServer } from '../web.infrastructure/web/WebServer';
 
 export class WebService {
-    static start(callback?: any): http.Server {
-        const authenticator = Container.get<WebAuthenticator>('web.authenticator');
-        let app: express.Express = express();
-
-        // view engine setup
-        app.set('views', path.join(__dirname, 'views'));
-        app.set('view engine', 'ejs');
-
-        app.use(express.static(path.join(__dirname, 'public')));
-        app.use(cookieParser());
-
-        app = useExpressServer(app, {
+    setup(callback?: any): Server {
+        const authenticator = Container.get(WebAuthenticator);
+        const options: RoutingControllersOptions = {
             controllers: [
                 path.join(__dirname, './controllers/*{.js,.ts}')
             ],
@@ -34,18 +26,25 @@ export class WebService {
             defaultErrorHandler: false,
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
-        });
+        };
+        const webServer = new WebServer(options);
+
+        // view engine setup
+        webServer.app.set('views', path.join(__dirname, 'views'));
+        webServer.app.set('view engine', 'ejs');
+
+        webServer.app.use(express.static(path.join(__dirname, 'public')));
+        webServer.app.use(cookieParser());
 
         // catch 404 and forward to error handler
-        // @ts-ignore
-        app.use(function(req, res, next) {
+        webServer.app.use(function(_req, res) {
             if (!res.finished) {
                 res.status(404);
                 res.render('404');
             }
         });
 
-        app.use(compression({ filter: /* istanbul ignore next */ (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
-        return app.listen(WEB_PORT, callback);
+        webServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
+        return webServer.start(WEB_PORT, callback);
     }
 }
