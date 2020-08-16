@@ -19,11 +19,11 @@ export class UserController {
         if (!userAuth)
             return response.redirect('/');
 
-        const data = await this._findUserInteractor.handle(filter, userAuth);
+        const result = await this._findUserInteractor.handle(filter, userAuth);
         return {
             title: 'User List',
             userAuth,
-            data
+            result
         };
     }
 }

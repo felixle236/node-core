@@ -12,7 +12,7 @@ function login() {
             password: password
         })
     }).done(function(result) {
-        setCookie('token', result.data.accessToken, 1);
+        setCookie('token', result.accessToken, 1);
         setTimeout(function() { location.reload() }, 100);
     }).fail(function(jqXHR, textStatus) {
         $('#login-error').html(jqXHR.responseJSON.message);

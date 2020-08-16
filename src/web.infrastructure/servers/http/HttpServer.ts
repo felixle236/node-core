@@ -1,4 +1,4 @@
-import { RoutingControllersOptions, createExpressServer } from 'routing-controllers';
+import { RoutingControllersOptions, createExpressServer, useExpressServer } from 'routing-controllers';
 import { Express } from 'express';
 import { Server } from 'http';
 
@@ -6,8 +6,11 @@ export class HttpServer {
     app: Express;
     server: Server;
 
-    constructor(options: RoutingControllersOptions) {
-        this.app = createExpressServer(options);
+    constructor(options: RoutingControllersOptions, app?: Express) {
+        if (app)
+            this.app = useExpressServer(app, options);
+        else
+            this.app = createExpressServer(options);
     }
 
     start(port: number, callback?: any): Server {

@@ -2,16 +2,25 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as path from 'path';
+import { IS_DEVELOPMENT, WEB_PORT } from '../configs/Configuration';
 import { Container } from 'typedi';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
 import { Server } from 'http';
-import { WEB_PORT } from '../configs/Configuration';
 import { WebAuthenticator } from './WebAuthenticator';
 
 export class WebService {
     setup(callback?: any): Server {
         const authenticator = Container.get(WebAuthenticator);
+        const app = express();
+
+        // view engine setup
+        app.set('views', path.join(__dirname, 'views'));
+        app.set('view engine', 'ejs');
+
+        app.use(express.static(path.join(__dirname, 'public')));
+        app.use(cookieParser());
+
         const options: RoutingControllersOptions = {
             controllers: [
                 path.join(__dirname, './controllers/*{.js,.ts}')
@@ -24,17 +33,11 @@ export class WebService {
             ],
             validation: false,
             defaultErrorHandler: false,
+            development: IS_DEVELOPMENT,
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
         };
-        const httpServer = new HttpServer(options);
-
-        // view engine setup
-        httpServer.app.set('views', path.join(__dirname, 'views'));
-        httpServer.app.set('view engine', 'ejs');
-
-        httpServer.app.use(express.static(path.join(__dirname, 'public')));
-        httpServer.app.use(cookieParser());
+        const httpServer = new HttpServer(options, app);
 
         // catch 404 and forward to error handler
         httpServer.app.use(function(_req, res) {

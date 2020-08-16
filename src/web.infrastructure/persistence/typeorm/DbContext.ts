@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
+import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../configs/Configuration';
 import { DbConnection } from './DbConnection';
 import { IDbConnection } from '../../../web.core/domain/common/persistence/IDbConnection';
@@ -11,26 +11,26 @@ import { SystemError } from '../../../web.core/domain/common/exceptions/SystemEr
 @Service('db.context')
 export class DbContext implements IDbContext {
     getConnection(connectionName?: string): IDbConnection {
-        let connection: DbConnection | undefined;
+        let connection: Connection | undefined;
         try {
-            connection = getConnection(connectionName) as DbConnection;
+            connection = getConnection(connectionName);
         }
         catch { }
         if (!connection || !connection.isConnected)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'database connection');
-        return connection;
+        return new DbConnection(connection);
     }
 
     async createConnection(connectionName?: string): Promise<IDbConnection> {
-        let connection: DbConnection | undefined;
+        let connection: Connection | undefined;
         try {
-            connection = getConnection(connectionName) as DbConnection;
+            connection = getConnection(connectionName);
         }
         catch { }
         if (connection && connection.isConnected)
-            return connection;
+            return new DbConnection(connection);
 
-        return await createConnection({
+        connection = await createConnection({
             name: connectionName,
             type: DB_TYPE,
             host: DB_HOST,
@@ -56,6 +56,7 @@ export class DbContext implements IDbContext {
             subscribers: [
                 path.join(__dirname, './subscribers/*{.js,.ts}')
             ]
-        } as ConnectionOptions) as DbConnection;
+        } as ConnectionOptions);
+        return new DbConnection(connection);
     }
 }

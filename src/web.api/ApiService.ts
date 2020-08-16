@@ -1,6 +1,6 @@
 import * as compression from 'compression';
 import * as path from 'path';
-import { API_PORT } from '../configs/Configuration';
+import { API_PORT, IS_DEVELOPMENT } from '../configs/Configuration';
 import { ApiAuthenticator } from './ApiAuthenticator';
 import { Container } from 'typedi';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
@@ -28,6 +28,7 @@ export class ApiService {
             ],
             validation: false,
             defaultErrorHandler: false,
+            development: IS_DEVELOPMENT,
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
         };

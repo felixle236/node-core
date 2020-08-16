@@ -15,7 +15,7 @@ export class GetRoleByIdInteractor implements IInteractor<number, GetRoleByIdOut
         const role = await this._roleRepository.getById(id);
         if (!role)
             throw new SystemError(MessageError.DATA_NOT_FOUND);
-        if (role.level <= userAuth.role.level)
+        if (role.level < userAuth.role.level)
             throw new SystemError(MessageError.ACCESS_DENIED);
 
         return new GetRoleByIdOutput(role);

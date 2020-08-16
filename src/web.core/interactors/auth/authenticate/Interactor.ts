@@ -39,15 +39,11 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
         if (roleIds && roleIds.length && !roleIds.find(roleId => roleId === payload.roleId))
             throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
-        const userAuth = new UserAuthenticated();
-        userAuth.userId = Number(payload.sub);
-
         const roles = await this._roleRepository.getAll();
         const role = roles.find(role => role.id === payload.roleId);
         if (!role)
             throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
-        userAuth.role = role;
-        return userAuth;
+        return new UserAuthenticated(Number(payload.sub), role);
     }
 }

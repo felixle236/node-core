@@ -19,17 +19,17 @@ module.exports = {
     synchronize: false,
     logging: true,
     entities: [
-        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/entities/*{.js,.ts}`)
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/persistence/typeorm/entities/*{.js,.ts}`)
     ],
     migrations: [
-        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/migrations/*{.js,.ts}`)
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/persistence/typeorm/migrations/*{.js,.ts}`)
     ],
     subscribers: [
-        path.join(__dirname, `./${sourceDir}/web.infrastructure/data/typeorm/subscribers/*{.js,.ts}`)
+        path.join(__dirname, `./${sourceDir}/web.infrastructure/persistence/typeorm/subscribers/*{.js,.ts}`)
     ],
     cli: {
-        entitiesDir: `${sourceDir}/web.infrastructure/data/typeorm/entities`,
-        migrationsDir: `${sourceDir}/web.infrastructure/data/typeorm/migrations`,
-        subscribersDir: `${sourceDir}/web.infrastructure/data/typeorm/subscribers`
+        entitiesDir: `${sourceDir}/web.infrastructure/persistence/typeorm/entities`,
+        migrationsDir: `${sourceDir}/web.infrastructure/persistence/typeorm/migrations`,
+        subscribersDir: `${sourceDir}/web.infrastructure/persistence/typeorm/subscribers`
     }
 };

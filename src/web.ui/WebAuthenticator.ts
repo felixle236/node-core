@@ -3,7 +3,7 @@ import { AuthenticateInput } from '../web.core/interactors/auth/authenticate/Inp
 import { AuthenticateInteractor } from '../web.core/interactors/auth/authenticate/Interactor';
 import { Service } from 'typedi';
 
-@Service('web.authenticator')
+@Service()
 export class WebAuthenticator {
     constructor(
         private readonly _authenticateInteractor: AuthenticateInteractor

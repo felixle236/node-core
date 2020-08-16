@@ -24,6 +24,6 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             delete err.stack;
 
         res.status(err.httpCode);
-        res.render('error', { err });
+        res.render('error', { error: err });
     }
 }

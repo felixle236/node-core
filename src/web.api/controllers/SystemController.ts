@@ -14,7 +14,7 @@ export class SystemController {
         private _createDummyUserInteractor: CreateDummyUserInteractor
     ) {}
 
-    @Post('/dummy-user')
+    @Post('/dummy-users')
     @Authorized(RoleId.SUPER_ADMIN)
     async createDummyUser(): Promise<BulkActionResult> {
         const param = new CreateDummyUserInput();

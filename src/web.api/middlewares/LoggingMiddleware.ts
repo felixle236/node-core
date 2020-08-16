@@ -10,7 +10,7 @@ export class LoggingMiddleware implements ExpressMiddlewareInterface {
 
     use(req: Request, _res: Response, next: NextFunction): void {
         this._logService.writeLog({
-            type: 'request',
+            type: 'Request',
             method: req.method,
             url: req.originalUrl,
             query: JSON.stringify(req.query, null, 2),

@@ -9,13 +9,16 @@ export class LoggingMiddleware implements ExpressMiddlewareInterface {
     private readonly _logService: ILogService;
 
     use(req: Request, _res: Response, next: NextFunction): void {
-        this._logService.writeLog({
-            type: 'request',
-            method: req.method,
-            url: req.originalUrl,
-            query: JSON.stringify(req.query, null, 2),
-            body: req.body
-        });
+        const index = req.originalUrl.lastIndexOf('.');
+        if (index === -1 || index < req.originalUrl.length - 5) {
+            this._logService.writeLog({
+                type: 'Request',
+                method: req.method,
+                url: req.originalUrl,
+                query: JSON.stringify(req.query, null, 2),
+                body: req.body
+            });
+        }
         next();
     }
 }
