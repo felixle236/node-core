@@ -1,7 +1,7 @@
 import { IPaymentParam, IPaymentService } from '../../../web.core/gateways/services/IPaymentService';
-import { PAYMENT_PROVIDER, PAYPAL_KEY, STRIPE_KEY } from '../../../constants/Environments';
+import { PAYMENT_PROVIDER, PAYPAL_KEY, STRIPE_KEY } from '../../../configs/Configuration';
 import { PaymentConsoleFactory } from './providers/PaymentConsoleFactory';
-import { PaymentProvider } from '../../../constants/Enums';
+import { PaymentProvider } from '../../../configs/ServiceProvider';
 import { PaypalFactory } from './providers/PaypalFactory';
 import { Service } from 'typedi';
 import { StripeFactory } from './providers/StripeFactory';

@@ -2,7 +2,8 @@ import { Inject, Service } from 'typedi';
 import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IContactStatusRepository } from '../../../gateways/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
-import { SystemError } from '../../../domain/common/exceptions';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()

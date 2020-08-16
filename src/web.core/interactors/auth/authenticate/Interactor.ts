@@ -4,7 +4,8 @@ import { AuthenticateInput } from './Input';
 import { IAuthenticationService } from '../../../gateways/services/IAuthenticationService';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
-import { UnauthorizedError } from '../../../domain/common/exceptions';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { UnauthorizedError } from '../../../domain/common/exceptions/UnauthorizedError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
@@ -21,7 +22,7 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
         const roleIds = param.roleIds;
 
         if (!validator.isJWT(token))
-            throw new UnauthorizedError(1010, 'authorization token');
+            throw new UnauthorizedError(MessageError.PARAM_INVALID, 'authorization token');
 
         let payload;
         try {
@@ -29,14 +30,14 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
         }
         catch (error) {
             if (error.name === 'TokenExpiredError')
-                throw new UnauthorizedError(1008, 'token');
+                throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'authorization token');
         }
 
         if (!payload || !payload.sub || !payload.roleId)
-            throw new UnauthorizedError(1002, 'token');
+            throw new UnauthorizedError(MessageError.PARAM_INVALID, 'authorization token');
 
         if (roleIds && roleIds.length && !roleIds.find(roleId => roleId === payload.roleId))
-            throw new UnauthorizedError(3);
+            throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
         const userAuth = new UserAuthenticated();
         userAuth.userId = Number(payload.sub);
@@ -44,7 +45,7 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
         const roles = await this._roleRepository.getAll();
         const role = roles.find(role => role.id === payload.roleId);
         if (!role)
-            throw new UnauthorizedError(3);
+            throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
         userAuth.role = role;
         return userAuth;

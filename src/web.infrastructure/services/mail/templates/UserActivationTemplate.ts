@@ -1,5 +1,5 @@
 import * as Mailgen from 'mailgen';
-import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../../constants/Environments';
+import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../../configs/Configuration';
 import { IUser } from '../../../../web.core/domain/types/IUser';
 
 export class UserActivationTemplate {

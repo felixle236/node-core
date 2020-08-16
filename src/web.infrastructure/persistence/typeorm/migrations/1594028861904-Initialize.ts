@@ -1,15 +1,17 @@
-import { GenderType, RoleId, UserStatus } from '../../../../constants/Enums';
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { BUCKET_NAME } from '../../../../constants/Environments';
-import { IRole } from '../../../../web.core/gateways/models/IRole';
-import { IRoleRepository } from '../../../../web.core/gateways/gateways/data/IRoleRepository';
-import { IStorageService } from '../../../../web.core/gateways/gateways/medias/IStorageService';
-import { IUserRepository } from '../../../../web.core/gateways/gateways/data/IUserRepository';
-import { Role } from '../../../../web.core/models/Role';
+import { BUCKET_NAME } from '../../../../configs/Configuration';
+import { GenderType } from '../../../../web.core/domain/enums/GenderType';
+import { IRole } from '../../../../web.core/domain/types/IRole';
+import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
+import { IStorageService } from '../../../../web.core/gateways/services/IStorageService';
+import { IUserRepository } from '../../../../web.core/gateways/repositories/IUserRepository';
+import { Role } from '../../../../web.core/domain/entities/Role';
+import { RoleId } from '../../../../web.core/domain/enums/RoleId';
 import { RoleRepository } from '../repositories/RoleRepository';
-import { StorageService } from '../../../medias/storage/StorageService';
-import { User } from '../../../../web.core/models/User';
+import { StorageService } from '../../../services/storage/StorageService';
+import { User } from '../../../../web.core/domain/entities/User';
 import { UserRepository } from '../repositories/UserRepository';
+import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 
 export class Initialize1594028861904 implements MigrationInterface {
     name = 'Initialize1594028861904'
@@ -63,14 +65,12 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     let role = new Role({ id: RoleId.SUPER_ADMIN } as IRole);
     role.name = 'Super Admin';
     role.level = 1;
-    let createData = role.toCreateData();
-    await roleRepository.create(createData, queryRunner);
+    await roleRepository.create(role, queryRunner);
 
     role = new Role({ id: RoleId.COMMON_USER } as IRole);
     role.name = 'Common User';
     role.level = 2;
-    createData = role.toCreateData();
-    await roleRepository.create(createData, queryRunner);
+    await roleRepository.create(role, queryRunner);
 
     // Initial user detail: Super Admin
 
@@ -82,8 +82,7 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     user.email = 'admin@localhost.com';
     user.password = 'Nodecore@2';
     user.gender = GenderType.MALE;
-    const createUser = user.toCreateData();
-    await userRepository.create(createUser, queryRunner);
+    await userRepository.create(user, queryRunner);
 }
 
 /**
@@ -91,39 +90,34 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
  */
 async function initBucket(): Promise<void> {
     const storageService: IStorageService = new StorageService();
-    const isExist = await storageService.checkBucketExist(BUCKET_NAME);
-    if (!isExist) {
-        await storageService.createBucket(BUCKET_NAME);
-
-        /* eslint-disable */
-        const policy = {
-            Version: '2012-10-17',
-            Statement: [{
-                Sid: '',
-                Effect: 'Allow',
-                Principal: '*',
-                Action: ['s3:GetBucketLocation'],
-                Resource: [`arn:aws:s3:::${BUCKET_NAME}`]
-            }, {
-                Sid: '',
-                Effect: 'Allow',
-                Principal: '*',
-                Action: ['s3:ListBucket'],
-                Resource: [`arn:aws:s3:::${BUCKET_NAME}`],
-                Condition: {
-                    StringEquals: {
-                        's3:prefix': ['images/']
-                    }
+    /* eslint-disable */
+    const policy = {
+        Version: '2012-10-17',
+        Statement: [{
+            Sid: '',
+            Effect: 'Allow',
+            Principal: '*',
+            Action: ['s3:GetBucketLocation'],
+            Resource: [`arn:aws:s3:::${BUCKET_NAME}`]
+        }, {
+            Sid: '',
+            Effect: 'Allow',
+            Principal: '*',
+            Action: ['s3:ListBucket'],
+            Resource: [`arn:aws:s3:::${BUCKET_NAME}`],
+            Condition: {
+                StringEquals: {
+                    's3:prefix': ['images/']
                 }
-            }, {
-                Sid: '',
-                Effect: 'Allow',
-                Principal: '*',
-                Action: ['s3:GetObject'],
-                Resource: [`arn:aws:s3:::${BUCKET_NAME}/images/*`]
-            }]
-        };
-        /* eslint-enable */
-        await storageService.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy));
-    }
+            }
+        }, {
+            Sid: '',
+            Effect: 'Allow',
+            Principal: '*',
+            Action: ['s3:GetObject'],
+            Resource: [`arn:aws:s3:::${BUCKET_NAME}/images/*`]
+        }]
+    };
+    /* eslint-enable */
+    await storageService.createBucket(JSON.stringify(policy));
 }

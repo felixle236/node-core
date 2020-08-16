@@ -42,9 +42,11 @@ const showServiceStatus = () => {
 
 if (IS_DEVELOPMENT) {
     console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode....\n');
-    await startApplication();
-    await runMigrations();
-    showServiceStatus();
+
+    startApplication().then(async () => {
+        await runMigrations();
+        showServiceStatus();
+    });
 }
 else {
     if (cluster.isMaster) {

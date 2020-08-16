@@ -1,8 +1,8 @@
-import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_PROVIDER, SENDINBLUE_API_KEY } from '../../../../constants/Environments';
+import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_PROVIDER, SENDINBLUE_API_KEY } from '../../../../configs/Configuration';
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { IMailProvider } from './interfaces/IMailProvider';
 import { MailConsoleFactory } from './providers/MailConsoleFactory';
-import { MailProvider } from '../../../../constants/Enums';
+import { MailProvider } from '../../../../configs/ServiceProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 
 export class MailSender implements IMailProvider {

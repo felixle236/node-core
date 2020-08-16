@@ -8,7 +8,7 @@ import { {PascalName}UpdateData } from '../../../../web.core/dtos/{camelName}/da
 import { I{PascalName} } from '../../../../web.core/gateways/models/I{PascalName}';
 import { I{PascalName}Repository } from '../../../../web.core/gateways/gateways/data/I{PascalName}Repository';
 import { Service } from 'typedi';
-import { SortType } from '../../../../constants/Enums';
+import { SortType } from '../../../../configs/ServiceProvider';
 import { getRepository } from 'typeorm';
 
 @Service('{camelName}.repository')

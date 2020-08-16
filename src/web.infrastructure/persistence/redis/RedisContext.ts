@@ -1,5 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
 import { REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../configs/Configuration';
@@ -7,10 +5,6 @@ import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
-
-// Map singleton instances.
-const folder = path.join(__dirname, './repositories');
-fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
 
 @Service('redis.context')
 export class RedisContext {

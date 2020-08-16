@@ -1,8 +1,8 @@
 import { INotificationProvider } from './interfaces/INotificationProvider';
-import { NOTIFICATION_PROVIDER } from '../../../../constants/Environments';
+import { NOTIFICATION_PROVIDER } from '../../../../configs/Configuration';
 import { NodePushNotificationFactory } from './providers/NodePushNotificationFactory';
 import { NotificationConsoleFactory } from './providers/NotificationConsoleFactory';
-import { NotificationProvider } from '../../../../constants/Enums';
+import { NotificationProvider } from '../../../../configs/ServiceProvider';
 
 export class NotificationSender implements INotificationProvider {
     private readonly _provider: INotificationProvider;

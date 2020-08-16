@@ -57,17 +57,15 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
                                 const filePath = path.join(__dirname, item.avatar);
                                 const buffer = await readFile(filePath);
                                 const type = await fileType.fromBuffer(buffer);
-                                const extension = type ? type.ext : '';
-
-                                user.validateAvatarFormat(extension);
-                                user.validateAvatarSize(buffer.length);
-
-                                const avatarPath = user.getAvatarPath(extension);
-                                const urlPath = await this._storageService.upload(avatarPath, buffer);
 
                                 const data = new User();
-                                data.avatar = urlPath;
+                                const avatarPath = await data.setAvatar(user.id, {
+                                    mimetype: type?.mime,
+                                    size: buffer.length,
+                                    buffer
+                                } as Express.Multer.File);
 
+                                await this._storageService.upload(avatarPath, buffer);
                                 await this._userRepository.update(id, data, queryRunner);
                             }
                         }

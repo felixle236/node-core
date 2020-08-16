@@ -1,5 +1,5 @@
 import * as NodePushNotification from 'node-pushnotifications';
-import { ANDROID_KEY, IOS_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../../../constants/Environments';
+import { ANDROID_KEY, IOS_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../../../configs/Configuration';
 import { INotificationProvider } from '../interfaces/INotificationProvider';
 
 export class NodePushNotificationFactory implements INotificationProvider {

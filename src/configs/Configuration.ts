@@ -54,7 +54,7 @@ export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.en
 // STORAGE SERVICE
 
 export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.CONSOLE;
-export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? 'dev';
+export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? 'node-core';
 
 export const MINIO_CONFIG_HOST: string = process.env.MINIO_CONFIG_HOST ?? 'localhost';
 export const MINIO_CONFIG_PORT: number = process.env.MINIO_CONFIG_PORT ? Number(process.env.MINIO_CONFIG_PORT) : 9000;
@@ -62,7 +62,7 @@ export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY ?? '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
 export const IS_USE_SSL_MINIO: boolean = convertStringToBoolean(process.env.IS_USE_SSL_MINIO);
 
-export const S3_REGION: string = process.env.S3_REGION ?? 'us-east-1';
+export const S3_REGION: string = process.env.S3_REGION ?? 'ap-southeast-1';
 export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';
 export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
 

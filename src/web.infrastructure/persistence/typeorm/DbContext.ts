@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, REDIS_CONFIG_HOST, REDIS_CONFIG_PORT } from '../../../configs/Configuration';
@@ -8,10 +7,6 @@ import { IDbContext } from '../../../web.core/domain/common/persistence/IDbConte
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
-
-// Map singleton instances.
-const folder = path.join(__dirname, './repositories');
-fs.readdirSync(folder).forEach(file => require(`${folder}/${file}`));
 
 @Service('db.context')
 export class DbContext implements IDbContext {

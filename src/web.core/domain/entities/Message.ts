@@ -3,7 +3,7 @@ import { BaseEntity } from './base/BaseEntity';
 import { IMessage } from '../types/IMessage';
 import { MessageError } from '../common/exceptions/message/MessageError';
 import { SystemError } from '../common/exceptions/SystemError';
-import { User } from './user';
+import { User } from './User';
 
 export class Message extends BaseEntity<IMessage> implements IMessage {
     constructor(data?: IMessage) {

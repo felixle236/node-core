@@ -5,9 +5,10 @@ import { IContactStatusRepository } from '../../../gateways/repositories/IContac
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IMessageRepository } from '../../../gateways/repositories/IMessageRepository';
 import { Message } from '../../../domain/entities/Message';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
 import { SocketIOEmitter } from 'socket.io-emitter';
 import { SocketNamespace } from '../../../domain/common/socket/SocketNamespace';
-import { SystemError } from '../../../domain/common/exceptions';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { sendByEmitter } from '../../../../libs/socket';
 
@@ -38,7 +39,7 @@ export class CreateMessageGroupInteractor implements IInteractor<CreateMessageGr
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const output = new CreateMessageGroupOutput(newMessage);
-        sendByEmitter(this._socketEmitter, SocketNamespace.message.name, SocketNamespace.message.events.messageGroup, message.room.toString(), output);
+        sendByEmitter(this._socketEmitter, SocketNamespace.MESSAGE.NAME, SocketNamespace.MESSAGE.EVENTS.MESSAGE_GROUP, message.room.toString(), output);
         return output;
     }
 }

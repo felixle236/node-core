@@ -1,3 +1,4 @@
+import * as fileType from 'file-type';
 import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { Container } from 'typedi';
@@ -112,15 +113,6 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     get avatar(): string | undefined {
         return this.data.avatar && this._storageService.mapUrl(this.data.avatar);
-    }
-
-    set avatar(val: string | undefined) {
-        if (val) {
-            val = val.trim();
-            if (val.length > 200)
-                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'avatar', 200);
-        }
-        this.data.avatar = val;
     }
 
     get gender(): GenderType | undefined {
@@ -277,23 +269,26 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.password === this._hashPassword(password);
     }
 
-    static validateAvatarFile(file: Express.Multer.File): void {
+    // Use only update functions.
+    async setAvatar(id: number, file: Express.Multer.File): Promise<string> {
         const maxSize = 1024 * 100; // 100KB
         const formats = ['jpeg', 'jpg', 'png', 'gif'];
-        const nameLen = 100;
+
+        if (!id)
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
+
+        const type = await fileType.fromBuffer(file.buffer);
+        if (!type)
+            throw new SystemError(MessageError.PARAM_INVALID, 'file type');
 
         if (file.size > maxSize)
             throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
 
-        const extension = file.mimetype.replace('image/', '');
-        if (!formats.includes(extension))
+        const format = file.mimetype.replace('image/', '');
+        if (!formats.includes(format))
             throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
 
-        if (file.fieldname.length > nameLen)
-            throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar name', nameLen);
-    }
-
-    getAvatarPath(extension: string): string {
-        return `images/avatar/${this.id}.${extension}`;
+        this.data.avatar = `/images/users/${id}/avatar.${type.ext}`;
+        return this.data.avatar;
     }
 }

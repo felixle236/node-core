@@ -282,7 +282,7 @@ npm test
 
 ### Common Type
 
-- Define enum type into `src/constants/Enums.ts`. It can be a number or a string.
+- Define enum type into `src/configs/ServiceProvider.ts`. It can be a number or a string.
 - When do we use the enum type in our project?
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
 

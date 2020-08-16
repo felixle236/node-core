@@ -1,7 +1,8 @@
 import { Connection } from 'typeorm';
 import { IDbConnection } from '../../../web.core/domain/common/persistence/IDbConnection';
 import { IDbQueryRunner } from '../../../web.core/domain/common/persistence/IDbQueryRunner';
-import { SystemError } from '../../../web.core/domain/common/exceptions';
+import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
 import { TransactionIsolationLevel } from '../../../web.core/domain/common/persistence/TransactionIsolationLevel';
 
 export class DbConnection extends Connection implements IDbConnection {

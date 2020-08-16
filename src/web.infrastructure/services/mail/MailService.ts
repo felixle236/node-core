@@ -1,4 +1,4 @@
-import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../constants/Environments';
+import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../configs/Configuration';
 import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { IMailService } from '../../../web.core/gateways/services/IMailService';
 import { IUser } from '../../../web.core/domain/types/IUser';

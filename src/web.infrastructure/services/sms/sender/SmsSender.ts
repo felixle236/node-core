@@ -1,8 +1,8 @@
-import { SENDINBLUE_API_KEY, SMS_PROVIDER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from '../../../../constants/Environments';
+import { SENDINBLUE_API_KEY, SMS_PROVIDER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from '../../../../configs/Configuration';
 import { ISmsProvider } from './interfaces/ISmsProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 import { SmsConsoleFactory } from './providers/SmsConsoleFactory';
-import { SmsProvider } from '../../../../constants/Enums';
+import { SmsProvider } from '../../../../configs/ServiceProvider';
 import { TwilioFactory } from './providers/TwilioFactory';
 
 export class SmsSender implements ISmsProvider {

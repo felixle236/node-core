@@ -2,7 +2,7 @@ import 'mocha';
 import '../mocks';
 import '../../ModuleRegister';
 import * as path from 'path';
-import { GenderType, UserStatus } from '../../constants/Enums';
+import { GenderType, UserStatus } from '../../configs/ServiceProvider';
 import { BulkActionResponse } from '../../web.core/dtos/common/BulkActionResponse';
 import { Container } from 'typedi';
 import { IRole } from '../../web.core/gateways/models/IRole';

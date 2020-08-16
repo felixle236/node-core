@@ -2,7 +2,7 @@ import 'mocha';
 import '../mocks';
 import '../../ModuleRegister';
 import * as jwt from 'jsonwebtoken';
-import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../constants/Environments';
+import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../configs/Configuration';
 import { SystemError, UnauthorizedError } from '../../web.core/dtos/common/Exception';
 import { Container } from 'typedi';
 import { IAuthenticationBusiness } from '../../web.core/gateways/businesses/IAuthenticationBusiness';
@@ -13,7 +13,7 @@ import { RoleRepository } from '../../web.infrastructure/data/typeorm/repositori
 import { User } from '../../web.core/models/User';
 import { UserLoginRequest } from '../../web.core/dtos/user/requests/UserLoginRequest';
 import { UserRepository } from '../../web.infrastructure/data/typeorm/repositories/UserRepository';
-import { UserStatus } from '../../constants/Enums';
+import { UserStatus } from '../../configs/ServiceProvider';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 
@@ -38,13 +38,13 @@ describe('User auth business testing', () => {
 
     it('Authenticate user without token', async () => {
         await userAuthBusiness.authenticateUser('').catch((error: UnauthorizedError) => {
-            expect(error.name).to.eq(new UnauthorizedError(1010, 'authorization token').name);
+            expect(error.name).to.eq(new UnauthorizedError(MessageError.PARAM_INVALID, 'authorization token').name);
         });
     });
 
     it('Authenticate user with an invalid token', async () => {
         await userAuthBusiness.authenticateUser('123').catch((error: UnauthorizedError) => {
-            expect(error.name).to.eq(new UnauthorizedError(1010, 'authorization token').name);
+            expect(error.name).to.eq(new UnauthorizedError(MessageError.PARAM_INVALID, 'authorization token').name);
         });
     });
 
@@ -59,7 +59,7 @@ describe('User auth business testing', () => {
         } as jwt.SignOptions);
 
         await userAuthBusiness.authenticateUser(token).catch((error: UnauthorizedError) => {
-            expect(error.name).to.eq(new UnauthorizedError(1002, 'token').name);
+            expect(error.name).to.eq(new UnauthorizedError(MessageError.PARAM_INVALID, 'authorization token').name);
         });
     });
 
@@ -73,7 +73,7 @@ describe('User auth business testing', () => {
         } as jwt.SignOptions);
 
         await userAuthBusiness.authenticateUser(token).catch((error: UnauthorizedError) => {
-            expect(error.name).to.eq(new UnauthorizedError(1008, 'token').name);
+            expect(error.name).to.eq(new UnauthorizedError(MessageError.PARAM_EXPIRED, 'authorization token').name);
         });
     });
 
@@ -91,7 +91,7 @@ describe('User auth business testing', () => {
         } as jwt.SignOptions);
 
         await userAuthBusiness.authenticateUser(token).catch((error: UnauthorizedError) => {
-            expect(error.message).to.eq(new UnauthorizedError(3).message);
+            expect(error.message).to.eq(new UnauthorizedError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -110,7 +110,7 @@ describe('User auth business testing', () => {
         } as jwt.SignOptions);
 
         await userAuthBusiness.authenticateUser(token).catch((error: UnauthorizedError) => {
-            expect(error.message).to.eq(new UnauthorizedError(3).message);
+            expect(error.message).to.eq(new UnauthorizedError(MessageError.ACCESS_DENIED).message);
         });
     });
 
