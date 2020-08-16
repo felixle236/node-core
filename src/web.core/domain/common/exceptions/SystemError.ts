@@ -1,20 +1,15 @@
-import { getMessageError } from '../../../../constants/Messages';
+import { ErrorObject } from './message/ErrorObject';
+import { MessageError } from './message/MessageError';
 import { mapTemplate } from '../../../../libs/common';
 
 export class SystemError extends Error {
-    code: number;
+    code: string;
     httpCode: number;
 
-    constructor(code: number = 1, ...params) {
+    constructor(errObj: ErrorObject = MessageError.SOMETHING_WRONG, ...params) {
         super();
-        this.code = code;
         this.httpCode = 400;
-
-        let message = getMessageError(code);
-        if (params && params.length)
-            message = mapTemplate(message, ...params);
-
-        this.code = code;
-        this.message = message;
+        this.code = errObj.code;
+        this.message = params && params.length ? mapTemplate(errObj.message, ...params) : errObj.message;
     }
 }

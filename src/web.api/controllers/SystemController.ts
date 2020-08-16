@@ -18,7 +18,7 @@ export class SystemController {
     @Authorized(RoleId.SUPER_ADMIN)
     async createDummyUser(): Promise<BulkActionResult> {
         const param = new CreateDummyUserInput();
-        param.users = require('../../resources/sample-data/users.json');
+        param.users = require('../../resources/data/dummy-users.json');
         return await this._createDummyUserInteractor.handle(param);
     }
 

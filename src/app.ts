@@ -1,7 +1,7 @@
 import './web.infrastructure/SingletonRegister';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
+import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './configs/Configuration';
 import { ApiService } from './web.api/ApiService';
 import { Container } from 'typedi';
 import { DbContext } from './web.infrastructure/persistence/typeorm/DbContext';

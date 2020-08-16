@@ -1,5 +1,5 @@
 import { INotificationService } from '../../../web.core/gateways/services/INotificationService';
-import { NotificationSender } from './NotificationSender';
+import { NotificationSender } from './sender/NotificationSender';
 import { Service } from 'typedi';
 
 @Service('notification.service')

@@ -1,4 +1,4 @@
-import { ISmsSender } from '../gateways/ISmsSender';
+import { ISmsProvider } from '../interfaces/ISmsProvider';
 const sibApiV3Sdk = require('sib-api-v3-sdk');
 
 /**
@@ -7,17 +7,17 @@ const sibApiV3Sdk = require('sib-api-v3-sdk');
  * https://developers.sendinblue.com/docs
  */
 
-export class SendInBlueFactory implements ISmsSender {
-    private readonly _smsApi;
+export class SendInBlueFactory implements ISmsProvider {
+    private readonly _provider;
 
     constructor(apiKey: string) {
         sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
-        this._smsApi = new sibApiV3Sdk.TransactionalSMSApi();
+        this._provider = new sibApiV3Sdk.TransactionalSMSApi();
     }
 
-    sendSMS(senderName: string, phoneNumber: string, content: string): Promise<any> {
-        return this._smsApi.sendTransacSms({
-            sender: senderName,
+    async send(senderOrPhone: string, phoneNumber: string, content: string): Promise<any> {
+        return await this._provider.sendTransacSms({
+            sender: senderOrPhone,
             recipient: phoneNumber,
             content
         });

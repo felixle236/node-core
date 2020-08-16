@@ -20,7 +20,7 @@ export class ResendActivationInteractor implements IInteractor<string, BooleanRe
 
     async handle(email: string): Promise<BooleanResult> {
         if (!validator.isEmail(email))
-            throw new SystemError(1002, 'email');
+            throw new SystemError(MessageError.PARAM_INVALID, 'email');
 
         const user = await this._userRepository.getByEmail(email);
         if (!user || user.status === UserStatus.ACTIVED)
@@ -32,7 +32,7 @@ export class ResendActivationInteractor implements IInteractor<string, BooleanRe
 
         const hasSucceed = await this._userRepository.update(user.id, data);
         if (!hasSucceed)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         await this._mailService.resendUserActivation(user);
         return new BooleanResult(hasSucceed);

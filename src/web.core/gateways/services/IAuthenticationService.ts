@@ -1,4 +1,4 @@
-import { User } from '../../domain/entities/User';
+import { IUser } from '../../domain/types/IUser';
 
 export interface IAuthenticationService {
     sign(user: IUser): string;

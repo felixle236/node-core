@@ -4,7 +4,8 @@ import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { IdentityResult } from '../../../domain/common/outputs/IdentityResult';
-import { SystemError } from '../../../domain/common/exceptions';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { User } from '../../../domain/entities/User';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { UserStatus } from '../../../domain/enums/UserStatus';
@@ -36,18 +37,18 @@ export class CreateUserInteractor implements IInteractor<CreateUserInput, Identi
         data.currency = param.currency;
 
         if (await this._userRepository.checkEmailExist(data.email))
-            throw new SystemError(1005, 'email');
+            throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
         const role = await this._roleRepository.getById(data.roleId);
         if (!role)
-            throw new SystemError(1002, 'role');
+            throw new SystemError(MessageError.PARAM_INVALID, 'role');
 
         if (role.level <= userAuth.role.level)
-            throw new SystemError(3);
+            throw new SystemError(MessageError.ACCESS_DENIED);
 
         const id = await this._userRepository.create(data);
         if (!id)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return new IdentityResult(id);
     }
 }

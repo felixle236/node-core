@@ -12,11 +12,11 @@ export class RemoveNewMessageStatusInteractor implements IInteractor<number, Boo
 
     async handle(room: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
         if (room === undefined || room < 0)
-            throw new SystemError(1002, 'room');
+            throw new SystemError(MessageError.PARAM_INVALID, 'room');
 
         const hasSucceed = await this._contactStatusRepository.removeNewMessageStatus(userAuth.userId, room);
         if (!hasSucceed)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         return new BooleanResult(hasSucceed);
     }

@@ -1,4 +1,4 @@
-import { User } from '../../domain/entities/User';
+import { IUser } from '../../domain/types/IUser';
 
 export interface IMailService {
     sendUserActivation(user: IUser): Promise<void>;

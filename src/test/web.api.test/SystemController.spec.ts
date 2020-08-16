@@ -50,7 +50,7 @@ describe('System controller testing', () => {
     });
 
     it('Init data without permission', async () => {
-        await request.post(url + '/sample-data').catch((response: Response) => {
+        await request.post(url + '/dummy-user').catch((response: Response) => {
             expect(response.statusCode).to.eq(401);
         });
     });
@@ -61,7 +61,7 @@ describe('System controller testing', () => {
         sandbox.stub(AuthenticationBusiness.prototype, 'authenticateUser').resolves(userAuth);
         sandbox.stub(UserBusiness.prototype, 'createSampleData').resolves(bulkActionRequest);
 
-        const { data }: {data: BulkActionResponse} = await request.post(url + '/sample-data');
+        const { data }: {data: BulkActionResponse} = await request.post(url + '/dummy-user');
         expect(data.total === bulkActionRequest.total && data.successes === bulkActionRequest.successes).to.eq(true);
     });
 

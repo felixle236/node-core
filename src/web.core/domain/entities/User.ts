@@ -4,6 +4,7 @@ import { Container } from 'typedi';
 import { GenderType } from '../enums/GenderType';
 import { IStorageService } from '../../gateways/services/IStorageService';
 import { IUser } from '../types/IUser';
+import { MessageError } from '../common/exceptions/message/MessageError';
 import { Role } from './Role';
 import { SystemError } from '../common/exceptions/SystemError';
 import { UserStatus } from '../enums/UserStatus';
@@ -26,9 +27,9 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set roleId(val: number) {
         if (!val)
-            throw new SystemError(1001, 'role id');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'role id');
         if (!validator.isPositive(val))
-            throw new SystemError(1002, 'role id');
+            throw new SystemError(MessageError.PARAM_INVALID, 'role id');
 
         this.data.roleId = val;
     }
@@ -39,9 +40,9 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set status(val: UserStatus) {
         if (!val)
-            throw new SystemError(1001, 'status');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'status');
         if (!validator.isEnum(val, UserStatus))
-            throw new SystemError(1002, 'status');
+            throw new SystemError(MessageError.PARAM_INVALID, 'status');
 
         this.data.status = val;
     }
@@ -52,11 +53,11 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set firstName(val: string) {
         if (!val)
-            throw new SystemError(1001, 'first name');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'first name');
 
         val = val.trim();
         if (val.length > 20)
-            throw new SystemError(2004, 'first name', 20);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20);
 
         this.data.firstName = val;
     }
@@ -69,7 +70,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length > 20)
-                throw new SystemError(2004, 'last name', 20);
+                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20);
         }
         this.data.lastName = val;
     }
@@ -80,14 +81,14 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set email(val: string) {
         if (!val)
-            throw new SystemError(1001, 'email');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
 
         val = val.trim().toLowerCase();
 
         if (!validator.isEmail(val))
-            throw new SystemError(1002, 'email');
+            throw new SystemError(MessageError.PARAM_INVALID, 'email');
         if (val.length > 120)
-            throw new SystemError(2004, 'email', 120);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120);
 
         this.data.email = val;
     }
@@ -98,13 +99,13 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set password(val: string) {
         if (!val)
-            throw new SystemError(1001, 'password');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
         if (val.length > 20)
-            throw new SystemError(2004, 'password', 20);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20);
 
         const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{6,20}/;
         if (!regExp.test(val))
-            throw new SystemError(3002, 'password', 6, 20);
+            throw new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20);
 
         this.data.password = this._hashPassword(val);
     }
@@ -117,7 +118,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length > 200)
-                throw new SystemError(2004, 'avatar', 200);
+                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'avatar', 200);
         }
         this.data.avatar = val;
     }
@@ -128,7 +129,7 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set gender(val: GenderType | undefined) {
         if (val && !validator.isEnum(val, GenderType))
-            throw new SystemError(1002, 'gender');
+            throw new SystemError(MessageError.PARAM_INVALID, 'gender');
         this.data.gender = val;
     }
 
@@ -141,7 +142,7 @@ export class User extends BaseEntity<IUser> implements IUser {
             val = new Date(val.getFullYear(), val.getMonth(), val.getDate());
             const now = new Date();
             if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() || now.getFullYear() - val.getFullYear() > 100)
-                throw new SystemError(1002, 'birthday');
+                throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
         }
         this.data.birthday = val;
     }
@@ -158,7 +159,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length > 20)
-                throw new SystemError(2004, 'phone', 20);
+                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'phone', 20);
         }
 
         this.data.phone = val;
@@ -172,7 +173,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length > 200)
-                throw new SystemError(2004, 'address', 200);
+                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'address', 200);
         }
 
         this.data.address = val;
@@ -186,7 +187,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length !== 5)
-                throw new SystemError(2001, 'culture', 5);
+                throw new SystemError(MessageError.PARAM_LEN_EQUAL, 'culture', 5);
         }
 
         this.data.culture = val;
@@ -200,7 +201,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         if (val) {
             val = val.trim();
             if (val.length !== 3)
-                throw new SystemError(2001, 'currency', 3);
+                throw new SystemError(MessageError.PARAM_LEN_EQUAL, 'currency', 3);
         }
 
         this.data.currency = val;
@@ -212,7 +213,7 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set activeKey(val: string | undefined) {
         if (val && val.length > 128)
-            throw new SystemError(2004, 'active key', 128);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'active key', 128);
         this.data.activeKey = val;
     }
 
@@ -246,7 +247,7 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set forgotKey(val: string | undefined) {
         if (val && val.length > 128)
-            throw new SystemError(2004, 'forgot key', 128);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'forgot key', 128);
         this.data.forgotKey = val;
     }
 
@@ -276,18 +277,20 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.password === this._hashPassword(password);
     }
 
-    static getMaxAvatarSize(): number {
-        return 1024 * 1024 * 2; // 2MB
-    }
+    static validateAvatarFile(file: Express.Multer.File): void {
+        const maxSize = 1024 * 100; // 100KB
+        const formats = ['jpeg', 'jpg', 'png', 'gif'];
+        const nameLen = 100;
 
-    validateAvatarSize(size: number): void {
-        if (size > User.getMaxAvatarSize())
-            throw new SystemError(3005, 'image', User.getMaxAvatarSize() / 1024, 'KB');
-    }
+        if (file.size > maxSize)
+            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
 
-    validateAvatarFormat(extension: string): void {
-        if (!['jpeg', 'jpg', 'png', 'gif'].includes(extension))
-            throw new SystemError(2006, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)');
+        const extension = file.mimetype.replace('image/', '');
+        if (!formats.includes(extension))
+            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
+
+        if (file.fieldname.length > nameLen)
+            throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar name', nameLen);
     }
 
     getAvatarPath(extension: string): string {

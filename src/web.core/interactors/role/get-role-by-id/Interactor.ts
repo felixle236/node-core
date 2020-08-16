@@ -2,7 +2,8 @@ import { Inject, Service } from 'typedi';
 import { GetRoleByIdOutput } from './Output';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
-import { SystemError } from '../../../domain/common/exceptions';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
@@ -12,8 +13,10 @@ export class GetRoleByIdInteractor implements IInteractor<number, GetRoleByIdOut
 
     async handle(id: number, userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
         const role = await this._roleRepository.getById(id);
-        if (!role || role.level <= userAuth.role.level)
-            throw new SystemError(4);
+        if (!role)
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
+        if (role.level <= userAuth.role.level)
+            throw new SystemError(MessageError.ACCESS_DENIED);
 
         return new GetRoleByIdOutput(role);
     }

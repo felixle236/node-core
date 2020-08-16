@@ -1,7 +1,6 @@
 import * as fileType from 'file-type';
 import * as path from 'path';
 import { Inject, Service } from 'typedi';
-import { BUCKET_NAME } from '../../../../constants/Environments';
 import { BulkActionResult } from '../../../domain/common/outputs/BulkActionResult';
 import { CreateDummyUserInput } from './Input';
 import { IDbContext } from '../../../domain/common/persistence/IDbContext';
@@ -64,10 +63,10 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
                                 user.validateAvatarSize(buffer.length);
 
                                 const avatarPath = user.getAvatarPath(extension);
-                                const url = await this._storageService.upload(BUCKET_NAME, avatarPath, buffer);
+                                const urlPath = await this._storageService.upload(avatarPath, buffer);
 
                                 const data = new User();
-                                data.avatar = url;
+                                data.avatar = urlPath;
 
                                 await this._userRepository.update(id, data, queryRunner);
                             }

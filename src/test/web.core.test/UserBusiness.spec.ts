@@ -162,7 +162,7 @@ describe('User business testing', () => {
         delete userCreate.roleId;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'role id').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'role id').message);
         });
     });
 
@@ -172,7 +172,7 @@ describe('User business testing', () => {
         userCreate.roleId = 0;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'role id').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role id').message);
         });
     });
 
@@ -182,7 +182,7 @@ describe('User business testing', () => {
         userCreate.firstName = '';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'first name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'first name').message);
         });
     });
 
@@ -192,7 +192,7 @@ describe('User business testing', () => {
         userCreate.firstName = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'first name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'first name').message);
         });
     });
 
@@ -202,7 +202,7 @@ describe('User business testing', () => {
         userCreate.firstName = 'This is the first name with length greater than 20 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'first name', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20).message);
         });
     });
 
@@ -212,7 +212,7 @@ describe('User business testing', () => {
         userCreate.lastName = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'last name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'last name').message);
         });
     });
 
@@ -222,7 +222,7 @@ describe('User business testing', () => {
         userCreate.lastName = 'This is the last name with length greater than 20 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'last name', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20).message);
         });
     });
 
@@ -232,7 +232,7 @@ describe('User business testing', () => {
         userCreate.email = '';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'email').message);
         });
     });
 
@@ -242,7 +242,7 @@ describe('User business testing', () => {
         userCreate.email = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -252,7 +252,7 @@ describe('User business testing', () => {
         userCreate.email = 'test@';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -262,7 +262,7 @@ describe('User business testing', () => {
         userCreate.email = 'test.localhost.test.localhost.test.localhost.localhost.localhost@test-asdfaasdfasfdgsgdsfasdfaasdfasfdgsgdsf-localhost.com';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'email', 120).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120).message);
         });
     });
 
@@ -272,7 +272,7 @@ describe('User business testing', () => {
         userCreate.password = '';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'password').message);
         });
     });
 
@@ -282,7 +282,7 @@ describe('User business testing', () => {
         userCreate.password = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'password').message);
         });
     });
 
@@ -292,7 +292,7 @@ describe('User business testing', () => {
         userCreate.password = 'This is the password with length greater than 20 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'password', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20).message);
         });
     });
 
@@ -302,7 +302,7 @@ describe('User business testing', () => {
         userCreate.password = '123456';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3002, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
         });
     });
 
@@ -312,7 +312,7 @@ describe('User business testing', () => {
         userCreate.gender = 'abc' as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'gender').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'gender').message);
         });
     });
 
@@ -322,7 +322,7 @@ describe('User business testing', () => {
         userCreate.birthday = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'birthday').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
         });
     });
 
@@ -332,7 +332,7 @@ describe('User business testing', () => {
         userCreate.birthday!.setDate(userCreate.birthday!.getDate() + 1);
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'birthday').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
         });
     });
 
@@ -342,7 +342,7 @@ describe('User business testing', () => {
         userCreate.phone = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'phone').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'phone').message);
         });
     });
 
@@ -352,7 +352,7 @@ describe('User business testing', () => {
         userCreate.phone = 'This is the phone number with length greater than 20 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'phone', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'phone', 20).message);
         });
     });
 
@@ -362,7 +362,7 @@ describe('User business testing', () => {
         userCreate.address = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'address').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'address').message);
         });
     });
 
@@ -373,7 +373,7 @@ describe('User business testing', () => {
         while (userCreate.address.length <= 200) userCreate.address += userCreate.address;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'address', 200).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'address', 200).message);
         });
     });
 
@@ -383,7 +383,7 @@ describe('User business testing', () => {
         userCreate.culture = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'culture').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'culture').message);
         });
     });
 
@@ -393,7 +393,7 @@ describe('User business testing', () => {
         userCreate.culture = 'This is the culture with length not be 5 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2001, 'culture', 5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, 'culture', 5).message);
         });
     });
 
@@ -403,7 +403,7 @@ describe('User business testing', () => {
         userCreate.currency = 123 as any;
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'currency').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'currency').message);
         });
     });
 
@@ -413,7 +413,7 @@ describe('User business testing', () => {
         userCreate.currency = 'This is the currency with length not be 3 characters!';
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2001, 'currency', 3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, 'currency', 3).message);
         });
     });
 
@@ -423,7 +423,7 @@ describe('User business testing', () => {
         const userCreate = generateUserCreate();
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1005, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXISTED, 'email').message);
         });
     });
 
@@ -434,7 +434,7 @@ describe('User business testing', () => {
         const userCreate = generateUserCreate();
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'role').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role').message);
         });
     });
 
@@ -447,7 +447,7 @@ describe('User business testing', () => {
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(role);
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -460,7 +460,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'create').resolves();
 
         await userBusiness.create(userCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -483,7 +483,7 @@ describe('User business testing', () => {
 
         const userUpdate = generateUserUpdate();
         await userBusiness.update(10, userUpdate).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'user').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'user').message);
         });
     });
 
@@ -497,7 +497,7 @@ describe('User business testing', () => {
         userAuth.role.level = 2;
 
         await userBusiness.update(user.id, userUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -509,7 +509,7 @@ describe('User business testing', () => {
         userUpdate.firstName = '';
 
         await userBusiness.update(user.id, userUpdate).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'first name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'first name').message);
         });
     });
 
@@ -520,7 +520,7 @@ describe('User business testing', () => {
 
         const userUpdate = generateUserUpdate();
         await userBusiness.update(user.id, userUpdate).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -538,7 +538,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getById').resolves(undefined);
 
         await userBusiness.updatePassword(10, '', '').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1003, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INCORRECT, 'password').message);
         });
     });
 
@@ -548,7 +548,7 @@ describe('User business testing', () => {
         item.password = 'Nodecore@2';
 
         await userBusiness.updatePassword(item.id, '12345', 'Nodecore@2').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1003, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INCORRECT, 'password').message);
         });
     });
 
@@ -569,7 +569,7 @@ describe('User business testing', () => {
         const buffer = await readFile(filePath);
 
         await userBusiness.uploadAvatar(10, buffer).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'user').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'user').message);
         });
     });
 
@@ -590,7 +590,7 @@ describe('User business testing', () => {
         const buffer = await readFile(filePath);
 
         await userBusiness.uploadAvatar(1, buffer).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2006, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_FORMAT_INVALID, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)').message);
         });
     });
 
@@ -602,7 +602,7 @@ describe('User business testing', () => {
         const buffer = await readFile(filePath);
 
         await userBusiness.uploadAvatar(1, buffer).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3005, 'image', User.getMaxAvatarSize() / 1024, 'KB').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_MAX, 'image', User.getMaxAvatarSize() / 1024).message);
         });
     });
 
@@ -615,7 +615,7 @@ describe('User business testing', () => {
         const buffer = await readFile(filePath);
 
         await userBusiness.uploadAvatar(10, buffer).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'avatar').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'avatar').message);
         });
     });
 
@@ -630,7 +630,7 @@ describe('User business testing', () => {
         const buffer = await readFile(filePath);
 
         await userBusiness.uploadAvatar(10, buffer).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'avatar', 200).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'avatar', 200).message);
         });
     });
 
@@ -653,7 +653,7 @@ describe('User business testing', () => {
         userRegister.firstName = '';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'first name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'first name').message);
         });
     });
 
@@ -662,7 +662,7 @@ describe('User business testing', () => {
         userRegister.firstName = 123 as any;
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'first name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'first name').message);
         });
     });
 
@@ -671,7 +671,7 @@ describe('User business testing', () => {
         userRegister.firstName = 'This is the first name with length greater than 20 characters!';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'first name', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20).message);
         });
     });
 
@@ -680,7 +680,7 @@ describe('User business testing', () => {
         userRegister.lastName = 123 as any;
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'last name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'last name').message);
         });
     });
 
@@ -689,7 +689,7 @@ describe('User business testing', () => {
         userRegister.lastName = 'This is the last name with length greater than 20 characters!';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'last name', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20).message);
         });
     });
 
@@ -698,7 +698,7 @@ describe('User business testing', () => {
         userRegister.email = '';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'email').message);
         });
     });
 
@@ -707,7 +707,7 @@ describe('User business testing', () => {
         userRegister.email = 'test@';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -716,7 +716,7 @@ describe('User business testing', () => {
         userRegister.email = 'test.localhost.test.localhost.test.localhost.localhost.localhost@test-asdfaasdfasfdgsgdsfasdfaasdfasfdgsgdsf-localhost.com';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'email', 120).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120).message);
         });
     });
 
@@ -725,7 +725,7 @@ describe('User business testing', () => {
         userRegister.password = '';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'password').message);
         });
     });
 
@@ -734,7 +734,7 @@ describe('User business testing', () => {
         userRegister.password = 'This is the password with length greater than 20 characters!';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'password', 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20).message);
         });
     });
 
@@ -743,7 +743,7 @@ describe('User business testing', () => {
         userRegister.password = '123456';
 
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3002, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
         });
     });
 
@@ -752,7 +752,7 @@ describe('User business testing', () => {
 
         const userRegister = generateUserRegister();
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1005, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXISTED, 'email').message);
         });
     });
 
@@ -762,7 +762,7 @@ describe('User business testing', () => {
 
         const userRegister = generateUserRegister();
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'role').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'role').message);
         });
     });
 
@@ -774,7 +774,7 @@ describe('User business testing', () => {
 
         const userRegister = generateUserRegister();
         await userBusiness.register(userRegister).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -802,7 +802,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(undefined);
 
         await userBusiness.active('node-core').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'activation key').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'activation key').message);
         });
     });
 
@@ -820,7 +820,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByActiveKey').resolves(item);
 
         await userBusiness.active('node-core').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1008, 'activation key').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXPIRED, 'activation key').message);
         });
     });
 
@@ -837,7 +837,7 @@ describe('User business testing', () => {
 
     it('Re-send activation with an invalid email', async () => {
         await userBusiness.resendActivation('test@localhost').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -871,7 +871,7 @@ describe('User business testing', () => {
 
     it('Forgot password with an invalid email', async () => {
         await userBusiness.forgotPassword('test@localhost').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -919,7 +919,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(undefined);
 
         await userBusiness.resetPassword('node-core', 'Nodecore@2').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'forgot key').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'forgot key').message);
         });
     });
 
@@ -938,7 +938,7 @@ describe('User business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByForgotKey').resolves(item);
 
         await userBusiness.resetPassword('node-core', 'Nodecore@2').catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1008, 'forgot key').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXPIRED, 'forgot key').message);
         });
     });
 
@@ -957,7 +957,7 @@ describe('User business testing', () => {
         const userAuth = generateUserAuth();
 
         await userBusiness.archive(10, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'user').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'user').message);
         });
     });
 
@@ -968,7 +968,7 @@ describe('User business testing', () => {
         userAuth.role.level = 2;
 
         await userBusiness.archive(item.id, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -987,7 +987,7 @@ describe('User business testing', () => {
         const userAuth = generateUserAuth();
 
         await userBusiness.delete(10, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'user').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'user').message);
         });
     });
 
@@ -1002,7 +1002,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully', async () => {
-        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/data/users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
@@ -1021,7 +1021,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with all items have ignored by role is not matched', async () => {
-        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/data/dummy-users.json')));
         const role = new Role({ id: 1000, createdAt: new Date(), updatedAt: new Date(), name: 'Role 1000', level: 1000 } as IRole);
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
 
@@ -1034,7 +1034,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with an item have email already', async () => {
-        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/data/dummy-users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);
@@ -1057,7 +1057,7 @@ describe('User business testing', () => {
     });
 
     it('Create data sample successfully with 2 items have failed', async () => {
-        const sampleList = JSON.parse(JSON.stringify(require('../../resources/sample-data/users.json')));
+        const sampleList = JSON.parse(JSON.stringify(require('../../resources/data/dummy-users.json')));
         const role = generateRole();
         const user = list[0];
         sandbox.stub(RoleRepository.prototype, 'getAll').resolves([role]);

@@ -1,79 +1,25 @@
-import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_TYPE } from '../../../../constants/Environments';
-import { AwsS3Factory } from './providers/AwsS3Factory';
-import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
-import { IBucketItem } from '../../../../web.core/gateways/models/storage/IBucketItem';
-import { IStorageService } from '../../../../web.core/gateways/services/IStorageService';
-import { LoggingFactory } from './providers/LoggingFactory';
-import { MinioFactory } from './providers/MinioFactory';
+import { BUCKET_NAME } from '../../../constants/Environments';
+import { IStorageService } from '../../../web.core/gateways/services/IStorageService';
 import { Service } from 'typedi';
-import { StorageType } from '../../../../constants/Enums';
+import { StorageUploader } from './uploader/StorageUploader';
 
 @Service('storage.service')
 export class StorageService implements IStorageService {
-    private readonly _storage: IStorageService;
+    private readonly _uploader: StorageUploader;
 
     constructor() {
-        switch (STORAGE_TYPE) {
-        case StorageType.MINIO:
-            this._storage = new MinioFactory(MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
-            break;
-
-        case StorageType.AWS_S3:
-            this._storage = new AwsS3Factory(S3_REGION, S3_ACCESS_KEY, S3_SECRET_KEY);
-            break;
-
-        case StorageType.GOOGLE_STORAGE:
-            this._storage = new GoogleStorageFactory();
-            break;
-
-        case StorageType.LOGGING:
-        default:
-            this._storage = new LoggingFactory();
-            break;
-        }
+        this._uploader = new StorageUploader();
     }
 
-    getBuckets(): Promise<string[]> {
-        return this._storage.getBuckets();
+    upload(urlPath: string, buffer: Buffer): Promise<string> {
+        return this._uploader.upload(BUCKET_NAME, urlPath, buffer);
     }
 
-    getBucketPolicy(bucketName: string): Promise<string> {
-        return this._storage.getBucketPolicy(bucketName);
+    download(urlPath: string): Promise<Buffer> {
+        return this._uploader.download(BUCKET_NAME, urlPath);
     }
 
-    checkBucketExist(bucketName): Promise<boolean> {
-        return this._storage.checkBucketExist(bucketName);
-    }
-
-    createBucket(bucketName: string): Promise<void> {
-        return this._storage.createBucket(bucketName);
-    }
-
-    setBucketPolicy(bucketName: string, policy: string): Promise<void> {
-        return this._storage.setBucketPolicy(bucketName, policy);
-    }
-
-    deleteBucket(bucketName: string): Promise<void> {
-        return this._storage.deleteBucket(bucketName);
-    }
-
-    deleteBucketPolicy(bucketName: string): Promise<void> {
-        return this._storage.deleteBucketPolicy(bucketName);
-    }
-
-    getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
-        return this._storage.getObjects(bucketName, prefix!);
-    }
-
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
-        return this._storage.upload(bucketName, objectName, buffer);
-    }
-
-    download(bucketName: string, objectName: string): Promise<Buffer> {
-        return this._storage.download(bucketName, objectName);
-    }
-
-    mapUrl(url: string): string {
-        return this._storage.mapUrl(url);
+    mapUrl(urlPath: string): string {
+        return this._uploader.mapUrl(urlPath);
     }
 }

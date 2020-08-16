@@ -1,6 +1,6 @@
 import * as compression from 'compression';
 import * as path from 'path';
-import { API_PORT } from '../constants/Environments';
+import { API_PORT } from '../configs/Configuration';
 import { ApiAuthenticator } from './ApiAuthenticator';
 import { Container } from 'typedi';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';

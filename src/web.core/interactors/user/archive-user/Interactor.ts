@@ -2,7 +2,8 @@ import { Inject, Service } from 'typedi';
 import { BooleanResult } from '../../../domain/common/outputs/BooleanResult';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
-import { SystemError } from '../../../domain/common/exceptions';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { User } from '../../../domain/entities/User';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { UserStatus } from '../../../domain/enums/UserStatus';
@@ -15,10 +16,10 @@ export class ArchiveUserInteractor implements IInteractor<number, BooleanResult>
     async handle(id: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const user = await this._userRepository.getById(id);
         if (!user)
-            throw new SystemError(1004, 'user');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');
 
         if (!user.role || user.role.level <= userAuth.role.level)
-            throw new SystemError(3);
+            throw new SystemError(MessageError.ACCESS_DENIED);
 
         const data = new User();
         data.status = UserStatus.ARCHIVED;
@@ -26,7 +27,7 @@ export class ArchiveUserInteractor implements IInteractor<number, BooleanResult>
 
         const hasSucceed = await this._userRepository.update(id, data);
         if (!hasSucceed)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         return new BooleanResult(hasSucceed);
     }

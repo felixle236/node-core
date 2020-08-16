@@ -6,7 +6,7 @@ import { Container } from 'typedi';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
 import { Server } from 'http';
-import { WEB_PORT } from '../constants/Environments';
+import { WEB_PORT } from '../configs/Configuration';
 import { WebAuthenticator } from './WebAuthenticator';
 
 export class WebService {
@@ -38,7 +38,7 @@ export class WebService {
 
         // catch 404 and forward to error handler
         httpServer.app.use(function(_req, res) {
-            if (!res.finished) {
+            if (!res.writableEnded) {
                 res.status(404);
                 res.render('404');
             }

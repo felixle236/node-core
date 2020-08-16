@@ -139,7 +139,7 @@ describe('User auth business testing', () => {
         userLogin.password = 'Nodecore@2';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'email').message);
         });
     });
 
@@ -149,7 +149,7 @@ describe('User auth business testing', () => {
         userLogin.password = 'Nodecore@2';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'email').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
         });
     });
 
@@ -159,7 +159,7 @@ describe('User auth business testing', () => {
         userLogin.password = 'Nodecore@2';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'email', 120).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120).message);
         });
     });
 
@@ -169,7 +169,7 @@ describe('User auth business testing', () => {
         userLogin.password = '';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'password').message);
         });
     });
 
@@ -179,7 +179,7 @@ describe('User auth business testing', () => {
         userLogin.password = '123abc';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3002, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
         });
     });
 
@@ -190,7 +190,7 @@ describe('User auth business testing', () => {
         sandbox.stub(UserRepository.prototype, 'getByUserPassword').resolves(undefined);
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1003, 'email address or password').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INCORRECT, 'email address or password').message);
         });
     });
 
@@ -209,7 +209,7 @@ describe('User auth business testing', () => {
         userLogin.password = 'Nodecore@123';
 
         await userAuthBusiness.login(userLogin).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1009, 'account').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_VERIFIED, 'account').message);
         });
     });
 

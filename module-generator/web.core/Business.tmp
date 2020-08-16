@@ -30,12 +30,12 @@ export class {PascalName}Business implements I{PascalName}Business {
         {camelName}.name = data.name;
 
         if (await this._{camelName}Repository.checkNameExist({camelName}.name))
-            throw new SystemError(1005, 'name');
+            throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const createData = {camelName}.toCreateData();
         const id = await this._{camelName}Repository.create(createData);
         if (!id)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const newData = await this._{camelName}Repository.getById(id);
         return mapModel({PascalName}Response, newData);
@@ -44,17 +44,17 @@ export class {PascalName}Business implements I{PascalName}Business {
     async update(id: number, data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined > {
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(1004, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
         {camelName}.name = data.name;
 
         if (await this._{camelName}Repository.checkNameExist({camelName}.name, id))
-            throw new SystemError(1005, 'name');
+            throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const updateData = {camelName}.toUpdateData();
         const hasSucceed = await this._{camelName}Repository.update(id, updateData);
         if (!hasSucceed)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const newData = await this._{camelName}Repository.getById(id);
         return mapModel({PascalName}Response, newData);
@@ -63,7 +63,7 @@ export class {PascalName}Business implements I{PascalName}Business {
     async delete(id: number): Promise<boolean> {
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(1004, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
         return await this._{camelName}Repository.delete(id);
     }

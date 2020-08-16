@@ -33,11 +33,11 @@ export class {PascalName} implements I{PascalName} {
 
     set name(val: string) {
         if (validator.isEmpty(val))
-            throw new SystemError(1001, 'name');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'name');
         if (!validator.isString(val))
-            throw new SystemError(1002, 'name');
+            throw new SystemError(MessageError.PARAM_INVALID, 'name');
         if (val.length > 50)
-            throw new SystemError(2004, 'name', 50);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
 
         this._data.name = val;
     }

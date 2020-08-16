@@ -1,6 +1,7 @@
 import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { IMessage } from '../types/IMessage';
+import { MessageError } from '../common/exceptions/message/MessageError';
 import { SystemError } from '../common/exceptions/SystemError';
 import { User } from './user';
 
@@ -19,9 +20,9 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
 
     set senderId(val: number) {
         if (!val)
-            throw new SystemError(1001, 'sender id');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'sender id');
         if (!validator.isPositive(val))
-            throw new SystemError(1002, 'sender id');
+            throw new SystemError(MessageError.PARAM_INVALID, 'sender id');
         this.data.senderId = val;
         this._updateRoom();
     }
@@ -33,7 +34,7 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
     set receiverId(val: number | undefined) {
         if (val) {
             if (!validator.isPositive(val))
-                throw new SystemError(1002, 'receiver id');
+                throw new SystemError(MessageError.PARAM_INVALID, 'receiver id');
         }
 
         this.data.receiverId = val;
@@ -46,11 +47,11 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
 
     set room(val: number) {
         if (!val)
-            throw new SystemError(1001, 'room');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'room');
         if (!validator.isInt(val) || validator.isNegative(val))
-            throw new SystemError(1002, 'room');
+            throw new SystemError(MessageError.PARAM_INVALID, 'room');
         if (val !== 0)
-            throw new SystemError(1004, 'room');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'room');
 
         if (this.data.receiverId)
             this.data.receiverId = undefined;
@@ -63,11 +64,11 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
 
     set content(val: string) {
         if (!val)
-            throw new SystemError(1001, 'content');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'content');
         if (!validator.isString(val))
-            throw new SystemError(1002, 'content');
+            throw new SystemError(MessageError.PARAM_INVALID, 'content');
         if (val.length > 2000)
-            throw new SystemError(2004, 'content', 2000);
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'content', 2000);
 
         this.data.content = val;
     }

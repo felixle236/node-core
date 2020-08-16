@@ -5,10 +5,11 @@ import { IInteractor } from '../../../domain/common/IInteractor';
 import { IMailService } from '../../../gateways/services/IMailService';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../domain/enums/RoleId';
 import { SignupInput } from './Input';
 import { SignupOutput } from './Output';
-import { SystemError } from '../../../domain/common/exceptions';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { User } from '../../../domain/entities/User';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 import { addSeconds } from '../../../../libs/date';
@@ -35,11 +36,11 @@ export class SignupInteractor implements IInteractor<SignupInput, SignupOutput> 
         data.password = param.password;
 
         if (await this._userRepository.checkEmailExist(data.email))
-            throw new SystemError(1005, 'email');
+            throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
         const role = await this._roleRepository.getById(RoleId.COMMON_USER);
         if (!role)
-            throw new SystemError(1004, 'role');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
 
         data.roleId = role.id;
         data.status = UserStatus.INACTIVE;
@@ -48,11 +49,11 @@ export class SignupInteractor implements IInteractor<SignupInput, SignupOutput> 
 
         const id = await this._userRepository.create(data);
         if (!id)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const user = await this._userRepository.getById(id);
         if (!user)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         await this._mailService.sendUserActivation(user);
         const token = this._authenticationService.sign(user);

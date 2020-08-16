@@ -1,4 +1,4 @@
-import { PROJECT_NAME } from '../../../../../constants/Environments';
+import { PROJECT_NAME } from '../../../../constants/Environments';
 
 export class UserActivationCodeTemplate {
     static getTemplate(code: string): string {

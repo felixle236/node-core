@@ -1,14 +1,13 @@
-import { ISmsSender } from './sender/gateways/ISmsSender';
-import { ISmsService } from '../../../../web.core/gateways/services/ISmsService';
+import { ISmsService } from '../../../web.core/gateways/services/ISmsService';
 import { IUser } from '../../../web.core/domain/types/IUser';
-import { SMS_SENDER_NAME } from '../../../../constants/Environments';
+import { SMS_SENDER_OR_PHONE } from '../../../constants/Environments';
 import { Service } from 'typedi';
-import { SmsSender } from './sender';
+import { SmsSender } from './sender/SmsSender';
 import { UserActivationCodeTemplate } from './templates/UserActivationCodeTemplate';
 
 @Service('sms.service')
 export class SmsService implements ISmsService {
-    private readonly _sender: ISmsSender;
+    private readonly _sender: SmsSender;
 
     constructor() {
         this._sender = new SmsSender();
@@ -16,6 +15,6 @@ export class SmsService implements ISmsService {
 
     async sendVerificationCode(user: IUser): Promise<void> {
         const content = UserActivationCodeTemplate.getTemplate(Date.now().toString());
-        await this._sender.sendSMS(SMS_SENDER_NAME, user.phone!, content);
+        await this._sender.send(SMS_SENDER_OR_PHONE, user.phone!, content);
     }
 }

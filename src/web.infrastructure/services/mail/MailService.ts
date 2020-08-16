@@ -3,7 +3,7 @@ import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { IMailService } from '../../../web.core/gateways/services/IMailService';
 import { IUser } from '../../../web.core/domain/types/IUser';
 import { MailGenerator } from './MailGenerator';
-import { MailSender } from './MailSender';
+import { MailSender } from './sender/MailSender';
 import { Service } from 'typedi';
 import { UserActivationTemplate } from './templates/UserActivationTemplate';
 

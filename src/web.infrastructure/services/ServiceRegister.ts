@@ -1,6 +1,7 @@
 import './auth/AuthenticationService';
-import './logs/log/LogService';
-import './messages/mail/MailService';
-import './messages/notification/NotificationService';
-import './messages/sms/SmsService';
-import './medias/storage/StorageService';
+import './log/LogService';
+import './mail/MailService';
+import './notification/NotificationService';
+import './payment/PaymentService';
+import './sms/SmsService';
+import './storage/StorageService';

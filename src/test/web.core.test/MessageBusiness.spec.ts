@@ -194,7 +194,7 @@ describe('Message business testing', () => {
         socket.userAuth.userId = undefined;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'sender id').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'sender id').message);
         });
     });
 
@@ -203,7 +203,7 @@ describe('Message business testing', () => {
         socket.userAuth.userId = 0;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'sender id').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'sender id').message);
         });
     });
 
@@ -212,7 +212,7 @@ describe('Message business testing', () => {
         data.receiverId = 0;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'receiver id').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'receiver id').message);
         });
     });
 
@@ -221,7 +221,7 @@ describe('Message business testing', () => {
         data.content = '';
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'content').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'content').message);
         });
     });
 
@@ -230,7 +230,7 @@ describe('Message business testing', () => {
         data.content = 123 as any;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'content').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'content').message);
         });
     });
 
@@ -240,7 +240,7 @@ describe('Message business testing', () => {
         while (data.content.length <= 2000) data.content += data.content;
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'content', 2000).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'content', 2000).message);
         });
     });
 
@@ -273,7 +273,7 @@ describe('Message business testing', () => {
         sandbox.stub(MessageRepository.prototype, 'create').resolves();
 
         await messageBusiness.create(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -293,7 +293,7 @@ describe('Message business testing', () => {
         delete data.room;
 
         await messageBusiness.createByRoom(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'room').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'room').message);
         });
     });
 
@@ -302,7 +302,7 @@ describe('Message business testing', () => {
         data.room = -1;
 
         await messageBusiness.createByRoom(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'room').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'room').message);
         });
     });
 
@@ -311,7 +311,7 @@ describe('Message business testing', () => {
         data.room = 1;
 
         await messageBusiness.createByRoom(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'room').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'room').message);
         });
     });
 
@@ -322,7 +322,7 @@ describe('Message business testing', () => {
         data.room = 0;
 
         await messageBusiness.createByRoom(socket, data).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -341,7 +341,7 @@ describe('Message business testing', () => {
 
     it('Update new message status with an invalid room', async () => {
         await messageBusiness.updateNewMessageStatus(socket, -1).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'room').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'room').message);
         });
     });
 

@@ -72,7 +72,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------ resources
 - |------------ documents -----------------------// Document files (doc, docx, xls, xlsx, pdf,...).
 - |------------ images --------------------------// Image files (jpg, jpeg, png, gif,...).
-- |------------ sample-data ---------------------// Initialize sample data.
+- |------------ data ----------------------------// Initialize data.
 - |------ test ----------------------------------// Source testing.
 - |------ web
 - |------------ controllers ---------------------// Navigate for requests.
@@ -333,10 +333,10 @@ Usage:
 import { SystemError } from '../dtos/common/Exception';
 ....
 throw new SystemError(); // Using default ERR_0001 => Data is invalid!
-throw new SystemError(3); // ERR_0003 => Access is denied!
-throw new SystemError(1001, 'id'); // ERR_1001 => The id is required!
-throw new SystemError(2006, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)'); // ERR_2006 => Invalid or unsupported image format! The following formats are supported: JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)
-throw new SystemError(3001, 'password', 6, 20); // ERR_3001 => The password must be at least 6 and maximum 20 characters!
+throw new SystemError(MessageError.ACCESS_DENIED); // ERR_0003 => Access is denied!
+throw new SystemError(MessageError.PARAM_REQUIRED, 'id'); // ERR_1001 => The id is required!
+throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)'); // ERR_2006 => Invalid or unsupported image format! The following formats are supported: JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)
+throw new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX, 'password', 6, 20); // ERR_3001 => The password must be at least 6 and maximum 20 characters!
 ```
 
 > If you got error with status code 500, it's error system. Almost, this error is your source code, you need to find and fix it soon.
@@ -497,7 +497,7 @@ HTTP/1.1 200 OK
 - Return data object [BulkActionResponse\<T\>] with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/systems/sample-data -H Content-Type:application/json
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/systems/dummy-user -H Content-Type:application/json
 
 Response:
 HTTP/1.1 200 OK

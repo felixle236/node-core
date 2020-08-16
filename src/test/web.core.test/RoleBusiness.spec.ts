@@ -123,7 +123,7 @@ describe('Role business testing', () => {
         roleCreate.name = '';
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'name').message);
         });
     });
 
@@ -133,7 +133,7 @@ describe('Role business testing', () => {
         roleCreate.name = 123 as any;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'name').message);
         });
     });
 
@@ -143,7 +143,7 @@ describe('Role business testing', () => {
         roleCreate.name = 'This is the name with length greater than 50 characters!';
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'name', 50).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50).message);
         });
     });
 
@@ -153,7 +153,7 @@ describe('Role business testing', () => {
         delete roleCreate.level;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'level').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'level').message);
         });
     });
 
@@ -163,7 +163,7 @@ describe('Role business testing', () => {
         roleCreate.level = 0;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1002, 'level').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'level').message);
         });
     });
 
@@ -173,7 +173,7 @@ describe('Role business testing', () => {
         roleCreate.level = 101;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'level', 100).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'level', 100).message);
         });
     });
 
@@ -183,7 +183,7 @@ describe('Role business testing', () => {
         userAuth.role.level = 3;
 
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -193,7 +193,7 @@ describe('Role business testing', () => {
 
         const roleCreate = generateRoleCreate();
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1005, 'name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXISTED, 'name').message);
         });
     });
 
@@ -204,7 +204,7 @@ describe('Role business testing', () => {
 
         const roleCreate = generateRoleCreate();
         await roleBusiness.create(roleCreate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -228,7 +228,7 @@ describe('Role business testing', () => {
 
         const roleUpdate = generateRoleUpdate();
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'role').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'role').message);
         });
     });
 
@@ -240,7 +240,7 @@ describe('Role business testing', () => {
 
         const roleUpdate = generateRoleUpdate();
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -253,7 +253,7 @@ describe('Role business testing', () => {
         roleUpdate.name = '';
 
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1001, 'name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'name').message);
         });
     });
 
@@ -266,7 +266,7 @@ describe('Role business testing', () => {
         roleUpdate.name = 'This is the name with length greater than 50 characters!';
 
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(2004, 'name', 50).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50).message);
         });
     });
 
@@ -280,7 +280,7 @@ describe('Role business testing', () => {
         roleUpdate.name = item.name;
 
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1005, 'name').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_EXISTED, 'name').message);
         });
     });
 
@@ -293,7 +293,7 @@ describe('Role business testing', () => {
 
         const roleUpdate = generateRoleUpdate();
         await roleBusiness.update(item.id, roleUpdate, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 
@@ -315,7 +315,7 @@ describe('Role business testing', () => {
         sandbox.stub(RoleRepository.prototype, 'getById').resolves(undefined);
 
         await roleBusiness.delete(10, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(1004, 'role').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_NOT_EXISTS, 'role').message);
         });
     });
 
@@ -326,7 +326,7 @@ describe('Role business testing', () => {
         userAuth.role.level = 2;
 
         await roleBusiness.delete(item.id, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(3).message);
+            expect(error.message).to.eq(new SystemError(MessageError.ACCESS_DENIED).message);
         });
     });
 
@@ -337,7 +337,7 @@ describe('Role business testing', () => {
         sandbox.stub(RoleRepository.prototype, 'delete').resolves(false);
 
         await roleBusiness.delete(item.id, userAuth).catch((error: SystemError) => {
-            expect(error.message).to.eq(new SystemError(5).message);
+            expect(error.message).to.eq(new SystemError(MessageError.DATA_CANNOT_SAVE).message);
         });
     });
 

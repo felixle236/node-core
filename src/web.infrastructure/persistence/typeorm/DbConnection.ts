@@ -7,10 +7,10 @@ import { TransactionIsolationLevel } from '../../../web.core/domain/common/persi
 export class DbConnection extends Connection implements IDbConnection {
     async clearCaching(keyCaching: string): Promise<void> {
         if (!keyCaching)
-            throw new SystemError(1001, 'key caching');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'key caching');
 
         if (!this.queryResultCache)
-            throw new SystemError(1011, 'caching feature');
+            throw new SystemError(MessageError.NOT_SUPPORTED, 'caching feature');
 
         await this.queryResultCache.remove([keyCaching]);
     }

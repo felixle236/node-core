@@ -4,14 +4,14 @@ import { DisconnectSocketInteractor } from '../../web.core/interactors/socket/di
 import { FindMessageFilter } from '../../web.core/interactors/message/find-message/Filter';
 import { FindMessageInteractor } from '../../web.core/interactors/message/find-message/Interactor';
 import { FindMessageOutput } from '../../web.core/interactors/message/find-message/Output';
-import { ISocket } from '../../web.core/domain/common/ISocket';
+import { ISocket } from '../../web.core/domain/common/socket/ISocket';
 import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
 import { Service } from 'typedi';
 import { SocketInput } from '../../web.core/domain/common/inputs/SocketInput';
-import { socketNamespace } from '../../web.core/domain/common/SocketNamespace';
+import { SocketNamespace } from '../../web.core/domain/common/socket/SocketNamespace';
 
 @Service()
-@SocketController('/' + socketNamespace.message.name)
+@SocketController('/' + SocketNamespace.MESSAGE.NAME)
 export default class MessageController {
     constructor(
         private readonly _connectSocketInteractor: ConnectSocketInteractor,

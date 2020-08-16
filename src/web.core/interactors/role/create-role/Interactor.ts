@@ -3,8 +3,9 @@ import { CreateRoleInput } from './Input';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { IdentityResult } from '../../../domain/common/outputs/IdentityResult';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
 import { Role } from '../../../domain/entities/Role';
-import { SystemError } from '../../../domain/common/exceptions';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
@@ -18,14 +19,14 @@ export class CreateRoleInteractor implements IInteractor<CreateRoleInput, Identi
         data.level = param.level;
 
         if (data.level <= userAuth.role.level)
-            throw new SystemError(3);
+            throw new SystemError(MessageError.ACCESS_DENIED);
 
         if (await this._roleRepository.checkNameExist(data.name))
-            throw new SystemError(1005, 'name');
+            throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const id = await this._roleRepository.create(data);
         if (!id)
-            throw new SystemError(5);
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         await this._roleRepository.clearCaching();
         return new IdentityResult(id);
