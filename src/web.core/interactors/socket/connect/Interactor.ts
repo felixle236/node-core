@@ -36,7 +36,7 @@ export class ConnectSocketInteractor implements IInteractor<SocketInput<string>,
                 socket.disconnect(true);
             else {
                 await this._contactStatusRepository.addOnlineStatus(socket.userAuth.userId);
-                socket.join(socket.userAuth.userId.toString());
+                socket.join(socket.userAuth.userId);
                 socket.join('0');
 
                 if (user.role && user.role.id !== RoleId.SUPER_ADMIN)

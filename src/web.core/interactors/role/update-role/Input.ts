@@ -1,5 +1,5 @@
 export class UpdateRoleInput {
-    id: number;
+    id: string;
     name: string;
     level: number;
 }

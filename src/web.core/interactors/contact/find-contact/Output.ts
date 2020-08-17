@@ -2,7 +2,7 @@ import { GenderType } from '../../../domain/enums/GenderType';
 import { User } from '../../../domain/entities/User';
 
 export class FindContactOutput {
-    id: number;
+    id: string;
     firstName: string;
     lastName?: string;
     email: string;

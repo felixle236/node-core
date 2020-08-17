@@ -1,13 +1,13 @@
 export interface IContactStatusRepository {
-    getListOnlineStatus(): Promise<number[]>;
+    getListOnlineStatus(): Promise<string[]>;
 
-    getListNewMessageStatus(roomOrReceiverId: number): Promise<number[]>;
+    getListNewMessageStatus(roomOrReceiverId: string): Promise<string[]>;
 
-    addOnlineStatus(memberId: number): Promise<boolean>;
+    addOnlineStatus(memberId: string): Promise<boolean>;
 
-    addNewMessageStatus(senderId: number, roomOrReceiverId: number): Promise<boolean>;
+    addNewMessageStatus(senderId: string, roomOrReceiverId: string): Promise<boolean>;
 
-    removeOnlineStatus(memberId: number): Promise<boolean>;
+    removeOnlineStatus(memberId: string): Promise<boolean>;
 
-    removeNewMessageStatus(receiverId: number, roomOrSenderId: number): Promise<boolean>;
+    removeNewMessageStatus(receiverId: string, roomOrSenderId: string): Promise<boolean>;
 }

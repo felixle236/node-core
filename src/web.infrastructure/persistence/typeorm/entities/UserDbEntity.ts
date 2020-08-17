@@ -12,11 +12,11 @@ import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 @Entity(USER_SCHEMA.TABLE_NAME)
 @Index((user: UserDbEntity) => [user.email, user.deletedAt], { unique: true })
 export class UserDbEntity extends BaseDbEntity<User> implements IUser {
-    @PrimaryGeneratedColumn({ name: USER_SCHEMA.COLUMNS.ID })
-    id: number;
+    @PrimaryGeneratedColumn('uuid', { name: USER_SCHEMA.COLUMNS.ID })
+    id: string;
 
     @Column({ name: USER_SCHEMA.COLUMNS.ROLE_ID })
-    roleId: number;
+    roleId: string;
 
     @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.INACTIVE })
     status: UserStatus;

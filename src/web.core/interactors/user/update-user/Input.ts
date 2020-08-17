@@ -1,7 +1,7 @@
 import { GenderType } from '../../../domain/enums/GenderType';
 
 export class UpdateUserInput {
-    id: number;
+    id: string;
     firstName: string;
     lastName?: string;
     gender?: GenderType;

@@ -7,12 +7,12 @@ import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class RemoveNewMessageStatusInteractor implements IInteractor<number, BooleanResult> {
+export class RemoveNewMessageStatusInteractor implements IInteractor<string, BooleanResult> {
     @Inject('contact.status.repository')
     private readonly _contactStatusRepository: IContactStatusRepository;
 
-    async handle(room: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
-        if (room === undefined || room < 0)
+    async handle(room: string, userAuth: UserAuthenticated): Promise<BooleanResult> {
+        if (!room)
             throw new SystemError(MessageError.PARAM_INVALID, 'room');
 
         const hasSucceed = await this._contactStatusRepository.removeNewMessageStatus(userAuth.userId, room);

@@ -15,5 +15,5 @@ export interface IJwtPayload {
 }
 
 export interface IJwtPayloadExtend extends IJwtPayload {
-    roleId: number;
+    roleId: string;
 }

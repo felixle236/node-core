@@ -7,18 +7,18 @@ import { UserDbEntity } from './UserDbEntity';
 
 @Entity(MESSAGE_SCHEMA.TABLE_NAME)
 export class MessageDbEntity extends BaseDbEntity<Message> implements IMessage {
-    @PrimaryGeneratedColumn({ name: MESSAGE_SCHEMA.COLUMNS.ID })
-    id: number;
+    @PrimaryGeneratedColumn('uuid', { name: MESSAGE_SCHEMA.COLUMNS.ID })
+    id: string;
 
     @Column({ name: MESSAGE_SCHEMA.COLUMNS.SENDER_ID })
-    senderId: number;
+    senderId: string;
 
     @Column({ name: MESSAGE_SCHEMA.COLUMNS.RECEIVER_ID, nullable: true })
-    receiverId?: number;
+    receiverId?: string;
 
     @Column({ name: MESSAGE_SCHEMA.COLUMNS.ROOM })
     @Index()
-    room: number;
+    room: string;
 
     @Column({ name: MESSAGE_SCHEMA.COLUMNS.CONTENT, length: 2000 })
     content: string;

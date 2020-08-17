@@ -3,7 +3,7 @@ import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 
 export class MinioFactory implements IStorageProvider {
-    private readonly _minioClient: minio.Client;
+    private readonly _client: minio.Client;
 
     constructor(
         private readonly _host: string,
@@ -12,7 +12,7 @@ export class MinioFactory implements IStorageProvider {
         private readonly _accessKey: string,
         private readonly _secretKey: string
     ) {
-        this._minioClient = new minio.Client({
+        this._client = new minio.Client({
             endPoint: this._host,
             port: this._port,
             useSSL: this._useSSL,
@@ -22,37 +22,37 @@ export class MinioFactory implements IStorageProvider {
     }
 
     getBuckets(): Promise<string[]> {
-        return this._minioClient.listBuckets().then(buckets => (buckets || []).map(bucket => bucket.name));
+        return this._client.listBuckets().then(buckets => (buckets || []).map(bucket => bucket.name));
     }
 
     getBucketPolicy(bucketName: string): Promise<string> {
-        return this._minioClient.getBucketPolicy(bucketName);
+        return this._client.getBucketPolicy(bucketName);
     }
 
     checkBucketExist(bucketName: string): Promise<boolean> {
-        return this._minioClient.bucketExists(bucketName);
+        return this._client.bucketExists(bucketName);
     }
 
     createBucket(bucketName: string): Promise<void> {
-        return this._minioClient.makeBucket(bucketName, 'ap-southeast-1');
+        return this._client.makeBucket(bucketName, 'ap-southeast-1');
     }
 
     setBucketPolicy(bucketName: string, policy: string): Promise<void> {
-        return this._minioClient.setBucketPolicy(bucketName, policy);
+        return this._client.setBucketPolicy(bucketName, policy);
     }
 
     deleteBucket(bucketName: string): Promise<void> {
-        return this._minioClient.removeBucket(bucketName);
+        return this._client.removeBucket(bucketName);
     }
 
     deleteBucketPolicy(bucketName: string): Promise<void> {
-        return this._minioClient.setBucketPolicy(bucketName, '');
+        return this._client.setBucketPolicy(bucketName, '');
     }
 
     getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
         return new Promise((resolve, reject) => {
             const items: IBucketItem[] = [];
-            const bucketStream = this._minioClient.listObjectsV2(bucketName, prefix);
+            const bucketStream = this._client.listObjectsV2(bucketName, prefix);
 
             bucketStream.on('data', obj => {
                 items.push({
@@ -73,14 +73,14 @@ export class MinioFactory implements IStorageProvider {
     }
 
     upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
-        return this._minioClient.putObject(bucketName, objectName, buffer).then(() => {
+        return this._client.putObject(bucketName, objectName, buffer).then(() => {
             return `/${bucketName}/${objectName}`;
         });
     }
 
     download(bucketName: string, objectName: string): Promise<Buffer> {
         return new Promise((resolve, reject) => {
-            this._minioClient.getObject(bucketName, objectName, (err, dataStream) => {
+            this._client.getObject(bucketName, objectName, (err, dataStream) => {
                 if (err) return reject(err);
                 const chunks: Buffer[] = [];
 

@@ -7,11 +7,11 @@ import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class DeleteRoleInteractor implements IInteractor<number, BooleanResult> {
+export class DeleteRoleInteractor implements IInteractor<string, BooleanResult> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(id: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async handle(id: string, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const role = await this._roleRepository.getById(id);
         if (!role)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');

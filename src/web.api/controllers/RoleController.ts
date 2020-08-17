@@ -43,28 +43,28 @@ export class RoleController {
         return await this._findRoleCommonInteractor.handle(filter, userAuth);
     }
 
-    @Get('/:id([0-9]+)')
+    @Get('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
+    async getById(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
         return await this._getRoleByIdInteractor.handle(id, userAuth);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@Body() data: CreateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
+    async create(@Body() data: CreateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<string>> {
         return await this._createRoleInteractor.handle(data, userAuth);
     }
 
-    @Put('/:id([0-9]+)')
+    @Put('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@Param('id') id: number, @Body() data: UpdateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async update(@Param('id') id: string, @Body() data: UpdateRoleInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         data.id = id;
         return await this._updateRoleInteractor.handle(data, userAuth);
     }
 
-    @Delete('/:id([0-9]+)')
+    @Delete('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async delete(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         return await this._deleteRoleInteractor.handle(id, userAuth);
     }
 }

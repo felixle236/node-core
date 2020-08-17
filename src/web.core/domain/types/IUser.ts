@@ -4,8 +4,8 @@ import { IRole } from './IRole';
 import { UserStatus } from '../enums/UserStatus';
 
 export interface IUser extends IEntity {
-    id: number;
-    roleId: number;
+    id: string;
+    roleId: string;
     status: UserStatus;
     firstName: string;
     lastName?: string;

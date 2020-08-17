@@ -12,7 +12,7 @@ import { UserDbEntity } from '../entities/UserDbEntity';
 import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 
 @Service('user.repository')
-export class UserRepository extends BaseRepository<User, UserDbEntity, number> implements IUserRepository {
+export class UserRepository extends BaseRepository<User, UserDbEntity, string> implements IUserRepository {
     constructor() {
         super(UserDbEntity, USER_SCHEMA);
     }
@@ -68,7 +68,7 @@ export class UserRepository extends BaseRepository<User, UserDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async getById(id: number, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
+    async getById(id: string, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .whereInIds(id)

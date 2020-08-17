@@ -3,7 +3,7 @@ import { IRead } from '../../domain/common/persistence/IRead';
 import { IWrite } from '../../domain/common/persistence/IWrite';
 import { Role } from '../../domain/entities/Role';
 
-export interface IRoleRepository extends IRead<Role, number>, IWrite<Role, number> {
+export interface IRoleRepository extends IRead<Role, string>, IWrite<Role, string> {
     /**
      * Get all roles with caching mode.
      */
@@ -18,7 +18,7 @@ export interface IRoleRepository extends IRead<Role, number>, IWrite<Role, numbe
     findCommonAndCount(filter: FindRoleCommonFilter): Promise<[Role[], number]>;
 
     checkNameExist(name: string): Promise<boolean>;
-    checkNameExist(name: string, excludeId: number): Promise<boolean>;
+    checkNameExist(name: string, excludeId: string): Promise<boolean>;
 
     clearCaching(): Promise<void>;
 }

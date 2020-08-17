@@ -9,7 +9,7 @@ export class ApiAuthenticator {
         private readonly _authenticateInteractor: AuthenticateInteractor
     ) {}
 
-    authorizationHttpChecker = async (action: Action, roleIds: number[]): Promise<boolean> => {
+    authorizationHttpChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
         const param = new AuthenticateInput(token, roleIds);

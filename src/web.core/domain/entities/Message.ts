@@ -10,30 +10,30 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
         super(data);
     }
 
-    get id(): number {
+    get id(): string {
         return this.data.id;
     }
 
-    get senderId(): number {
+    get senderId(): string {
         return this.data.senderId;
     }
 
-    set senderId(val: number) {
+    set senderId(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'sender id');
-        if (!validator.isPositive(val))
+        if (!validator.isString(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'sender id');
         this.data.senderId = val;
         this._updateRoom();
     }
 
-    get receiverId(): number | undefined {
+    get receiverId(): string | undefined {
         return this.data.receiverId;
     }
 
-    set receiverId(val: number | undefined) {
+    set receiverId(val: string | undefined) {
         if (val) {
-            if (!validator.isPositive(val))
+            if (!validator.isString(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'receiver id');
         }
 
@@ -41,16 +41,16 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
         this._updateRoom();
     }
 
-    get room(): number {
+    get room(): string {
         return this.data.room;
     }
 
-    set room(val: number) {
+    set room(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'room');
-        if (!validator.isInt(val) || validator.isNegative(val))
+        if (!validator.isString(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'room');
-        if (val !== 0)
+        if (val !== '0')
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'room');
 
         if (this.data.receiverId)
@@ -87,19 +87,6 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
 
     private _updateRoom() {
         if (this.data.senderId && this.data.receiverId)
-            this.data.room = Message.generateRoom(this.data.senderId, this.data.receiverId);
-    }
-
-    static generateRoom(senderId: number, receiverId: number): number {
-        if (senderId > receiverId)
-            return Number(this._generateId(senderId) + this._generateId(receiverId));
-        else
-            return Number(this._generateId(receiverId) + this._generateId(senderId));
-    }
-
-    private static _generateId(num: number): string {
-        if (num.toString().length >= 4)
-            return num.toString();
-        return (num * Number('1'.padEnd(5 - num.toString().length, '0'))).toString();
+            this.data.room = this.data.senderId > this.data.receiverId ? `${this.data.senderId}:${this.data.receiverId}` : `${this.data.receiverId}:${this.data.senderId}`;
     }
 }

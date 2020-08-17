@@ -11,14 +11,14 @@ import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 
 @Service()
-export class CreateUserInteractor implements IInteractor<CreateUserInput, IdentityResult<number>> {
+export class CreateUserInteractor implements IInteractor<CreateUserInput, IdentityResult<string>> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: CreateUserInput, userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
+    async handle(param: CreateUserInput, userAuth: UserAuthenticated): Promise<IdentityResult<string>> {
         const data = new User();
         data.roleId = param.roleId;
         data.status = UserStatus.ACTIVED;

@@ -10,7 +10,7 @@ export class AuthenticationService implements IAuthenticationService {
         return jwt.sign({
             roleId: user.roleId
         }, AUTH_SECRET_OR_PRIVATE_KEY, {
-            subject: user.id.toString(),
+            subject: user.id,
             expiresIn: 24 * 60 * 60,
             issuer: PROJECT_NAME,
             audience: `${PROTOTYPE}://${DOMAIN}`,

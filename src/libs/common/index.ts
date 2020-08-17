@@ -41,11 +41,11 @@ export function convertToCurrency(value: number, option): string {
  */
 export function convertStringToBoolean(val?: string, defaultValue?: boolean): boolean {
     if (!val)
-        return defaultValue ?? false;
+        return defaultValue !== undefined ? defaultValue : false;
 
     switch (val.toLowerCase().trim()) {
     case 'true': case 'yes': case '1': return true;
     case 'false': case 'no': case '0': return false;
-    default: return defaultValue ?? false;
+    default: return defaultValue !== undefined ? defaultValue : false;
     }
 }

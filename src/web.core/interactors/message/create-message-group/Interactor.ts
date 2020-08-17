@@ -39,7 +39,7 @@ export class CreateMessageGroupInteractor implements IInteractor<CreateMessageGr
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const output = new CreateMessageGroupOutput(newMessage);
-        sendByEmitter(this._socketEmitter, SocketNamespace.MESSAGE.NAME, SocketNamespace.MESSAGE.EVENTS.MESSAGE_GROUP, message.room.toString(), output);
+        sendByEmitter(this._socketEmitter, SocketNamespace.MESSAGE.NAME, SocketNamespace.MESSAGE.EVENTS.MESSAGE_GROUP, message.room, output);
         return output;
     }
 }

@@ -8,8 +8,8 @@ import { UserDbEntity } from './UserDbEntity';
 @Entity(ROLE_SCHEMA.TABLE_NAME)
 @Index((role: RoleDbEntity) => [role.name, role.deletedAt], { unique: true })
 export class RoleDbEntity extends BaseDbEntity<Role> implements IRole {
-    @PrimaryGeneratedColumn({ name: ROLE_SCHEMA.COLUMNS.ID })
-    id: number;
+    @PrimaryGeneratedColumn('uuid', { name: ROLE_SCHEMA.COLUMNS.ID })
+    id: string;
 
     @Column({ name: ROLE_SCHEMA.COLUMNS.NAME, length: 50 })
     name: string;

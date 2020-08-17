@@ -39,7 +39,7 @@ export class CreateMessageInteractor implements IInteractor<CreateMessageInput, 
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const output = new CreateMessageOutput(newMessage);
-        sendByEmitter(this._socketEmitter, SocketNamespace.MESSAGE.NAME, SocketNamespace.MESSAGE.EVENTS.MESSAGE_DIRECTLY, message.receiverId.toString(), output);
+        sendByEmitter(this._socketEmitter, SocketNamespace.MESSAGE.NAME, SocketNamespace.MESSAGE.EVENTS.MESSAGE_DIRECTLY, message.receiverId, output);
         return output;
     }
 }

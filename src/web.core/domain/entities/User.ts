@@ -1,4 +1,3 @@
-import * as fileType from 'file-type';
 import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { Container } from 'typedi';
@@ -18,18 +17,18 @@ export class User extends BaseEntity<IUser> implements IUser {
         super(data);
     }
 
-    get id(): number {
+    get id(): string {
         return this.data.id;
     }
 
-    get roleId(): number {
+    get roleId(): string {
         return this.data.roleId;
     }
 
-    set roleId(val: number) {
+    set roleId(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'role id');
-        if (!validator.isPositive(val))
+        if (!validator.isString(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'role id');
 
         this.data.roleId = val;
@@ -113,6 +112,15 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     get avatar(): string | undefined {
         return this.data.avatar && this._storageService.mapUrl(this.data.avatar);
+    }
+
+    set avatar(val: string | undefined) {
+        if (val) {
+            val = val.trim();
+            if (val.length > 200)
+                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200);
+        }
+        this.data.avatar = val;
     }
 
     get gender(): GenderType | undefined {
@@ -269,17 +277,9 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.password === this._hashPassword(password);
     }
 
-    // Use only update functions.
-    async setAvatar(id: number, file: Express.Multer.File): Promise<string> {
+    static validateAvatarFile(file: Express.Multer.File): void {
         const maxSize = 1024 * 100; // 100KB
         const formats = ['jpeg', 'jpg', 'png', 'gif'];
-
-        if (!id)
-            throw new SystemError(MessageError.DATA_NOT_FOUND);
-
-        const type = await fileType.fromBuffer(file.buffer);
-        if (!type)
-            throw new SystemError(MessageError.PARAM_INVALID, 'file type');
 
         if (file.size > maxSize)
             throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
@@ -287,8 +287,9 @@ export class User extends BaseEntity<IUser> implements IUser {
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
             throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
+    }
 
-        this.data.avatar = `/images/users/${id}/avatar.${type.ext}`;
-        return this.data.avatar;
+    static getAvatarPath(id: string, extension: string): string {
+        return `images/users/${id}/avatar.${extension}`;
     }
 }

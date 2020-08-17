@@ -35,34 +35,34 @@ export class UserController {
         return await this._findUserInteractor.handle(filter, userAuth);
     }
 
-    @Get('/:id([0-9]+)')
+    @Get('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdOutput> {
+    async getById(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdOutput> {
         return await this._getUserByIdInteractor.handle(id, userAuth);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@Body() data: CreateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
+    async create(@Body() data: CreateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<string>> {
         return await this._createUserInteractor.handle(data, userAuth);
     }
 
-    @Put('/:id([0-9]+)')
+    @Put('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@Param('id') id: number, @Body() data: UpdateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async update(@Param('id') id: string, @Body() data: UpdateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         data.id = id;
         return await this._updateUserInteractor.handle(data, userAuth);
     }
 
-    @Post('/:id([0-9]+)/archive')
+    @Post('/:id/archive')
     @Authorized(RoleId.SUPER_ADMIN)
-    async archive(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async archive(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         return await this._archiveUserInteractor.handle(id, userAuth);
     }
 
-    @Delete('/:id([0-9]+)')
+    @Delete('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@Param('id') id: number, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async delete(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
         return await this._deleteUserInteractor.handle(id, userAuth);
     }
 }

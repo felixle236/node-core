@@ -8,7 +8,7 @@ import { Service } from 'typedi';
 import { SortType } from '../../../../web.core/domain/common/persistence/SortType';
 
 @Service('message.repository')
-export class MessageRepository extends BaseRepository<Message, MessageDbEntity, number> implements IMessageRepository {
+export class MessageRepository extends BaseRepository<Message, MessageDbEntity, string> implements IMessageRepository {
     constructor() {
         super(MessageDbEntity, MESSAGE_SCHEMA);
     }

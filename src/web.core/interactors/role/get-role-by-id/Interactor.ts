@@ -7,11 +7,11 @@ import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class GetRoleByIdInteractor implements IInteractor<number, GetRoleByIdOutput> {
+export class GetRoleByIdInteractor implements IInteractor<string, GetRoleByIdOutput> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(id: number, userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
+    async handle(id: string, userAuth: UserAuthenticated): Promise<GetRoleByIdOutput> {
         const role = await this._roleRepository.getById(id);
         if (!role)
             throw new SystemError(MessageError.DATA_NOT_FOUND);

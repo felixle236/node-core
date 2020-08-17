@@ -4,7 +4,7 @@ import { IRead } from '../../domain/common/persistence/IRead';
 import { IWrite } from '../../domain/common/persistence/IWrite';
 import { User } from '../../domain/entities/User';
 
-export interface IUserRepository extends IRead<User, number>, IWrite<User, number> {
+export interface IUserRepository extends IRead<User, string>, IWrite<User, string> {
     findContactAndCount(filter: FindContactFilter): Promise<[User[], number]>;
 
     getByEmail(email: string): Promise<User | undefined>;

@@ -9,7 +9,7 @@ import { Service } from 'typedi';
 import { SortType } from '../../../../web.core/domain/common/persistence/SortType';
 
 @Service('role.repository')
-export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> implements IRoleRepository {
+export class RoleRepository extends BaseRepository<Role, RoleDbEntity, string> implements IRoleRepository {
     private readonly _roleListCacheKey = 'roles';
 
     constructor() {
@@ -71,7 +71,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, number> i
         return [list.map(item => item.toEntity()), count];
     }
 
-    async checkNameExist(name: string, excludeId?: number): Promise<boolean> {
+    async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
             .where(`lower(${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 

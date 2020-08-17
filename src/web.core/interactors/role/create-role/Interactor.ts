@@ -9,11 +9,11 @@ import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 @Service()
-export class CreateRoleInteractor implements IInteractor<CreateRoleInput, IdentityResult<number>> {
+export class CreateRoleInteractor implements IInteractor<CreateRoleInput, IdentityResult<string>> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(param: CreateRoleInput, userAuth: UserAuthenticated): Promise<IdentityResult<number>> {
+    async handle(param: CreateRoleInput, userAuth: UserAuthenticated): Promise<IdentityResult<string>> {
         const data = new Role();
         data.name = param.name;
         data.level = param.level;

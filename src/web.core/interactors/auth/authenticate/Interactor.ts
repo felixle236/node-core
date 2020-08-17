@@ -44,6 +44,6 @@ export class AuthenticateInteractor implements IInteractor<AuthenticateInput, Us
         if (!role)
             throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
-        return new UserAuthenticated(Number(payload.sub), role);
+        return new UserAuthenticated(payload.sub, role);
     }
 }

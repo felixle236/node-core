@@ -2,12 +2,12 @@ import { Message } from '../../../domain/entities/Message';
 import { User } from '../../../domain/entities/User';
 
 export class FindMessageOutput {
-    id: number;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
-    senderId: number;
-    receiverId?: number;
-    room: number;
+    senderId: string;
+    receiverId?: string;
+    room: string;
     content: string;
 
     sender?: UserOutput;
@@ -31,7 +31,7 @@ export class FindMessageOutput {
 }
 
 class UserOutput {
-    id: number;
+    id: string;
     firstName: string;
     lastName?: string;
 

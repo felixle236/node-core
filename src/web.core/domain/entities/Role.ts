@@ -10,7 +10,7 @@ export class Role extends BaseEntity<IRole> implements IRole {
         super(data);
     }
 
-    get id(): number {
+    get id(): string {
         return this.data.id;
     }
 

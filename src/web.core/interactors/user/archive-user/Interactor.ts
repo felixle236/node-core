@@ -9,11 +9,11 @@ import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 
 @Service()
-export class ArchiveUserInteractor implements IInteractor<number, BooleanResult> {
+export class ArchiveUserInteractor implements IInteractor<string, BooleanResult> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(id: number, userAuth: UserAuthenticated): Promise<BooleanResult> {
+    async handle(id: string, userAuth: UserAuthenticated): Promise<BooleanResult> {
         const user = await this._userRepository.getById(id);
         if (!user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');

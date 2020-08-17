@@ -1,4 +1,4 @@
 export class CreateMessageGroupInput {
-    room: number;
+    room: string;
     content: string;
 }

@@ -1,7 +1,7 @@
 import { Role } from '../../../domain/entities/Role';
 
 export class FindRoleCommonOutput {
-    id: number;
+    id: string;
     name: string;
 
     constructor(data: Role) {

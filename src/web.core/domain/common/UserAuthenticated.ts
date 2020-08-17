@@ -1,17 +1,17 @@
 import { Role } from '../entities/Role';
 
 export class UserAuthenticated {
-    userId: number;
+    userId: string;
     role: RoleAuthenticated;
 
-    constructor(userId: number, role: Role) {
+    constructor(userId: string, role: Role) {
         this.userId = userId;
         this.role = new RoleAuthenticated(role);
     }
 }
 
 class RoleAuthenticated {
-    id: number;
+    id: string;
     name: string;
     level: number;
 

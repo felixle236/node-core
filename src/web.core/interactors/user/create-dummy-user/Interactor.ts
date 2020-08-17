@@ -8,6 +8,8 @@ import { IInteractor } from '../../../domain/common/IInteractor';
 import { IRoleRepository } from '../../../gateways/repositories/IRoleRepository';
 import { IStorageService } from '../../../gateways/services/IStorageService';
 import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
+import { MessageError } from '../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../domain/common/exceptions/SystemError';
 import { User } from '../../../domain/entities/User';
 import { UserStatus } from '../../../domain/enums/UserStatus';
 import { readFile } from '../../../../libs/file';
@@ -37,7 +39,7 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
                 bulkAction.ignore();
             else {
                 await this._dbContext.getConnection().runTransaction(async queryRunner => {
-                    let user = await this._userRepository.getByEmail(item.email, queryRunner);
+                    const user = await this._userRepository.getByEmail(item.email, queryRunner);
                     if (user)
                         bulkAction.ignore();
                     else {
@@ -52,26 +54,30 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
 
                         const id = await this._userRepository.create(data, queryRunner);
                         if (id && item.avatar) {
-                            user = await this._userRepository.getById(id, queryRunner);
-                            if (user) {
-                                const filePath = path.join(__dirname, item.avatar);
-                                const buffer = await readFile(filePath);
-                                const type = await fileType.fromBuffer(buffer);
+                            const filePath = path.join(__dirname, item.avatar);
+                            const buffer = await readFile(filePath);
 
-                                const data = new User();
-                                const avatarPath = await data.setAvatar(user.id, {
-                                    mimetype: type?.mime,
-                                    size: buffer.length,
-                                    buffer
-                                } as Express.Multer.File);
+                            const type = await fileType.fromBuffer(buffer);
+                            if (!type)
+                                throw new SystemError(MessageError.PARAM_INVALID, 'file type');
 
-                                await this._storageService.upload(avatarPath, buffer);
-                                await this._userRepository.update(id, data, queryRunner);
-                            }
+                            User.validateAvatarFile({
+                                mimetype: type?.mime,
+                                size: buffer.length,
+                                buffer
+                            } as Express.Multer.File);
+
+                            const avatarPath = User.getAvatarPath(id, type.ext);
+                            const data = new User();
+                            data.avatar = await this._storageService.upload(avatarPath, buffer);
+                            await this._userRepository.update(id, data, queryRunner);
                         }
                         bulkAction.success();
                     }
-                }, async () => bulkAction.fail(index));
+                }, async (err) => {
+                    console.log(err);
+                    bulkAction.fail(index);
+                });
             }
         }
         return bulkAction;

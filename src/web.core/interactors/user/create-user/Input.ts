@@ -1,7 +1,7 @@
 import { GenderType } from '../../../domain/enums/GenderType';
 
 export class CreateUserInput {
-    roleId: number;
+    roleId: string;
     firstName: string;
     lastName?: string;
     email: string;

@@ -3,7 +3,7 @@ import { UserAuthenticated } from '../../../domain/common/UserAuthenticated';
 
 export class FindMessageFilter extends BaseFilter {
     keyword?: string;
-    room?: number;
-    receiverId?: number;
+    room?: string;
+    receiverId?: string;
     userAuth: UserAuthenticated;
 }

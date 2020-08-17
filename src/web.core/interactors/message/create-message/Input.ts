@@ -1,4 +1,4 @@
 export class CreateMessageInput {
-    receiverId: number;
+    receiverId: string;
     content: string;
 }

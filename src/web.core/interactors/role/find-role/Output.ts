@@ -1,7 +1,7 @@
 import { Role } from '../../../domain/entities/Role';
 
 export class FindRoleOutput {
-    id: number;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;

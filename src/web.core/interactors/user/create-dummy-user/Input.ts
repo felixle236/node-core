@@ -5,7 +5,7 @@ export class CreateDummyUserInput {
 }
 
 interface IDummyUser {
-    roleId: number;
+    roleId: string;
     firstName: string;
     lastName?: string;
     email: string;

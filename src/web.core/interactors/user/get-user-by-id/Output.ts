@@ -3,11 +3,11 @@ import { Role } from '../../../domain/entities/Role';
 import { User } from '../../../domain/entities/User';
 
 export class GetUserByIdOutput {
-    id: number;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
-    roleId: number;
+    roleId: string;
     firstName: string;
     lastName?: string;
     email: string;
@@ -43,7 +43,7 @@ export class GetUserByIdOutput {
 }
 
 class RoleOutput {
-    id: number;
+    id: string;
     name: string;
 
     constructor(data: Role) {
