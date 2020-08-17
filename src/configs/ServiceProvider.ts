@@ -1,7 +1,6 @@
 export enum LogProvider {
     CONSOLE = 1,
-    LOG_FILE = 2,
-    LOG_STASH = 3
+    LOG_FILE = 2
 }
 
 export enum StorageProvider {

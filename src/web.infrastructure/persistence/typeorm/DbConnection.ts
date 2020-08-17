@@ -19,11 +19,25 @@ export class DbConnection implements IDbConnection {
         await this._connection.queryResultCache.remove([keyCaching]);
     }
 
-    async runTransaction<T>(runInTransaction: (queryRunner: IDbQueryRunner)=> Promise<T>, isolationLevel?: TransactionIsolationLevel): Promise<T> {
-        return await this._connection.transaction(isolationLevel!, async entityManager => {
-            const queryRunner = entityManager.connection.createQueryRunner();
-            return await runInTransaction(queryRunner);
-        });
+    async runTransaction(runInTransaction: (queryRunner: IDbQueryRunner)=> Promise<void>, rollback: (error: Error)=> Promise<void>, isolationLevel?: TransactionIsolationLevel): Promise<void> {
+        let err;
+        const query = this._connection.createQueryRunner();
+        await query.startTransaction(isolationLevel);
+
+        try {
+            await runInTransaction(query);
+            await query.commitTransaction();
+        }
+        catch (error) {
+            err = error;
+            await query.rollbackTransaction();
+        }
+        finally {
+            await query.release();
+        }
+
+        if (err && rollback)
+            await rollback(err);
     }
 
     async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' | undefined }): Promise<IDbMigration[]> {

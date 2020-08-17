@@ -71,9 +71,7 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
                         }
                         bulkAction.success();
                     }
-                }).catch(() => {
-                    bulkAction.fail(index);
-                });
+                }, async () => bulkAction.fail(index));
             }
         }
         return bulkAction;
