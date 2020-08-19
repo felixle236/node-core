@@ -28,7 +28,7 @@ export class User extends BaseEntity<IUser> implements IUser {
     set roleId(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'role id');
-        if (!validator.isString(val))
+        if (!validator.isUUID(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'role id');
 
         this.data.roleId = val;
@@ -281,15 +281,15 @@ export class User extends BaseEntity<IUser> implements IUser {
         const maxSize = 1024 * 100; // 100KB
         const formats = ['jpeg', 'jpg', 'png', 'gif'];
 
-        if (file.size > maxSize)
-            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
-
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
             throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
+
+        if (file.size > maxSize)
+            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
     }
 
-    static getAvatarPath(id: string, extension: string): string {
-        return `images/users/${id}/avatar.${extension}`;
+    static getAvatarPath(id: string, ext: string): string {
+        return `images/users/${id}/avatar.${ext}`;
     }
 }

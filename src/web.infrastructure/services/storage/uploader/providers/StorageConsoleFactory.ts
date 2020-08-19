@@ -38,9 +38,9 @@ export class StorageConsoleFactory implements IStorageProvider {
         return [];
     }
 
-    async upload(bucketName: string, objectName: string, _buffer: Buffer): Promise<string> {
+    async upload(bucketName: string, objectName: string, _buffer: Buffer): Promise<boolean> {
         console.log('StorageService.upload', { bucketName, objectName });
-        return `/${bucketName}/${objectName}`;
+        return true;
     }
 
     async download(bucketName: string, objectName: string): Promise<Buffer> {
@@ -48,8 +48,8 @@ export class StorageConsoleFactory implements IStorageProvider {
         return Promise.resolve(Buffer.from('Logging'));
     }
 
-    mapUrl(path: string): string {
-        console.log('StorageService.mapUrl', path);
-        return 'http://localhost/' + path;
+    mapUrl(bucketName: string, path: string): string {
+        console.log('StorageService.mapUrl', { bucketName, path });
+        return `http://localhost/${bucketName}/` + path;
     }
 }

@@ -20,14 +20,13 @@ export class ActiveUserInteractor implements IInteractor<string, BooleanResult> 
         if (!user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'activation key');
         if (user.status === UserStatus.ACTIVED)
-            throw new SystemError();
+            throw new SystemError(MessageError.DATA_INVALID);
         if (!user.activeKey || !user.activeExpire || user.activeExpire < new Date())
             throw new SystemError(MessageError.PARAM_EXPIRED, 'activation key');
 
         const data = new User();
         data.status = UserStatus.ACTIVED;
-        data.activeKey = undefined;
-        data.activeExpire = undefined;
+        data.activeKey = '';
         data.activedAt = new Date();
 
         const hasSucceed = await this._userRepository.update(user.id, data);

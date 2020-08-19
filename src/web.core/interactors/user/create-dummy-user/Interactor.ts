@@ -1,5 +1,4 @@
-import * as fileType from 'file-type';
-import * as path from 'path';
+import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
 import { BulkActionResult } from '../../../domain/common/outputs/BulkActionResult';
 import { CreateDummyUserInput } from './Input';
@@ -54,22 +53,23 @@ export class CreateDummyUserInteractor implements IInteractor<CreateDummyUserInp
 
                         const id = await this._userRepository.create(data, queryRunner);
                         if (id && item.avatar) {
-                            const filePath = path.join(__dirname, item.avatar);
-                            const buffer = await readFile(filePath);
+                            const buffer = await readFile(item.avatar);
+                            const mimetype = mime.lookup(item.avatar) || '';
+                            const ext = mime.extension(mimetype);
 
-                            const type = await fileType.fromBuffer(buffer);
-                            if (!type)
-                                throw new SystemError(MessageError.PARAM_INVALID, 'file type');
+                            if (!ext)
+                                throw new SystemError(MessageError.PARAM_INVALID, 'avatar');
 
                             User.validateAvatarFile({
-                                mimetype: type?.mime,
-                                size: buffer.length,
-                                buffer
+                                mimetype,
+                                buffer,
+                                size: buffer.length
                             } as Express.Multer.File);
 
-                            const avatarPath = User.getAvatarPath(id, type.ext);
+                            const avatarPath = User.getAvatarPath(id, ext);
                             const data = new User();
-                            data.avatar = await this._storageService.upload(avatarPath, buffer);
+                            data.avatar = avatarPath;
+                            await this._storageService.upload(avatarPath, buffer);
                             await this._userRepository.update(id, data, queryRunner);
                         }
                         bulkAction.success();

@@ -1,4 +1,4 @@
-import * as fileType from 'file-type';
+import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IStorageService } from '../../../gateways/services/IStorageService';
@@ -19,16 +19,16 @@ export class UploadMyAvatarInteractor implements IInteractor<Express.Multer.File
 
     async handle(file: Express.Multer.File, userAuth: UserAuthenticated): Promise<UploadMyAvatarOutput> {
         const id = userAuth.userId;
-
-        const type = await fileType.fromBuffer(file.buffer);
-        if (!type)
-            throw new SystemError(MessageError.PARAM_INVALID, 'file type');
+        const ext = mime.extension(file.mimetype);
+        if (!ext)
+            throw new SystemError(MessageError.PARAM_INVALID, 'avatar');
 
         User.validateAvatarFile(file);
-        const avatarPath = User.getAvatarPath(id, type.ext);
+        const avatarPath = User.getAvatarPath(id, ext);
         const data = new User();
-        data.avatar = await this._storageService.upload(avatarPath, file.buffer);
+        data.avatar = avatarPath;
 
+        await this._storageService.upload(avatarPath, file.buffer);
         await this._userRepository.update(id, data);
         return new UploadMyAvatarOutput(data.avatar);
     }

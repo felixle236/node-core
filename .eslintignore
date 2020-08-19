@@ -1,3 +1,1 @@
-gruntfile.js
 src/web.ui/**/*.js
-module-generator/generate.js

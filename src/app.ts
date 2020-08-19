@@ -24,6 +24,7 @@ const startApplication = async () => {
 };
 
 const runMigrations = async () => {
+    console.log('\nRun migrations.\n');
     const conn = dbContext.getConnection();
     const migrations = await conn.runMigrations();
     if (!migrations.length)

@@ -63,7 +63,7 @@ export class StorageUploader implements IStorageProvider {
         return await this._provider.getObjects(bucketName, prefix);
     }
 
-    async upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
+    async upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
         return await this._provider.upload(bucketName, objectName, buffer);
     }
 
@@ -71,7 +71,7 @@ export class StorageUploader implements IStorageProvider {
         return await this._provider.download(bucketName, objectName);
     }
 
-    mapUrl(path: string): string {
-        return this._provider.mapUrl(path);
+    mapUrl(bucketName: string, path: string): string {
+        return this._provider.mapUrl(bucketName, path);
     }
 }

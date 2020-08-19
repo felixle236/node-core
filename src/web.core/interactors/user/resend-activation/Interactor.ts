@@ -25,7 +25,7 @@ export class ResendActivationInteractor implements IInteractor<string, BooleanRe
 
         const user = await this._userRepository.getByEmail(email);
         if (!user || user.status === UserStatus.ACTIVED)
-            throw new SystemError();
+            throw new SystemError(MessageError.DATA_INVALID);
 
         const data = new User();
         data.activeKey = crypto.randomBytes(32).toString('hex');
@@ -35,7 +35,9 @@ export class ResendActivationInteractor implements IInteractor<string, BooleanRe
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        await this._mailService.resendUserActivation(user);
+        user.activeKey = data.activeKey;
+        user.activeExpire = data.activeExpire;
+        this._mailService.resendUserActivation(user);
         return new BooleanResult(hasSucceed);
     }
 }

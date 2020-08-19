@@ -27,8 +27,7 @@ export class ResetPasswordInteractor implements IInteractor<ResetPasswordInput, 
 
         const data = new User();
         data.password = param.password;
-        data.forgotKey = undefined;
-        data.forgotExpire = undefined;
+        data.forgotKey = '';
 
         const hasSucceed = await this._userRepository.update(user.id, data);
         if (!hasSucceed)

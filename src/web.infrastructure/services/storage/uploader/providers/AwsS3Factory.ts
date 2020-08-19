@@ -109,7 +109,7 @@ export class AwsS3Factory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
+    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._client.upload({
                 Bucket: bucketName, // eslint-disable-line
@@ -117,7 +117,7 @@ export class AwsS3Factory implements IStorageProvider {
                 Body: buffer // eslint-disable-line
             }, err => {
                 if (err) return reject(err);
-                resolve(`/${bucketName}/${objectName}`);
+                resolve(true);
             });
         });
     }
@@ -134,7 +134,7 @@ export class AwsS3Factory implements IStorageProvider {
         });
     }
 
-    mapUrl(path: string): string {
-        return `https://s3.${this._region}.amazonaws.com${path}`;
+    mapUrl(bucketName: string, path: string): string {
+        return `https://s3.${this._region}.amazonaws.com/${bucketName}/${path}`;
     }
 }

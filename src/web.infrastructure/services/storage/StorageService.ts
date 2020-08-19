@@ -19,7 +19,7 @@ export class StorageService implements IStorageService {
         }
     }
 
-    async upload(urlPath: string, buffer: Buffer): Promise<string> {
+    async upload(urlPath: string, buffer: Buffer): Promise<boolean> {
         return await this._uploader.upload(BUCKET_NAME, urlPath, buffer);
     }
 
@@ -28,6 +28,6 @@ export class StorageService implements IStorageService {
     }
 
     mapUrl(urlPath: string): string {
-        return this._uploader.mapUrl(urlPath);
+        return this._uploader.mapUrl(BUCKET_NAME, urlPath);
     }
 }

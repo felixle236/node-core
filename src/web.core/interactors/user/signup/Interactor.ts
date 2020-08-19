@@ -55,7 +55,7 @@ export class SignupInteractor implements IInteractor<SignupInput, SignupOutput> 
         if (!user)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        await this._mailService.sendUserActivation(user);
+        this._mailService.sendUserActivation(user);
         const token = this._authenticationService.sign(user);
         return new SignupOutput(token);
     }

@@ -21,7 +21,7 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
     set senderId(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'sender id');
-        if (!validator.isString(val))
+        if (!validator.isUUID(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'sender id');
         this.data.senderId = val;
         this._updateRoom();
@@ -33,7 +33,7 @@ export class Message extends BaseEntity<IMessage> implements IMessage {
 
     set receiverId(val: string | undefined) {
         if (val) {
-            if (!validator.isString(val))
+            if (!validator.isUUID(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'receiver id');
         }
 

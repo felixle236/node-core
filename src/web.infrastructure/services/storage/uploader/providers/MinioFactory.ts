@@ -72,10 +72,8 @@ export class MinioFactory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string> {
-        return this._client.putObject(bucketName, objectName, buffer).then(() => {
-            return `/${bucketName}/${objectName}`;
-        });
+    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
+        return this._client.putObject(bucketName, objectName, buffer).then(result => !!result);
     }
 
     download(bucketName: string, objectName: string): Promise<Buffer> {
@@ -97,7 +95,7 @@ export class MinioFactory implements IStorageProvider {
         });
     }
 
-    mapUrl(path: string): string {
-        return (this._useSSL ? 'https' : 'http') + `://${this._host}` + (this._port === 80 ? '' : `:${this._port}`) + path;
+    mapUrl(bucketName: string, path: string): string {
+        return (this._useSSL ? 'https' : 'http') + `://${this._host}` + (this._port === 80 ? '' : `:${this._port}`) + `/${bucketName}/` + path;
     }
 }

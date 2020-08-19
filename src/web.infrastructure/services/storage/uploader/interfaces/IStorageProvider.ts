@@ -18,9 +18,9 @@ export interface IStorageProvider {
     getObjects(bucketName: string): Promise<IBucketItem[]>;
     getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]>;
 
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<string>;
+    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean>;
 
     download(bucketName: string, objectName: string): Promise<Buffer>;
 
-    mapUrl(path: string): string;
+    mapUrl(bucketName: string, path: string): string;
 }

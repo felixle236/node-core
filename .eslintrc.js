@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     extends: 'standard',
     parser: '@typescript-eslint/parser',
     env: {
@@ -8,10 +9,11 @@ module.exports = {
         mocha: true
     },
     parserOptions: {
-        ecmaVersion: 8,
+        ecmaVersion: 2019,
         sourceType: 'module',
         ecmaFeatures: {},
-        project: './tsconfig.json'
+        project: './tsconfig.json',
+        createDefaultProgram: true // Tempory solution for IDE.
     },
     plugins: ['@typescript-eslint'],
     overrides: [{
@@ -24,68 +26,68 @@ module.exports = {
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
-                    'selector': 'default',
-                    'format': ['camelCase']
+                    selector: 'default',
+                    format: ['camelCase']
                 },
                 {
-                    'selector': 'memberLike',
-                    'modifiers': ['private'],
-                    'format': ['camelCase'],
-                    'leadingUnderscore': 'require'
+                    selector: 'memberLike',
+                    modifiers: ['private'],
+                    format: ['camelCase'],
+                    leadingUnderscore: 'require'
                 },
                 {
-                    'selector': 'memberLike',
-                    'format': ['camelCase', 'UPPER_CASE']
+                    selector: 'memberLike',
+                    format: ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    'selector': 'parameter',
-                    'format': ['camelCase'],
-                    'leadingUnderscore': 'allow'
+                    selector: 'parameter',
+                    format: ['camelCase'],
+                    leadingUnderscore: 'allow'
                 },
                 {
-                    'selector': 'variableLike',
-                    'format': ['camelCase', 'UPPER_CASE']
+                    selector: 'variableLike',
+                    format: ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    'selector': 'variable',
-                    'format': ['camelCase', 'UPPER_CASE']
+                    selector: 'variable',
+                    format: ['camelCase', 'UPPER_CASE']
                 },
                 {
-                    'selector': 'variable',
-                    'types': ['boolean'],
-                    'format': ['PascalCase', 'UPPER_CASE'],
-                    'prefix': ['is', 'should', 'has', 'can', 'did', 'will', 'enable', 'IS_', 'SHOULD_', 'HAS_', 'CAN_', 'DID_', 'WILL_', 'ENABLE_']
+                    selector: 'variable',
+                    types: ['boolean'],
+                    format: ['PascalCase', 'UPPER_CASE'],
+                    prefix: ['is', 'should', 'has', 'can', 'did', 'will', 'enable', 'IS_', 'SHOULD_', 'HAS_', 'CAN_', 'DID_', 'WILL_', 'ENABLE_']
                 },
                 {
-                    'selector': 'typeParameter',
-                    'format': ['PascalCase'],
-                    'prefix': ['T']
+                    selector: 'typeParameter',
+                    format: ['PascalCase'],
+                    prefix: ['T']
                 },
                 {
-                    'selector': 'interface',
-                    'format': ['PascalCase'],
-                    'custom': {
-                        'regex': '^I[A-Z]',
-                        'match': true
+                    selector: 'interface',
+                    format: ['PascalCase'],
+                    custom: {
+                        regex: '^I[A-Z]',
+                        match: true
                     }
                 },
                 {
-                    'selector': 'typeLike',
-                    'format': ['PascalCase']
+                    selector: 'typeLike',
+                    format: ['PascalCase']
                 }
             ]
         }
     }],
     rules: {
-        'indent': ['error', 4],
-        'semi': ['error', 'always'],
+        indent: ['error', 4],
+        semi: ['error', 'always'],
         'no-var': ['error'],
         'one-var': ['error', 'never'],
         'require-jsdoc': 'error',
-        'camelcase': ['error'],
+        camelcase: ['error'],
         'eol-last': ['error', 'always'],
-        'curly': ['error', 'multi-or-nest'],
-        'eqeqeq': ['error', 'always', { 'null': 'ignore' }],
+        curly: ['error', 'multi-or-nest'],
+        eqeqeq: ['error', 'always', { null: 'ignore' }],
         'brace-style': ['error', 'stroustrup'],
         'no-return-await': 'off',
         'no-useless-constructor': 'off',
@@ -96,10 +98,10 @@ module.exports = {
             asyncArrow: 'always'
         }],
         'sort-imports': ['error', {
-            'ignoreCase': false,
-            'ignoreMemberSort': false,
-            'ignoreDeclarationSort': false,
-            'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']
+            ignoreCase: false,
+            ignoreMemberSort: false,
+            ignoreDeclarationSort: false,
+            memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
         }]
     }
 };

@@ -25,7 +25,7 @@ export class ForgotPasswordInteractor implements IInteractor<string, BooleanResu
 
         const user = await this._userRepository.getByEmail(email);
         if (!user || user.status !== UserStatus.ACTIVED)
-            throw new SystemError();
+            throw new SystemError(MessageError.DATA_INVALID);
 
         const data = new User();
         data.forgotKey = crypto.randomBytes(32).toString('hex');
@@ -35,7 +35,9 @@ export class ForgotPasswordInteractor implements IInteractor<string, BooleanResu
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        await this._mailService.sendForgotPassword(user);
+        user.forgotKey = data.forgotKey;
+        user.forgotExpire = data.forgotExpire;
+        this._mailService.sendForgotPassword(user);
         return new BooleanResult(hasSucceed);
     }
 }

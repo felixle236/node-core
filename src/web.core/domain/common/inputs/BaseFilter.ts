@@ -59,4 +59,6 @@ export abstract class BaseFilter implements IFilter {
 
         this._maxLimit = val;
     }
+
+    validate(): void { }
 }

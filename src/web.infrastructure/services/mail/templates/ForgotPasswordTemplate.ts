@@ -13,7 +13,7 @@ export class ForgotPasswordTemplate {
                     button: {
                         color: '#DC4D2F',
                         text: 'Reset your password',
-                        link: `${PROTOTYPE}://${DOMAIN}/reset-password?email=${user.email}`
+                        link: `${PROTOTYPE}://${DOMAIN}/reset-password?email=${user.email}&key=${user.forgotKey}`
                     }
                 },
                 outro: 'If you did not request a password reset, no further action is required on your part.'
