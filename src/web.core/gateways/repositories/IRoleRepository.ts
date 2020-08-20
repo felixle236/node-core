@@ -1,9 +1,8 @@
 import { FindRoleCommonFilter } from '../../interactors/role/find-role-common/Filter';
-import { IRead } from '../../domain/common/persistence/IRead';
-import { IWrite } from '../../domain/common/persistence/IWrite';
+import { IBaseRepository } from '../../domain/common/persistence/IBaseRepository';
 import { Role } from '../../domain/entities/Role';
 
-export interface IRoleRepository extends IRead<Role, string>, IWrite<Role, string> {
+export interface IRoleRepository extends IBaseRepository<Role, string> {
     /**
      * Get all roles with caching mode.
      */

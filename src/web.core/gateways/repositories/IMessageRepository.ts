@@ -1,7 +1,6 @@
-import { IRead } from '../../domain/common/persistence/IRead';
-import { IWrite } from '../../domain/common/persistence/IWrite';
+import { IBaseRepository } from '../../domain/common/persistence/IBaseRepository';
 import { Message } from '../../domain/entities/Message';
 
-export interface IMessageRepository extends IRead<Message, string>, IWrite<Message, string> {
+export interface IMessageRepository extends IBaseRepository<Message, string> {
 
 }

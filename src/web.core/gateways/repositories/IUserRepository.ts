@@ -1,10 +1,9 @@
 import { FindContactFilter } from '../../interactors/contact/find-contact/Filter';
+import { IBaseRepository } from '../../domain/common/persistence/IBaseRepository';
 import { IDbQueryRunner } from '../../domain/common/persistence/IDbQueryRunner';
-import { IRead } from '../../domain/common/persistence/IRead';
-import { IWrite } from '../../domain/common/persistence/IWrite';
 import { User } from '../../domain/entities/User';
 
-export interface IUserRepository extends IRead<User, string>, IWrite<User, string> {
+export interface IUserRepository extends IBaseRepository<User, string> {
     findContactAndCount(filter: FindContactFilter): Promise<[User[], number]>;
 
     getByEmail(email: string): Promise<User | undefined>;

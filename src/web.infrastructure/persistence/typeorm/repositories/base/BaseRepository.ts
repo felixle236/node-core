@@ -1,13 +1,12 @@
 import { QueryRunner, Repository, getRepository } from 'typeorm';
 import { BaseDbEntity } from '../../entities/base/BaseDbEntity';
 import { DbContext } from '../../DbContext';
+import { IBaseRepository } from '../../../../../web.core/domain/common/persistence/IBaseRepository';
 import { IDbQueryRunner } from '../../../../../web.core/domain/common/persistence/IDbQueryRunner';
 import { IFilter } from '../../../../../web.core/domain/common/inputs/IFilter';
-import { IRead } from '../../../../../web.core/domain/common/persistence/IRead';
-import { IWrite } from '../../../../../web.core/domain/common/persistence/IWrite';
 import { Inject } from 'typedi';
 
-export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IRead<TEntity, TIdentityType>, IWrite<TEntity, TIdentityType> {
+export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IBaseRepository<TEntity, TIdentityType> {
     @Inject('db.context')
     protected readonly dbContext: DbContext;
 
