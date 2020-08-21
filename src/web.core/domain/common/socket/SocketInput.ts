@@ -1,4 +1,4 @@
-import { ISocket } from '../socket/ISocket';
+import { ISocket } from './ISocket';
 
 export class SocketInput<TInputParam> {
     socket: ISocket;

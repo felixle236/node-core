@@ -1,4 +1,4 @@
-import { FindRoleCommonFilter } from '../../interactors/role/find-role-common/Filter';
+import { FindRoleCommonFilter } from '../../interactors/role/queries/find-role-common/Filter';
 import { IBaseRepository } from '../../domain/common/persistence/IBaseRepository';
 import { Role } from '../../domain/entities/Role';
 

@@ -1,6 +1,6 @@
 import { BaseRepository } from './base/BaseRepository';
-import { FindRoleCommonFilter } from '../../../../web.core/interactors/role/find-role-common/Filter';
-import { FindRoleFilter } from '../../../../web.core/interactors/role/find-role/Filter';
+import { FindRoleCommonFilter } from '../../../../web.core/interactors/role/queries/find-role-common/Filter';
+import { FindRoleInput } from '../../../../web.core/interactors/role/queries/find-role/Input';
 import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Role } from '../../../../web.core/domain/entities/Role';
@@ -25,7 +25,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, string> i
         return list.map(item => item.toEntity());
     }
 
-    async findAndCount(filter: FindRoleFilter): Promise<[Role[], number]> {
+    async findAndCount(filter: FindRoleInput): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME);
 
         if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)

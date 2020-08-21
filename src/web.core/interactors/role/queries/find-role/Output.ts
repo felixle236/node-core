@@ -1,4 +1,4 @@
-import { Role } from '../../../domain/entities/Role';
+import { Role } from '../../../../domain/entities/Role';
 
 export class FindRoleOutput {
     id: string;

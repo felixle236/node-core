@@ -5,7 +5,7 @@ import { IContactStatusRepository } from '../../../gateways/repositories/IContac
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { IUserRepository } from '../../../gateways/repositories/IUserRepository';
 import { RoleId } from '../../../domain/enums/RoleId';
-import { SocketInput } from '../../../domain/common/inputs/SocketInput';
+import { SocketInput } from '../../../domain/common/socket/SocketInput';
 
 @Service()
 export class ConnectSocketInteractor implements IInteractor<SocketInput<string>, void> {

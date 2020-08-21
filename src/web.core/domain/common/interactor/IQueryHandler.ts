@@ -1,6 +1,5 @@
-import { IInput } from './IInput';
-import { IOutput } from './IOutput';
+import { IQuery } from './IQuery';
 
-export interface IQueryHandler<TIn extends IInput, TOut> {
-    handle(param: TIn): Promise<IOutput<TOut>>;
+export interface IQueryHandler<TIn extends IQuery, TOut> {
+    handle(param: TIn): Promise<TOut>;
 }

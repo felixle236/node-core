@@ -7,7 +7,7 @@ import { FindMessageOutput } from '../../web.core/interactors/message/find-messa
 import { ISocket } from '../../web.core/domain/common/socket/ISocket';
 import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
 import { Service } from 'typedi';
-import { SocketInput } from '../../web.core/domain/common/inputs/SocketInput';
+import { SocketInput } from '../../web.core/domain/common/socket/SocketInput';
 import { SocketNamespace } from '../../web.core/domain/common/socket/SocketNamespace';
 
 @Service()

@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IContactStatusRepository } from '../../../gateways/repositories/IContactStatusRepository';
 import { IInteractor } from '../../../domain/common/IInteractor';
 import { RoleId } from '../../../domain/enums/RoleId';
-import { SocketInput } from '../../../domain/common/inputs/SocketInput';
+import { SocketInput } from '../../../domain/common/socket/SocketInput';
 
 @Service()
 export class DisconnectSocketInteractor implements IInteractor<SocketInput<unknown>, void> {
