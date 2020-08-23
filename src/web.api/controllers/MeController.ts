@@ -1,48 +1,57 @@
 import * as multer from 'multer';
 import { Authorized, Body, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
-import { BooleanResult } from '../../web.core/domain/common/outputs/BooleanResult';
-import { GetMyProfileInteractor } from '../../web.core/interactors/user/get-my-profile/Interactor';
-import { GetMyProfileOutput } from '../../web.core/interactors/user/get-my-profile/Output';
+import { GetMyProfileQuery } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQuery';
+import { GetMyProfileQueryHandler } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQueryHandler';
+import { GetMyProfileResult } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileResult';
 import { Service } from 'typedi';
-import { UpdateMyPasswordInput } from '../../web.core/interactors/user/update-my-password/Input';
-import { UpdateMyPasswordInteractor } from '../../web.core/interactors/user/update-my-password/Interactor';
-import { UpdateMyProfileInput } from '../../web.core/interactors/user/update-my-profile/Input';
-import { UpdateMyProfileInteractor } from '../../web.core/interactors/user/update-my-profile/Interactor';
-import { UploadMyAvatarInteractor } from '../../web.core/interactors/user/upload-my-avatar/Interactor';
-import { UploadMyAvatarOutput } from '../../web.core/interactors/user/upload-my-avatar/Output';
+import { UpdateMyPasswordCommand } from '../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommand';
+import { UpdateMyPasswordCommandHandler } from '../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommandHandler';
+import { UpdateMyProfileCommand } from '../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommand';
+import { UpdateMyProfileCommandHandler } from '../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommandHandler';
+import { UploadMyAvatarCommand } from '../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommand';
+import { UploadMyAvatarCommandHandler } from '../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/me')
 export class MeController {
     constructor(
-        private _getMyProfileInteractor: GetMyProfileInteractor,
-        private _updateMyProfileInteractor: UpdateMyProfileInteractor,
-        private _updateMyPasswordInteractor: UpdateMyPasswordInteractor,
-        private _uploadMyAvatarInteractor: UploadMyAvatarInteractor
+        private _getMyProfileQueryHandler: GetMyProfileQueryHandler,
+        private _updateMyProfileCommandHandler: UpdateMyProfileCommandHandler,
+        private _updateMyPasswordCommandHandler: UpdateMyPasswordCommandHandler,
+        private _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
     ) {}
 
     @Get('/')
     @Authorized()
-    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileOutput> {
-        return await this._getMyProfileInteractor.handle(userAuth);
+    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileResult> {
+        const param = new GetMyProfileQuery();
+        param.id = userAuth.userId;
+
+        return await this._getMyProfileQueryHandler.handle(param);
     }
 
     @Put('/')
     @Authorized()
-    async updateMyProfile(@Body() data: UpdateMyProfileInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
-        return await this._updateMyProfileInteractor.handle(data, userAuth);
+    async updateMyProfile(@Body() param: UpdateMyProfileCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.id = userAuth.userId;
+        return await this._updateMyProfileCommandHandler.handle(param);
     }
 
     @Patch('/password')
     @Authorized()
-    async updateMyPassword(@Body() data: UpdateMyPasswordInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
-        return await this._updateMyPasswordInteractor.handle(data, userAuth);
+    async updateMyPassword(@Body() param: UpdateMyPasswordCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.id = userAuth.userId;
+        return await this._updateMyPasswordCommandHandler.handle(param);
     }
 
     @Post('/avatar')
     @Authorized()
-    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage: multer.memoryStorage() } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadMyAvatarOutput> {
-        return await this._uploadMyAvatarInteractor.handle(file, userAuth);
+    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage: multer.memoryStorage() } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
+        const param = new UploadMyAvatarCommand();
+        param.id = userAuth.userId;
+        param.file = file;
+
+        return await this._uploadMyAvatarCommandHandler.handle(param);
     }
 }

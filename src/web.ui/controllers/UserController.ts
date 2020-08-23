@@ -1,6 +1,6 @@
 import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
-import { FindUserFilter } from '../../web.core/interactors/user/find-user/Filter';
-import { FindUserInteractor } from '../../web.core/interactors/user/find-user/Interactor';
+import { FindUserQuery } from '../../web.core/interactors/user/queries/find-user/FindUserQuery';
+import { FindUserQueryHandler } from '../../web.core/interactors/user/queries/find-user/FindUserQueryHandler';
 import { Response } from 'express';
 import { Service } from 'typedi';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
@@ -9,17 +9,19 @@ import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticate
 @Controller('/users')
 export class UserController {
     constructor(
-        private readonly _findUserInteractor: FindUserInteractor
+        private readonly _findUserQueryHandler: FindUserQueryHandler
     ) {}
 
     @Get('/')
     @Render('users/list')
     @Authorized()
-    async find(@Res() response: Response, @CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: FindUserFilter) {
+    async find(@Res() response: Response, @CurrentUser() userAuth: UserAuthenticated, @QueryParams() param: FindUserQuery) {
         if (!userAuth)
             return response.redirect('/');
 
-        const result = await this._findUserInteractor.handle(filter, userAuth);
+        param.roleAuthLevel = userAuth.role.level;
+
+        const result = await this._findUserQueryHandler.handle(param);
         return {
             title: 'User List',
             userAuth,

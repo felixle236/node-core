@@ -1,10 +1,19 @@
 export class SocketNamespace {
+    static CONFIGURATION = {
+        NAME: 'configuratons',
+        EVENTS: {
+            USER_ONLINE_STATUS_CHANGED: 'user_online_status_changed',
+            DISPLAY_BOTTOM_MENU_STATUS_CHANGED: 'display_bottom_menu_status_changed' // Demo about change config realtime for mobile application.
+        }
+    };
+
+    // Demo about chat realtime.
     static MESSAGE = {
         NAME: 'messages',
         EVENTS: {
-            MESSAGE_DIRECTLY: 'message_directly',
-            MESSAGE_GROUP: 'message_group',
-            MESSAGE_STATUS: 'message_status'
+            MESSAGE_SEND: 'message_send',
+            MESSAGE_RECEIVED: 'message_received',
+            MESSAGE_STATUS_CHANGED: 'message_status_changed'
         }
-    }
+    };
 }

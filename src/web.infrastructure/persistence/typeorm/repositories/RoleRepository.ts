@@ -1,6 +1,6 @@
 import { BaseRepository } from './base/BaseRepository';
-import { FindRoleCommonFilter } from '../../../../web.core/interactors/role/queries/find-role-common/Filter';
-import { FindRoleInput } from '../../../../web.core/interactors/role/queries/find-role/Input';
+import { FindRoleCommonQuery } from '../../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
+import { FindRoleQuery } from '../../../../web.core/interactors/role/queries/find-role/FindRoleQuery';
 import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Role } from '../../../../web.core/domain/entities/Role';
@@ -25,47 +25,47 @@ export class RoleRepository extends BaseRepository<Role, RoleDbEntity, string> i
         return list.map(item => item.toEntity());
     }
 
-    async findAndCount(filter: FindRoleInput): Promise<[Role[], number]> {
+    async findAndCount(param: FindRoleQuery): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME);
 
-        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: filter.userAuth.role.level });
+        if (param.roleAuthLevel)
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
 
-        if (filter.keyword) {
-            const keyword = `%${filter.keyword}%`;
+        if (param.keyword) {
+            const keyword = `%${param.keyword}%`;
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
         }
 
         query = query
             .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
             .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
-            .skip(filter.skip)
-            .take(filter.limit);
+            .skip(param.skip)
+            .take(param.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommonAndCount(filter: FindRoleCommonFilter): Promise<[Role[], number]> {
+    async findCommonAndCount(param: FindRoleCommonQuery): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
             .select([
                 `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.ID}`,
                 `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`
             ]);
 
-        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: filter.userAuth.role.level });
+        if (param.roleAuthLevel)
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
 
-        if (filter.keyword) {
-            const keyword = `%${filter.keyword}%`;
+        if (param.keyword) {
+            const keyword = `%${param.keyword}%`;
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
         }
 
         query = query
             .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
             .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
-            .skip(filter.skip)
-            .take(filter.limit);
+            .skip(param.skip)
+            .take(param.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];

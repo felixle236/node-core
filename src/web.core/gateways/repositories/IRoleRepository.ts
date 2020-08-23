@@ -1,5 +1,5 @@
-import { FindRoleCommonFilter } from '../../interactors/role/queries/find-role-common/Filter';
-import { IBaseRepository } from '../../domain/common/persistence/IBaseRepository';
+import { FindRoleCommonQuery } from '../../interactors/role/queries/find-role-common/FindRoleCommonQuery';
+import { IBaseRepository } from '../../domain/common/persistence/interfaces/IBaseRepository';
 import { Role } from '../../domain/entities/Role';
 
 export interface IRoleRepository extends IBaseRepository<Role, string> {
@@ -14,7 +14,7 @@ export interface IRoleRepository extends IBaseRepository<Role, string> {
      */
     getAll(expireTimeCaching: number): Promise<Role[]>;
 
-    findCommonAndCount(filter: FindRoleCommonFilter): Promise<[Role[], number]>;
+    findCommonAndCount(filter: FindRoleCommonQuery): Promise<[Role[], number]>;
 
     checkNameExist(name: string): Promise<boolean>;
     checkNameExist(name: string, excludeId: string): Promise<boolean>;

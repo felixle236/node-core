@@ -1,28 +1,29 @@
 import { Body, HeaderParam, JsonController, Post } from 'routing-controllers';
-import { AuthenticateInput } from '../../web.core/interactors/auth/authenticate/Input';
-import { AuthenticateInteractor } from '../../web.core/interactors/auth/authenticate/Interactor';
+import { AuthenticateQuery } from '../../web.core/interactors/auth/queries/authenticate/AuthenticateQuery';
+import { AuthenticateQueryHandler } from '../../web.core/interactors/auth/queries/authenticate/AuthenticateQueryHandler';
 import { Service } from 'typedi';
-import { SigninInput } from '../../web.core/interactors/user/signin/Input';
-import { SigninInteractor } from '../../web.core/interactors/user/signin/Interactor';
-import { SigninOutput } from '../../web.core/interactors/user/signin/Output';
+import { SigninQuery } from '../../web.core/interactors/user/queries/signin/SigninQuery';
+import { SigninQueryHandler } from '../../web.core/interactors/user/queries/signin/SigninQueryHandler';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/auth')
 export class AuthenticationController {
     constructor(
-        private readonly _authenticateInteractor: AuthenticateInteractor,
-        private readonly _signinInteractor: SigninInteractor
+        private readonly _authenticateQueryHandler: AuthenticateQueryHandler,
+        private readonly _signinQueryHandler: SigninQueryHandler
     ) {}
 
     @Post('/')
     async authenticate(@HeaderParam('authorization') token: string): Promise<UserAuthenticated> {
-        const param = new AuthenticateInput(token);
-        return await this._authenticateInteractor.handle(param);
+        const param = new AuthenticateQuery();
+        param.token = token;
+
+        return await this._authenticateQueryHandler.handle(param);
     }
 
     @Post('/login')
-    async login(@Body() data: SigninInput): Promise<SigninOutput> {
-        return await this._signinInteractor.handle(data);
+    async login(@Body() param: SigninQuery): Promise<string> {
+        return await this._signinQueryHandler.handle(param);
     }
 }

@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
-import { IDbConnection } from '../../../web.core/domain/common/persistence/IDbConnection';
-import { IDbMigration } from '../../../web.core/domain/common/persistence/IDbMigration';
-import { IDbQueryRunner } from '../../../web.core/domain/common/persistence/IDbQueryRunner';
+import { IDbConnection } from '../../../web.core/domain/common/persistence/interfaces/IDbConnection';
+import { IDbMigration } from '../../../web.core/domain/common/persistence/interfaces/IDbMigration';
+import { IDbQueryRunner } from '../../../web.core/domain/common/persistence/interfaces/IDbQueryRunner';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
 import { TransactionIsolationLevel } from '../../../web.core/domain/common/persistence/TransactionIsolationLevel';

@@ -1,8 +1,7 @@
 import { Brackets, QueryRunner } from 'typeorm';
 import { BaseRepository } from './base/BaseRepository';
-import { FindContactFilter } from '../../../../web.core/interactors/contact/find-contact/Filter';
-import { FindUserFilter } from '../../../../web.core/interactors/user/find-user/Filter';
-import { IDbQueryRunner } from '../../../../web.core/domain/common/persistence/IDbQueryRunner';
+import { FindUserQuery } from '../../../../web.core/interactors/user/queries/find-user/FindUserQuery';
+import { IDbQueryRunner } from '../../../../web.core/domain/common/persistence/interfaces/IDbQueryRunner';
 import { IUserRepository } from '../../../../web.core/gateways/repositories/IUserRepository';
 import { ROLE_SCHEMA } from '../schemas/RoleSchema';
 import { Service } from 'typedi';
@@ -17,52 +16,28 @@ export class UserRepository extends BaseRepository<User, UserDbEntity, string> i
         super(UserDbEntity, USER_SCHEMA);
     }
 
-    async findAndCount(filter: FindUserFilter): Promise<[User[], number]> {
+    async findAndCount(param: FindUserQuery): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME);
-        query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status || UserStatus.ACTIVED });
+        query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
 
-        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: filter.userAuth.role.level });
+        if (param.roleAuthLevel)
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
 
-        if (filter.keyword) {
-            const keyword = `%${filter.keyword}%`;
+        if (param.keyword) {
+            const keyword = `%${param.keyword}%`;
             query = query.andWhere(new Brackets(qb => {
                 qb.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
                     .orWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));
         }
 
-        if (filter.roleId)
-            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = :roleId`, { roleId: filter.roleId });
+        if (param.roleId)
+            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = :roleId`, { roleId: param.roleId });
 
         query = query
-            .skip(filter.skip)
-            .take(filter.limit);
-
-        const [list, count] = await query.getManyAndCount();
-        return [list.map(item => item.toEntity()), count];
-    }
-
-    async findContactAndCount(filter: FindContactFilter): Promise<[User[], number]> {
-        let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
-            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: UserStatus.ACTIVED });
-
-        if (filter.userAuth && filter.userAuth.role && filter.userAuth.role.level)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} >= :level`, { level: filter.userAuth.role.level });
-
-        if (filter.keyword) {
-            const keyword = `%${filter.keyword}%`;
-            query = query.andWhere(new Brackets(qb => {
-                qb.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
-                    .orWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
-            }));
-        }
-
-        query = query
-            .skip(filter.skip)
-            .take(filter.limit);
+            .skip(param.skip)
+            .take(param.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];

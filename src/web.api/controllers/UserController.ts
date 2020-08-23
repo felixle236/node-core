@@ -1,68 +1,86 @@
-import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
-import { ArchiveUserInteractor } from '../../web.core/interactors/user/archive-user/Interactor';
-import { BooleanResult } from '../../web.core/domain/common/outputs/BooleanResult';
-import { CreateUserInput } from '../../web.core/interactors/user/create-user/Input';
-import { CreateUserInteractor } from '../../web.core/interactors/user/create-user/Interactor';
-import { DeleteUserInteractor } from '../../web.core/interactors/user/delete-user/Interactor';
-import { FindUserFilter } from '../../web.core/interactors/user/find-user/Filter';
-import { FindUserInteractor } from '../../web.core/interactors/user/find-user/Interactor';
-import { FindUserOutput } from '../../web.core/interactors/user/find-user/Output';
-import { GetUserByIdInteractor } from '../../web.core/interactors/user/get-user-by-id/Interactor';
-import { GetUserByIdOutput } from '../../web.core/interactors/user/get-user-by-id/Output';
-import { IdentityResult } from '../../web.core/domain/common/outputs/IdentityResult';
-import { PaginationResult } from '../../web.core/domain/common/outputs/PaginationResult';
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { ArchiveUserCommand } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommand';
+import { ArchiveUserCommandHandler } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommandHandler';
+import { CreateUserCommand } from '../../web.core/interactors/user/commands/create-user/CreateUserCommand';
+import { CreateUserCommandHandler } from '../../web.core/interactors/user/commands/create-user/CreateUserCommandHandler';
+import { DeleteUserCommand } from '../../web.core/interactors/user/commands/delete-user/DeleteUserCommand';
+import { DeleteUserCommandHandler } from '../../web.core/interactors/user/commands/delete-user/DeleteUserCommandHandler';
+import { FindUserQuery } from '../../web.core/interactors/user/queries/find-user/FindUserQuery';
+import { FindUserQueryHandler } from '../../web.core/interactors/user/queries/find-user/FindUserQueryHandler';
+import { FindUserResult } from '../../web.core/interactors/user/queries/find-user/FindUserResult';
+import { GetListOnlineStatusByIdsQuery } from '../../web.core/interactors/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQuery';
+import { GetListOnlineStatusByIdsQueryHandler } from '../../web.core/interactors/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
+import { GetListOnlineStatusByIdsResult } from '../../web.core/interactors/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsResult';
+import { GetUserByIdQuery } from '../../web.core/interactors/user/queries/get-user-by-id/GetUserByIdQuery';
+import { GetUserByIdQueryHandler } from '../../web.core/interactors/user/queries/get-user-by-id/GetUserByIdQueryHandler';
+import { GetUserByIdResult } from '../../web.core/interactors/user/queries/get-user-by-id/GetUserByIdResult';
+import { PaginationResult } from '../../web.core/domain/common/interactor/PaginationResult';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
-import { UpdateUserInput } from '../../web.core/interactors/user/update-user/Input';
-import { UpdateUserInteractor } from '../../web.core/interactors/user/update-user/Interactor';
+import { UpdateUserCommand } from '../../web.core/interactors/user/commands/update-user/UpdateUserCommand';
+import { UpdateUserCommandHandler } from '../../web.core/interactors/user/commands/update-user/UpdateUserCommandHandler';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/users')
 export class UserController {
     constructor(
-        private _findUserInteractor: FindUserInteractor,
-        private _getUserByIdInteractor: GetUserByIdInteractor,
-        private _createUserInteractor: CreateUserInteractor,
-        private _updateUserInteractor: UpdateUserInteractor,
-        private _archiveUserInteractor: ArchiveUserInteractor,
-        private _deleteUserInteractor: DeleteUserInteractor
+        private _findUserQueryHandler: FindUserQueryHandler,
+        private _getUserByIdQueryHandler: GetUserByIdQueryHandler,
+        private _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler,
+        private _createUserCommandHandler: CreateUserCommandHandler,
+        private _updateUserCommandHandler: UpdateUserCommandHandler,
+        private _archiveUserCommandHandler: ArchiveUserCommandHandler,
+        private _deleteUserCommandHandler: DeleteUserCommandHandler
     ) {}
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@QueryParams() filter: FindUserFilter, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindUserOutput>> {
-        return await this._findUserInteractor.handle(filter, userAuth);
+    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindUserResult>> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._findUserQueryHandler.handle(param);
     }
 
     @Get('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdOutput> {
-        return await this._getUserByIdInteractor.handle(id, userAuth);
+    async getById(@Params() param: GetUserByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdResult> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._getUserByIdQueryHandler.handle(param);
+    }
+
+    @Post('/list-online-status')
+    @Authorized()
+    async getListOnlineStatusByIds(@Body() param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsResult[]> {
+        return await this._getListOnlineStatusByIdsQueryHandler.handle(param);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@Body() data: CreateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<IdentityResult<string>> {
-        return await this._createUserInteractor.handle(data, userAuth);
+    async create(@Body() param: CreateUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._createUserCommandHandler.handle(param);
     }
 
     @Put('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@Param('id') id: string, @Body() data: UpdateUserInput, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
-        data.id = id;
-        return await this._updateUserInteractor.handle(data, userAuth);
+    async update(@Param('id') id: string, @Body() param: UpdateUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.id = id;
+        param.roleAuthLevel = userAuth.role.level;
+
+        return await this._updateUserCommandHandler.handle(param);
     }
 
     @Post('/:id/archive')
     @Authorized(RoleId.SUPER_ADMIN)
-    async archive(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
-        return await this._archiveUserInteractor.handle(id, userAuth);
+    async archive(@Params() param: ArchiveUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._archiveUserCommandHandler.handle(param);
     }
 
     @Delete('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@Param('id') id: string, @CurrentUser() userAuth: UserAuthenticated): Promise<BooleanResult> {
-        return await this._deleteUserInteractor.handle(id, userAuth);
+    async delete(@Params() param: DeleteUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._deleteUserCommandHandler.handle(param);
     }
 }

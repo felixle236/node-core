@@ -1,9 +1,9 @@
 import { QueryRunner, Repository, getRepository } from 'typeorm';
 import { BaseDbEntity } from '../../entities/base/BaseDbEntity';
 import { DbContext } from '../../DbContext';
-import { IBaseRepository } from '../../../../../web.core/domain/common/persistence/IBaseRepository';
-import { IDbQueryRunner } from '../../../../../web.core/domain/common/persistence/IDbQueryRunner';
-import { IFilter } from '../../../../../web.core/domain/common/inputs/IFilter';
+import { IBaseRepository } from '../../../../../web.core/domain/common/persistence/interfaces/IBaseRepository';
+import { IDbQueryRunner } from '../../../../../web.core/domain/common/persistence/interfaces/IDbQueryRunner';
+import { IFilter } from '../../../../../web.core/domain/common/interactor/interfaces/IFilter';
 import { Inject } from 'typedi';
 
 export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IBaseRepository<TEntity, TIdentityType> {
