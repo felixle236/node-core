@@ -26,6 +26,9 @@ export class ApiService {
             middlewares: [
                 path.join(__dirname, './middlewares/*{.js,.ts}')
             ],
+            interceptors: [
+                path.join(__dirname, './interceptors/*{.js,.ts}')
+            ],
             validation: false,
             defaultErrorHandler: false,
             development: IS_DEVELOPMENT,

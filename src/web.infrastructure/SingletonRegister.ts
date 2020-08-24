@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import './persistence/PersistenceRegister';
+import './databases/PersistenceRegister';
 import './services/ServiceRegister';
 import * as routingController from 'routing-controllers';
 import * as socketController from 'socket-controllers';

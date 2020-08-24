@@ -36,7 +36,6 @@ export default class ConfigurationController {
             param.isOnline = true;
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
-
             if (hasSucceed && socket.userAuth.role.id !== RoleId.SUPER_ADMIN)
                 socket.nsp.emit(SocketNamespace.CONFIGURATION.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
         }
@@ -50,7 +49,6 @@ export default class ConfigurationController {
             param.isOnline = false;
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
-
             if (hasSucceed && socket.userAuth.role.id !== RoleId.SUPER_ADMIN)
                 socket.nsp.emit(SocketNamespace.CONFIGURATION.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
         }
@@ -61,7 +59,7 @@ export default class ConfigurationController {
     @EmitOnFail('message_list_error')
     @EmitOnSuccess('message_list_successfully')
     @SkipEmitOnEmptyResult()
-    async find(@ConnectedSocket() _socket: ISocket, @MessageBody() _param: any): Promise<any> {
-        return undefined;
+    async find(@ConnectedSocket() _socket: ISocket, @MessageBody() _param: any): Promise<string> {
+        return '';
     }
 }

@@ -10,7 +10,6 @@ import { ResetPasswordCommandHandler } from '../../web.core/interactors/user/com
 import { Service } from 'typedi';
 import { SignupCommand } from '../../web.core/interactors/user/commands/signup/SignupCommand';
 import { SignupCommandHandler } from '../../web.core/interactors/user/commands/signup/SignupCommandHandler';
-import { SignupResult } from '../../web.core/interactors/user/commands/signup/SignupResult';
 
 @Service()
 @JsonController()
@@ -24,7 +23,7 @@ export class RootController {
     ) {}
 
     @Post('/register')
-    async register(@Body() param: SignupCommand): Promise<SignupResult> {
+    async register(@Body() param: SignupCommand): Promise<string> {
         return await this._signupCommandHandler.handle(param);
     }
 

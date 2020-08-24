@@ -4,8 +4,8 @@ import * as os from 'os';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './configs/Configuration';
 import { ApiService } from './web.api/ApiService';
 import { Container } from 'typedi';
-import { DbContext } from './web.infrastructure/persistence/typeorm/DbContext';
-import { RedisContext } from './web.infrastructure/persistence/redis/RedisContext';
+import { DbContext } from './web.infrastructure/databases/typeorm/DbContext';
+import { RedisContext } from './web.infrastructure/databases/redis/RedisContext';
 import { SocketService } from './web.socket/SocketService';
 import { WebService } from './web.ui/WebService';
 

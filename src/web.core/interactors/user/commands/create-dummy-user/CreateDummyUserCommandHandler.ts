@@ -3,7 +3,7 @@ import { Inject, Service } from 'typedi';
 import { BulkActionResult } from '../../../../domain/common/interactor/BulkActionResult';
 import { CreateDummyUserCommand } from './CreateDummyUserCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
-import { IDbContext } from '../../../../domain/common/persistence/interfaces/IDbContext';
+import { IDbContext } from '../../../../domain/common/database/interfaces/IDbContext';
 import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
 import { IStorageService } from '../../../../gateways/services/IStorageService';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';

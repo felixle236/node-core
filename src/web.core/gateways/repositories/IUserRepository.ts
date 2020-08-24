@@ -1,5 +1,5 @@
-import { IBaseRepository } from '../../domain/common/persistence/interfaces/IBaseRepository';
-import { IDbQueryRunner } from '../../domain/common/persistence/interfaces/IDbQueryRunner';
+import { IBaseRepository } from '../../domain/common/database/interfaces/IBaseRepository';
+import { IDbQueryRunner } from '../../domain/common/database/interfaces/IDbQueryRunner';
 import { User } from '../../domain/entities/User';
 
 export interface IUserRepository extends IBaseRepository<User, string> {

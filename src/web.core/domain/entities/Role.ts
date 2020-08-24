@@ -21,8 +21,6 @@ export class Role extends BaseEntity<IRole> implements IRole {
     set name(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'name');
-        if (!validator.isString(val))
-            throw new SystemError(MessageError.PARAM_INVALID, 'name');
         if (val.length > 50)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
 

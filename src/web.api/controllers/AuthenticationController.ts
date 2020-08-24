@@ -16,8 +16,9 @@ export class AuthenticationController {
 
     @Post('/')
     async authenticate(@HeaderParam('authorization') token: string): Promise<UserAuthenticated> {
+        const parts = (token || '').split(' ');
         const param = new AuthenticateQuery();
-        param.token = token;
+        param.token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
 
         return await this._authenticateQueryHandler.handle(param);
     }

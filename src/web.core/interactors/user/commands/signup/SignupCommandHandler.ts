@@ -8,14 +8,13 @@ import { IUserRepository } from '../../../../gateways/repositories/IUserReposito
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../../domain/enums/RoleId';
 import { SignupCommand } from './SignupCommand';
-import { SignupResult } from './SignupResult';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
 import { addSeconds } from '../../../../../libs/date';
 
 @Service()
-export class SignupCommandHandler implements ICommandHandler<SignupCommand, SignupResult> {
+export class SignupCommandHandler implements ICommandHandler<SignupCommand, string> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
@@ -28,7 +27,7 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, Sign
     @Inject('mail.service')
     private readonly _mailService: IMailService;
 
-    async handle(param: SignupCommand): Promise<SignupResult> {
+    async handle(param: SignupCommand): Promise<string> {
         const data = new User();
         data.firstName = param.firstName;
         data.lastName = param.lastName;
@@ -56,7 +55,6 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, Sign
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         this._mailService.sendUserActivation(user);
-        const token = this._authenticationService.sign(user);
-        return new SignupResult(token);
+        return this._authenticationService.sign(user);
     }
 }
