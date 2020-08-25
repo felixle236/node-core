@@ -6,6 +6,6 @@ export class LogConsoleFactory implements ILogProvider {
     }
 
     async writeErrorLog(content: string): Promise<void> {
-        console.error('LogService.writeLog', content);
+        console.error('LogService.writeErrorLog', content);
     }
 }

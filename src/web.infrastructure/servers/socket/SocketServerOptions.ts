@@ -2,8 +2,8 @@ export class SocketServerOptions {
     port: number;
     redisAdapter: SocketServerRedisAdapter;
 
-    controllerPaths: string[];
-    middlewarePaths: string[];
+    controllers: string[];
+    middlewares: string[];
 }
 
 export class SocketServerRedisAdapter {

@@ -4,7 +4,7 @@ import { ILogService } from '../../web.core/gateways/services/ILogService';
 import { IS_DEVELOPMENT } from '../../configs/Configuration';
 import { Inject } from 'typedi';
 
-@Middleware({ type: 'before' })
+@Middleware({ type: 'before', priority: 2 })
 export class LoggingMiddleware implements ExpressMiddlewareInterface {
     @Inject('log.service')
     private readonly _logService: ILogService;
@@ -15,7 +15,7 @@ export class LoggingMiddleware implements ExpressMiddlewareInterface {
                 type: 'Request',
                 method: req.method,
                 url: req.originalUrl,
-                query: JSON.stringify(req.query, null, 2),
+                query: req.query,
                 body: req.body
             });
         }

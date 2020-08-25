@@ -17,7 +17,7 @@ export class LoggingMiddleware implements ExpressMiddlewareInterface {
                     type: 'Request',
                     method: req.method,
                     url: req.originalUrl,
-                    query: JSON.stringify(req.query, null, 2),
+                    query: req.query,
                     body: req.body
                 });
             }

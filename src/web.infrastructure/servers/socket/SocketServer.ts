@@ -10,8 +10,8 @@ export class SocketServer {
 
     start(options: SocketServerOptions): Server {
         this.server = createSocketServer(options.port, {
-            controllers: options.controllerPaths,
-            middlewares: options.middlewarePaths
+            controllers: options.controllers,
+            middlewares: options.middlewares
         });
 
         // Initalize socket adapter

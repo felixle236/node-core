@@ -9,9 +9,7 @@ export class SocketService {
         const socketServerOptions = new SocketServerOptions();
         socketServerOptions.port = SOCKET_PORT;
         socketServerOptions.redisAdapter = new SocketServerRedisAdapter(REDIS_CONFIG_HOST, REDIS_CONFIG_PORT);
-
-        const controllerPath = path.join(__dirname, './controllers');
-        socketServerOptions.controllerPaths = [controllerPath];
+        socketServerOptions.controllers = [path.join(__dirname, './controllers/*{.js,.ts}')];
 
         const socketServer = new SocketServer();
         return socketServer.start(socketServerOptions);

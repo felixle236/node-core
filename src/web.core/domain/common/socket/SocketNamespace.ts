@@ -1,6 +1,6 @@
 export class SocketNamespace {
     static CONFIGURATION = {
-        NAME: 'configuratons',
+        NAME: 'configurations',
         EVENTS: {
             USER_ONLINE_STATUS_CHANGED: 'user_online_status_changed',
             DISPLAY_BOTTOM_MENU_STATUS_CHANGED: 'display_bottom_menu_status_changed' // Demo about change config realtime for mobile application.

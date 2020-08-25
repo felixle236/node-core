@@ -1,4 +1,6 @@
 var baseUrl = 'http://localhost:3000';
+var baseSocket = 'http://localhost:5000';
+var socket;
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -20,4 +22,27 @@ function getCookie(name) {
 
 function deleteCookie(name) {   
     document.cookie = name+'=; Max-Age=-99999999;';  
+}
+
+window.onload = function() {
+    if (userAuth) {
+        socket = io(baseSocket + '/configurations', {
+            query: {
+                token: getCookie('token')
+            },
+            reconnection: true,
+            transports: ['websocket']
+        });
+
+        socket.on('connect', function() {
+            console.log('You are connected!');
+        });
+
+        socket.on('disconnect', function() {
+            console.log('You have disconnected!');
+        });
+    }
+
+    if (typeof main === 'function')
+        main();
 }

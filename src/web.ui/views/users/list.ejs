@@ -3,11 +3,56 @@
 <a class="btn btn-link" href="/">Home Page</a><br />
 <h2>Total: <%= result.data.length %> users</h2>
 <% result.data.forEach(user => { %>
-<p style="margin-top: 20px;">
+<p id="item-<%= user.id %>" style="margin-top: 20px;">
     <img src="<%= user.avatar %>" width="44" height="44" style="float: left; margin-top: -4px; margin-right: 8px;" />
+    <span class="dot-online d-none"></span>
     <span><%= user.firstName + ' ' + user.lastName %></span><br />
     <span><%= user.email %></span>
 </p>
 <% }) %>
+
+<script src="/javascripts/user.js"></script>
+<script language="javascript">
+    var result = JSON.parse('<%- JSON.stringify(result) %>');
+    var users = result.data;
+
+    function main() {
+        if (users.length)
+            getUserOnlineStatusByIds(users.map(function(user) { return user.id; }));
+
+        if (socket) {
+            socket.on('user_online_status_changed', function(onlineStatus) {
+                var item = $('#item-' + onlineStatus.id + ' .dot-online');
+                if (onlineStatus.isOnline)
+                    item.removeClass('d-none');
+                else
+                    item.addClass('d-none');
+            });
+        }
+    }
+
+    function getUserOnlineStatusByIds(ids) {
+        $.ajax({
+            method: 'POST',
+            url: baseUrl + '/api/v1/users/list-online-status',
+            contentType: 'application/json',
+            headers: {
+                Authorization: "Bearer " + getCookie('token')
+            },
+            data: JSON.stringify({
+                ids
+            })
+        }).done(function(result) {
+            if (result.data) {
+                result.data.forEach(function(item) {
+                    if (item.isOnline)
+                        $('#item-' + item.id + ' .dot-online').removeClass('d-none');
+                });
+            }
+        }).fail(function(jqXHR, textStatus) {
+            alert(jqXHR.responseJSON.message);
+        });
+    }
+</script>
 
 <%- include('../layout/footer') %>
