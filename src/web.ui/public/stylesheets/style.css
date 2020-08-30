@@ -1,0 +1,18 @@
+body {
+    padding: 50px;
+    font: 14px 'Varela Round', 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.dot-online {
+    height: 10px;
+    width: 10px;
+    background-color: #52da71;
+    border-radius: 50%;
+    position: absolute;
+    margin-left: -22px;
+    margin-top: 26px;
+}

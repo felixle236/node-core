@@ -1,47 +1,36 @@
-import { ENABLE_DATA_LOGGING, ENABLE_WRITE_LOG, IS_DEVELOPMENT } from '../../constants/Environments';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
-import { NextFunction, Request, Response } from 'express';
-import { ILogService } from '../../web.core/interfaces/gateways/logs/ILogService';
+import { Request, Response } from 'express';
+import { ILogService } from '../../web.core/gateways/services/ILogService';
 import { Inject } from 'typedi';
-import { SystemError } from '../../web.core/dtos/common/Exception';
+import { SystemError } from '../../web.core/domain/common/exceptions/SystemError';
 
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
     @Inject('log.service')
     private readonly _logService: ILogService;
 
-    // @ts-ignore
-    error(err: SystemError, req: Request, res: Response, next: NextFunction) {
-        if (ENABLE_DATA_LOGGING)
-            console.error({ ...err, stack: err.stack });
-
-        if (ENABLE_WRITE_LOG)
-            this._logService.writeLog(JSON.stringify({ ...err, stack: err.stack }));
-
-        // Handle upload error.
-        if (err.name === 'MulterError') {
-            if (<any>err.code === 'LIMIT_FILE_SIZE')
-                err = new SystemError(6);
-            else if (<any>err.code === 'LIMIT_FIELD_KEY')
-                err = new SystemError(7);
-        }
-
-        const error = {
-            code: err.code,
-            message: err.message
-        } as SystemError;
-
-        if (IS_DEVELOPMENT)
-            error.stack = err.stack;
+    error(err: SystemError, req: Request, res: Response) {
+        const stack = err.stack;
 
         // Handle internal server error.
         if (!err.code || !err.httpCode) {
-            err = new SystemError(2);
-            error.code = err.code;
-            error.message = err.message;
+            this._logService.writeErrorLog({
+                type: 'Request',
+                method: req.method,
+                url: req.originalUrl,
+                query: req.query,
+                body: req.body,
+                message: err.message,
+                stack: err.stack
+            });
+            err = new SystemError();
+            err.stack = stack;
         }
 
         res.status(err.httpCode);
-        res.send(error);
+        res.send({
+            code: err.code,
+            message: err.message
+        });
     }
 }

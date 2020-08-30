@@ -1,0 +1,17 @@
+import { {PascalName} } from '../../../../domain/entities/{PascalName}';
+
+export class Get{PascalName}ByIdResult {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt?: Date;
+    name: string;
+
+    constructor(data: {PascalName}) {
+        this.id = data.id;
+        this.createdAt = data.createdAt;
+        this.updatedAt = data.updatedAt;
+        this.deletedAt = data.deletedAt;
+        this.name = data.name;
+    }
+}

@@ -1,0 +1,5 @@
+import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
+
+export class Delete{PascalName}Command implements ICommand {
+    id: string;
+}

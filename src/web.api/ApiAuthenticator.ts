@@ -1,16 +1,22 @@
-import { Inject, Service } from 'typedi';
 import { Action } from 'routing-controllers';
-import { IAuthenticationBusiness } from '../web.core/interfaces/businesses/IAuthenticationBusiness';
+import { AuthenticateUserQuery } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
+import { AuthenticateUserQueryHandler } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
+import { Service } from 'typedi';
 
-@Service('api.authenticator')
+@Service()
 export class ApiAuthenticator {
-    @Inject('authentication.business')
-    private readonly _authBusiness: IAuthenticationBusiness;
+    constructor(
+        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler
+    ) {}
 
-    authorizationHttpChecker = async (action: Action, roleIds: number[]): Promise<boolean> => {
+    authorizationHttpChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
-        action.request.userAuth = await this._authBusiness.authenticateUser(token, roleIds);
+        const param = new AuthenticateUserQuery();
+        param.token = token;
+        param.roleIds = roleIds;
+
+        action.request.userAuth = await this._authenticateUserQueryHandler.handle(param);
         return !!action.request.userAuth;
     }
 

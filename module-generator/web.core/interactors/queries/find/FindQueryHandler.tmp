@@ -1,0 +1,19 @@
+import { Inject, Service } from 'typedi';
+import { Find{PascalName}Query } from './Find{PascalName}Query';
+import { Find{PascalName}Result } from './Find{PascalName}Result';
+import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/I{PascalName}Repository';
+import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
+
+@Service()
+export class Find{PascalName}QueryHandler implements IQueryHandler<Find{PascalName}Query, PaginationResult<Find{PascalName}Result>> {
+    @Inject('{camelName}.repository')
+    private readonly _{camelName}Repository: I{PascalName}Repository;
+
+    async handle(param: Find{PascalName}Query): Promise<PaginationResult<Find{PascalName}Result>> {
+        const [{camelName}s, count] = await this._{camelName}Repository.findAndCount(param);
+        const list = {camelName}s.map({camelName} => new Find{PascalName}Result({camelName}));
+
+        return new PaginationResult(list, count, param.skip, param.limit);
+    }
+}

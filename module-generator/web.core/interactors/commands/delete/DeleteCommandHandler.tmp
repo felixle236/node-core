@@ -1,0 +1,26 @@
+import { Inject, Service } from 'typedi';
+import { Delete{PascalName}Command } from './Delete{PascalName}Command';
+import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/I{PascalName}Repository';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+
+@Service()
+export class Delete{PascalName}CommandHandler implements ICommandHandler<Delete{PascalName}Command, boolean> {
+    @Inject('{camelName}.repository')
+    private readonly _{camelName}Repository: I{PascalName}Repository;
+
+    async handle(param: Delete{PascalName}Command): Promise<boolean> {
+        if (!param.id)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
+
+        const {camelName} = await this._{camelName}Repository.getById(param.id);
+        if (!{camelName})
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+
+        const hasSucceed = await this._{camelName}Repository.delete(param.id);
+        if (!hasSucceed)
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
+        return hasSucceed;
+    }
+}

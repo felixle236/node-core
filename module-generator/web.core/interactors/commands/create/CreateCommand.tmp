@@ -1,0 +1,5 @@
+import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
+
+export class Create{PascalName}Command implements ICommand {
+    name: string;
+}

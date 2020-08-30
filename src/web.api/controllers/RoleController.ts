@@ -1,55 +1,77 @@
-import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import { IRoleBusiness } from '../../web.core/interfaces/businesses/IRoleBusiness';
-import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
-import { RoleCommonFilterRequest } from '../../web.core/dtos/role/requests/RoleCommonFilterRequest';
-import { RoleCommonResponse } from '../../web.core/dtos/role/responses/RoleCommonResponse';
-import { RoleCreateRequest } from '../../web.core/dtos/role/requests/RoleCreateRequest';
-import { RoleFilterRequest } from '../../web.core/dtos/role/requests/RoleFilterRequest';
-import { RoleId } from '../../constants/Enums';
-import { RoleResponse } from '../../web.core/dtos/role/responses/RoleResponse';
-import { RoleUpdateRequest } from '../../web.core/dtos/role/requests/RoleUpdateRequest';
-import { UserAuthenticated } from '../../web.core/dtos/common/UserAuthenticated';
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { CreateRoleCommand } from '../../web.core/interactors/role/commands/create-role/CreateRoleCommand';
+import { CreateRoleCommandHandler } from '../../web.core/interactors/role/commands/create-role/CreateRoleCommandHandler';
+import { DeleteRoleCommand } from '../../web.core/interactors/role/commands/delete-role/DeleteRoleCommand';
+import { DeleteRoleCommandHandler } from '../../web.core/interactors/role/commands/delete-role/DeleteRoleCommandHandler';
+import { FindRoleCommonQuery } from '../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
+import { FindRoleCommonQueryHandler } from '../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQueryHandler';
+import { FindRoleCommonResult } from '../../web.core/interactors/role/queries/find-role-common/FindRoleCommonResult';
+import { FindRoleQuery } from '../../web.core/interactors/role/queries/find-role/FindRoleQuery';
+import { FindRoleQueryHandler } from '../../web.core/interactors/role/queries/find-role/FindRoleQueryHandler';
+import { FindRoleResult } from '../../web.core/interactors/role/queries/find-role/FindRoleResult';
+import { GetRoleByIdQuery } from '../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdQuery';
+import { GetRoleByIdQueryHandler } from '../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdQueryHandler';
+import { GetRoleByIdResult } from '../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdResult';
+import { PaginationResult } from '../../web.core/domain/common/interactor/PaginationResult';
+import { RoleId } from '../../web.core/domain/enums/RoleId';
+import { Service } from 'typedi';
+import { UpdateRoleCommand } from '../../web.core/interactors/role/commands/update-role/UpdateRoleCommand';
+import { UpdateRoleCommandHandler } from '../../web.core/interactors/role/commands/update-role/UpdateRoleCommandHandler';
+import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/roles')
 export class RoleController {
-    @Inject('role.business')
-    private readonly _roleBusiness: IRoleBusiness;
+    constructor(
+        private readonly _findRoleQueryHandler: FindRoleQueryHandler,
+        private readonly _findRoleCommonQueryHandler: FindRoleCommonQueryHandler,
+        private readonly _getRoleByIdQueryHandler: GetRoleByIdQueryHandler,
+        private readonly _createRoleCommandHandler: CreateRoleCommandHandler,
+        private readonly _updateRoleCommandHandler: UpdateRoleCommandHandler,
+        private readonly _deleteRoleCommandHandler: DeleteRoleCommandHandler
+    ) {}
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleFilterRequest): Promise<ResultListResponse<RoleResponse>> {
-        return await this._roleBusiness.find(filter, userAuth);
+    async find(@QueryParams() param: FindRoleQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindRoleResult>> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._findRoleQueryHandler.handle(param);
     }
 
     @Get('/common')
     @Authorized(RoleId.SUPER_ADMIN)
-    async findCommon(@CurrentUser() userAuth: UserAuthenticated, @QueryParams() filter: RoleCommonFilterRequest): Promise<ResultListResponse<RoleCommonResponse>> {
-        return await this._roleBusiness.findCommon(filter, userAuth);
+    async findCommon(@QueryParams() param: FindRoleCommonQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindRoleCommonResult>> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._findRoleCommonQueryHandler.handle(param);
     }
 
-    @Get('/:id([0-9]+)')
+    @Get('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<RoleResponse | undefined> {
-        return await this._roleBusiness.getById(id, userAuth);
+    async getById(@Params() param: GetRoleByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetRoleByIdResult> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._getRoleByIdQueryHandler.handle(param);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@CurrentUser() userAuth: UserAuthenticated, @Body() data: RoleCreateRequest): Promise<RoleResponse | undefined> {
-        return await this._roleBusiness.create(data, userAuth);
+    async create(@Body() param: CreateRoleCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._createRoleCommandHandler.handle(param);
     }
 
-    @Put('/:id([0-9]+)')
+    @Put('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number, @Body() data: RoleUpdateRequest): Promise<RoleResponse | undefined> {
-        return await this._roleBusiness.update(id, data, userAuth);
+    async update(@Param('id') id: string, @Body() param: UpdateRoleCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.id = id;
+        param.roleAuthLevel = userAuth.role.level;
+
+        return await this._updateRoleCommandHandler.handle(param);
     }
 
-    @Delete('/:id([0-9]+)')
+    @Delete('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@CurrentUser() userAuth: UserAuthenticated, @Param('id') id: number): Promise<boolean> {
-        return await this._roleBusiness.delete(id, userAuth);
+    async delete(@Params() param: DeleteRoleCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        param.roleAuthLevel = userAuth.role.level;
+        return await this._deleteRoleCommandHandler.handle(param);
     }
 }

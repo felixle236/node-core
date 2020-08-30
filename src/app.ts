@@ -1,29 +1,30 @@
-import './ModuleRegister';
+import './web.infrastructure/SingletonRegister';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './constants/Environments';
+import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './configs/Configuration';
 import { ApiService } from './web.api/ApiService';
 import { Container } from 'typedi';
-import { DbContext } from './web.infrastructure/data/typeorm/DbContext';
-import { RedisContext } from './web.infrastructure/data/redis/RedisContext';
+import { DbContext } from './web.infrastructure/databases/typeorm/DbContext';
+import { RedisContext } from './web.infrastructure/databases/redis/RedisContext';
 import { SocketService } from './web.socket/SocketService';
-import { WebService } from './web/WebService';
+import { WebService } from './web.ui/WebService';
 
-const dbContext = Container.get<DbContext>('database.context');
+const dbContext = Container.get<DbContext>('db.context');
 const redisContext = Container.get<RedisContext>('redis.context');
 
 const startApplication = async () => {
     redisContext.createConnection();
     await dbContext.createConnection();
     if (ENABLE_API_SERVICE)
-        ApiService.start();
+        new ApiService().setup();
     if (ENABLE_WEB_SERVICE)
-        WebService.start();
+        new WebService().setup();
     if (ENABLE_SOCKET_SERVICE)
-        SocketService.start();
+        new SocketService().setup();
 };
 
 const runMigrations = async () => {
+    console.log('\nRun migrations.\n');
     const conn = dbContext.getConnection();
     const migrations = await conn.runMigrations();
     if (!migrations.length)
@@ -42,10 +43,11 @@ const showServiceStatus = () => {
 
 if (IS_DEVELOPMENT) {
     console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode....\n');
+
     startApplication().then(async () => {
         await runMigrations();
         showServiceStatus();
-    }).catch(error => console.log('\x1b[31m', error.message, '\x1b[0m'));
+    });
 }
 else {
     if (cluster.isMaster) {

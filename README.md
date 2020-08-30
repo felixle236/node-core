@@ -1,25 +1,27 @@
 # Node Core
 The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.
 
-* Integrated modules: role, user, authentication, message.
-* Cache data to improve performance. Can store into database or Redis.
-* Build quickly with the generate module feature.
+* Integrated modules: role, user, authentication.
+* Use data caching to improve performance. Cache into database or Redis.
 * Use coding rules with ESLint.
+* Build quickly with the generate module feature.
 * Realtime with Socket IO.
 * Easy maintenance and expansion.
 * Easy to deploy with docker container.
 * Run & debug on .ts files by Visual Code.
 * Unit test & coverage.
 * Database migration.
+* Demo table inheritance (feature/table-inheritance)
 
 ### Patterns and Principles
 
-- Clean Architecture Design Pattern
-- Repository Pattern
-- Transfer Object Pattern
-- Data Mapper Pattern
-- Singleton Pattern
-- Factory Pattern
+- Clean architecture design pattern
+- Repository pattern
+- CQRS pattern
+- Transfer object pattern
+- Data mapper pattern
+- Singleton pattern
+- Factory pattern
 
 ### Technologies and Tools
 
@@ -40,7 +42,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 
 ### Required
 
-- NodeJS (version >= 8.x)
+- NodeJS (version >= 12.x)
 - Knowledge of Typescript, ES6, TypeORM, PostgreSQL.
 
 ### Document Related
@@ -64,24 +66,14 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |-- module-generator -------------------------// Source templates for creating new module.
 - |-- node_modules
 - |-- src --------------------------------------// Source of development.
-- |------ constants
-- |------------ Enums.ts -----------------------// Define the enum, data types.
-- |------------ Environments.ts ----------------// Define environment variables from .env file.
-- |------------ Messages.ts --------------------// Define message for API response error.
+- |------ configs
+- |------------ Configuration.ts ---------------// Define environment variables from .env file.
+- |------------ ServiceProvider.ts -------------// Define service provider.
 - |------ libs
 - |------ resources
+- |------------ data ----------------------------// Initialize data.
 - |------------ documents -----------------------// Document files (doc, docx, xls, xlsx, pdf,...).
 - |------------ images --------------------------// Image files (jpg, jpeg, png, gif,...).
-- |------------ sample-data ---------------------// Initialize sample data.
-- |------ test ----------------------------------// Source testing.
-- |------ web
-- |------------ controllers ---------------------// Navigate for requests.
-- |------------ middlewares
-- |------------ public
-- |------------ views
-- |------------ WebAuthenticator.ts
-- |------------ WebModule.ts
-- |------------ WebService.ts -------------------// Initialize web service.
 - |------ web.api
 - |------------ controllers ---------------------// Navigate for requests.
 - |------------ interceptors
@@ -90,59 +82,71 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------------------ ErrorMiddleware.ts --------// Handling of errors.
 - |------------------ LoggingMiddleware.ts ------// Logs, track requests.
 - |------------ ApiAuthenticator.ts
-- |------------ ApiModule.ts
 - |------------ ApiService.ts -------------------// Initialize Api service.
 - |------ web.core
-- |------------ businesses ----------------------// Logical code & business flow.
-- |------------ dtos ----------------------------// Data transfer object.
-- |------------ interfaces
-- |------------ models
-- |------------ CoreModule.ts
+- |------------ domain
+- |------------------ common
+- |------------------ entities
+- |------------------ enums
+- |------------------ types
+- |------------ gateways
+- |------------------ repositories --------------// Interface of repositories.
+- |------------------ services ------------------// Interface of services.
+- |------------ interactors ---------------------// Business logic (usecase).
 - |------ web.infrastructure
-- |------------ data ----------------------------// Data storage services.
+- |------------ databases -----------------------// Data storage services.
 - |------------------ redis ---------------------// In-memory database service.
 - |------------------------ repositories --------// Execution operations.
 - |------------------------ RedisContext.ts
-- |------------------------ ServiceRegister.ts
+- |------------------------ RedisRegister.ts
 - |------------------ typeorm -------------------// Database service.
 - |------------------------ entities ------------// Define database structure.
 - |------------------------ migrations ----------// Database migrations.
 - |------------------------ repositories --------// Execution operations.
 - |------------------------ schemas -------------// Define database schemas.
 - |------------------------ transformers --------// Transform data before insert and after select from database.
+- |------------------------ DbConnection.ts
 - |------------------------ DbContext.ts
-- |------------------------ ServiceRegister.ts
-- |------------ logs
-- |------------------ log -----------------------// Local log service.
-- |------------ medias
-- |------------------ storage -------------------// File storage service.
-- |------------ messages
+- |------------------------ DbRegister.ts
+- |------------------ DatabaseRegister.ts
+- |------------ servers
+- |------------------ http ----------------------// Define http server.
+- |------------------ socket --------------------// Define socket server.
+- |------------ services
+- |------------------ auth ----------------------// Authentication service.
+- |------------------ log -----------------------// Log service.
 - |------------------ mail ----------------------// Mail service.
 - |------------------ notification --------------// Notification service.
-- |------------------ sms -----------------------// Sms service.
-- |------------ payments
 - |------------------ payment -------------------// Payment service.
-- |------------ InfrastructureModule.ts
+- |------------------ sms -----------------------// SMS service.
+- |------------------ storage -------------------// Storage service.
+- |------------------ ServiceRegister.ts
 - |------------ SingletonRegister.ts ------------// Define singleton and need to load first.
 - |------ web.socket
 - |------------ controllers ---------------------// Navigate for requests.
-- |------------ SocketModule.ts
 - |------------ SocketService.ts ----------------// Initialize socket service
+- |------ web.ui
+- |------------ controllers ---------------------// Navigate for requests.
+- |------------ middlewares
+- |------------ public
+- |------------ views
+- |------------ WebAuthenticator.ts
+- |------------ WebService.ts -------------------// Initialize web service.
 - |------ app.ts --------------------------------// Main application.
-- |------ ModuleRegister.ts
 - |-- .dockerignore -----------------------------// Docker ignore configuration.
 - |-- .env --------------------------------------// Configuration cloned from `.env.sample` and we need to add to `.gitignore`.
 - |-- .env.sample -------------------------------// Configuration sample.
+- |-- .eslintignore -----------------------------// Eslint ignore.
 - |-- .eslintrc.js ------------------------------// Eslint configuration.
 - |-- .gitignore --------------------------------// Git ignore configuration.
-- |-- .nycrc ------------------------------------// Nyc configuration for testing coverage.
+- |-- .nycrc.json -------------------------------// Nyc configuration for testing coverage.
 - |-- docker-compose.yml ------------------------// Docker configuration.
 - |-- Dockerfile --------------------------------// Used by `docker-compose.yml`.
 - |-- gruntfile.js
-- |-- LICENSE
+- |-- nodemon.json
 - |-- ormconfig.js ------------------------------// TypeORM configuration, this file only use for running migration commands.
-- |-- package-lock.json -------------------------// Lock package version.
 - |-- package.json
+- |-- package-lock.json -------------------------// Lock package version.
 - |-- README.md ---------------------------------// `IMPORTANT` to start the project.
 - |-- tsconfig.json -----------------------------// Typescript configuration.
 ```
@@ -154,7 +158,7 @@ npm run cache:clear -------------------------------// Clear cache of TypeORM.
 npm run migration:generate {Migration_Name} -------// Generate migration for update database structure.
 npm run migration:run -----------------------------// Run the next migrations for update database structure.
 npm run migration:revert --------------------------// Revert migration for update database structure.
-npm run generate:module {ModuleName} --------------// Generate module: entity, dto, schema, repository, business, controller,...
+npm run generate:module {ModuleName} --------------// Generate module: entity, schema, repository, interactor, controller,....
 npm run lint
 npm run build -------------------------------------// Build source before start with production environment.
 npm test ------------------------------------------// Start unit test.
@@ -218,11 +222,11 @@ npm test
 ```
 - npm install
 - npm run build
-- npm test (if have unit test)
+- npm test (unit test)
 - npm run migration:run
 ```
 
-- Refer the deployment steps like below:
+- Refer the gitlab deployment steps like below:
 ```
 - apk add --update openssh # Use this command for Alpine Linux
 - ssh $STAG_USER@$STAG_ADDR "cd $STAG_PROJECT_PATH && git pull && docker system prune -f && docker-compose build && docker-compose up -d && exit;"
@@ -231,7 +235,7 @@ npm test
 ### Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- If you want to create module Customer, you can execute: `npm run generate:module Customer`. It will generate model, entity, schema, dtos, repository, business, controller resource,....
+- If you want to create module Client, you can execute: `npm run generate:module Client`. It will generate entity, schema, repository, interactor, controller,....
 
 ### Configuration
 
@@ -241,7 +245,7 @@ npm test
 - `Dockerfile` is Docker script for build image.
 - `.eslintrc.js` is Eslint configuration.
 - `.gitignore` is Git ignore configuration.
-- `.nycrc` is Nyc configuration for testing coverage.
+- `.nycrc.json` is Nyc configuration for testing coverage.
 - `ormconfig.js` is TypeORM configuration.
 - `tsconfig.json` is Typescript configuration.
 
@@ -271,72 +275,81 @@ npm test
 
 - Default we don't want to store the file in the same server that we use to serve this project.
 - We can use [Minio](https://github.com/felixle236/docker-minio) like AWS S3 to store the file go to cloud.
-- We also switch to AWS S3 by change the configuration of environment `STORAGE_TYPE` in `.env`.
-- Refer with values `MINIO (1) - AWS_S3 (2) - GOOGLE_STORAGE (3) - LOGGING (empty)`.
+- We also switch to AWS S3 by change the configuration of environment `STORAGE_PROVIDER` in `.env`.
+- Refer with values `CONSOLE (1) - MINIO (2) - AWS_S3 (3) - GOOGLE_STORAGE (4)`.
 
 ### Send Mail Template
 
 - We are using `mailgen` package to generate the mail template. There are a lot of the mail template to use, refer to [mailgen](https://github.com/eladnava/mailgen).
-- We can use Google SMTP or SendInBlue to send mail by change the configuration of environment `SEND_MAIL_SENDER` in `.env`. Also you can integrate another service that you want to use.
-- Refer with values `GOOGLE_SMTP (1) - SEND_IN_BLUE (2) - LOGGING (empty)`.
+- We can use Google SMTP or SendInBlue to send mail by change the configuration of environment `MAIL_PROVIDER` in `.env`. Also you can integrate another service that you want to use.
+- Refer with values `CONSOLE (1) - GOOGLE_SMTP (2) - SEND_IN_BLUE (3)`.
 
 ### Common Type
 
-- Define enum type into `src/constants/Enums.ts`. It can be a number or a string.
+- Define enum type into `src/configs/ServiceProvider.ts`. It can be a number or a string.
 - When do we use the enum type in our project?
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
 
 - Why do we use the enum type?
    > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.processing` vs `order.status = 2`.
 
-- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(102, 'order status');`
+- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, 'order status');`
 
 ### Error Handler
 
-We should define message error into `src/constants/Messages.ts`. Ex:
+We should define message error into `src\web.core\domain\common\exceptions\message\MessageError.ts`. Ex:
 ```
-static ERR_0001 = 'Data is invalid!';
-static ERR_0002 = 'Something went wrong!';
-static ERR_0003 = 'Access is denied!';
-static ERR_0004 = 'Data not found!';
-static ERR_0005 = 'Data cannot save!';
-static ERR_0006 = 'File too large!';
-static ERR_0007 = 'File name too long!';
+static SOMETHING_WRONG = new ErrorObject(ErrorCode.SOMETHING_WRONG, 'Something went wrong!');
 
-static ERR_1001 = 'The {0} is required!';
-static ERR_1002 = 'The {0} is invalid!';
-static ERR_1003 = 'The {0} is incorrect!';
-static ERR_1004 = 'The {0} is not exists!';
-static ERR_1005 = 'The {0} is already existed!';
-static ERR_1006 = 'The {0} is enabled!';
-static ERR_1007 = 'The {0} is disabled!';
-static ERR_1008 = 'The {0} has expired!';
-static ERR_1009 = 'The {0} has not been verified!';
-static ERR_1010 = 'The {0} was not found!';
+static NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
 
-static ERR_2001 = 'The {0} must be {1} characters!';
-static ERR_2002 = 'The {0} must be at least {1} characters!';
-static ERR_2003 = 'The {0} must be a maximum of {1} characters!';
-static ERR_2004 = 'The {0} must be less than or equal to {1}!';
-static ERR_2005 = 'The {0} must be greater than or equal to {1}!';
-static ERR_2006 = 'Invalid or unsupported {0} format! The following formats are supported: {1}';
+static ACCESS_DENIED = new ErrorObject(ErrorCode.ACCESS_DENIED, 'Access is denied!');
 
-static ERR_3001 = 'The {0} must be at least {1} and maximum {2} characters!';
-static ERR_3002 = 'The {0} must be at least {1} and maximum {2} characters with one uppercase letter, one lower case letter, one digit and one special character!';
-static ERR_3003 = 'The {0} must be at least {1} characters {2}!';
-static ERR_3004 = 'The {0} must be between {1} and {2}!';
-static ERR_3005 = 'The {0} must be a maximum of {1} {2}!';
+static DATA_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, 'Data not found!');
+static PARAM_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, 'The {0} was not found!');
+
+static DATA_CANNOT_SAVE = new ErrorObject(ErrorCode.DATA_CANNOT_SAVE, 'Data cannot save!');
+
+static PARAM_CANNOT_UPLOAD = new ErrorObject(ErrorCode.DATA_CANNOT_UPLOAD, 'The {0} cannot upload!');
+
+static PARAM_REQUIRED = new ErrorObject(ErrorCode.DATA_REQUIRED, 'The {0} is required!');
+
+static PARAM_INCORRECT = new ErrorObject(ErrorCode.DATA_INCORRECT, 'The {0} is incorrect!');
+
+static PARAM_EXISTED = new ErrorObject(ErrorCode.DATA_EXISTED, 'The {0} is already existed!');
+
+static PARAM_NOT_EXISTS = new ErrorObject(ErrorCode.DATA_NOT_EXISTS, 'The {0} is not exists!');
+
+static PARAM_EXPIRED = new ErrorObject(ErrorCode.DATA_EXPIRED, 'The {0} has expired!');
+
+static PARAM_NOT_ACTIVATED = new ErrorObject(ErrorCode.DATA_NOT_ACTIVATED, 'The {0} has not been activated!');
+
+static PARAM_NOT_VERIFIED = new ErrorObject(ErrorCode.DATA_NOT_VERIFIED, 'The {0} has not been verified!');
+
+static DATA_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'Data is invalid!');
+static PARAM_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The {0} is invalid!');
+static PARAM_FORMAT_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The format of {0} is invalid or not supported! The following formats are supported: {1}');
+static PARAM_SIZE_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The size of {0} must be a maximum of {1} ({2})!');
+static PARAM_LEN_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be {1}!');
+static PARAM_LEN_AT_LEAST = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1}!');
+static PARAM_LEN_AT_LEAST_AND_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1} and maximum {2}!');
+static PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1} and maximum {2} with one uppercase letter, one lower case letter, one digit and one special character!');
+static PARAM_LEN_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be a maximum of {1}!');
+static PARAM_LEN_LESS_OR_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be less than or equal to {1}!');
+static PARAM_LEN_GREATER_OR_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be greater than or equal to {1}!');
+static PARAM_LEN_BETWEEN = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be between {1} and {2}!');
 ```
 
 Usage:
 ```
-import { SystemError } from '../dtos/common/Exception';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 ....
-throw new SystemError(); // Using default ERR_0001 => Data is invalid!
-throw new SystemError(3); // ERR_0003 => Access is denied!
-throw new SystemError(1001, 'id'); // ERR_1001 => The id is required!
-throw new SystemError(2006, 'image', 'JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)'); // ERR_2006 => Invalid or unsupported image format! The following formats are supported: JPEG (.jpeg/.jpg), GIF (.gif), PNG (.png)
-throw new SystemError(3001, 'password', 6, 20); // ERR_3001 => The password must be at least 6 and maximum 20 characters!
+throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
+throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
+throw new SystemError(MessageError.DATA_NOT_FOUND);
+throw new SystemError(MessageError.ACCESS_DENIED);
+throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 ```
 
 > If you got error with status code 500, it's error system. Almost, this error is your source code, you need to find and fix it soon.
@@ -344,7 +357,7 @@ throw new SystemError(3001, 'password', 6, 20); // ERR_3001 => The password must
 ### Data Transformer
 
 - If you use column numeric type in PostgreSQL, it will return a string (not number), you should use transformer option to convert to number. Ex: `@Column('numeric', { transformer: new NumericTransformer() })`
-- If you have a field `birthday` with data type is string and store into db with data type is Date. Ex: `@Column('date', { name: UserSchema.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })`
+- If you have a field `birthday` with data type is string and store into db with data type is Date. Ex: `@Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })`
 
 ### Database Execution
 
@@ -352,12 +365,18 @@ throw new SystemError(3001, 'password', 6, 20); // ERR_3001 => The password must
 - We should use QueryBuilder for database execution, it will select and map to entity object.
 - To use database transaction:
 ```
-await getConnection().transaction(async entityManager => {
-   const queryRunner = entityManager.connection.createQueryRunner();
-   let user = await this.userRepository.getByEmail(item.email, queryRunner);
+@Inject('db.context')
+private readonly _dbContext: IDbContext;
+....
+await this._dbContext.getConnection().runTransaction(async queryRunner => {
+   const user = await this.userRepository.getByEmail(item.email, queryRunner);
    ....
    const id = await this.userRepository.create(user, queryRunner);
    ....
+}, async (err) => {
+   // Rollback....
+}, async () => {
+   // Done!
 });
 ```
 
@@ -371,7 +390,7 @@ await getConnection().transaction(async entityManager => {
 ```
 npm run migration:generate Migration_Name
 ```
-> Migration_Name should be named full meaning. Ex: Create_Table_Customer, Add_Field_Email_In_Customer, Modify_Field_Email_In_Customer, Migrate_Old_Data_To_New_Data,....
+> Migration_Name should be named full meaning. Ex: Create_Table_Client, Add_Field_Email_In_Client, Modify_Field_Email_In_Client, Migrate_Old_Data_To_New_Data,....
 
 - To run the next migrations for update database structure:
 ```
@@ -386,14 +405,12 @@ npm run migration:revert
 ### Permission
 
 - We are using the role for checking permission.
-- We validate and check permission in controllers and pass user info (user authenticated) into business functions (if necessary).
+- We validate and check permission in controllers and pass user info (user authenticated) into interactor handler (if necessary).
 - Usually, we have 3 cases:
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
    - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` on controller functions.
 - `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object. Also, we can pass the role in this function for checking. The process will be through the cache first, so the process will be handled very quickly.
-
-- To check permission of the user in another place (ex: business and repository), we can use the information of `UserAuthenticated` and pass to filter data (or another param).
 
 ### API Response Format
 
@@ -405,8 +422,8 @@ curl -i -H Accept:application/json -X GET http://localhost:3000/api/v1/me
 Response:
 HTTP/1.1 401 Unauthorized
 {
-   "code": 1010,
-   "message": "The authorization token was not found!"
+   "code": "ACCESS_DENIED_ERR",
+   "message": "The token is required!"
 }
 ```
 
@@ -418,50 +435,12 @@ curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/log
 Response:
 HTTP/1.1 400 Bad Request
 {
-   "code": 1003,
-   "message": "The email address or password is incorrect!",
+   "code": "DATA_INCORRECT_ERR",
+   "message": "The email or password is incorrect!",
 }
 ```
 
-- Return data object [UserLoginSucceedResponse] with status code 200.
-```
-Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/login -H Content-Type:application/json -d '{"email": "admin@localhost.com", "password": "Nodecore@2"}'
-
-Response:
-HTTP/1.1 200 OK
-{
-   "data": {
-      "profile": {
-         "id": 1,
-         "createdAt": "2020-02-09T19:33:44.871Z",
-         "updatedAt": "2020-02-10T02:08:38.631Z",
-         "roleId": 1,
-         "firstName": "Super",
-         "lastName": "Admin",
-         "fullName": "Super Admin",
-         "email": "admin@localhost.com",
-         "avatar": null,
-         "gender": "male",
-         "birthday": "1990-12-31",
-         "phone": "0912345678",
-         "address": "123 Abc",
-         "culture": "en-US",
-         "currency": "USD",
-         "role": {
-               "id": 1,
-               "createdAt": "2020-02-09T19:33:44.871Z",
-               "updatedAt": "2020-02-09T19:33:44.871Z",
-               "name": "Super Admin",
-               "level": 1
-         }
-      },
-      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...;"
-   }
-}
-```
-
-- Return data object [ResultListResponse\<T\>] with status code 200.
+- Return data pagination with status code 200.
 ```
 Request:
 curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X GET http://localhost:3000/api/v1/roles
@@ -469,36 +448,28 @@ curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIs
 Response:
 HTTP/1.1 200 OK
 {
-   "data": {
-      "pagination": {
-         "skip": 0,
-         "limit": 10,
-         "total": 2
+   "pagination": {
+      "skip": 0,
+      "limit": 10,
+      "total": 2
+   },
+   "data": [
+      {
+         "id": ...,
+         "name": ...
       },
-      "results": [
-         {
-            "id": 2,
-            "createdAt": "2020-02-09T19:33:44.871Z",
-            "updatedAt": "2020-02-09T19:33:44.871Z",
-            "name": "Common User",
-            "level": 2
-         },
-         {
-            "id": 3,
-            "createdAt": "2020-02-10T01:52:39.630Z",
-            "updatedAt": "2020-02-10T01:52:55.348Z",
-            "name": "Role Test",
-            "level": 4
-         }
-      ]
-   }
+      {
+         "id": ...,
+         "name": ...
+      }
+   ]
 }
 ```
 
-- Return data object [BulkActionResponse\<T\>] with status code 200.
+- Return data object with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/systems/sample-data -H Content-Type:application/json
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/users/dummy-clients -H Content-Type:application/json
 
 Response:
 HTTP/1.1 200 OK
@@ -516,7 +487,7 @@ HTTP/1.1 200 OK
 - Return boolean data with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X DELETE http://localhost:3000/api/v1/roles/3 -H Content-Type:application/json
+curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X DELETE http://localhost:3000/api/v1/roles/{:id} -H Content-Type:application/json
 
 Response:
 HTTP/1.1 200 OK
@@ -532,8 +503,8 @@ HTTP/1.1 200 OK
 ```
 GET http://localhost/api/v1/users                         --> Find user and return the user list.
 GET http://localhost/api/v1/users?keyword=felix           --> Find user with name and return the user list.
-GET http://localhost/api/v1/users/1                       --> Get user with id is 1 and return the user object.
-GET http://localhost/api/v1/users/1/role                  --> Get role of user with id is 1 and return the role object.
+GET http://localhost/api/v1/users/{:id}                   --> Get user with id is 1 and return the user object.
+GET http://localhost/api/v1/users/{:id}/role              --> Get role of user with id is 1 and return the role object.
 ```
 
 - `POST`: Used to create new resource, add a child resource, upload file, requests the creation of an activation.
@@ -542,18 +513,18 @@ GET http://localhost/api/v1/users/1/role                  --> Get role of user w
 POST http://localhost/api/v1/auth/login                    --> Login request.
 POST http://localhost/api/v1/me/avatar                     --> Upload binary file.
 POST http://localhost/api/v1/users                         --> Create user.
-POST http://localhost/api/v1/users/register                --> Register new user.
-POST http://localhost/api/v1/users/active                  --> Request active user.
-POST http://localhost/api/v1/users/resend-activation
-POST http://localhost/api/v1/users/forgot-password
-POST http://localhost/api/v1/users/resend-activation
+POST http://localhost/api/v1/register                      --> Register new user.
+POST http://localhost/api/v1/active                        --> Request active user.
+POST http://localhost/api/v1/resend-activation
+POST http://localhost/api/v1/forgot-password
+POST http://localhost/api/v1/resend-activation
 ```
 
 - `PUT`: Used to create new resource or update (replace object) if it already exists, replace the entire using the data specified in request.
 
 ```
-PUT http://localhost/api/v1/users/1                       --> Update user object with id 1.
-PUT http://localhost/api/v1/users/reset-password          --> Reset/update password.
+PUT http://localhost/api/v1/users/{:id}                   --> Update user object with id 1.
+PUT http://localhost/api/v1/reset-password                --> Reset password.
 ```
 
 - `PATCH`: Used only to update some fields with record id. Besides, it's just about the meaning, sometime it's very difficult to recognize the boundary, we can use `PUT` instead of `PATCH`.
@@ -565,30 +536,29 @@ PATCH http://localhost/api/v1/me/password
 - `DELETE`: Used to delete, remove item, disable, inactive,....
 
 ```
-DELETE http://localhost/api/v1/users/1
+DELETE http://localhost/api/v1/users/{:id}
 ```
 
 ### Experiences
 
 - Order of development:
    - Web Core:
-      - Model interface (src/web.core/interfaces/models)
-      - Model (src/web.core/models)
-      - Dtos (src/web.core/dtos)
-         - Data
-         - Responses
-         - Requests
-      - Gateway interface (src/web.core/interfaces/gateways(/data))
-      - Business interface (src/web.core/interfaces/businesses)
-      - Business (src/web.core/businesses)
-   - Web Infrastructure (data)
-      - Schema (src/web.infrastructure/data/typeorm/schemas)
-      - Entity (src/web.infrastructure/data/typeorm/entities)
-      - Repository (src/web.infrastructure/data/typeorm/repositories)
+      - Domain
+         - Types
+         - Entities
+         - Enums
+      - Interactors
+      - Gateways
+   - Web Infrastructure
+      - Databases (typeorm/redis)
+         - Schema
+         - Entities
+         - Repositories
+      - Services
    - Web API:
-      - Controller (src/web.api/controllers)
+      - Controllers
    - Web Socket:
-      - Controller (src/web.socket/controllers)
+      - Controllers
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
-- The function order should be arranged in turn according to find, findCommon, get, check, create, update, delete, remove.
-- The query param will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to UserFilterRequest.ts file.
+- The function order should be arranged in turn according to find, get, check, create, update, delete, remove.
+- The query param will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to FindUserQuery.ts file.

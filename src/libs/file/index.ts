@@ -17,6 +17,15 @@ export function getDirectories(dir: string): Promise<string[]> {
 }
 
 /**
+ * Get list directories synchronize into specified directory.
+ * @param dir directory original
+ */
+export function getDirectoriesSync(dir: string): string[] {
+    const list = fs.readdirSync(dir);
+    return list.filter(item => fs.statSync(path.join(dir, item)).isDirectory());
+}
+
+/**
  * Get list files into specified directory.
  * @param dir directory original
  */
@@ -29,6 +38,15 @@ export function getFiles(dir: string): Promise<string[]> {
                 resolve(list.filter(item => !fs.statSync(path.join(dir, item)).isDirectory()));
         });
     });
+}
+
+/**
+ * Get list files synchronize into specified directory.
+ * @param dir directory original
+ */
+export function getFilesSync(dir: string): string[] {
+    const list = fs.readdirSync(dir);
+    return list.filter(item => !fs.statSync(path.join(dir, item)).isDirectory());
 }
 
 /**

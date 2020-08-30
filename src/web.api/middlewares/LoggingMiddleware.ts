@@ -1,17 +1,23 @@
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { NextFunction, Request, Response } from 'express';
-import { ENABLE_DATA_LOGGING } from '../../constants/Environments';
+import { ILogService } from '../../web.core/gateways/services/ILogService';
+import { IS_DEVELOPMENT } from '../../configs/Configuration';
+import { Inject } from 'typedi';
 
-@Middleware({ type: 'before' })
+@Middleware({ type: 'before', priority: 2 })
 export class LoggingMiddleware implements ExpressMiddlewareInterface {
-    // @ts-ignore
-    use(req: Request, res: Response, next: NextFunction): void {
-        if (ENABLE_DATA_LOGGING) {
-            console.log('\nRequest API Service:');
-            console.log('• Method:', '\x1b[35m', req.method, '\x1b[0m');
-            console.log('• URL:', '\x1b[35m', req.originalUrl, '\x1b[0m');
-            console.log('• Query:', '\x1b[35m', JSON.stringify(req.query, null, 2), '\x1b[0m');
-            console.log('• Body:', '\x1b[35m', JSON.stringify(req.body, null, 2), '\x1b[0m', '\n');
+    @Inject('log.service')
+    private readonly _logService: ILogService;
+
+    use(req: Request, _res: Response, next: NextFunction): void {
+        if (IS_DEVELOPMENT) {
+            this._logService.writeLog({
+                type: 'Request',
+                method: req.method,
+                url: req.originalUrl,
+                query: req.query,
+                body: req.body
+            });
         }
         next();
     }
