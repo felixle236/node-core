@@ -33,7 +33,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
 
         if (param.keyword) {
             const keyword = `%${param.keyword}%`;
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
+            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
         }
 
         query = query

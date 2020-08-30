@@ -109,10 +109,10 @@ export class UserController {
         return await this._createDummyUserCommandHandler.handle(param);
     }
 
-    @Post('/dummy-customers')
+    @Post('/dummy-clients')
     @Authorized(RoleId.SUPER_ADMIN)
-    async createDummyCustomers(): Promise<BulkActionResult> {
-        const list: DummyUser[] = require('../../resources/data/dummy-customers');
+    async createDummyClients(): Promise<BulkActionResult> {
+        const list: DummyUser[] = require('../../resources/data/dummy-clients');
         const param = new CreateDummyUserCommand();
         param.users = [];
         list.forEach(item => {

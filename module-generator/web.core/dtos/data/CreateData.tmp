@@ -1,3 +1,0 @@
-export class {PascalName}CreateData {
-    name: string;
-}

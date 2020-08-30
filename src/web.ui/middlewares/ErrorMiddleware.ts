@@ -1,7 +1,6 @@
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import { Request, Response } from 'express';
 import { ILogService } from '../../web.core/gateways/services/ILogService';
-import { IS_DEVELOPMENT } from '../../configs/Configuration';
 import { Inject } from 'typedi';
 import { SystemError } from '../../web.core/domain/common/exceptions/SystemError';
 
@@ -28,10 +27,12 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             err.stack = stack;
         }
 
-        if (!IS_DEVELOPMENT)
-            delete err.stack;
-
         res.status(err.httpCode);
-        res.render('error', { error: err });
+        res.render('error', {
+            error: {
+                code: err.code,
+                message: err.message
+            }
+        });
     }
 }

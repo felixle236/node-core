@@ -38,7 +38,7 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
         if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
-        const role = await this._roleRepository.getById(RoleId.CUSTOMER);
+        const role = await this._roleRepository.getById(RoleId.CLIENT);
         if (!role)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
 

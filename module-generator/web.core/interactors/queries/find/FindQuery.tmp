@@ -1,0 +1,5 @@
+import { Filter } from '../../../../domain/common/interactor/Filter';
+
+export class Find{PascalName}Query extends Filter {
+    keyword?: string;
+}

@@ -1,3 +1,0 @@
-export class {PascalName}UpdateData {
-    name: string;
-}

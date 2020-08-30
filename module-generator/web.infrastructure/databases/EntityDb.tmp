@@ -1,0 +1,33 @@
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseDbEntity } from './base/BaseDBEntity';
+import { I{PascalName} } from '../../../../web.core/domain/types/I{PascalName}';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../schemas/{PascalName}Schema';
+import { {PascalName} } from '../../../../web.core/domain/entities/{PascalName}';
+
+@Entity({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+@Index(({camelName}: {PascalName}Db) => [{camelName}.name, {camelName}.deletedAt], { unique: true })
+export class {PascalName}Db extends BaseDbEntity<{PascalName}> implements I{PascalName} {
+    @PrimaryGeneratedColumn('uuid', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID })
+    id: string;
+
+    @Column({ name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME, length: 50 })
+    name: string;
+
+    /* handlers */
+
+    toEntity(): {PascalName} {
+        return new {PascalName}(this);
+    }
+
+    fromEntity(entity: {PascalName}): this {
+        const data = entity.toData();
+
+        if (data.id !== undefined)
+            this.id = data.id;
+
+        if (data.name !== undefined)
+            this.name = data.name;
+
+        return this;
+    }
+}

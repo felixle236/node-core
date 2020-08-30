@@ -60,8 +60,8 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     role.level = 2;
     await roleRepository.create(role, queryRunner);
 
-    role = new Role({ id: RoleId.CUSTOMER } as IRole);
-    role.name = 'Customer';
+    role = new Role({ id: RoleId.CLIENT } as IRole);
+    role.name = 'Client';
     role.level = 3;
     await roleRepository.create(role, queryRunner);
 

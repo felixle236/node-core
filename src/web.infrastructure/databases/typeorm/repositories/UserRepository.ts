@@ -19,7 +19,11 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
     async findAndCount(param: FindUserQuery): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME);
+
         query = query.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
+
+        if (param.roleId)
+            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = :roleId`, { roleId: param.roleId });
 
         if (param.roleAuthLevel)
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
@@ -32,8 +36,8 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
             }));
         }
 
-        if (param.roleId)
-            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = :roleId`, { roleId: param.roleId });
+        if (param.isBirthdayNearly)
+            query = query.where(`date(date_part('year', current_date) || '-' || date_part('month', ${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.BIRTHDAY}) || '-' || date_part('day', ${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.BIRTHDAY})) between current_date and current_date + interval '30 days'`);
 
         query = query
             .skip(param.skip)

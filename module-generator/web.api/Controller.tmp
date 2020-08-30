@@ -1,45 +1,53 @@
-import { Authorized, Body, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import { {PascalName}CreateRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}CreateRequest';
-import { {PascalName}FilterRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}FilterRequest';
-import { {PascalName}Response } from '../../web.core/dtos/{camelName}/responses/{PascalName}Response';
-import { {PascalName}UpdateRequest } from '../../web.core/dtos/{camelName}/requests/{PascalName}UpdateRequest';
-import { I{PascalName}Business } from '../../web.core/gateways/businesses/I{PascalName}Business';
-import { ResultListResponse } from '../../web.core/dtos/common/ResultListResponse';
+import { Body, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { Create{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/create-{camelName}/Create{PascalName}Command';
+import { Create{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/create-{camelName}/Create{PascalName}CommandHandler';
+import { Delete{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/delete-{camelName}/Delete{PascalName}Command';
+import { Delete{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/delete-{camelName}/Delete{PascalName}CommandHandler';
+import { Find{PascalName}Query } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
+import { Find{PascalName}QueryHandler } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}QueryHandler';
+import { Find{PascalName}Result } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}Result';
+import { Get{PascalName}ByIdQuery } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQuery';
+import { Get{PascalName}ByIdQueryHandler } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQueryHandler';
+import { Get{PascalName}ByIdResult } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdResult';
+import { PaginationResult } from '../../web.core/domain/common/interactor/PaginationResult';
+import { Service } from 'typedi';
+import { Update{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/update-{camelName}/Update{PascalName}Command';
+import { Update{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/update-{camelName}/Update{PascalName}CommandHandler';
 
 @Service()
 @JsonController('/{camelName}s')
 export class {PascalName}Controller {
-    @Inject('{camelName}.business')
-    private readonly _{camelName}Business: I{PascalName}Business;
+    constructor(
+        private readonly _find{PascalName}QueryHandler: Find{PascalName}QueryHandler,
+        private readonly _get{PascalName}ByIdQueryHandler: Get{PascalName}ByIdQueryHandler,
+        private readonly _create{PascalName}CommandHandler: Create{PascalName}CommandHandler,
+        private readonly _update{PascalName}CommandHandler: Update{PascalName}CommandHandler,
+        private readonly _delete{PascalName}CommandHandler: Delete{PascalName}CommandHandler
+    ) {}
 
     @Get('/')
-    @Authorized()
-    async find(@QueryParams() filter: {PascalName}FilterRequest): Promise<ResultListResponse<{PascalName}Response>> {
-        return await this._{camelName}Business.find(filter);
+    async find(@QueryParams() param: Find{PascalName}Query): Promise<PaginationResult<Find{PascalName}Result>> {
+        return await this._find{PascalName}QueryHandler.handle(param);
     }
 
-    @Get('/:id([0-9]+)')
-    @Authorized()
-    async getById(@Param('id') id: number): Promise<{PascalName}Response | undefined> {
-        return await this._{camelName}Business.getById(id);
+    @Get('/:id')
+    async getById(@Params() param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdResult> {
+        return await this._get{PascalName}ByIdQueryHandler.handle(param);
     }
 
     @Post('/')
-    @Authorized()
-    async create(@Body() data: {PascalName}CreateRequest): Promise<{PascalName}Response | undefined> {
-        return await this._{camelName}Business.create(data);
+    async create(@Body() param: Create{PascalName}Command): Promise<string> {
+        return await this._create{PascalName}CommandHandler.handle(param);
     }
 
-    @Put('/:id([0-9]+)')
-    @Authorized()
-    async update(@Param('id') id: number, @Body() data: {PascalName}UpdateRequest): Promise<{PascalName}Response | undefined> {
-        return await this._{camelName}Business.update(id, data);
+    @Put('/:id')
+    async update(@Param('id') id: string, @Body() param: Update{PascalName}Command): Promise<boolean> {
+        param.id = id;
+        return await this._update{PascalName}CommandHandler.handle(param);
     }
 
-    @Delete('/:id([0-9]+)')
-    @Authorized()
-    async delete(@Param('id') id: number): Promise<boolean> {
-        return await this._{camelName}Business.delete(id);
+    @Delete('/:id')
+    async delete(@Params() param: Delete{PascalName}Command): Promise<boolean> {
+        return await this._delete{PascalName}CommandHandler.handle(param);
     }
 }
