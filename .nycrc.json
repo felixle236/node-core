@@ -7,15 +7,12 @@
         "branches": [80, 90],
         "statements": [80, 90]
     },
+    "include": [
+        "src/web.core/**/*.ts"
+    ],
     "exclude": [
-        "src/config",
-        "src/libs",
-        "src/resources",
-        "src/test",
-        "src/web",
-        "src/web.core/dtos/common",
-        "src/web.api/middlewares",
-        "src/web.infrastructure"
+        "src/**/*.test.ts",
+        "src/**/Filter.ts"
     ],
     "extension": [
         ".ts"

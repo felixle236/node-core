@@ -21,12 +21,12 @@ export class SigninQueryHandler implements ICommandHandler<SigninQuery, string> 
         data.email = param.email;
         data.password = param.password;
 
-        const user = await this._userRepository.getByUserPassword(data.email, data.password);
+        const user = await this._userRepository.getByEmailPassword(data.email, data.password);
         if (!user)
-            throw new SystemError(MessageError.PARAM_INCORRECT, 'email address or password');
+            throw new SystemError(MessageError.PARAM_INCORRECT, 'email or password');
 
         if (user.status !== UserStatus.ACTIVED)
-            throw new SystemError(MessageError.PARAM_NOT_VERIFIED, 'account');
+            throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
 
         return this._authenticationService.sign(user);
     }

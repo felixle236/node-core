@@ -16,7 +16,7 @@ export class UpdateUserCommandHandler implements ICommandHandler<UpdateUserComma
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
         if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role level');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const id = param.id;
         const data = new User();
@@ -34,7 +34,7 @@ export class UpdateUserCommandHandler implements ICommandHandler<UpdateUserComma
 
         const user = await this._userRepository.getById(id);
         if (!user)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         if (!user.role || user.role.level <= param.roleAuthLevel)
             throw new SystemError(MessageError.ACCESS_DENIED);

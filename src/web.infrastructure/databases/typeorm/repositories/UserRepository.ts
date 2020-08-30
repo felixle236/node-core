@@ -19,7 +19,7 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
     async findAndCount(param: FindUserQuery): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME);
-        query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
+        query = query.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
 
         if (param.roleAuthLevel)
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
@@ -51,40 +51,27 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
         return result?.toEntity();
     }
 
-    async getByEmail(email: string, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
+    async getByEmail(email: string): Promise<User | undefined> {
+        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
         return result?.toEntity();
     }
 
-    async getByUserPassword(email: string, password: string): Promise<User | undefined> {
+    async checkEmailExist(email: string, queryRunner?: IDbQueryRunner): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
+            .select(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ID}`)
+            .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
+            .getOne();
+        return !!result;
+    }
+
+    async getByEmailPassword(email: string, password: string): Promise<User | undefined> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.PASSWORD} = :password`, { password })
             .getOne();
         return result?.toEntity();
-    }
-
-    async getByActiveKey(activeKey: string): Promise<User | undefined> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ACTIVE_KEY} = :activeKey`, { activeKey })
-            .getOne();
-        return result?.toEntity();
-    }
-
-    async getByForgotKey(forgotKey: string): Promise<User | undefined> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.FORGOT_KEY} = :forgotKey`, { forgotKey })
-            .getOne();
-        return result?.toEntity();
-    }
-
-    async checkEmailExist(email: string): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
-            .getOne();
-        return !!result;
     }
 }

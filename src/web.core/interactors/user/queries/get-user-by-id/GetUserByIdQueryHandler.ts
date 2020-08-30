@@ -16,7 +16,7 @@ export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, 
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
         if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role level');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const user = await this._userRepository.getById(param.id);
         if (!user)

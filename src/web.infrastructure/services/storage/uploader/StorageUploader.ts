@@ -70,8 +70,4 @@ export class StorageUploader implements IStorageProvider {
     async download(bucketName: string, objectName: string): Promise<Buffer> {
         return await this._provider.download(bucketName, objectName);
     }
-
-    mapUrl(bucketName: string, path: string): string {
-        return this._provider.mapUrl(bucketName, path);
-    }
 }

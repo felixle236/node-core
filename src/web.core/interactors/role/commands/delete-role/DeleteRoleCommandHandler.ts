@@ -15,7 +15,7 @@ export class DeleteRoleCommandHandler implements ICommandHandler<DeleteRoleComma
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
         if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role level');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const role = await this._roleRepository.getById(param.id);
         if (!role)

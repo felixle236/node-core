@@ -2,7 +2,7 @@ import { GenderType } from '../../../../domain/enums/GenderType';
 import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
 
 export class UpdateMyProfileCommand implements ICommand {
-    id: string;
+    userAuthId: string;
     firstName: string;
     lastName?: string;
     gender?: GenderType;

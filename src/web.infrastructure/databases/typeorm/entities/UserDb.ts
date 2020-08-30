@@ -53,7 +53,6 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column({ name: USER_SCHEMA.COLUMNS.CURRENCY, length: 3, nullable: true })
     currency?: string;
 
-    @Index({ unique: true })
     @Column({ name: USER_SCHEMA.COLUMNS.ACTIVE_KEY, length: 64, nullable: true })
     activeKey?: string;
 
@@ -66,7 +65,6 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
     archivedAt?: Date;
 
-    @Index({ unique: true })
     @Column({ name: USER_SCHEMA.COLUMNS.FORGOT_KEY, length: 64, nullable: true })
     forgotKey?: string;
 

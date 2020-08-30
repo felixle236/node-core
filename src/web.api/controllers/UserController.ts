@@ -1,6 +1,9 @@
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { CreateDummyUserCommand, DummyUser } from '../../web.core/interactors/user/commands/create-dummy-user/CreateDummyUserCommand';
 import { ArchiveUserCommand } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommandHandler';
+import { BulkActionResult } from '../../web.core/domain/common/interactor/BulkActionResult';
+import { CreateDummyUserCommandHandler } from '../../web.core/interactors/user/commands/create-dummy-user/CreateDummyUserCommandHandler';
 import { CreateUserCommand } from '../../web.core/interactors/user/commands/create-user/CreateUserCommand';
 import { CreateUserCommandHandler } from '../../web.core/interactors/user/commands/create-user/CreateUserCommandHandler';
 import { DeleteUserCommand } from '../../web.core/interactors/user/commands/delete-user/DeleteUserCommand';
@@ -25,13 +28,14 @@ import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticate
 @JsonController('/users')
 export class UserController {
     constructor(
-        private _findUserQueryHandler: FindUserQueryHandler,
-        private _getUserByIdQueryHandler: GetUserByIdQueryHandler,
-        private _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler,
-        private _createUserCommandHandler: CreateUserCommandHandler,
-        private _updateUserCommandHandler: UpdateUserCommandHandler,
-        private _archiveUserCommandHandler: ArchiveUserCommandHandler,
-        private _deleteUserCommandHandler: DeleteUserCommandHandler
+        private readonly _findUserQueryHandler: FindUserQueryHandler,
+        private readonly _getUserByIdQueryHandler: GetUserByIdQueryHandler,
+        private readonly _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler,
+        private readonly _createUserCommandHandler: CreateUserCommandHandler,
+        private readonly _updateUserCommandHandler: UpdateUserCommandHandler,
+        private readonly _archiveUserCommandHandler: ArchiveUserCommandHandler,
+        private readonly _deleteUserCommandHandler: DeleteUserCommandHandler,
+        private readonly _createDummyUserCommandHandler: CreateDummyUserCommandHandler
     ) {}
 
     @Get('/')
@@ -82,5 +86,47 @@ export class UserController {
     async delete(@Params() param: DeleteUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
         param.roleAuthLevel = userAuth.role.level;
         return await this._deleteUserCommandHandler.handle(param);
+    }
+
+    @Post('/dummy-managers')
+    @Authorized(RoleId.SUPER_ADMIN)
+    async createDummyManagers(): Promise<BulkActionResult> {
+        const list: DummyUser[] = require('../../resources/data/dummy-managers');
+        const param = new CreateDummyUserCommand();
+        param.users = [];
+        list.forEach(item => {
+            const user = new DummyUser();
+            user.roleId = item.roleId;
+            user.firstName = item.firstName;
+            user.lastName = item.lastName;
+            user.email = item.email;
+            user.password = item.password;
+            user.gender = item.gender;
+            user.avatar = item.avatar;
+
+            param.users.push(user);
+        });
+        return await this._createDummyUserCommandHandler.handle(param);
+    }
+
+    @Post('/dummy-customers')
+    @Authorized(RoleId.SUPER_ADMIN)
+    async createDummyCustomers(): Promise<BulkActionResult> {
+        const list: DummyUser[] = require('../../resources/data/dummy-customers');
+        const param = new CreateDummyUserCommand();
+        param.users = [];
+        list.forEach(item => {
+            const user = new DummyUser();
+            user.roleId = item.roleId;
+            user.firstName = item.firstName;
+            user.lastName = item.lastName;
+            user.email = item.email;
+            user.password = item.password;
+            user.gender = item.gender;
+            user.avatar = item.avatar;
+
+            param.users.push(user);
+        });
+        return await this._createDummyUserCommandHandler.handle(param);
     }
 }

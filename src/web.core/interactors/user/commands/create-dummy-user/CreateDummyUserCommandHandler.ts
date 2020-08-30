@@ -38,8 +38,8 @@ export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDumm
                 bulkAction.ignore();
             else {
                 await this._dbContext.getConnection().runTransaction(async queryRunner => {
-                    const user = await this._userRepository.getByEmail(item.email, queryRunner);
-                    if (user)
+                    const isExist = await this._userRepository.checkEmailExist(item.email);
+                    if (isExist)
                         bulkAction.ignore();
                     else {
                         const data = new User();
@@ -72,11 +72,12 @@ export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDumm
                             await this._storageService.upload(avatarPath, buffer);
                             await this._userRepository.update(id, data, queryRunner);
                         }
-                        bulkAction.success();
                     }
                 }, async (err) => {
                     console.log(err);
                     bulkAction.fail(index);
+                }, async () => {
+                    bulkAction.success();
                 });
             }
         }

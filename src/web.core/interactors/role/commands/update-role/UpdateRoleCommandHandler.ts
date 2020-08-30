@@ -16,7 +16,7 @@ export class UpdateRoleCommandHandler implements ICommandHandler<UpdateRoleComma
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
         if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role level');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const data = new Role();
         data.name = param.name;
@@ -29,7 +29,8 @@ export class UpdateRoleCommandHandler implements ICommandHandler<UpdateRoleComma
         if (role.level <= param.roleAuthLevel || data.level <= param.roleAuthLevel)
             throw new SystemError(MessageError.ACCESS_DENIED);
 
-        if (await this._roleRepository.checkNameExist(data.name, param.id))
+        const isExist = await this._roleRepository.checkNameExist(data.name, param.id);
+        if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const hasSucceed = await this._roleRepository.update(param.id, data);

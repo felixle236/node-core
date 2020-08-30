@@ -21,12 +21,8 @@ export class RedisContext {
     }
 
     createConnection(redisLib = redis): IRedisClient {
-        if (this._connection) {
-            if (this._connection.connected)
-                return this._connection;
-            else
-                delete this._connection;
-        }
+        if (this._connection && this._connection.connected)
+            return this._connection;
 
         this._connection = promisifyRedis(redisLib).createClient(REDIS_CONFIG_PORT, REDIS_CONFIG_HOST) as IRedisClient;
         return this._connection;

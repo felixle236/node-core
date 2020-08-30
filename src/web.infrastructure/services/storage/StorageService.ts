@@ -26,8 +26,4 @@ export class StorageService implements IStorageService {
     async download(urlPath: string): Promise<Buffer> {
         return await this._uploader.download(BUCKET_NAME, urlPath);
     }
-
-    mapUrl(urlPath: string): string {
-        return this._uploader.mapUrl(BUCKET_NAME, urlPath);
-    }
 }

@@ -1,22 +1,22 @@
 import { Action } from 'routing-controllers';
-import { AuthenticateQuery } from '../web.core/interactors/auth/queries/authenticate/AuthenticateQuery';
-import { AuthenticateQueryHandler } from '../web.core/interactors/auth/queries/authenticate/AuthenticateQueryHandler';
+import { AuthenticateUserQuery } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
+import { AuthenticateUserQueryHandler } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
 import { Service } from 'typedi';
 
 @Service()
 export class ApiAuthenticator {
     constructor(
-        private readonly _authenticateQueryHandler: AuthenticateQueryHandler
+        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler
     ) {}
 
     authorizationHttpChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
-        const param = new AuthenticateQuery();
+        const param = new AuthenticateUserQuery();
         param.token = token;
         param.roleIds = roleIds;
 
-        action.request.userAuth = await this._authenticateQueryHandler.handle(param);
+        action.request.userAuth = await this._authenticateUserQueryHandler.handle(param);
         return !!action.request.userAuth;
     }
 

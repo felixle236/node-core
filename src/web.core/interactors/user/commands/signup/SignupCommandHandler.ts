@@ -34,10 +34,11 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
         data.email = param.email;
         data.password = param.password;
 
-        if (await this._userRepository.checkEmailExist(data.email))
+        const isExist = await this._userRepository.checkEmailExist(data.email);
+        if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
-        const role = await this._roleRepository.getById(RoleId.COMMON_USER);
+        const role = await this._roleRepository.getById(RoleId.CUSTOMER);
         if (!role)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
 
@@ -46,11 +47,7 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
         data.activeKey = crypto.randomBytes(32).toString('hex');
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
-        const id = await this._userRepository.create(data);
-        if (!id)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
-        const user = await this._userRepository.getById(id);
+        const user = await this._userRepository.createGet(data);
         if (!user)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 

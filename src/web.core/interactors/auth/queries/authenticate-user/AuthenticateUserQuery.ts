@@ -1,7 +1,7 @@
 
 import { IQuery } from '../../../../domain/common/interactor/interfaces/IQuery';
 
-export class AuthenticateQuery implements IQuery {
+export class AuthenticateUserQuery implements IQuery {
     token: string;
     roleIds?: string[];
 }

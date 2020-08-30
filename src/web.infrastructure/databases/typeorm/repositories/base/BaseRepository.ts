@@ -3,10 +3,11 @@ import { BaseDbEntity } from '../../entities/base/BaseDBEntity';
 import { DbContext } from '../../DbContext';
 import { IBaseRepository } from '../../../../../web.core/domain/common/database/interfaces/IBaseRepository';
 import { IDbQueryRunner } from '../../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
+import { IEntity } from '../../../../../web.core/domain/types/base/IEntity';
 import { IFilter } from '../../../../../web.core/domain/common/interactor/interfaces/IFilter';
 import { Inject } from 'typedi';
 
-export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IBaseRepository<TEntity, TIdentityType> {
+export abstract class BaseRepository<TEntity extends IEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IBaseRepository<TEntity, TIdentityType> {
     @Inject('db.context')
     protected readonly dbContext: DbContext;
 
@@ -44,6 +45,16 @@ export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEn
         return result.identifiers && result.identifiers.length && result.identifiers[0].id;
     }
 
+    async createGet(data: TEntity, queryRunner?: IDbQueryRunner): Promise<TEntity | undefined> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .insert()
+            .values(new this._type().fromEntity(data) as any)
+            .execute();
+        const id = result.identifiers && result.identifiers.length && result.identifiers[0].id;
+        if (!id) return undefined;
+        return await this.getById(id, queryRunner);
+    }
+
     async createMultiple(list: TEntity[], queryRunner?: IDbQueryRunner): Promise<TIdentityType[]> {
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .insert()
@@ -58,6 +69,16 @@ export abstract class BaseRepository<TEntity, TDbEntity extends BaseDbEntity<TEn
             .whereInIds(id)
             .execute();
         return !!result.affected;
+    }
+
+    async updateGet(id: TIdentityType, data: TEntity, queryRunner?: IDbQueryRunner): Promise<TEntity | undefined> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .update(new this._type().fromEntity(data) as any)
+            .whereInIds(id)
+            .execute();
+        const hasSucceed = !!result.affected;
+        if (!hasSucceed) return undefined;
+        return await this.getById(id, queryRunner);
     }
 
     async delete(ids: TIdentityType | TIdentityType[]): Promise<boolean> {

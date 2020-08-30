@@ -19,7 +19,12 @@ export class DbConnection implements IDbConnection {
         await this._connection.queryResultCache.remove([keyCaching]);
     }
 
-    async runTransaction(runInTransaction: (queryRunner: IDbQueryRunner)=> Promise<void>, rollback: (error: Error)=> Promise<void>, isolationLevel?: TransactionIsolationLevel): Promise<void> {
+    async runTransaction(
+        runInTransaction: (queryRunner: IDbQueryRunner)=> Promise<void>,
+        rollback?: (error: Error)=> Promise<void>,
+        done?: ()=> Promise<void>,
+        isolationLevel?: TransactionIsolationLevel
+    ): Promise<void> {
         let err;
         const query = this._connection.createQueryRunner();
         await query.startTransaction(isolationLevel);
@@ -36,8 +41,12 @@ export class DbConnection implements IDbConnection {
             await query.release();
         }
 
-        if (err && rollback)
-            await rollback(err);
+        if (err) {
+            if (rollback)
+                await rollback(err);
+        }
+        else if (done)
+            await done();
     }
 
     async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' | undefined }): Promise<IDbMigration[]> {

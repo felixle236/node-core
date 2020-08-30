@@ -10,7 +10,8 @@ export class GetListOnlineStatusByIdsQueryHandler implements IQueryHandler<GetLi
     private readonly _userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     async handle(param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsResult[]> {
-        const onlineIds = await this._userOnlineStatusRepository.getListOnlineStatusByIds(param.ids);
-        return param.ids.map(id => new GetListOnlineStatusByIdsResult(id, onlineIds.indexOf(id) !== -1));
+        const ids = param.ids ?? [];
+        const onlineIds = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
+        return ids.map(id => new GetListOnlineStatusByIdsResult(id, onlineIds.indexOf(id) !== -1));
     }
 }

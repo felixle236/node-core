@@ -1,18 +1,15 @@
 import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
-import { Container } from 'typedi';
 import { GenderType } from '../enums/GenderType';
-import { IStorageService } from '../../gateways/services/IStorageService';
 import { IUser } from '../types/IUser';
 import { MessageError } from '../common/exceptions/message/MessageError';
 import { Role } from './Role';
+import { STORAGE_URL } from '../../../configs/Configuration';
 import { SystemError } from '../common/exceptions/SystemError';
 import { UserStatus } from '../enums/UserStatus';
 import { hashMD5 } from '../../../libs/crypt';
 
 export class User extends BaseEntity<IUser> implements IUser {
-    private readonly _storageService: IStorageService = Container.get('storage.service');
-
     constructor(data?: IUser) {
         super(data);
     }
@@ -39,11 +36,6 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     set status(val: UserStatus) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'status');
-        if (!validator.isEnum(val, UserStatus))
-            throw new SystemError(MessageError.PARAM_INVALID, 'status');
-
         this.data.status = val;
     }
 
@@ -111,14 +103,14 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     get avatar(): string | undefined {
-        return this.data.avatar && this._storageService.mapUrl(this.data.avatar);
+        return this.data.avatar && STORAGE_URL + this.data.avatar;
     }
 
     set avatar(val: string | undefined) {
         if (val) {
             val = val.trim();
-            if (val.length > 200)
-                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200);
+            if (val.length > 100)
+                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 100);
         }
         this.data.avatar = val;
     }
@@ -139,6 +131,9 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set birthday(val: Date | undefined) {
         if (val) {
+            if (!validator.isDate(val))
+                throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
+
             val = new Date(val.getFullYear(), val.getMonth(), val.getDate());
             const now = new Date();
             if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() || now.getFullYear() - val.getFullYear() > 100)
@@ -212,8 +207,6 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     set activeKey(val: string | undefined) {
-        if (val && val.length > 128)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'active key', 128);
         this.data.activeKey = val;
     }
 
@@ -246,8 +239,6 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     set forgotKey(val: string | undefined) {
-        if (val && val.length > 128)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'forgot key', 128);
         this.data.forgotKey = val;
     }
 
@@ -283,10 +274,10 @@ export class User extends BaseEntity<IUser> implements IUser {
 
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
-            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
+            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar file', formats.join(', '));
 
         if (file.size > maxSize)
-            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
+            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar file', maxSize / 1024, 'KB');
     }
 
     static getAvatarPath(id: string, ext: string): string {

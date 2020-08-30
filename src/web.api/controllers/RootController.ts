@@ -15,11 +15,11 @@ import { SignupCommandHandler } from '../../web.core/interactors/user/commands/s
 @JsonController()
 export class RootController {
     constructor(
-        private _signupCommandHandler: SignupCommandHandler,
-        private _activeUserCommandHandler: ActiveUserCommandHandler,
-        private _resendActivationCommandHandler: ResendActivationCommandHandler,
-        private _forgotPasswordCommandHandler: ForgotPasswordCommandHandler,
-        private _resetPasswordCommandHandler: ResetPasswordCommandHandler
+        private readonly _signupCommandHandler: SignupCommandHandler,
+        private readonly _activeUserCommandHandler: ActiveUserCommandHandler,
+        private readonly _resendActivationCommandHandler: ResendActivationCommandHandler,
+        private readonly _forgotPasswordCommandHandler: ForgotPasswordCommandHandler,
+        private readonly _resetPasswordCommandHandler: ResetPasswordCommandHandler
     ) {}
 
     @Post('/register')

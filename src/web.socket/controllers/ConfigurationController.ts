@@ -1,6 +1,6 @@
 import { ConnectedSocket, EmitOnFail, EmitOnSuccess, MessageBody, OnConnect, OnDisconnect, OnMessage, SkipEmitOnEmptyResult, SocketController, SocketQueryParam } from 'socket-controllers';
-import { AuthenticateQuery } from '../../web.core/interactors/auth/queries/authenticate/AuthenticateQuery';
-import { AuthenticateQueryHandler } from '../../web.core/interactors/auth/queries/authenticate/AuthenticateQueryHandler';
+import { AuthenticateUserQuery } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
+import { AuthenticateUserQueryHandler } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
 import { ISocket } from '../../web.core/domain/common/socket/interfaces/ISocket';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
@@ -12,17 +12,17 @@ import { UpdateUserOnlineStatusCommandHandler } from '../../web.core/interactors
 @SocketController('/' + SocketNamespace.CONFIGURATION.NAME)
 export default class ConfigurationController {
     constructor(
-        private readonly _authenticateQueryHandler: AuthenticateQueryHandler,
+        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler,
         private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
     ) {}
 
     @OnConnect()
     async connect(@ConnectedSocket() socket: ISocket, @SocketQueryParam('token') token: string): Promise<void> {
         try {
-            const param = new AuthenticateQuery();
+            const param = new AuthenticateUserQuery();
             param.token = token;
 
-            socket.userAuth = await this._authenticateQueryHandler.handle(param);
+            socket.userAuth = await this._authenticateUserQueryHandler.handle(param);
         }
         catch (error) {
             socket.emit('connect_error', error);

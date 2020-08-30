@@ -66,6 +66,10 @@ export const S3_REGION: string = process.env.S3_REGION ?? 'ap-southeast-1';
 export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';
 export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
 
+export const STORAGE_URL: string = STORAGE_PROVIDER === StorageProvider.MINIO
+    ? (IS_USE_SSL_MINIO ? 'https' : 'http') + `://${MINIO_CONFIG_HOST}` + (MINIO_CONFIG_PORT === 80 ? '' : `:${MINIO_CONFIG_PORT}`) + `/${BUCKET_NAME}/`
+    : STORAGE_PROVIDER === StorageProvider.AWS_S3 ? `https://s3.${S3_REGION}.amazonaws.com/${BUCKET_NAME}/` : `http://localhost/${BUCKET_NAME}/`;
+
 // MAIL SERVICE
 
 export const MAIL_PROVIDER: number = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.CONSOLE;

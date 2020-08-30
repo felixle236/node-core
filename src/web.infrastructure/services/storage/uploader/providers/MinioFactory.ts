@@ -94,8 +94,4 @@ export class MinioFactory implements IStorageProvider {
             });
         });
     }
-
-    mapUrl(bucketName: string, path: string): string {
-        return (this._useSSL ? 'https' : 'http') + `://${this._host}` + (this._port === 80 ? '' : `:${this._port}`) + `/${bucketName}/` + path;
-    }
 }

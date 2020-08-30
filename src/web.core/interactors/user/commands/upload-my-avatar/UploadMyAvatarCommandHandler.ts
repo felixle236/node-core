@@ -17,23 +17,29 @@ export class UploadMyAvatarCommandHandler implements ICommandHandler<UploadMyAva
     private readonly _storageService: IStorageService;
 
     async handle(param: UploadMyAvatarCommand): Promise<string> {
-        if (!param.id)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
+        if (!param.userAuthId)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         if (!param.file)
-            throw new SystemError(MessageError.DATA_INVALID);
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'avatar file');
 
         const ext = mime.extension(param.file.mimetype);
         if (!ext)
-            throw new SystemError(MessageError.PARAM_INVALID, 'avatar');
+            throw new SystemError(MessageError.PARAM_INVALID, 'avatar file');
 
         User.validateAvatarFile(param.file);
-        const avatarPath = User.getAvatarPath(param.id, ext);
+        const avatarPath = User.getAvatarPath(param.userAuthId, ext);
         const data = new User();
         data.avatar = avatarPath;
 
-        await this._storageService.upload(avatarPath, param.file.buffer);
-        await this._userRepository.update(param.id, data);
+        let hasSucceed = await this._storageService.upload(avatarPath, param.file.buffer);
+        if (!hasSucceed)
+            throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar file');
+
+        hasSucceed = await this._userRepository.update(param.userAuthId, data);
+        if (!hasSucceed)
+            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
+
         return data.avatar;
     }
 }

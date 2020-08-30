@@ -47,9 +47,4 @@ export class StorageConsoleFactory implements IStorageProvider {
         console.log('StorageService.download', { bucketName, objectName });
         return Promise.resolve(Buffer.from('Logging'));
     }
-
-    mapUrl(bucketName: string, path: string): string {
-        console.log('StorageService.mapUrl', { bucketName, path });
-        return `http://localhost/${bucketName}/` + path;
-    }
 }

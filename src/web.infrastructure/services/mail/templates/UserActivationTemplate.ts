@@ -13,7 +13,7 @@ export class UserActivationTemplate {
                     button: {
                         color: '#22BC66',
                         text: 'Confirm your account',
-                        link: `${PROTOTYPE}://${DOMAIN}/confirm-account?key=${user.activeKey}`
+                        link: `${PROTOTYPE}://${DOMAIN}/confirm-account?email=${user.email}&key=${user.activeKey}`
                     }
                 },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'

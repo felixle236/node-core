@@ -13,7 +13,7 @@ export class CreateRoleCommandHandler implements ICommandHandler<CreateRoleComma
 
     async handle(param: CreateRoleCommand): Promise<string> {
         if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role level');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const data = new Role();
         data.name = param.name;
@@ -22,7 +22,8 @@ export class CreateRoleCommandHandler implements ICommandHandler<CreateRoleComma
         if (data.level <= param.roleAuthLevel)
             throw new SystemError(MessageError.ACCESS_DENIED);
 
-        if (await this._roleRepository.checkNameExist(data.name))
+        const isExist = await this._roleRepository.checkNameExist(data.name);
+        if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const id = await this._roleRepository.create(data);

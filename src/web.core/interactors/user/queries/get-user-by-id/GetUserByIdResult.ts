@@ -18,6 +18,8 @@ export class GetUserByIdResult {
     address?: string;
     culture?: string;
     currency?: string;
+    activedAt?: Date;
+    archivedAt?: Date;
 
     role?: RoleResult;
 
@@ -37,6 +39,8 @@ export class GetUserByIdResult {
         this.address = data.address;
         this.culture = data.culture;
         this.currency = data.currency;
+        this.activedAt = data.activedAt;
+        this.archivedAt = data.archivedAt;
 
         this.role = data.role && new RoleResult(data.role);
     }

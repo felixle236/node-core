@@ -1,3 +1,4 @@
+import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
@@ -13,15 +14,23 @@ export class ResetPasswordCommandHandler implements ICommandHandler<ResetPasswor
     private readonly _userRepository: IUserRepository;
 
     async handle(param: ResetPasswordCommand): Promise<boolean> {
-        if (!param.forgotKey || !param.password)
+        if (!param.email)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
+
+        if (!validator.isEmail(param.email))
+            throw new SystemError(MessageError.PARAM_INVALID, 'email');
+
+        if (!param.forgotKey)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'forgot key');
+
+        if (!param.password)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
+
+        const user = await this._userRepository.getByEmail(param.email);
+        if (!user || user.forgotKey !== param.forgotKey || user.status !== UserStatus.ACTIVED)
             throw new SystemError(MessageError.DATA_INVALID);
 
-        const user = await this._userRepository.getByForgotKey(param.forgotKey);
-        if (!user)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'forgot key');
-        if (user.status !== UserStatus.ACTIVED)
-            throw new SystemError(MessageError.DATA_INVALID);
-        if (!user.forgotKey || !user.forgotExpire || user.forgotExpire < new Date())
+        if (!user.forgotExpire || user.forgotExpire < new Date())
             throw new SystemError(MessageError.PARAM_EXPIRED, 'forgot key');
 
         const data = new User();

@@ -16,10 +16,10 @@ import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticate
 @JsonController('/me')
 export class MeController {
     constructor(
-        private _getMyProfileQueryHandler: GetMyProfileQueryHandler,
-        private _updateMyProfileCommandHandler: UpdateMyProfileCommandHandler,
-        private _updateMyPasswordCommandHandler: UpdateMyPasswordCommandHandler,
-        private _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
+        private readonly _getMyProfileQueryHandler: GetMyProfileQueryHandler,
+        private readonly _updateMyProfileCommandHandler: UpdateMyProfileCommandHandler,
+        private readonly _updateMyPasswordCommandHandler: UpdateMyPasswordCommandHandler,
+        private readonly _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
     ) {}
 
     @Get('/')
@@ -34,14 +34,14 @@ export class MeController {
     @Put('/')
     @Authorized()
     async updateMyProfile(@Body() param: UpdateMyProfileCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
-        param.id = userAuth.userId;
+        param.userAuthId = userAuth.userId;
         return await this._updateMyProfileCommandHandler.handle(param);
     }
 
     @Patch('/password')
     @Authorized()
     async updateMyPassword(@Body() param: UpdateMyPasswordCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
-        param.id = userAuth.userId;
+        param.userAuthId = userAuth.userId;
         return await this._updateMyPasswordCommandHandler.handle(param);
     }
 
@@ -49,7 +49,7 @@ export class MeController {
     @Authorized()
     async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage: multer.memoryStorage() } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
         const param = new UploadMyAvatarCommand();
-        param.id = userAuth.userId;
+        param.userAuthId = userAuth.userId;
         param.file = file;
 
         return await this._uploadMyAvatarCommandHandler.handle(param);

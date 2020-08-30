@@ -4,6 +4,4 @@ export interface IStorageService {
     upload(urlPath: string, buffer: Buffer): Promise<boolean>;
 
     download(urlPath: string): Promise<Buffer>;
-
-    mapUrl(urlPath: string): string;
 }

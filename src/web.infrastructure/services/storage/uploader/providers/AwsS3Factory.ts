@@ -4,10 +4,8 @@ import { IStorageProvider } from '../interfaces/IStorageProvider';
 
 export class AwsS3Factory implements IStorageProvider {
     private readonly _client: S3;
-    private readonly _region: string;
 
     constructor(region: string, accessKeyId: string, secretAccessKey: string) {
-        this._region = region;
         this._client = new S3({
             region,
             accessKeyId,
@@ -132,9 +130,5 @@ export class AwsS3Factory implements IStorageProvider {
                 resolve(<Buffer>data.Body);
             });
         });
-    }
-
-    mapUrl(bucketName: string, path: string): string {
-        return `https://s3.${this._region}.amazonaws.com/${bucketName}/${path}`;
     }
 }

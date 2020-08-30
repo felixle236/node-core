@@ -12,8 +12,8 @@ export class UpdateMyProfileCommandHandler implements ICommandHandler<UpdateMyPr
     private readonly _userRepository: IUserRepository;
 
     async handle(param: UpdateMyProfileCommand): Promise<boolean> {
-        if (!param.id)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
+        if (!param.userAuthId)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const data = new User();
         data.firstName = param.firstName;
@@ -28,7 +28,7 @@ export class UpdateMyProfileCommandHandler implements ICommandHandler<UpdateMyPr
         data.currency = param.currency;
         data.culture = param.culture;
 
-        const hasSucceed = await this._userRepository.update(param.id, data);
+        const hasSucceed = await this._userRepository.update(param.userAuthId, data);
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return hasSucceed;

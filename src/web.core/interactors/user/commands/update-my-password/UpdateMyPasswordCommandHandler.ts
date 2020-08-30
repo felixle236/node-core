@@ -12,17 +12,17 @@ export class UpdateMyPasswordCommandHandler implements ICommandHandler<UpdateMyP
     private readonly _userRepository: IUserRepository;
 
     async handle(param: UpdateMyPasswordCommand): Promise<boolean> {
-        if (!param.id)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
+        if (!param.userAuthId)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const data = new User();
-        data.password = param.newPassword;
+        data.password = param.password;
 
-        const user = await this._userRepository.getById(param.id);
-        if (!user || !user.comparePassword(param.password))
-            throw new SystemError(MessageError.PARAM_INCORRECT, 'password');
+        const user = await this._userRepository.getById(param.userAuthId);
+        if (!user || !user.comparePassword(param.oldPassword))
+            throw new SystemError(MessageError.PARAM_INCORRECT, 'old password');
 
-        const hasSucceed = await this._userRepository.update(param.id, data);
+        const hasSucceed = await this._userRepository.update(param.userAuthId, data);
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return hasSucceed;
