@@ -19,8 +19,7 @@ export class UserController {
         if (!userAuth)
             return response.redirect('/');
 
-        param.roleAuthLevel = userAuth.role.level;
-
+        param.roleAuthId = userAuth.roleId;
         const result = await this._findUserQueryHandler.handle(param);
         return {
             title: 'User List',

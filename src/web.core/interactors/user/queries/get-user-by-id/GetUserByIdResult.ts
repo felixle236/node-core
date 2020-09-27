@@ -2,6 +2,16 @@ import { GenderType } from '../../../../domain/enums/GenderType';
 import { Role } from '../../../../domain/entities/Role';
 import { User } from '../../../../domain/entities/User';
 
+class RoleResult {
+    id: string;
+    name: string;
+
+    constructor(data: Role) {
+        this.id = data.id;
+        this.name = data.name;
+    }
+}
+
 export class GetUserByIdResult {
     id: string;
     createdAt: Date;
@@ -43,15 +53,5 @@ export class GetUserByIdResult {
         this.archivedAt = data.archivedAt;
 
         this.role = data.role && new RoleResult(data.role);
-    }
-}
-
-class RoleResult {
-    id: string;
-    name: string;
-
-    constructor(data: Role) {
-        this.id = data.id;
-        this.name = data.name;
     }
 }

@@ -2,10 +2,9 @@ import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
 import { Container } from 'typedi';
-import { IAuthenticationService } from '../../../../gateways/services/IAuthenticationService';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
 import { IRole } from '../../../../domain/types/IRole';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
@@ -16,9 +15,6 @@ import { User } from '../../../../domain/entities/User';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 
-Container.set('role.repository', {
-    async getById() {}
-});
 Container.set('user.repository', {
     async getById() {},
     async checkEmailExist() {},
@@ -27,16 +23,15 @@ Container.set('user.repository', {
 Container.set('mail.service', {
     async sendUserActivation() {}
 });
-Container.set('authentication.service', {
+Container.set('jwt.auth.service', {
     sign() {}
 });
-const roleRepository = Container.get<IRoleRepository>('role.repository');
 const userRepository = Container.get<IUserRepository>('user.repository');
 const mailService = Container.get<IMailService>('mail.service');
-const authenticationService = Container.get<IAuthenticationService>('authentication.service');
+const jwtAuthService = Container.get<IJwtAuthService>('jwt.auth.service');
 const signupCommandHandler = Container.get(SignupCommandHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: uuid.v4(), name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -150,22 +145,8 @@ describe('User - Signup', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_EXISTED, 'email'));
     });
 
-    it('Signup with role not found', async () => {
-        sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(roleRepository, 'getById').resolves(undefined);
-        const param = new SignupCommand();
-        param.firstName = 'Test';
-        param.lastName = '1';
-        param.email = 'test@localhost.com';
-        param.password = 'Nodecore@2';
-
-        const result = await signupCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_NOT_EXISTS, 'role'));
-    });
-
     it('Signup with data cannot save', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(roleRepository, 'getById').resolves(user.role);
         sandbox.stub(userRepository, 'createGet').resolves(undefined);
         const param = new SignupCommand();
         param.firstName = 'Test';
@@ -179,10 +160,9 @@ describe('User - Signup', () => {
 
     it('Signup successfully', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(roleRepository, 'getById').resolves(user.role);
         sandbox.stub(userRepository, 'createGet').resolves(user);
         sandbox.stub(mailService, 'sendUserActivation').resolves();
-        sandbox.stub(authenticationService, 'sign').returns('token');
+        sandbox.stub(jwtAuthService, 'sign').returns('token');
         const param = new SignupCommand();
         param.firstName = 'Test';
         param.lastName = '1';

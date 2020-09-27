@@ -6,7 +6,6 @@ export class FindRoleResult {
     updatedAt: Date;
     deletedAt?: Date;
     name: string;
-    level: number;
 
     constructor(data: Role) {
         this.id = data.id;
@@ -14,6 +13,5 @@ export class FindRoleResult {
         this.updatedAt = data.updatedAt;
         this.deletedAt = data.deletedAt;
         this.name = data.name;
-        this.level = data.level;
     }
 }

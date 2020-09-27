@@ -8,6 +8,7 @@ import { IRole } from '../../../../domain/types/IRole';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
@@ -20,7 +21,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const findUserQueryHandler = Container.get(FindUserQueryHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 1', level: 1 } as IRole;
+const roleData = { id: RoleId.MANAGER, name: 'Role 2' } as IRole;
 const generateUsers = () => {
     return [
         new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser),
@@ -48,10 +49,18 @@ describe('User - Find users', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
     });
 
+    it('Find users with access denied', async () => {
+        const param = new FindUserQuery();
+        param.roleAuthId = RoleId.CLIENT;
+
+        const result = await findUserQueryHandler.handle(param).catch(error => error);
+        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
+    });
+
     it('Find users successfully', async () => {
         sandbox.stub(userRepository, 'findAndCount').resolves([list, 10]);
         const param = new FindUserQuery();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
 
         const result = await findUserQueryHandler.handle(param);
         expect(Array.isArray(result.data) && result.data.length === list.length && result.pagination.total === 10).to.eq(true);
@@ -60,9 +69,9 @@ describe('User - Find users', () => {
     it('Find users successfully with params', async () => {
         sandbox.stub(userRepository, 'findAndCount').resolves([list, 10]);
         const param = new FindUserQuery();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.keyword = 'test';
-        param.roleId = list[0].roleId;
+        param.roleIds = [list[0].roleId];
         param.status = UserStatus.ACTIVED;
 
         const result = await findUserQueryHandler.handle(param);

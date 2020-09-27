@@ -2,11 +2,12 @@ import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
 import { Container } from 'typedi';
-import { IAuthenticationService } from '../../../../gateways/services/IAuthenticationService';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IRole } from '../../../../domain/types/IRole';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SigninQuery } from './SigninQuery';
 import { SigninQueryHandler } from './SigninQueryHandler';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
@@ -18,14 +19,14 @@ import { expect } from 'chai';
 Container.set('user.repository', {
     async getByEmailPassword() {}
 });
-Container.set('authentication.service', {
+Container.set('jwt.auth.service', {
     sign() {}
 });
 const userRepository = Container.get<IUserRepository>('user.repository');
-const authenticationService = Container.get<IAuthenticationService>('authentication.service');
+const jwtAuthService = Container.get<IJwtAuthService>('jwt.auth.service');
 const signinQueryHandler = Container.get(SigninQueryHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: RoleId.SUPER_ADMIN, name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, status: UserStatus.ACTIVED, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -114,7 +115,7 @@ describe('User - Signin', () => {
 
     it('Signin successfully', async () => {
         sandbox.stub(userRepository, 'getByEmailPassword').resolves(user);
-        sandbox.stub(authenticationService, 'sign').returns('token');
+        sandbox.stub(jwtAuthService, 'sign').returns('token');
         const param = new SigninQuery();
         param.email = 'test@localhost.com';
         param.password = 'Nodecore@2';

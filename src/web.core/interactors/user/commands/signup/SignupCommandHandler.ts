@@ -1,9 +1,8 @@
 import * as crypto from 'crypto';
 import { Inject, Service } from 'typedi';
-import { IAuthenticationService } from '../../../../gateways/services/IAuthenticationService';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../../domain/enums/RoleId';
@@ -15,14 +14,11 @@ import { addSeconds } from '../../../../../libs/date';
 
 @Service()
 export class SignupCommandHandler implements ICommandHandler<SignupCommand, string> {
-    @Inject('role.repository')
-    private readonly _roleRepository: IRoleRepository;
-
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    @Inject('authentication.service')
-    private readonly _authenticationService: IAuthenticationService;
+    @Inject('jwt.auth.service')
+    private readonly _jwtAuthService: IJwtAuthService;
 
     @Inject('mail.service')
     private readonly _mailService: IMailService;
@@ -38,11 +34,7 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
         if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
-        const role = await this._roleRepository.getById(RoleId.CLIENT);
-        if (!role)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
-
-        data.roleId = role.id;
+        data.roleId = RoleId.CLIENT;
         data.status = UserStatus.INACTIVE;
         data.activeKey = crypto.randomBytes(32).toString('hex');
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
@@ -52,6 +44,6 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         this._mailService.sendUserActivation(user);
-        return this._authenticationService.sign(user);
+        return this._jwtAuthService.sign(user);
     }
 }

@@ -8,6 +8,7 @@ import { IRole } from '../../../../domain/types/IRole';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { createSandbox } from 'sinon';
@@ -19,7 +20,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const getMyProfileQueryHandler = Container.get(GetMyProfileQueryHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: RoleId.SUPER_ADMIN, name: 'Role 1' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), updatedAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };

@@ -1,7 +1,7 @@
 import { ConnectedSocket, EmitOnFail, EmitOnSuccess, MessageBody, OnConnect, OnDisconnect, OnMessage, SkipEmitOnEmptyResult, SocketController, SocketQueryParam } from 'socket-controllers';
-import { AuthenticateUserQuery } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
-import { AuthenticateUserQueryHandler } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
 import { ISocket } from '../../web.core/domain/common/socket/interfaces/ISocket';
+import { JwtAuthUserQuery } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { RoleId } from '../../web.core/domain/enums/RoleId';
 import { Service } from 'typedi';
 import { SocketNamespace } from '../../web.core/domain/common/socket/SocketNamespace';
@@ -12,17 +12,17 @@ import { UpdateUserOnlineStatusCommandHandler } from '../../web.core/interactors
 @SocketController('/' + SocketNamespace.CONFIGURATION.NAME)
 export default class ConfigurationController {
     constructor(
-        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler,
+        private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler,
         private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
     ) {}
 
     @OnConnect()
     async connect(@ConnectedSocket() socket: ISocket, @SocketQueryParam('token') token: string): Promise<void> {
         try {
-            const param = new AuthenticateUserQuery();
+            const param = new JwtAuthUserQuery();
             param.token = token;
 
-            socket.userAuth = await this._authenticateUserQueryHandler.handle(param);
+            socket.userAuth = await this._jwtAuthUserQueryHandler.handle(param);
         }
         catch (error) {
             socket.emit('connect_error', error);
@@ -36,7 +36,7 @@ export default class ConfigurationController {
             param.isOnline = true;
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
-            if (hasSucceed && socket.userAuth.role.id !== RoleId.SUPER_ADMIN)
+            if (hasSucceed && socket.userAuth.roleId !== RoleId.SUPER_ADMIN)
                 socket.nsp.emit(SocketNamespace.CONFIGURATION.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
         }
     }
@@ -49,7 +49,7 @@ export default class ConfigurationController {
             param.isOnline = false;
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
-            if (hasSucceed && socket.userAuth.role.id !== RoleId.SUPER_ADMIN)
+            if (hasSucceed && socket.userAuth.roleId !== RoleId.SUPER_ADMIN)
                 socket.nsp.emit(SocketNamespace.CONFIGURATION.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
         }
     }

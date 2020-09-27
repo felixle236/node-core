@@ -19,7 +19,7 @@ const roleRepository = Container.get<IRoleRepository>('role.repository');
 const getRoleByIdQueryHandler = Container.get(GetRoleByIdQueryHandler);
 
 const generateRole = () => {
-    return new Role({ id: uuid.v4(), name: 'Role 1', level: 1 } as IRole);
+    return new Role({ id: uuid.v4(), name: 'Role 1' } as IRole);
 };
 
 describe('Role - Get role by id', () => {
@@ -41,39 +41,18 @@ describe('Role - Get role by id', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'id'));
     });
 
-    it('Get role by id without permission', async () => {
-        const param = new GetRoleByIdQuery();
-        param.id = role.id;
-
-        const result = await getRoleByIdQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
-    });
-
     it('Get role by id with data not found', async () => {
         sandbox.stub(roleRepository, 'getById').resolves(undefined);
         const param = new GetRoleByIdQuery();
-        param.roleAuthLevel = 1;
         param.id = role.id;
 
         const result = await getRoleByIdQueryHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.DATA_NOT_FOUND));
     });
 
-    it('Get role by id with access denied', async () => {
-        sandbox.stub(roleRepository, 'getById').resolves(role);
-        const param = new GetRoleByIdQuery();
-        param.roleAuthLevel = 2;
-        param.id = role.id;
-
-        const result = await getRoleByIdQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
-    });
-
     it('Get role by id successfully', async () => {
-        role.level = 2;
         sandbox.stub(roleRepository, 'getById').resolves(role);
         const param = new GetRoleByIdQuery();
-        param.roleAuthLevel = 1;
         param.id = role.id;
 
         const result = await getRoleByIdQueryHandler.handle(param);

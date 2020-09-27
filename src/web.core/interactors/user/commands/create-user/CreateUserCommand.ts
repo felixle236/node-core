@@ -1,8 +1,9 @@
 import { GenderType } from '../../../../domain/enums/GenderType';
 import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
+import { RoleId } from '../../../../domain/enums/RoleId';
 
 export class CreateUserCommand implements ICommand {
-    roleId: string;
+    roleId: RoleId;
     firstName: string;
     lastName?: string;
     email: string;
@@ -13,6 +14,4 @@ export class CreateUserCommand implements ICommand {
     address?: string;
     culture?: string;
     currency?: string;
-
-    roleAuthLevel: number;
 }

@@ -10,6 +10,7 @@ import { IRoleRepository } from '../../../../gateways/repositories/IRoleReposito
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { addDays } from '../../../../../libs/date';
@@ -27,7 +28,7 @@ const roleRepository = Container.get<IRoleRepository>('role.repository');
 const userRepository = Container.get<IUserRepository>('user.repository');
 const createUserCommandHandler = Container.get(CreateUserCommandHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: RoleId.SUPER_ADMIN, name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -44,16 +45,8 @@ describe('User - Create user', () => {
         sandbox.restore();
     });
 
-    it('Create user without permission', async () => {
-        const param = new CreateUserCommand();
-
-        const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
-    });
-
     it('Create user without role', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'role id'));
@@ -61,8 +54,7 @@ describe('User - Create user', () => {
 
     it('Create user with role is invalid', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
-        param.roleId = 'test';
+        param.roleId = 'test' as RoleId;
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_INVALID, 'role id'));
@@ -70,7 +62,6 @@ describe('User - Create user', () => {
 
     it('Create user without first name', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
@@ -79,7 +70,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of first name greater than 20 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'This is the first name with length greater than 20 characters!';
 
@@ -89,7 +79,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of last name greater than 20 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = 'This is the last name with length greater than 20 characters!';
@@ -100,7 +89,6 @@ describe('User - Create user', () => {
 
     it('Create user without email', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -111,7 +99,6 @@ describe('User - Create user', () => {
 
     it('Create user with email is invalid', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -123,7 +110,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of email greater than 120 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -135,7 +121,6 @@ describe('User - Create user', () => {
 
     it('Create user without password', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -147,7 +132,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of password greater than 20 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -160,7 +144,6 @@ describe('User - Create user', () => {
 
     it('Create user with password is not secure', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -173,7 +156,6 @@ describe('User - Create user', () => {
 
     it('Create user with gender is invalid', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -187,7 +169,6 @@ describe('User - Create user', () => {
 
     it('Create user with birthday is not a date', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -202,7 +183,6 @@ describe('User - Create user', () => {
 
     it('Create user with birthday greater than today', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -217,7 +197,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of phone greater than 20 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -233,7 +212,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of address greater than 200 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -251,7 +229,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of culture is not 5 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -269,7 +246,6 @@ describe('User - Create user', () => {
 
     it('Create user with the length of currency is not 3 characters', async () => {
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -289,7 +265,6 @@ describe('User - Create user', () => {
     it('Create user with email is existed', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(true);
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -304,7 +279,6 @@ describe('User - Create user', () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
         sandbox.stub(roleRepository, 'getById').resolves(undefined);
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -315,27 +289,11 @@ describe('User - Create user', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_NOT_EXISTS, 'role'));
     });
 
-    it('Create user with access denied', async () => {
-        sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(roleRepository, 'getById').resolves(user.role);
-        const param = new CreateUserCommand();
-        param.roleAuthLevel = 2;
-        param.roleId = user.roleId;
-        param.firstName = 'Test';
-        param.lastName = '1';
-        param.email = 'test@localhost.com';
-        param.password = 'Nodecore@2';
-
-        const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
-    });
-
     it('Create user with data cannot save', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
         sandbox.stub(roleRepository, 'getById').resolves(user.role);
         sandbox.stub(userRepository, 'create').resolves(undefined);
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -351,7 +309,6 @@ describe('User - Create user', () => {
         sandbox.stub(roleRepository, 'getById').resolves(user.role);
         sandbox.stub(userRepository, 'create').resolves(user.id);
         const param = new CreateUserCommand();
-        param.roleAuthLevel = 1;
         param.roleId = user.roleId;
         param.firstName = 'Test';
         param.lastName = '1';

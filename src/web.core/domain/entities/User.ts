@@ -4,6 +4,7 @@ import { GenderType } from '../enums/GenderType';
 import { IUser } from '../types/IUser';
 import { MessageError } from '../common/exceptions/message/MessageError';
 import { Role } from './Role';
+import { RoleId } from '../enums/RoleId';
 import { STORAGE_URL } from '../../../configs/Configuration';
 import { SystemError } from '../common/exceptions/SystemError';
 import { UserStatus } from '../enums/UserStatus';
@@ -18,14 +19,15 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.data.id;
     }
 
-    get roleId(): string {
+    get roleId(): RoleId {
         return this.data.roleId;
     }
 
-    set roleId(val: string) {
+    set roleId(val: RoleId) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'role id');
-        if (!validator.isUUID(val))
+
+        if (!validator.isUUID(val) || !validator.isEnum(val, RoleId))
             throw new SystemError(MessageError.PARAM_INVALID, 'role id');
 
         this.data.roleId = val;
@@ -79,6 +81,7 @@ export class User extends BaseEntity<IUser> implements IUser {
 
         if (!validator.isEmail(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'email');
+
         if (val.length > 120)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120);
 
@@ -92,6 +95,7 @@ export class User extends BaseEntity<IUser> implements IUser {
     set password(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
+
         if (val.length > 20)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20);
 
@@ -259,9 +263,7 @@ export class User extends BaseEntity<IUser> implements IUser {
     /* handlers */
 
     private _hashPassword(password: string): string {
-        if (password)
-            password = hashMD5(password, '$$88');
-        return password;
+        return hashMD5(password, '$$88');
     }
 
     comparePassword(password: string): boolean {

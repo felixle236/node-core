@@ -1,22 +1,18 @@
 import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
-import { AuthenticateUserQuery } from './AuthenticateUserQuery';
-import { IAuthenticationService } from '../../../../gateways/services/IAuthenticationService';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
+import { JwtAuthUserQuery } from './JwtAuthUserQuery';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { UnauthorizedError } from '../../../../domain/common/exceptions/UnauthorizedError';
 import { UserAuthenticated } from '../../../../domain/common/UserAuthenticated';
 
 @Service()
-export class AuthenticateUserQueryHandler implements IQueryHandler<AuthenticateUserQuery, UserAuthenticated> {
-    @Inject('role.repository')
-    private readonly _roleRepository: IRoleRepository;
+export class JwtAuthUserQueryHandler implements IQueryHandler<JwtAuthUserQuery, UserAuthenticated> {
+    @Inject('jwt.auth.service')
+    private readonly _jwtAuthService: IJwtAuthService;
 
-    @Inject('authentication.service')
-    private readonly _authenticationService: IAuthenticationService;
-
-    async handle(param: AuthenticateUserQuery): Promise<UserAuthenticated> {
+    async handle(param: JwtAuthUserQuery): Promise<UserAuthenticated> {
         if (!param.token)
             throw new UnauthorizedError(MessageError.PARAM_REQUIRED, 'token');
 
@@ -25,7 +21,7 @@ export class AuthenticateUserQueryHandler implements IQueryHandler<AuthenticateU
 
         let payload;
         try {
-            payload = this._authenticationService.verify(param.token);
+            payload = this._jwtAuthService.verify(param.token);
         }
         catch (error) {
             if (error.name === 'TokenExpiredError')
@@ -40,11 +36,6 @@ export class AuthenticateUserQueryHandler implements IQueryHandler<AuthenticateU
         if (param.roleIds && param.roleIds.length && !param.roleIds.find(roleId => roleId === payload.roleId))
             throw new UnauthorizedError(MessageError.ACCESS_DENIED);
 
-        const roles = await this._roleRepository.getAll();
-        const role = roles.find(role => role.id === payload.roleId);
-        if (!role)
-            throw new UnauthorizedError(MessageError.PARAM_INVALID, 'role');
-
-        return new UserAuthenticated(payload.sub, role);
+        return new UserAuthenticated(payload.sub, payload.roleId);
     }
 }

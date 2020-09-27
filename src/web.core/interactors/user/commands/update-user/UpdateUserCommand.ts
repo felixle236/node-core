@@ -11,6 +11,4 @@ export class UpdateUserCommand implements ICommand {
     address?: string;
     culture?: string;
     currency?: string;
-
-    roleAuthLevel: number;
 }

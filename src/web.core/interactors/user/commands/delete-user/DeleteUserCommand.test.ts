@@ -20,7 +20,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const deleteUserCommandHandler = Container.get(DeleteUserCommandHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: uuid.v4(), name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -44,39 +44,19 @@ describe('User - Delete user', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'id'));
     });
 
-    it('Delete user without permission', async () => {
-        const param = new DeleteUserCommand();
-        param.id = user.id;
-
-        const result = await deleteUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
-    });
-
     it('Delete user with data not found', async () => {
         sandbox.stub(userRepository, 'getById').resolves(undefined);
         const param = new DeleteUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
 
         const result = await deleteUserCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.DATA_NOT_FOUND));
     });
 
-    it('Delete user with access denied', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(user);
-        const param = new DeleteUserCommand();
-        param.roleAuthLevel = 2;
-        param.id = user.id;
-
-        const result = await deleteUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
-    });
-
     it('Delete user with data cannot save', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'delete').resolves(false);
         const param = new DeleteUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
 
         const result = await deleteUserCommandHandler.handle(param).catch(error => error);
@@ -87,7 +67,6 @@ describe('User - Delete user', () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'delete').resolves(true);
         const param = new DeleteUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
 
         const hasSucceed = await deleteUserCommandHandler.handle(param);

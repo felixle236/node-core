@@ -6,16 +6,13 @@ import { Role } from '../../../../web.core/domain/entities/Role';
 import { UserDb } from './UserDb';
 
 @Entity(ROLE_SCHEMA.TABLE_NAME)
-@Index((role: RoleDb) => [role.name, role.deletedAt], { unique: true })
 export class RoleDb extends BaseDbEntity<Role> implements IRole {
     @PrimaryGeneratedColumn('uuid', { name: ROLE_SCHEMA.COLUMNS.ID })
     id: string;
 
     @Column({ name: ROLE_SCHEMA.COLUMNS.NAME, length: 50 })
+    @Index({ unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
     name: string;
-
-    @Column('smallint', { name: ROLE_SCHEMA.COLUMNS.LEVEL })
-    level: number;
 
     /* Relationship */
 
@@ -36,9 +33,6 @@ export class RoleDb extends BaseDbEntity<Role> implements IRole {
 
         if (data.name !== undefined)
             this.name = data.name;
-
-        if (data.level !== undefined)
-            this.level = data.level;
 
         return this;
     }

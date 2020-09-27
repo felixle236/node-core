@@ -5,6 +5,7 @@ import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/I
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
@@ -13,12 +14,29 @@ export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, Pagina
     private readonly _userRepository: IUserRepository;
 
     async handle(param: FindUserQuery): Promise<PaginationResult<FindUserResult>> {
-        if (!param.roleAuthLevel)
+        if (!param.roleAuthId)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
+
+        param.roleIds = this._filterRolePermissions(param.roleAuthId, param.roleIds);
+        if (!param.roleIds.length)
+            throw new SystemError(MessageError.ACCESS_DENIED);
 
         const [users, count] = await this._userRepository.findAndCount(param);
         const list = users.map(user => new FindUserResult(user));
 
         return new PaginationResult(list, count, param.skip, param.limit);
+    }
+
+    private _filterRolePermissions(roleAuthId: RoleId, roleIds?: RoleId[]): RoleId[] {
+        const limitRoleIds: RoleId[] = [];
+
+        if (roleAuthId === RoleId.SUPER_ADMIN)
+            limitRoleIds.push(RoleId.MANAGER, RoleId.CLIENT);
+        else if (roleAuthId === RoleId.MANAGER)
+            limitRoleIds.push(RoleId.CLIENT);
+
+        if (!roleIds || !roleIds.length)
+            return limitRoleIds;
+        return roleIds.filter(roleId => limitRoleIds.includes(roleId));
     }
 }

@@ -1,4 +1,3 @@
-import * as validator from 'class-validator';
 import { BaseEntity } from './base/BaseEntity';
 import { IRole } from '../types/IRole';
 import { MessageError } from '../common/exceptions/message/MessageError';
@@ -21,25 +20,11 @@ export class Role extends BaseEntity<IRole> implements IRole {
     set name(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'name');
+
         if (val.length > 50)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
 
         this.data.name = val;
-    }
-
-    get level(): number {
-        return this.data.level;
-    }
-
-    set level(val: number) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'level');
-        if (!validator.isPositive(val))
-            throw new SystemError(MessageError.PARAM_INVALID, 'level');
-        if (val > 100)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'level', 100);
-
-        this.data.level = val;
     }
 
     /* Relationship */

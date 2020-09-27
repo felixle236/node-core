@@ -8,6 +8,7 @@ import { IRole } from '../../../../domain/types/IRole';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { createSandbox } from 'sinon';
@@ -20,7 +21,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const archiveUserCommandHandler = Container.get(ArchiveUserCommandHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: uuid.v4(), name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -55,7 +56,7 @@ describe('User - Archive user', () => {
     it('Archive user with data not found', async () => {
         sandbox.stub(userRepository, 'getById').resolves(undefined);
         const param = new ArchiveUserCommand();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;
 
         const result = await archiveUserCommandHandler.handle(param).catch(error => error);
@@ -65,7 +66,7 @@ describe('User - Archive user', () => {
     it('Archive user with access denied', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         const param = new ArchiveUserCommand();
-        param.roleAuthLevel = 2;
+        param.roleAuthId = RoleId.CLIENT;
         param.id = user.id;
 
         const result = await archiveUserCommandHandler.handle(param).catch(error => error);
@@ -76,7 +77,7 @@ describe('User - Archive user', () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'update').resolves(false);
         const param = new ArchiveUserCommand();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;
 
         const result = await archiveUserCommandHandler.handle(param).catch(error => error);
@@ -87,7 +88,7 @@ describe('User - Archive user', () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'update').resolves(true);
         const param = new ArchiveUserCommand();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;
 
         const hasSucceed = await archiveUserCommandHandler.handle(param);

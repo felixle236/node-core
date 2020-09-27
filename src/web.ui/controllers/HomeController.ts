@@ -8,7 +8,7 @@ export class HomeController {
     @Get('/')
     @Render('index')
     @Authorized()
-    home(@CurrentUser() userAuth: UserAuthenticated) {
+    async home(@CurrentUser() userAuth: UserAuthenticated) {
         return {
             title: 'Node Core',
             userAuth

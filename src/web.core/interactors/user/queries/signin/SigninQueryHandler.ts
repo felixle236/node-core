@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { IAuthenticationService } from '../../../../gateways/services/IAuthenticationService';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SigninQuery } from './SigninQuery';
@@ -13,8 +13,8 @@ export class SigninQueryHandler implements ICommandHandler<SigninQuery, string> 
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    @Inject('authentication.service')
-    private readonly _authenticationService: IAuthenticationService;
+    @Inject('jwt.auth.service')
+    private readonly _jwtAuthService: IJwtAuthService;
 
     async handle(param: SigninQuery): Promise<string> {
         const data = new User();
@@ -28,6 +28,6 @@ export class SigninQueryHandler implements ICommandHandler<SigninQuery, string> 
         if (user.status !== UserStatus.ACTIVED)
             throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
 
-        return this._authenticationService.sign(user);
+        return this._jwtAuthService.sign(user);
     }
 }

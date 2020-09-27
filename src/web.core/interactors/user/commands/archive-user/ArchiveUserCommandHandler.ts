@@ -3,6 +3,7 @@ import { ArchiveUserCommand } from './ArchiveUserCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
@@ -16,14 +17,14 @@ export class ArchiveUserCommandHandler implements ICommandHandler<ArchiveUserCom
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
-        if (!param.roleAuthLevel)
+        if (!param.roleAuthId)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         const user = await this._userRepository.getById(param.id);
         if (!user)
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
-        if (!user.role || user.role.level <= param.roleAuthLevel)
+        if (!(param.roleAuthId === RoleId.SUPER_ADMIN || (param.roleAuthId === RoleId.MANAGER && [RoleId.CLIENT].includes(user.roleId))))
             throw new SystemError(MessageError.ACCESS_DENIED);
 
         const data = new User();

@@ -1,4 +1,4 @@
-import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParam, QueryParams } from 'routing-controllers';
 import { CreateDummyUserCommand, DummyUser } from '../../web.core/interactors/user/commands/create-dummy-user/CreateDummyUserCommand';
 import { ArchiveUserCommand } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from '../../web.core/interactors/user/commands/archive-user/ArchiveUserCommandHandler';
@@ -39,16 +39,17 @@ export class UserController {
     ) {}
 
     @Get('/')
-    @Authorized(RoleId.SUPER_ADMIN)
-    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<PaginationResult<FindUserResult>> {
-        param.roleAuthLevel = userAuth.role.level;
+    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('roleId') roleId?: RoleId): Promise<PaginationResult<FindUserResult>> {
+        param.roleAuthId = userAuth.roleId;
+        param.roleIds = roleId ? [roleId] : [];
         return await this._findUserQueryHandler.handle(param);
     }
 
     @Get('/:id')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
     async getById(@Params() param: GetUserByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdResult> {
-        param.roleAuthLevel = userAuth.role.level;
+        param.roleAuthId = userAuth.roleId;
         return await this._getUserByIdQueryHandler.handle(param);
     }
 
@@ -60,31 +61,27 @@ export class UserController {
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async create(@Body() param: CreateUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
-        param.roleAuthLevel = userAuth.role.level;
+    async create(@Body() param: CreateUserCommand): Promise<string> {
         return await this._createUserCommandHandler.handle(param);
     }
 
     @Put('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async update(@Param('id') id: string, @Body() param: UpdateUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+    async update(@Param('id') id: string, @Body() param: UpdateUserCommand): Promise<boolean> {
         param.id = id;
-        param.roleAuthLevel = userAuth.role.level;
-
         return await this._updateUserCommandHandler.handle(param);
     }
 
     @Post('/:id/archive')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
     async archive(@Params() param: ArchiveUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
-        param.roleAuthLevel = userAuth.role.level;
+        param.roleAuthId = userAuth.roleId;
         return await this._archiveUserCommandHandler.handle(param);
     }
 
     @Delete('/:id')
     @Authorized(RoleId.SUPER_ADMIN)
-    async delete(@Params() param: DeleteUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
-        param.roleAuthLevel = userAuth.role.level;
+    async delete(@Params() param: DeleteUserCommand): Promise<boolean> {
         return await this._deleteUserCommandHandler.handle(param);
     }
 
@@ -101,7 +98,6 @@ export class UserController {
             user.lastName = item.lastName;
             user.email = item.email;
             user.password = item.password;
-            user.gender = item.gender;
             user.avatar = item.avatar;
 
             param.users.push(user);

@@ -22,7 +22,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const updateUserCommandHandler = Container.get(UpdateUserCommandHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: uuid.v4(), name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser);
 };
@@ -46,17 +46,8 @@ describe('User - Update user', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'id'));
     });
 
-    it('Update user without permission', async () => {
-        const param = new UpdateUserCommand();
-        param.id = user.id;
-
-        const result = await updateUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
-    });
-
     it('Update user without first name', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
 
         const result = await updateUserCommandHandler.handle(param).catch(error => error);
@@ -65,7 +56,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of first name greater than 20 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'This is the first name with length greater than 20 characters!';
 
@@ -75,7 +65,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of last name greater than 20 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = 'This is the last name with length greater than 20 characters!';
@@ -86,7 +75,6 @@ describe('User - Update user', () => {
 
     it('Update user with gender is invalid', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -98,7 +86,6 @@ describe('User - Update user', () => {
 
     it('Update user with birthday is not a date', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -111,7 +98,6 @@ describe('User - Update user', () => {
 
     it('Update user with birthday greater than today', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -124,7 +110,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of phone greater than 20 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -138,7 +123,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of address greater than 200 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -154,7 +138,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of culture is not 5 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -170,7 +153,6 @@ describe('User - Update user', () => {
 
     it('Update user with the length of currency is not 3 characters', async () => {
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -188,7 +170,6 @@ describe('User - Update user', () => {
     it('Update user with data not found', async () => {
         sandbox.stub(userRepository, 'getById').resolves(undefined);
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -197,23 +178,10 @@ describe('User - Update user', () => {
         expect(result).to.include(new SystemError(MessageError.DATA_NOT_FOUND));
     });
 
-    it('Update user with access denied', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(user);
-        const param = new UpdateUserCommand();
-        param.roleAuthLevel = 2;
-        param.id = user.id;
-        param.firstName = 'Test';
-        param.lastName = '1';
-
-        const result = await updateUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
-    });
-
     it('Update user with data cannot save', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'update').resolves(false);
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';
@@ -226,7 +194,6 @@ describe('User - Update user', () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         sandbox.stub(userRepository, 'update').resolves(true);
         const param = new UpdateUserCommand();
-        param.roleAuthLevel = 1;
         param.id = user.id;
         param.firstName = 'Test';
         param.lastName = '1';

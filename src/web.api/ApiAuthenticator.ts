@@ -1,22 +1,22 @@
 import { Action } from 'routing-controllers';
-import { AuthenticateUserQuery } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
-import { AuthenticateUserQueryHandler } from '../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
+import { JwtAuthUserQuery } from '../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { Service } from 'typedi';
 
 @Service()
 export class ApiAuthenticator {
     constructor(
-        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler
+        private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler
     ) {}
 
     authorizationHttpChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
         const parts = (action.request.headers.authorization || '').split(' ');
         const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
-        const param = new AuthenticateUserQuery();
+        const param = new JwtAuthUserQuery();
         param.token = token;
         param.roleIds = roleIds;
 
-        action.request.userAuth = await this._authenticateUserQueryHandler.handle(param);
+        action.request.userAuth = await this._jwtAuthUserQueryHandler.handle(param);
         return !!action.request.userAuth;
     }
 

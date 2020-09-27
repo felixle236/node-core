@@ -17,9 +17,6 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
     private readonly _userRepository: IUserRepository;
 
     async handle(param: CreateUserCommand): Promise<string> {
-        if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
-
         const data = new User();
         data.roleId = param.roleId;
         data.status = UserStatus.ACTIVED;
@@ -44,9 +41,6 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
         const role = await this._roleRepository.getById(data.roleId);
         if (!role)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
-
-        if (role.level <= param.roleAuthLevel)
-            throw new SystemError(MessageError.ACCESS_DENIED);
 
         const id = await this._userRepository.create(data);
         if (!id)

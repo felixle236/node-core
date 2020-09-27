@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { LogProvider, MailProvider, NotificationProvider, PaymentProvider, SmsProvider, StorageProvider } from './ServiceProvider';
+import { LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './ServiceProvider';
 import { convertStringToBoolean } from '../libs/common';
 dotenv.config();
 
@@ -67,7 +67,7 @@ export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';
 export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
 
 export const STORAGE_URL: string = STORAGE_PROVIDER === StorageProvider.MINIO
-    ? (IS_USE_SSL_MINIO ? 'https' : 'http') + `://${MINIO_CONFIG_HOST}` + (MINIO_CONFIG_PORT === 80 ? '' : `:${MINIO_CONFIG_PORT}`) + `/${BUCKET_NAME}/`
+    ? `http://${MINIO_CONFIG_HOST}` + (MINIO_CONFIG_PORT === 80 ? '' : `:${MINIO_CONFIG_PORT}`) + `/${BUCKET_NAME}/`
     : STORAGE_PROVIDER === StorageProvider.AWS_S3 ? `https://s3.${S3_REGION}.amazonaws.com/${BUCKET_NAME}/` : `http://localhost/${BUCKET_NAME}/`;
 
 // MAIL SERVICE
@@ -91,7 +91,6 @@ export const TWILIO_AUTH_TOKEN: string = process.env.TWILIO_AUTH_TOKEN ?? '';
 
 // PAYMENT SERVICE
 
-export const PAYMENT_PROVIDER: number = process.env.PAYMENT_PROVIDER ? Number(process.env.PAYMENT_PROVIDER) : PaymentProvider.CONSOLE;
 export const STRIPE_KEY: string = process.env.STRIPE_KEY ?? '';
 export const PAYPAL_KEY: string = process.env.PAYPAL_KEY ?? '';
 

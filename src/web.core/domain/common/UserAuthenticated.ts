@@ -1,23 +1,11 @@
-import { Role } from '../entities/Role';
+import { RoleId } from '../enums/RoleId';
 
 export class UserAuthenticated {
     userId: string;
-    role: RoleAuthenticated;
+    roleId: RoleId;
 
-    constructor(userId: string, role: Role) {
+    constructor(userId: string, roleId: RoleId) {
         this.userId = userId;
-        this.role = new RoleAuthenticated(role);
-    }
-}
-
-class RoleAuthenticated {
-    id: string;
-    name: string;
-    level: number;
-
-    constructor(data: Role) {
-        this.id = data.id;
-        this.name = data.name;
-        this.level = data.level;
+        this.roleId = roleId;
     }
 }

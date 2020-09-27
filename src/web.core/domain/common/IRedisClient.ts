@@ -1,5 +1,62 @@
 import { RedisClient, ServerInfo } from 'redis';
 
+export interface IServerInfo {
+    redis_version: string; // eslint-disable-line
+    versions: number[];
+}
+
+export interface IOverloadedCommand<T, T2> {
+    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T): Promise<T2>;
+    (arg1: T, arg2: T | T[]): Promise<T2>;
+    (arg1: T | T[]): Promise<T2>;
+    (...args: Array<T>): Promise<T2>;
+}
+
+export interface IOverloadedKeyCommand<T, T2> {
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T): Promise<T2>;
+    (key: string, arg1: T | T[]): Promise<T2>;
+    (key: string, ...args: Array<T>): Promise<T2>;
+    (...args: Array<string | T>): Promise<T2>;
+}
+
+export interface IOverloadedListCommand<T, T2> {
+    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
+    (arg1: T, arg2: T, arg3: T): Promise<T2>;
+    (arg1: T, arg2: T): Promise<T2>;
+    (arg1: T | T[]): Promise<T2>;
+    (...args: Array<T>): Promise<T2>;
+}
+
+export interface IOverloadedSetCommand<T, T2> {
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T, arg3: T): Promise<T2>;
+    (key: string, arg1: T, arg2: T): Promise<T2>;
+    (key: string, arg1: T | { [key: string]: T } | T[]): Promise<T2>;
+    (key: string, ...args: Array<T>): Promise<T2>;
+    (args: [string, ...T[]]): Promise<T2>;
+}
+
+export interface IOverloadedLastCommand<T1, T2, T3> {
+    (arg1: T1, arg2: T1, arg3: T1, arg4: T1, arg5: T1, arg6: T2): Promise<T3>;
+    (arg1: T1, arg2: T1, arg3: T1, arg4: T1, arg5: T2): Promise<T3>;
+    (arg1: T1, arg2: T1, arg3: T1, arg4: T2): Promise<T3>;
+    (arg1: T1, arg2: T1, arg3: T2): Promise<T3>;
+    (arg1: T1, arg2: T2 | Array<T1 | T2>): Promise<T3>;
+    (args: Array<T1 | T2>): Promise<T3>;
+    (...args: Array<T1 | T2>): Promise<T3>;
+}
+
 export interface IRedisClient extends RedisClient {
     monitorAsync(): Promise<undefined>;
     MONITORASYNC(): Promise<undefined>;
@@ -1066,61 +1123,4 @@ export interface IRedisClient extends RedisClient {
      */
     zscanAsync: IOverloadedKeyCommand<string, [string, string[]]>;
     ZSCANASYNC: IOverloadedKeyCommand<string, [string, string[]]>;
-}
-
-export interface IServerInfo {
-    redis_version: string; // eslint-disable-line
-    versions: number[];
-}
-
-export interface IOverloadedCommand<T, T2> {
-    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T): Promise<T2>;
-    (arg1: T, arg2: T | T[]): Promise<T2>;
-    (arg1: T | T[]): Promise<T2>;
-    (...args: Array<T>): Promise<T2>;
-}
-
-export interface IOverloadedKeyCommand<T, T2> {
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T): Promise<T2>;
-    (key: string, arg1: T | T[]): Promise<T2>;
-    (key: string, ...args: Array<T>): Promise<T2>;
-    (...args: Array<string | T>): Promise<T2>;
-}
-
-export interface IOverloadedListCommand<T, T2> {
-    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
-    (arg1: T, arg2: T, arg3: T): Promise<T2>;
-    (arg1: T, arg2: T): Promise<T2>;
-    (arg1: T | T[]): Promise<T2>;
-    (...args: Array<T>): Promise<T2>;
-}
-
-export interface IOverloadedSetCommand<T, T2> {
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T, arg6: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T, arg5: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T, arg4: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T, arg3: T): Promise<T2>;
-    (key: string, arg1: T, arg2: T): Promise<T2>;
-    (key: string, arg1: T | { [key: string]: T } | T[]): Promise<T2>;
-    (key: string, ...args: Array<T>): Promise<T2>;
-    (args: [string, ...T[]]): Promise<T2>;
-}
-
-export interface IOverloadedLastCommand<T1, T2, T3> {
-    (arg1: T1, arg2: T1, arg3: T1, arg4: T1, arg5: T1, arg6: T2): Promise<T3>;
-    (arg1: T1, arg2: T1, arg3: T1, arg4: T1, arg5: T2): Promise<T3>;
-    (arg1: T1, arg2: T1, arg3: T1, arg4: T2): Promise<T3>;
-    (arg1: T1, arg2: T1, arg3: T2): Promise<T3>;
-    (arg1: T1, arg2: T2 | Array<T1 | T2>): Promise<T3>;
-    (args: Array<T1 | T2>): Promise<T3>;
-    (...args: Array<T1 | T2>): Promise<T3>;
 }

@@ -1,6 +1,6 @@
 import { Body, HeaderParam, JsonController, Post } from 'routing-controllers';
-import { AuthenticateUserQuery } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQuery';
-import { AuthenticateUserQueryHandler } from '../../web.core/interactors/auth/queries/authenticate-user/AuthenticateUserQueryHandler';
+import { JwtAuthUserQuery } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { Service } from 'typedi';
 import { SigninQuery } from '../../web.core/interactors/user/queries/signin/SigninQuery';
 import { SigninQueryHandler } from '../../web.core/interactors/user/queries/signin/SigninQueryHandler';
@@ -8,19 +8,19 @@ import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticate
 
 @Service()
 @JsonController('/auth')
-export class AuthenticationController {
+export class AuthController {
     constructor(
-        private readonly _authenticateUserQueryHandler: AuthenticateUserQueryHandler,
+        private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler,
         private readonly _signinQueryHandler: SigninQueryHandler
     ) {}
 
     @Post('/')
     async authenticate(@HeaderParam('authorization') token: string): Promise<UserAuthenticated> {
         const parts = (token || '').split(' ');
-        const param = new AuthenticateUserQuery();
+        const param = new JwtAuthUserQuery();
         param.token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
 
-        return await this._authenticateUserQueryHandler.handle(param);
+        return await this._jwtAuthUserQueryHandler.handle(param);
     }
 
     @Post('/login')

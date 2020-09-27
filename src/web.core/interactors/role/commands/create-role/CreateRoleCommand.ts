@@ -2,7 +2,4 @@ import { ICommand } from '../../../../domain/common/interactor/interfaces/IComma
 
 export class CreateRoleCommand implements ICommand {
     name: string;
-    level: number;
-
-    roleAuthLevel: number;
 }

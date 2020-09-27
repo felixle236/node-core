@@ -3,9 +3,7 @@ import { FindRoleQuery } from './FindRoleQuery';
 import { FindRoleResult } from './FindRoleResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
 export class FindRoleQueryHandler implements IQueryHandler<FindRoleQuery, PaginationResult<FindRoleResult>> {
@@ -13,9 +11,6 @@ export class FindRoleQueryHandler implements IQueryHandler<FindRoleQuery, Pagina
     private readonly _roleRepository: IRoleRepository;
 
     async handle(param: FindRoleQuery): Promise<PaginationResult<FindRoleResult>> {
-        if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
-
         const [roles, count] = await this._roleRepository.findAndCount(param);
         const list = roles.map(role => new FindRoleResult(role));
 

@@ -4,20 +4,20 @@ import { DateTransformer } from '../transformers/DateTransformer';
 import { GenderType } from '../../../../web.core/domain/enums/GenderType';
 import { IUser } from '../../../../web.core/domain/types/IUser';
 import { RoleDb } from './RoleDb';
+import { RoleId } from '../../../../web.core/domain/enums/RoleId';
 import { USER_SCHEMA } from '../schemas/UserSchema';
 import { User } from '../../../../web.core/domain/entities/User';
 import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 
 @Entity(USER_SCHEMA.TABLE_NAME)
-@Index((user: UserDb) => [user.email, user.deletedAt], { unique: true })
 export class UserDb extends BaseDbEntity<User> implements IUser {
     @PrimaryGeneratedColumn('uuid', { name: USER_SCHEMA.COLUMNS.ID })
     id: string;
 
     @Column({ name: USER_SCHEMA.COLUMNS.ROLE_ID })
-    roleId: string;
+    roleId: RoleId;
 
-    @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.INACTIVE })
+    @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.ACTIVED })
     status: UserStatus;
 
     @Column({ name: USER_SCHEMA.COLUMNS.FIRST_NAME, length: 20 })
@@ -27,6 +27,7 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     lastName?: string;
 
     @Column({ name: USER_SCHEMA.COLUMNS.EMAIL, length: 120 })
+    @Index({ unique: true, where: UserDb.getIndexFilterDeletedColumn() })
     email: string;
 
     @Column({ name: USER_SCHEMA.COLUMNS.PASSWORD, length: 32 })

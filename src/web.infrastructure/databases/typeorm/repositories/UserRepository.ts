@@ -22,11 +22,8 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
 
         query = query.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
 
-        if (param.roleId)
-            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = :roleId`, { roleId: param.roleId });
-
-        if (param.roleAuthLevel)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
+        if (param.roleIds)
+            query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: param.roleIds });
 
         if (param.keyword) {
             const keyword = `%${param.keyword}%`;

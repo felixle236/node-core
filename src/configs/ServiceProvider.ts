@@ -22,12 +22,6 @@ export enum SmsProvider {
     SEND_IN_BLUE = 3
 }
 
-export enum PaymentProvider {
-    CONSOLE = 1,
-    STRIPE = 2,
-    PAYPAL = 3
-}
-
 export enum NotificationProvider {
     CONSOLE = 1,
     NODE_PUSH_NOTIFICATION = 2

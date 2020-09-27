@@ -26,10 +26,7 @@ export const USER_SCHEMA = {
         FORGOT_EXPIRE: 'forgot_expire'
     },
     RELATED_ONE: {
+        // Table name
         ROLE: 'role'
-    },
-    RELATED_MANY: {
-        SENDERS: 'senders',
-        RECEIVERS: 'receivers'
     }
 };

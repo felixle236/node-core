@@ -8,6 +8,7 @@ import { IRole } from '../../../../domain/types/IRole';
 import { IUser } from '../../../../domain/types/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { RoleId } from '../../../../domain/enums/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/User';
 import { createSandbox } from 'sinon';
@@ -19,7 +20,7 @@ Container.set('user.repository', {
 const userRepository = Container.get<IUserRepository>('user.repository');
 const getUserByIdQueryHandler = Container.get(GetUserByIdQueryHandler);
 
-const roleData = { id: uuid.v4(), name: 'Role 2', level: 2 } as IRole;
+const roleData = { id: RoleId.MANAGER, name: 'Role 2' } as IRole;
 const generateUser = () => {
     return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com', birthday: new Date() } as IUser);
 };
@@ -54,7 +55,7 @@ describe('User - Get user by id', () => {
     it('Get user by id with data not found', async () => {
         sandbox.stub(userRepository, 'getById').resolves(undefined);
         const param = new GetUserByIdQuery();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;
 
         const result = await getUserByIdQueryHandler.handle(param).catch(error => error);
@@ -64,7 +65,7 @@ describe('User - Get user by id', () => {
     it('Get user by id with access denied', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         const param = new GetUserByIdQuery();
-        param.roleAuthLevel = 2;
+        param.roleAuthId = RoleId.CLIENT;
         param.id = user.id;
 
         const result = await getUserByIdQueryHandler.handle(param).catch(error => error);
@@ -74,7 +75,7 @@ describe('User - Get user by id', () => {
     it('Get user by id successfully', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
         const param = new GetUserByIdQuery();
-        param.roleAuthLevel = 1;
+        param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;
 
         const result = await getUserByIdQueryHandler.handle(param);

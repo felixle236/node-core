@@ -5,10 +5,10 @@ export const ROLE_SCHEMA = {
     COLUMNS: {
         ...BASE_SCHEMA.COLUMNS,
         ID: 'id',
-        NAME: 'name',
-        LEVEL: 'level'
+        NAME: 'name'
     },
     RELATED_MANY: {
-        USERS: 'users'
+        // Table name
+        USER: 'users'
     }
 };

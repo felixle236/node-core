@@ -15,14 +15,9 @@ export class GetRoleByIdQueryHandler implements IQueryHandler<GetRoleByIdQuery, 
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
-        if (!param.roleAuthLevel)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
-
         const role = await this._roleRepository.getById(param.id);
         if (!role)
             throw new SystemError(MessageError.DATA_NOT_FOUND);
-        if (role.level < param.roleAuthLevel)
-            throw new SystemError(MessageError.ACCESS_DENIED);
 
         return new GetRoleByIdResult(role);
     }

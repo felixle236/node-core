@@ -18,8 +18,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
 
     async getAll(expireTimeCaching: number = 24 * 60 * 60 * 1000): Promise<Role[]> {
         const list = await this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
-            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
             .cache(this._roleListCacheKey, expireTimeCaching)
             .getMany();
         return list.map(item => item.toEntity());
@@ -28,17 +27,13 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
     async findAndCount(param: FindRoleQuery): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME);
 
-        if (param.roleAuthLevel)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
-
         if (param.keyword) {
             const keyword = `%${param.keyword}%`;
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
         }
 
         query = query
-            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
             .skip(param.skip)
             .take(param.limit);
 
@@ -53,17 +48,13 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
                 `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`
             ]);
 
-        if (param.roleAuthLevel)
-            query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL} > :level`, { level: param.roleAuthLevel });
-
         if (param.keyword) {
             const keyword = `%${param.keyword}%`;
             query = query.andWhere(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME} ilike :keyword`, { keyword });
         }
 
         query = query
-            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.LEVEL}`, SortType.ASC)
-            .addOrderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
+            .orderBy(`${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}`, SortType.ASC)
             .skip(param.skip)
             .take(param.limit);
 

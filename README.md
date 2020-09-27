@@ -11,7 +11,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 * Run & debug on .ts files by Visual Code.
 * Unit test & coverage.
 * Database migration.
-* Demo table inheritance (feature/table-inheritance)
+* Demo table inheritance, refer to `Experiences` below of this guide and branch `feature/table-inheritance`.
 
 ### Patterns and Principles
 
@@ -42,7 +42,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 
 ### Required
 
-- NodeJS (version >= 12.x)
+- NodeJS (version >= 12.9.0)
 - Knowledge of Typescript, ES6, TypeORM, PostgreSQL.
 
 ### Document Related
@@ -117,7 +117,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------------------ log -----------------------// Log service.
 - |------------------ mail ----------------------// Mail service.
 - |------------------ notification --------------// Notification service.
-- |------------------ payment -------------------// Payment service.
+- |------------------ payment -------------------// Payment services.
 - |------------------ sms -----------------------// SMS service.
 - |------------------ storage -------------------// Storage service.
 - |------------------ ServiceRegister.ts
@@ -315,29 +315,6 @@ static PARAM_CANNOT_UPLOAD = new ErrorObject(ErrorCode.DATA_CANNOT_UPLOAD, 'The 
 static PARAM_REQUIRED = new ErrorObject(ErrorCode.DATA_REQUIRED, 'The {0} is required!');
 
 static PARAM_INCORRECT = new ErrorObject(ErrorCode.DATA_INCORRECT, 'The {0} is incorrect!');
-
-static PARAM_EXISTED = new ErrorObject(ErrorCode.DATA_EXISTED, 'The {0} is already existed!');
-
-static PARAM_NOT_EXISTS = new ErrorObject(ErrorCode.DATA_NOT_EXISTS, 'The {0} is not exists!');
-
-static PARAM_EXPIRED = new ErrorObject(ErrorCode.DATA_EXPIRED, 'The {0} has expired!');
-
-static PARAM_NOT_ACTIVATED = new ErrorObject(ErrorCode.DATA_NOT_ACTIVATED, 'The {0} has not been activated!');
-
-static PARAM_NOT_VERIFIED = new ErrorObject(ErrorCode.DATA_NOT_VERIFIED, 'The {0} has not been verified!');
-
-static DATA_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'Data is invalid!');
-static PARAM_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The {0} is invalid!');
-static PARAM_FORMAT_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The format of {0} is invalid or not supported! The following formats are supported: {1}');
-static PARAM_SIZE_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The size of {0} must be a maximum of {1} ({2})!');
-static PARAM_LEN_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be {1}!');
-static PARAM_LEN_AT_LEAST = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1}!');
-static PARAM_LEN_AT_LEAST_AND_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1} and maximum {2}!');
-static PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1} and maximum {2} with one uppercase letter, one lower case letter, one digit and one special character!');
-static PARAM_LEN_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be a maximum of {1}!');
-static PARAM_LEN_LESS_OR_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be less than or equal to {1}!');
-static PARAM_LEN_GREATER_OR_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be greater than or equal to {1}!');
-static PARAM_LEN_BETWEEN = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be between {1} and {2}!');
 ```
 
 Usage:
@@ -409,7 +386,7 @@ npm run migration:revert
 - Usually, we have 3 cases:
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
-   - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` on controller functions.
+   - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` or `@Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])` on controller functions.
 - `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object. Also, we can pass the role in this function for checking. The process will be through the cache first, so the process will be handled very quickly.
 
 ### API Response Format
@@ -561,4 +538,5 @@ DELETE http://localhost/api/v1/users/{:id}
       - Controllers
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
 - The function order should be arranged in turn according to find, get, check, create, update, delete, remove.
-- The query param will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to FindUserQuery.ts file.
+- The query param (url-path?param1=&param2=) will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to FindUserQuery.ts file.
+- If we use the table inheritance then we shouldn't use the enum type for parent table in database schema, with the logic code is still good.

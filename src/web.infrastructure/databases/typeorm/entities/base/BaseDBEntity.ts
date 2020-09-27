@@ -16,4 +16,8 @@ export abstract class BaseDbEntity<T extends IEntity> {
 
     abstract toEntity(): T;
     abstract fromEntity(entity: T): this;
+
+    static getIndexFilterDeletedColumn(): string {
+        return `${BASE_SCHEMA.COLUMNS.DELETED_AT} IS NULL`;
+    }
 }

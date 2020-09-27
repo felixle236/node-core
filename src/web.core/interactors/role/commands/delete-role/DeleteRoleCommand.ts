@@ -2,6 +2,4 @@ import { ICommand } from '../../../../domain/common/interactor/interfaces/IComma
 
 export class DeleteRoleCommand implements ICommand {
     id: string;
-
-    roleAuthLevel: number;
 }

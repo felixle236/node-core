@@ -1,16 +1,24 @@
-import { IPaymentParam, IPaymentService } from '../../../../web.core/gateways/services/IPaymentService';
+import { IS_DEVELOPMENT, STRIPE_KEY } from '../../../configs/Configuration';
+import { IStripePaymentParam, IStripePaymentService } from '../../../web.core/gateways/services/IStripePaymentService';
+import { Service } from 'typedi';
 import { Stripe } from 'stripe';
 
-export class StripeFactory implements IPaymentService {
+@Service('stripe.payment.service')
+export class StripePaymentService implements IStripePaymentService {
     private readonly _stripe: Stripe;
 
-    constructor(apiKey: string) {
-        this._stripe = new Stripe(apiKey, {
+    constructor() {
+        this._stripe = new Stripe(STRIPE_KEY, {
             apiVersion: '2020-08-27'
         });
     }
 
-    async pay(data: IPaymentParam): Promise<string> {
+    async pay(data: IStripePaymentParam): Promise<string> {
+        if (IS_DEVELOPMENT) {
+            console.log('StripePaymentService.pay', data);
+            return 'customer id';
+        }
+
         const customerParams: Stripe.CustomerCreateParams = {
             name: data.name,
             email: data.email,
