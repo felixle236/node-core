@@ -71,7 +71,7 @@ const repository = getFileContent(path.join(__dirname, './web.infrastructure/dat
 
 // web.api
 
-const controllerPath = path.join(__dirname, `../src/web.api/controllers/${pascalName}Controller.ts`);
+const controllerPath = path.join(__dirname, `../src/web.api/controllers/${camelName}/${pascalName}Controller.ts`);
 const controller = getFileContent(path.join(__dirname, './web.api/Controller.tmp'));
 
 // Handle

@@ -6,7 +6,7 @@ import { MessageError } from '../../../../domain/common/exceptions/message/Messa
 import { SigninQuery } from './SigninQuery';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 
 @Service()
 export class SigninQueryHandler implements ICommandHandler<SigninQuery, string> {

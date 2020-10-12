@@ -10,7 +10,7 @@ import { ResendActivationCommand } from './ResendActivationCommand';
 import { ResendActivationCommandHandler } from './ResendActivationCommandHandler';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 

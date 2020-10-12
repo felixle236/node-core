@@ -8,7 +8,7 @@ import { Service } from 'typedi';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 import { User } from '../../../../../web.core/domain/entities/user/User';
 import { UserDb } from '../../entities/user/UserDb';
-import { UserStatus } from '../../../../../web.core/domain/enums/UserStatus';
+import { UserStatus } from '../../../../../web.core/domain/enums/user/UserStatus';
 
 @Service('user.repository')
 export class UserRepository extends BaseRepository<User, UserDb, string> implements IUserRepository {

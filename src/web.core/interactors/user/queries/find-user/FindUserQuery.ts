@@ -1,7 +1,7 @@
 import { Filter } from '../../../../domain/common/interactor/Filter';
 import { IsBoolean } from 'class-validator';
-import { RoleId } from '../../../../domain/enums/RoleId';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 
 export class FindUserQuery extends Filter {
     roleIds?: RoleId[];

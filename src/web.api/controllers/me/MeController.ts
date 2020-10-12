@@ -1,16 +1,16 @@
 import * as multer from 'multer';
 import { Authorized, Body, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
-import { GetMyProfileQuery } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQuery';
-import { GetMyProfileQueryHandler } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQueryHandler';
-import { GetMyProfileResult } from '../../web.core/interactors/user/queries/get-my-profile/GetMyProfileResult';
+import { GetMyProfileQuery } from '../../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQuery';
+import { GetMyProfileQueryHandler } from '../../../web.core/interactors/user/queries/get-my-profile/GetMyProfileQueryHandler';
+import { GetMyProfileResult } from '../../../web.core/interactors/user/queries/get-my-profile/GetMyProfileResult';
 import { Service } from 'typedi';
-import { UpdateMyPasswordCommand } from '../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommand';
-import { UpdateMyPasswordCommandHandler } from '../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommandHandler';
-import { UpdateMyProfileCommand } from '../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommand';
-import { UpdateMyProfileCommandHandler } from '../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommandHandler';
-import { UploadMyAvatarCommand } from '../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommand';
-import { UploadMyAvatarCommandHandler } from '../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
-import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
+import { UpdateMyPasswordCommand } from '../../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommand';
+import { UpdateMyPasswordCommandHandler } from '../../../web.core/interactors/user/commands/update-my-password/UpdateMyPasswordCommandHandler';
+import { UpdateMyProfileCommand } from '../../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommand';
+import { UpdateMyProfileCommandHandler } from '../../../web.core/interactors/user/commands/update-my-profile/UpdateMyProfileCommandHandler';
+import { UploadMyAvatarCommand } from '../../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommand';
+import { UploadMyAvatarCommandHandler } from '../../../web.core/interactors/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
+import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/v1/me')

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { ContentType, Get, JsonController, Res } from 'routing-controllers';
 import { Service } from 'typedi';
-import { readFile } from '../../libs/file';
+import { readFile } from '../../../libs/file';
 
 @Service()
 @JsonController('/v1/systems')

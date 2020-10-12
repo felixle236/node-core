@@ -7,12 +7,12 @@ import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/RoleId';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SigninQuery } from './SigninQuery';
 import { SigninQueryHandler } from './SigninQueryHandler';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 

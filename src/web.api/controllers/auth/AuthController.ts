@@ -1,10 +1,10 @@
 import { Body, HeaderParam, JsonController, Post } from 'routing-controllers';
-import { JwtAuthUserQuery } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
-import { JwtAuthUserQueryHandler } from '../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
+import { JwtAuthUserQuery } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { Service } from 'typedi';
-import { SigninQuery } from '../../web.core/interactors/user/queries/signin/SigninQuery';
-import { SigninQueryHandler } from '../../web.core/interactors/user/queries/signin/SigninQueryHandler';
-import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
+import { SigninQuery } from '../../../web.core/interactors/user/queries/signin/SigninQuery';
+import { SigninQueryHandler } from '../../../web.core/interactors/user/queries/signin/SigninQueryHandler';
+import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/v1/auth')

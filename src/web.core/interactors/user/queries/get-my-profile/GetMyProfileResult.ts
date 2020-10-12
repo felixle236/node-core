@@ -1,4 +1,4 @@
-import { GenderType } from '../../../../domain/enums/GenderType';
+import { GenderType } from '../../../../domain/enums/user/GenderType';
 import { Role } from '../../../../domain/entities/role/Role';
 import { User } from '../../../../domain/entities/user/User';
 

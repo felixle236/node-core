@@ -1,17 +1,17 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { BUCKET_NAME } from '../../../../configs/Configuration';
-import { GenderType } from '../../../../web.core/domain/enums/GenderType';
+import { GenderType } from '../../../../web.core/domain/enums/user/GenderType';
 import { IRole } from '../../../../web.core/domain/types/role/IRole';
 import { IRoleRepository } from '../../../../web.core/gateways/repositories/role/IRoleRepository';
 import { IStorageService } from '../../../../web.core/gateways/services/IStorageService';
 import { IUserRepository } from '../../../../web.core/gateways/repositories/user/IUserRepository';
 import { Role } from '../../../../web.core/domain/entities/role/Role';
-import { RoleId } from '../../../../web.core/domain/enums/RoleId';
+import { RoleId } from '../../../../web.core/domain/enums/role/RoleId';
 import { RoleRepository } from '../repositories/role/RoleRepository';
 import { StorageService } from '../../../services/storage/StorageService';
 import { User } from '../../../../web.core/domain/entities/user/User';
 import { UserRepository } from '../repositories/user/UserRepository';
-import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
+import { UserStatus } from '../../../../web.core/domain/enums/user/UserStatus';
 
 export class Initialize1598357101124 implements MigrationInterface {
     name = 'Initialize1598357101124'

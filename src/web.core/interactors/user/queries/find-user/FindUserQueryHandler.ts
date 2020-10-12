@@ -5,7 +5,7 @@ import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/I
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
-import { RoleId } from '../../../../domain/enums/RoleId';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()

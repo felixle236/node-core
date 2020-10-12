@@ -4,7 +4,7 @@ import { GetUserByIdResult } from './GetUserByIdResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/RoleId';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()

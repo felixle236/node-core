@@ -8,7 +8,7 @@ import { MessageError } from '../../../../domain/common/exceptions/message/Messa
 import { ResendActivationCommand } from './ResendActivationCommand';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { addSeconds } from '../../../../../libs/date';
 
 @Service()

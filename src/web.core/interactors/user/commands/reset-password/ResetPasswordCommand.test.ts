@@ -9,7 +9,7 @@ import { ResetPasswordCommand } from './ResetPasswordCommand';
 import { ResetPasswordCommandHandler } from './ResetPasswordCommandHandler';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { addDays } from '../../../../../libs/date';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';

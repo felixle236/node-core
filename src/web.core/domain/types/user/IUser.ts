@@ -1,8 +1,8 @@
-import { GenderType } from '../../enums/GenderType';
+import { GenderType } from '../../enums/user/GenderType';
 import { IEntity } from '../base/IEntity';
 import { IRole } from '../role/IRole';
-import { RoleId } from '../../enums/RoleId';
-import { UserStatus } from '../../enums/UserStatus';
+import { RoleId } from '../../enums/role/RoleId';
+import { UserStatus } from '../../enums/user/UserStatus';
 
 export interface IUser extends IEntity {
     id: string;

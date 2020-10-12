@@ -1,4 +1,4 @@
-import { RoleId } from '../enums/RoleId';
+import { RoleId } from '../enums/role/RoleId';
 
 export class UserAuthenticated {
     userId: string;

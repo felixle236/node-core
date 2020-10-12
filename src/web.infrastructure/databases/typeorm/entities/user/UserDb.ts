@@ -1,13 +1,13 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseDbEntity } from '../base/BaseDBEntity';
 import { DateTransformer } from '../../transformers/DateTransformer';
-import { GenderType } from '../../../../../web.core/domain/enums/GenderType';
+import { GenderType } from '../../../../../web.core/domain/enums/user/GenderType';
 import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { RoleDb } from '../role/RoleDb';
-import { RoleId } from '../../../../../web.core/domain/enums/RoleId';
+import { RoleId } from '../../../../../web.core/domain/enums/role/RoleId';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 import { User } from '../../../../../web.core/domain/entities/user/User';
-import { UserStatus } from '../../../../../web.core/domain/enums/UserStatus';
+import { UserStatus } from '../../../../../web.core/domain/enums/user/UserStatus';
 
 @Entity(USER_SCHEMA.TABLE_NAME)
 export class UserDb extends BaseDbEntity<User> implements IUser {

@@ -5,11 +5,11 @@ import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/RoleId';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SignupCommand } from './SignupCommand';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { addSeconds } from '../../../../../libs/date';
 
 @Service()

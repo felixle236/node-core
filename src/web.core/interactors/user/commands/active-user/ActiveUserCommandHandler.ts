@@ -6,7 +6,7 @@ import { IUserRepository } from '../../../../gateways/repositories/user/IUserRep
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/UserStatus';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 
 @Service()
 export class ActiveUserCommandHandler implements ICommandHandler<ActiveUserCommand, boolean> {

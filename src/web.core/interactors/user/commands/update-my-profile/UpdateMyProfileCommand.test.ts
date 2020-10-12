@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
 import { Container } from 'typedi';
-import { GenderType } from '../../../../domain/enums/GenderType';
+import { GenderType } from '../../../../domain/enums/user/GenderType';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
