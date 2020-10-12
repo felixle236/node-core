@@ -13,7 +13,7 @@ import { UploadMyAvatarCommandHandler } from '../../web.core/interactors/user/co
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
-@JsonController('/me')
+@JsonController('/v1/me')
 export class MeController {
     constructor(
         private readonly _getMyProfileQueryHandler: GetMyProfileQueryHandler,

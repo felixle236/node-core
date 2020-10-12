@@ -1,16 +1,16 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { BUCKET_NAME } from '../../../../configs/Configuration';
 import { GenderType } from '../../../../web.core/domain/enums/GenderType';
-import { IRole } from '../../../../web.core/domain/types/IRole';
-import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
+import { IRole } from '../../../../web.core/domain/types/role/IRole';
+import { IRoleRepository } from '../../../../web.core/gateways/repositories/role/IRoleRepository';
 import { IStorageService } from '../../../../web.core/gateways/services/IStorageService';
-import { IUserRepository } from '../../../../web.core/gateways/repositories/IUserRepository';
-import { Role } from '../../../../web.core/domain/entities/Role';
+import { IUserRepository } from '../../../../web.core/gateways/repositories/user/IUserRepository';
+import { Role } from '../../../../web.core/domain/entities/role/Role';
 import { RoleId } from '../../../../web.core/domain/enums/RoleId';
-import { RoleRepository } from '../repositories/RoleRepository';
+import { RoleRepository } from '../repositories/role/RoleRepository';
 import { StorageService } from '../../../services/storage/StorageService';
-import { User } from '../../../../web.core/domain/entities/User';
-import { UserRepository } from '../repositories/UserRepository';
+import { User } from '../../../../web.core/domain/entities/user/User';
+import { UserRepository } from '../repositories/user/UserRepository';
 import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
 
 export class Initialize1598357101124 implements MigrationInterface {

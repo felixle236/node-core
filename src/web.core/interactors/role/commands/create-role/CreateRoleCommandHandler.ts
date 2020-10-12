@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { CreateRoleCommand } from './CreateRoleCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { Role } from '../../../../domain/entities/Role';
+import { Role } from '../../../../domain/entities/role/Role';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()

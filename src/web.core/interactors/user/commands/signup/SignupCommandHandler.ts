@@ -3,12 +3,12 @@ import { Inject, Service } from 'typedi';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../../domain/enums/RoleId';
 import { SignupCommand } from './SignupCommand';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/User';
+import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
 import { addSeconds } from '../../../../../libs/date';
 

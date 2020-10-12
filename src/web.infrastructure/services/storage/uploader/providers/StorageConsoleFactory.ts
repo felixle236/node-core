@@ -47,4 +47,9 @@ export class StorageConsoleFactory implements IStorageProvider {
         console.log('StorageService.download', { bucketName, objectName });
         return Promise.resolve(Buffer.from('Logging'));
     }
+
+    async delete(bucketName: string, objectName: string): Promise<boolean> {
+        console.log('StorageService.delete', { bucketName, objectName });
+        return true;
+    }
 }

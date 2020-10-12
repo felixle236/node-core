@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { FindRoleCommonQuery } from './FindRoleCommonQuery';
 import { FindRoleCommonResult } from './FindRoleCommonResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
 
 @Service()

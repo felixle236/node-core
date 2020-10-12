@@ -4,12 +4,12 @@ import * as uuid from 'uuid';
 import { Container } from 'typedi';
 import { DeleteUserCommand } from './DeleteUserCommand';
 import { DeleteUserCommandHandler } from './DeleteUserCommandHandler';
-import { IRole } from '../../../../domain/types/IRole';
-import { IUser } from '../../../../domain/types/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IRole } from '../../../../domain/types/role/IRole';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/User';
+import { User } from '../../../../domain/entities/user/User';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 

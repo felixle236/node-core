@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
 import { Container } from 'typedi';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/IUserOnlineStatusRepository';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { UpdateUserOnlineStatusCommand } from './UpdateUserOnlineStatusCommand';

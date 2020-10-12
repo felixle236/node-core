@@ -21,4 +21,6 @@ export interface IStorageProvider {
     upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean>;
 
     download(bucketName: string, objectName: string): Promise<Buffer>;
+
+    delete(bucketName: string, objectName: string): Promise<boolean>;
 }

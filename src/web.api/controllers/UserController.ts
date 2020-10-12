@@ -25,7 +25,7 @@ import { UpdateUserCommandHandler } from '../../web.core/interactors/user/comman
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
-@JsonController('/users')
+@JsonController('/v1/users')
 export class UserController {
     constructor(
         private readonly _findUserQueryHandler: FindUserQueryHandler,

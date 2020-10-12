@@ -1,4 +1,4 @@
-import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_PROVIDER } from '../../../../configs/Configuration';
+import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_CONFIG_HOST, STORAGE_CONFIG_PORT, STORAGE_PROVIDER } from '../../../../configs/Configuration';
 import { AwsS3Factory } from './providers/AwsS3Factory';
 import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
 import { IBucketItem } from './interfaces/IBucketItem';
@@ -13,7 +13,7 @@ export class StorageUploader implements IStorageProvider {
     constructor() {
         switch (STORAGE_PROVIDER) {
         case StorageProvider.MINIO:
-            this._provider = new MinioFactory(MINIO_CONFIG_HOST, MINIO_CONFIG_PORT, IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
+            this._provider = new MinioFactory(STORAGE_CONFIG_HOST, STORAGE_CONFIG_PORT, IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
             break;
 
         case StorageProvider.AWS_S3:
@@ -69,5 +69,9 @@ export class StorageUploader implements IStorageProvider {
 
     async download(bucketName: string, objectName: string): Promise<Buffer> {
         return await this._provider.download(bucketName, objectName);
+    }
+
+    async delete(bucketName: string, objectName: string): Promise<boolean> {
+        return await this._provider.delete(bucketName, objectName);
     }
 }

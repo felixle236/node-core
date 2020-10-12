@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { IUserOnlineStatusRepository } from '../../../../web.core/gateways/repositories/IUserOnlineStatusRepository';
-import { RedisContext } from '../RedisContext';
+import { IUserOnlineStatusRepository } from '../../../../../web.core/gateways/repositories/user/IUserOnlineStatusRepository';
+import { RedisContext } from '../../RedisContext';
 
 @Service('user.online.status.repository')
 export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {

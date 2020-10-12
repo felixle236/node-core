@@ -13,13 +13,13 @@ const upperCaseName = moduleName.toUpperCase();
 
 // web.core
 
-const entityInterfacePath = path.join(__dirname, `../src/web.core/domain/types/I${pascalName}.ts`);
+const entityInterfacePath = path.join(__dirname, `../src/web.core/domain/types/${camelName}/I${pascalName}.ts`);
 const entityInterface = getFileContent(path.join(__dirname, './web.core/domain/Type.tmp'));
 
-const entityPath = path.join(__dirname, `../src/web.core/domain/entities/${pascalName}.ts`);
+const entityPath = path.join(__dirname, `../src/web.core/domain/entities/${camelName}/${pascalName}.ts`);
 const entity = getFileContent(path.join(__dirname, './web.core/domain/Entity.tmp'));
 
-const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/I${pascalName}Repository.ts`);
+const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${camelName}/I${pascalName}Repository.ts`);
 const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'));
 
 const findQueryInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
@@ -60,13 +60,13 @@ const deleteCommandHandlerInteractor = getFileContent(path.join(__dirname, './we
 
 // web.infrastructure
 
-const schemaPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/schemas/${pascalName}Schema.ts`);
+const schemaPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/schemas/${camelName}/${pascalName}Schema.ts`);
 const schema = getFileContent(path.join(__dirname, './web.infrastructure/databases/Schema.tmp'));
 
-const entityDbPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/entities/${pascalName}Db.ts`);
+const entityDbPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/entities/${camelName}/${pascalName}Db.ts`);
 const entityDb = getFileContent(path.join(__dirname, './web.infrastructure/databases/EntityDb.tmp'));
 
-const repositoryPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/repositories/${pascalName}Repository.ts`);
+const repositoryPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/repositories/${camelName}/${pascalName}Repository.ts`);
 const repository = getFileContent(path.join(__dirname, './web.infrastructure/databases/Repository.tmp'));
 
 // web.api

@@ -15,7 +15,7 @@ export class SendInBlueFactory implements IMailProvider {
         this._smtpApi = new sibApiV3Sdk.SMTPApi();
     }
 
-    async send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {
+    async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
         return await this._smtpApi.sendTransacEmail({
             sender: {
                 name: senderName,
@@ -27,7 +27,7 @@ export class SendInBlueFactory implements IMailProvider {
         });
     }
 
-    async sendHtml(senderEmail: string, senderName: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
+    async sendHtml(senderName: string, senderEmail: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
         return await this._smtpApi.sendTransacEmail({
             sender: {
                 name: senderName,

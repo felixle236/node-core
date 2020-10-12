@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import { Container } from 'typedi';
 import { GetListOnlineStatusByIdsQuery } from './GetListOnlineStatusByIdsQuery';
 import { GetListOnlineStatusByIdsQueryHandler } from './GetListOnlineStatusByIdsQueryHandler';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/IUserOnlineStatusRepository';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 import { createSandbox } from 'sinon';
 import { expect } from 'chai';
 

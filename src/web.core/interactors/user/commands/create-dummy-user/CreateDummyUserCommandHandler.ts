@@ -4,12 +4,12 @@ import { BulkActionResult } from '../../../../domain/common/interactor/BulkActio
 import { CreateDummyUserCommand } from './CreateDummyUserCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IDbContext } from '../../../../domain/common/database/interfaces/IDbContext';
-import { IRoleRepository } from '../../../../gateways/repositories/IRoleRepository';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { IStorageService } from '../../../../gateways/services/IStorageService';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/User';
+import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
 import { readFile } from '../../../../../libs/file';
 

@@ -15,7 +15,7 @@ import { Update{PascalName}Command } from '../../web.core/interactors/{camelName
 import { Update{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/update-{camelName}/Update{PascalName}CommandHandler';
 
 @Service()
-@JsonController('/{camelName}s')
+@JsonController('/v1/{camelName}s')
 export class {PascalName}Controller {
     constructor(
         private readonly _find{PascalName}QueryHandler: Find{PascalName}QueryHandler,

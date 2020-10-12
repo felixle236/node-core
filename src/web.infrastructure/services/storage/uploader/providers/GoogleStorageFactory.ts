@@ -20,4 +20,6 @@ export class GoogleStorageFactory implements IStorageProvider {
     upload(): any { }
 
     download(): any { }
+
+    delete(): any { }
 }

@@ -26,4 +26,8 @@ export class StorageService implements IStorageService {
     async download(urlPath: string): Promise<Buffer> {
         return await this._uploader.download(BUCKET_NAME, urlPath);
     }
+
+    async delete(urlPath: string): Promise<boolean> {
+        return await this._uploader.delete(BUCKET_NAME, urlPath);
+    }
 }

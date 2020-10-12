@@ -1,12 +1,12 @@
-import { BaseRepository } from './base/BaseRepository';
-import { FindRoleCommonQuery } from '../../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
-import { FindRoleQuery } from '../../../../web.core/interactors/role/queries/find-role/FindRoleQuery';
-import { IRoleRepository } from '../../../../web.core/gateways/repositories/IRoleRepository';
-import { ROLE_SCHEMA } from '../schemas/RoleSchema';
-import { Role } from '../../../../web.core/domain/entities/Role';
-import { RoleDb } from '../entities/RoleDb';
+import { BaseRepository } from '../base/BaseRepository';
+import { FindRoleCommonQuery } from '../../../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
+import { FindRoleQuery } from '../../../../../web.core/interactors/role/queries/find-role/FindRoleQuery';
+import { IRoleRepository } from '../../../../../web.core/gateways/repositories/role/IRoleRepository';
+import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
+import { Role } from '../../../../../web.core/domain/entities/role/Role';
+import { RoleDb } from '../../entities/role/RoleDb';
 import { Service } from 'typedi';
-import { SortType } from '../../../../web.core/domain/common/database/SortType';
+import { SortType } from '../../../../../web.core/domain/common/database/SortType';
 
 @Service('role.repository')
 export class RoleRepository extends BaseRepository<Role, RoleDb, string> implements IRoleRepository {

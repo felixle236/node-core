@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SECRET_OR_PUBLIC_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../configs/Configuration';
 import { IJwtAuthService, IJwtPayloadExtend } from '../../../web.core/gateways/services/IJwtAuthService';
-import { IUser } from '../../../web.core/domain/types/IUser';
+import { IUser } from '../../../web.core/domain/types/user/IUser';
 import { Service } from 'typedi';
 
 @Service('jwt.auth.service')

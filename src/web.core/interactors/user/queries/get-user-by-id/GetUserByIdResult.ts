@@ -1,6 +1,6 @@
 import { GenderType } from '../../../../domain/enums/GenderType';
-import { Role } from '../../../../domain/entities/Role';
-import { User } from '../../../../domain/entities/User';
+import { Role } from '../../../../domain/entities/role/Role';
+import { User } from '../../../../domain/entities/user/User';
 
 class RoleResult {
     id: string;

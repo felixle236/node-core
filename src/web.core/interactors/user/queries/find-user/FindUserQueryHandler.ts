@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserResult } from './FindUserResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
 import { RoleId } from '../../../../domain/enums/RoleId';

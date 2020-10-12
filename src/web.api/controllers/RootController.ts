@@ -12,7 +12,7 @@ import { SignupCommand } from '../../web.core/interactors/user/commands/signup/S
 import { SignupCommandHandler } from '../../web.core/interactors/user/commands/signup/SignupCommandHandler';
 
 @Service()
-@JsonController()
+@JsonController('/v1')
 export class RootController {
     constructor(
         private readonly _signupCommandHandler: SignupCommandHandler,

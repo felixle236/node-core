@@ -1,4 +1,4 @@
-import { IUser } from '../../domain/types/IUser';
+import { IUser } from '../../domain/types/user/IUser';
 
 export interface IJwtPayload {
     sub: string; // Subject

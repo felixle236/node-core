@@ -1,4 +1,4 @@
-import { BASE_SCHEMA } from './base/BaseSchema';
+import { BASE_SCHEMA } from '../base/BaseSchema';
 
 export const USER_SCHEMA = {
     TABLE_NAME: 'users',
@@ -26,7 +26,7 @@ export const USER_SCHEMA = {
         FORGOT_EXPIRE: 'forgot_expire'
     },
     RELATED_ONE: {
-        // Table name
+        // The field name that we're defined into entity.
         ROLE: 'role'
     }
 };

@@ -1,5 +1,5 @@
 import { ISmsService } from '../../../web.core/gateways/services/ISmsService';
-import { IUser } from '../../../web.core/domain/types/IUser';
+import { IUser } from '../../../web.core/domain/types/user/IUser';
 import { SMS_SENDER_OR_PHONE } from '../../../configs/Configuration';
 import { Service } from 'typedi';
 import { SmsSender } from './sender/SmsSender';

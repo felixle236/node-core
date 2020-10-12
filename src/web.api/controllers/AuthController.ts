@@ -7,7 +7,7 @@ import { SigninQueryHandler } from '../../web.core/interactors/user/queries/sign
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 
 @Service()
-@JsonController('/auth')
+@JsonController('/v1/auth')
 export class AuthController {
     constructor(
         private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler,

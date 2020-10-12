@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/IUserOnlineStatusRepository';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { UpdateUserOnlineStatusCommand } from './UpdateUserOnlineStatusCommand';

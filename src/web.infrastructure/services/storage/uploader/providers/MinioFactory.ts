@@ -94,4 +94,13 @@ export class MinioFactory implements IStorageProvider {
             });
         });
     }
+
+    delete(bucketName: string, objectName: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this._client.removeObject(bucketName, objectName, err => {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    }
 }

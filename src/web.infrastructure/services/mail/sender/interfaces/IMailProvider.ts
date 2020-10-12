@@ -1,5 +1,5 @@
 export interface IMailProvider {
-    send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any>;
+    send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any>;
 
-    sendHtml(senderEmail: string, senderName: string, emails: string | string[], subject: string, htmlContent: string): Promise<any>;
+    sendHtml(senderName: string, senderEmail: string, emails: string | string[], subject: string, htmlContent: string): Promise<any>;
 }

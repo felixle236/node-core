@@ -1,4 +1,4 @@
-import { BASE_SCHEMA } from './base/BaseSchema';
+import { BASE_SCHEMA } from '../base/BaseSchema';
 
 export const ROLE_SCHEMA = {
     TABLE_NAME: 'role',
@@ -8,7 +8,7 @@ export const ROLE_SCHEMA = {
         NAME: 'name'
     },
     RELATED_MANY: {
-        // Table name
+        // The field name that we're defined into entity.
         USER: 'users'
     }
 };

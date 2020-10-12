@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { UpdateMyProfileCommand } from './UpdateMyProfileCommand';
-import { User } from '../../../../domain/entities/User';
+import { User } from '../../../../domain/entities/user/User';
 
 @Service()
 export class UpdateMyProfileCommandHandler implements ICommandHandler<UpdateMyProfileCommand, boolean> {

@@ -1,14 +1,14 @@
 import { Brackets, QueryRunner } from 'typeorm';
-import { BaseRepository } from './base/BaseRepository';
-import { FindUserQuery } from '../../../../web.core/interactors/user/queries/find-user/FindUserQuery';
-import { IDbQueryRunner } from '../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
-import { IUserRepository } from '../../../../web.core/gateways/repositories/IUserRepository';
-import { ROLE_SCHEMA } from '../schemas/RoleSchema';
+import { BaseRepository } from '../base/BaseRepository';
+import { FindUserQuery } from '../../../../../web.core/interactors/user/queries/find-user/FindUserQuery';
+import { IDbQueryRunner } from '../../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
+import { IUserRepository } from '../../../../../web.core/gateways/repositories/user/IUserRepository';
+import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
 import { Service } from 'typedi';
-import { USER_SCHEMA } from '../schemas/UserSchema';
-import { User } from '../../../../web.core/domain/entities/User';
-import { UserDb } from '../entities/UserDb';
-import { UserStatus } from '../../../../web.core/domain/enums/UserStatus';
+import { USER_SCHEMA } from '../../schemas/user/UserSchema';
+import { User } from '../../../../../web.core/domain/entities/user/User';
+import { UserDb } from '../../entities/user/UserDb';
+import { UserStatus } from '../../../../../web.core/domain/enums/UserStatus';
 
 @Service('user.repository')
 export class UserRepository extends BaseRepository<User, UserDb, string> implements IUserRepository {

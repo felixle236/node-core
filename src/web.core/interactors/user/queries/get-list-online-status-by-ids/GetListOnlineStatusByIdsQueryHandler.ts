@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { GetListOnlineStatusByIdsQuery } from './GetListOnlineStatusByIdsQuery';
 import { GetListOnlineStatusByIdsResult } from './GetListOnlineStatusByIdsResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/IUserOnlineStatusRepository';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
 @Service()
 export class GetListOnlineStatusByIdsQueryHandler implements IQueryHandler<GetListOnlineStatusByIdsQuery, GetListOnlineStatusByIdsResult[]> {

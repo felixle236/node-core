@@ -1,9 +1,9 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseDbEntity } from './base/BaseDBEntity';
-import { IRole } from '../../../../web.core/domain/types/IRole';
-import { ROLE_SCHEMA } from '../schemas/RoleSchema';
-import { Role } from '../../../../web.core/domain/entities/Role';
-import { UserDb } from './UserDb';
+import { BaseDbEntity } from '../base/BaseDBEntity';
+import { IRole } from '../../../../../web.core/domain/types/role/IRole';
+import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
+import { Role } from '../../../../../web.core/domain/entities/role/Role';
+import { UserDb } from '../user/UserDb';
 
 @Entity(ROLE_SCHEMA.TABLE_NAME)
 export class RoleDb extends BaseDbEntity<Role> implements IRole {

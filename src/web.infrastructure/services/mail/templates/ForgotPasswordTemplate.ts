@@ -1,6 +1,6 @@
 import * as Mailgen from 'mailgen';
 import { DOMAIN, PROTOTYPE } from '../../../../configs/Configuration';
-import { IUser } from '../../../../web.core/domain/types/IUser';
+import { IUser } from '../../../../web.core/domain/types/user/IUser';
 
 export class ForgotPasswordTemplate {
     static getTemplate(user: IUser): Mailgen.Content {

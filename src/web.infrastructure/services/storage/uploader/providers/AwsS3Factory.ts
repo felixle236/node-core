@@ -131,4 +131,16 @@ export class AwsS3Factory implements IStorageProvider {
             });
         });
     }
+
+    delete(bucketName: string, objectName: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this._client.deleteObject({
+                Bucket: bucketName, // eslint-disable-line
+                Key: objectName // eslint-disable-line
+            }, err => {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    }
 }

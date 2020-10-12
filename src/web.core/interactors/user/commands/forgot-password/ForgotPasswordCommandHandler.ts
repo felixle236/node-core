@@ -4,10 +4,10 @@ import { Inject, Service } from 'typedi';
 import { ForgotPasswordCommand } from './ForgotPasswordCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IMailService } from '../../../../gateways/services/IMailService';
-import { IUserRepository } from '../../../../gateways/repositories/IUserRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/User';
+import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/UserStatus';
 import { addSeconds } from '../../../../../libs/date';
 

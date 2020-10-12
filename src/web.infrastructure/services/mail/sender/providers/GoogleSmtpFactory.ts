@@ -20,7 +20,7 @@ export class GoogleSmtpFactory implements IMailProvider {
         });
     }
 
-    async send(senderEmail: string, senderName: string, emails: string | string[], subject: string, content: string): Promise<any> {
+    async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
         return await this._transporter.sendMail({
             from: `${senderName} <${senderEmail}>`,
             to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
@@ -29,7 +29,7 @@ export class GoogleSmtpFactory implements IMailProvider {
         });
     }
 
-    async sendHtml(senderEmail: string, senderName: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
+    async sendHtml(senderName: string, senderEmail: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
         return await this._transporter.sendMail({
             from: `${senderName} <${senderEmail}>`,
             to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,

@@ -19,7 +19,7 @@ import { UpdateRoleCommand } from '../../web.core/interactors/role/commands/upda
 import { UpdateRoleCommandHandler } from '../../web.core/interactors/role/commands/update-role/UpdateRoleCommandHandler';
 
 @Service()
-@JsonController('/roles')
+@JsonController('/v1/roles')
 export class RoleController {
     constructor(
         private readonly _findRoleQueryHandler: FindRoleQueryHandler,

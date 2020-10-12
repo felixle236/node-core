@@ -4,7 +4,7 @@ import { Service } from 'typedi';
 import { readFile } from '../../libs/file';
 
 @Service()
-@JsonController('/systems')
+@JsonController('/v1/systems')
 export class SystemController {
     // Demo API download file binary
     @Get('/export-pdf')

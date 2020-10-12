@@ -540,3 +540,4 @@ DELETE http://localhost/api/v1/users/{:id}
 - The function order should be arranged in turn according to find, get, check, create, update, delete, remove.
 - The query param (url-path?param1=&param2=) will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()`. Refer to FindUserQuery.ts file.
 - If we use the table inheritance then we shouldn't use the enum type for parent table in database schema, with the logic code is still good.
+- Refer the joining relations document to have the best practice: https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations
