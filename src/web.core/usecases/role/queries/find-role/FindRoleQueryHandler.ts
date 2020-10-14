@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { FindRoleQuery } from './FindRoleQuery';
 import { FindRoleResult } from './FindRoleResult';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
+import { PaginationResult } from '../../../../domain/common/usecase/PaginationResult';
 
 @Service()
 export class FindRoleQueryHandler implements IQueryHandler<FindRoleQuery, PaginationResult<FindRoleResult>> {

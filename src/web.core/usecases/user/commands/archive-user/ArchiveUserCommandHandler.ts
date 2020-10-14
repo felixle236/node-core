@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { ArchiveUserCommand } from './ArchiveUserCommand';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../../domain/enums/role/RoleId';

@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { Find{PascalName}Query } from './Find{PascalName}Query';
 import { Find{PascalName}Result } from './Find{PascalName}Result';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/I{PascalName}Repository';
-import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
+import { PaginationResult } from '../../../../domain/common/usecase/PaginationResult';
 
 @Service()
 export class Find{PascalName}QueryHandler implements IQueryHandler<Find{PascalName}Query, PaginationResult<Find{PascalName}Result>> {

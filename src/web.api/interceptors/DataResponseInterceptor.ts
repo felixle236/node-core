@@ -1,5 +1,5 @@
 import { Action, Interceptor, InterceptorInterface } from 'routing-controllers';
-import { PaginationResult } from '../../web.core/domain/common/interactor/PaginationResult';
+import { PaginationResult } from '../../web.core/domain/common/usecase/PaginationResult';
 
 @Interceptor()
 export class DataResponseInterceptor implements InterceptorInterface {

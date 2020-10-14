@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
 import { GetUserByIdResult } from './GetUserByIdResult';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { RoleId } from '../../../../domain/enums/role/RoleId';

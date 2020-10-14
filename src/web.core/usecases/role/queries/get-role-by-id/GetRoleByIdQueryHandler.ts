@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { GetRoleByIdQuery } from './GetRoleByIdQuery';
 import { GetRoleByIdResult } from './GetRoleByIdResult';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';

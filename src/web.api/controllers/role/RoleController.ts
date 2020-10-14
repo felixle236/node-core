@@ -12,7 +12,7 @@ import { FindRoleResult } from '../../../web.core/usecases/role/queries/find-rol
 import { GetRoleByIdQuery } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQuery';
 import { GetRoleByIdQueryHandler } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQueryHandler';
 import { GetRoleByIdResult } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdResult';
-import { PaginationResult } from '../../../web.core/domain/common/interactor/PaginationResult';
+import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
 import { UpdateRoleCommand } from '../../../web.core/usecases/role/commands/update-role/UpdateRoleCommand';

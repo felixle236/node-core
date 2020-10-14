@@ -1,5 +1,5 @@
 import { GenderType } from '../../../../domain/enums/user/GenderType';
-import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
+import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
 
 export class DummyUser {

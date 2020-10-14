@@ -2,7 +2,7 @@ import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { JwtAuthUserQuery } from './JwtAuthUserQuery';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { UnauthorizedError } from '../../../../domain/common/exceptions/UnauthorizedError';

@@ -1,5 +1,5 @@
 import { IDbQueryRunner } from './IDbQueryRunner';
-import { IFilter } from '../../interactor/interfaces/IFilter';
+import { IFilter } from '../../usecase/interfaces/IFilter';
 
 export interface IBaseRepository<TEntity, TIdentityType> {
     findAndCount(filter: IFilter): Promise<[TEntity[], number]>;

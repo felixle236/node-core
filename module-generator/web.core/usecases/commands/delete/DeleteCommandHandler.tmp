@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Delete{PascalName}Command } from './Delete{PascalName}Command';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/I{PascalName}Repository';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 

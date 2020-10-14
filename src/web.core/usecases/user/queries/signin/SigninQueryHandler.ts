@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';

@@ -1,8 +1,8 @@
 import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
-import { BulkActionResult } from '../../../../domain/common/interactor/BulkActionResult';
+import { BulkActionResult } from '../../../../domain/common/usecase/BulkActionResult';
 import { CreateDummyUserCommand } from './CreateDummyUserCommand';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IDbContext } from '../../../../domain/common/database/interfaces/IDbContext';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { IStorageService } from '../../../../gateways/services/IStorageService';

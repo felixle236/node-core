@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { CreateUserCommand } from './CreateUserCommand';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';

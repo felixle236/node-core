@@ -2,7 +2,7 @@ import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Para
 import { CreateDummyUserCommand, DummyUser } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommand';
 import { ArchiveUserCommand } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommandHandler';
-import { BulkActionResult } from '../../../web.core/domain/common/interactor/BulkActionResult';
+import { BulkActionResult } from '../../../web.core/domain/common/usecase/BulkActionResult';
 import { CreateDummyUserCommandHandler } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommandHandler';
 import { CreateUserCommand } from '../../../web.core/usecases/user/commands/create-user/CreateUserCommand';
 import { CreateUserCommandHandler } from '../../../web.core/usecases/user/commands/create-user/CreateUserCommandHandler';
@@ -17,7 +17,7 @@ import { GetListOnlineStatusByIdsResult } from '../../../web.core/usecases/user/
 import { GetUserByIdQuery } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQuery';
 import { GetUserByIdQueryHandler } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQueryHandler';
 import { GetUserByIdResult } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdResult';
-import { PaginationResult } from '../../../web.core/domain/common/interactor/PaginationResult';
+import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
 import { UpdateUserCommand } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommand';

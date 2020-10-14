@@ -1,4 +1,4 @@
-import { {PascalName} } from '../../../../domain/entities/{PascalName}';
+import { {PascalName} } from '../../../../domain/entities/{camelName}/{PascalName}';
 
 export class Find{PascalName}Result {
     id: string;

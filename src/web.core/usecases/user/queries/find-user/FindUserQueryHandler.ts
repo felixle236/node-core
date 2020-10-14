@@ -2,10 +2,10 @@ import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserResult } from './FindUserResult';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { PaginationResult } from '../../../../domain/common/interactor/PaginationResult';
+import { PaginationResult } from '../../../../domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 

@@ -1,6 +1,6 @@
 import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IStorageService } from '../../../../gateways/services/IStorageService';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';

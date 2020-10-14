@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';

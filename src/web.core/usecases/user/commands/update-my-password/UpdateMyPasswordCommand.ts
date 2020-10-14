@@ -1,4 +1,4 @@
-import { ICommand } from '../../../../domain/common/interactor/interfaces/ICommand';
+import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
 
 export class UpdateMyPasswordCommand implements ICommand {
     userAuthId: string;

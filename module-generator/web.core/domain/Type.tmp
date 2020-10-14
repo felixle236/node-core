@@ -1,4 +1,4 @@
-import { IEntity } from './base/IEntity';
+import { IEntity } from '../base/IEntity';
 
 export interface I{PascalName} extends IEntity {
     id: string;

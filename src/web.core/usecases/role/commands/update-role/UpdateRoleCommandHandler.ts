@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { Role } from '../../../../domain/entities/role/Role';

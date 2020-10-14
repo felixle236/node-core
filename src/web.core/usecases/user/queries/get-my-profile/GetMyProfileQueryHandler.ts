@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { GetMyProfileQuery } from './GetMyProfileQuery';
 import { GetMyProfileResult } from './GetMyProfileResult';
-import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';

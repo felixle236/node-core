@@ -1,4 +1,4 @@
-import { IQuery } from '../../../../domain/common/interactor/interfaces/IQuery';
+import { IQuery } from '../../../../domain/common/usecase/interfaces/IQuery';
 
 export class GetMyProfileQuery implements IQuery {
     id: string;

@@ -1,4 +1,4 @@
-import { Filter } from '../../../../domain/common/interactor/Filter';
+import { Filter } from '../../../../domain/common/usecase/Filter';
 import { IsBoolean } from 'class-validator';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
