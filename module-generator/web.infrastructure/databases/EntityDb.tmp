@@ -5,12 +5,12 @@ import { {UPPER_CASE_NAME}_SCHEMA } from '../schemas/{PascalName}Schema';
 import { {PascalName} } from '../../../../web.core/domain/entities/{PascalName}';
 
 @Entity({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
-@Index(({camelName}: {PascalName}Db) => [{camelName}.name, {camelName}.deletedAt], { unique: true })
 export class {PascalName}Db extends BaseDbEntity<{PascalName}> implements I{PascalName} {
     @PrimaryGeneratedColumn('uuid', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID })
     id: string;
 
     @Column({ name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME, length: 50 })
+    @Index({ unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
     name: string;
 
     /* handlers */

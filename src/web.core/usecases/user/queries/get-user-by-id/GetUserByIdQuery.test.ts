@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { Container } from 'typedi';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
 import { GetUserByIdQueryHandler } from './GetUserByIdQueryHandler';
@@ -69,7 +70,7 @@ describe('User - Get user by id', () => {
         param.id = user.id;
 
         const result = await getUserByIdQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
+        expect(result).to.include(new AccessDeniedError());
     });
 
     it('Get user by id successfully', async () => {

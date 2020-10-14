@@ -1,6 +1,6 @@
 import { Brackets, QueryRunner } from 'typeorm';
 import { BaseRepository } from '../base/BaseRepository';
-import { FindUserQuery } from '../../../../../web.core/interactors/user/queries/find-user/FindUserQuery';
+import { FindUserQuery } from '../../../../../web.core/usecases/user/queries/find-user/FindUserQuery';
 import { IDbQueryRunner } from '../../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
 import { IUserRepository } from '../../../../../web.core/gateways/repositories/user/IUserRepository';
 import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { ArchiveUserCommand } from './ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from './ArchiveUserCommandHandler';
 import { Container } from 'typedi';
@@ -70,7 +71,7 @@ describe('User - Archive user', () => {
         param.id = user.id;
 
         const result = await archiveUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
+        expect(result).to.include(new AccessDeniedError());
     });
 
     it('Archive user with data cannot save', async () => {

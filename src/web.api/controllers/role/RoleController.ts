@@ -1,22 +1,22 @@
 import { Authorized, Body, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
-import { CreateRoleCommand } from '../../../web.core/interactors/role/commands/create-role/CreateRoleCommand';
-import { CreateRoleCommandHandler } from '../../../web.core/interactors/role/commands/create-role/CreateRoleCommandHandler';
-import { DeleteRoleCommand } from '../../../web.core/interactors/role/commands/delete-role/DeleteRoleCommand';
-import { DeleteRoleCommandHandler } from '../../../web.core/interactors/role/commands/delete-role/DeleteRoleCommandHandler';
-import { FindRoleCommonQuery } from '../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
-import { FindRoleCommonQueryHandler } from '../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQueryHandler';
-import { FindRoleCommonResult } from '../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonResult';
-import { FindRoleQuery } from '../../../web.core/interactors/role/queries/find-role/FindRoleQuery';
-import { FindRoleQueryHandler } from '../../../web.core/interactors/role/queries/find-role/FindRoleQueryHandler';
-import { FindRoleResult } from '../../../web.core/interactors/role/queries/find-role/FindRoleResult';
-import { GetRoleByIdQuery } from '../../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdQuery';
-import { GetRoleByIdQueryHandler } from '../../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdQueryHandler';
-import { GetRoleByIdResult } from '../../../web.core/interactors/role/queries/get-role-by-id/GetRoleByIdResult';
+import { CreateRoleCommand } from '../../../web.core/usecases/role/commands/create-role/CreateRoleCommand';
+import { CreateRoleCommandHandler } from '../../../web.core/usecases/role/commands/create-role/CreateRoleCommandHandler';
+import { DeleteRoleCommand } from '../../../web.core/usecases/role/commands/delete-role/DeleteRoleCommand';
+import { DeleteRoleCommandHandler } from '../../../web.core/usecases/role/commands/delete-role/DeleteRoleCommandHandler';
+import { FindRoleCommonQuery } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQuery';
+import { FindRoleCommonQueryHandler } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQueryHandler';
+import { FindRoleCommonResult } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonResult';
+import { FindRoleQuery } from '../../../web.core/usecases/role/queries/find-role/FindRoleQuery';
+import { FindRoleQueryHandler } from '../../../web.core/usecases/role/queries/find-role/FindRoleQueryHandler';
+import { FindRoleResult } from '../../../web.core/usecases/role/queries/find-role/FindRoleResult';
+import { GetRoleByIdQuery } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQuery';
+import { GetRoleByIdQueryHandler } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQueryHandler';
+import { GetRoleByIdResult } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdResult';
 import { PaginationResult } from '../../../web.core/domain/common/interactor/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
-import { UpdateRoleCommand } from '../../../web.core/interactors/role/commands/update-role/UpdateRoleCommand';
-import { UpdateRoleCommandHandler } from '../../../web.core/interactors/role/commands/update-role/UpdateRoleCommandHandler';
+import { UpdateRoleCommand } from '../../../web.core/usecases/role/commands/update-role/UpdateRoleCommand';
+import { UpdateRoleCommandHandler } from '../../../web.core/usecases/role/commands/update-role/UpdateRoleCommandHandler';
 
 @Service()
 @JsonController('/v1/roles')

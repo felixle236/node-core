@@ -1,12 +1,12 @@
 import { ConnectedSocket, EmitOnFail, EmitOnSuccess, MessageBody, OnConnect, OnDisconnect, OnMessage, SkipEmitOnEmptyResult, SocketController, SocketQueryParam } from 'socket-controllers';
 import { ISocket } from '../../../web.core/domain/common/socket/interfaces/ISocket';
-import { JwtAuthUserQuery } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
-import { JwtAuthUserQueryHandler } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
+import { JwtAuthUserQuery } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
 import { SocketNamespace } from '../../../web.core/domain/common/socket/SocketNamespace';
-import { UpdateUserOnlineStatusCommand } from '../../../web.core/interactors/user/commands/update-user-online-status/UpdateUserOnlineStatusCommand';
-import { UpdateUserOnlineStatusCommandHandler } from '../../../web.core/interactors/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
+import { UpdateUserOnlineStatusCommand } from '../../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommand';
+import { UpdateUserOnlineStatusCommandHandler } from '../../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 
 @Service()
 @SocketController('/' + SocketNamespace.CONFIGURATION.NAME)

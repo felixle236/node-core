@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import * as uuid from 'uuid';
 import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../../../configs/Configuration';
 import { IJwtAuthService, IJwtPayloadExtend } from '../../../../gateways/services/IJwtAuthService';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { Container } from 'typedi';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
@@ -107,7 +108,7 @@ describe('Auth - Authenticate user', () => {
         param.roleIds = [uuid.v4(), uuid.v4()];
 
         const result = await jwtAuthUserQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new UnauthorizedError(MessageError.ACCESS_DENIED));
+        expect(result).to.include(new AccessDeniedError());
     });
 
     it('Authenticate user successfully', async () => {

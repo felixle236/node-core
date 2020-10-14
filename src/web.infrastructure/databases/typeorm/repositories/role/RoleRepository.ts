@@ -1,6 +1,6 @@
 import { BaseRepository } from '../base/BaseRepository';
-import { FindRoleCommonQuery } from '../../../../../web.core/interactors/role/queries/find-role-common/FindRoleCommonQuery';
-import { FindRoleQuery } from '../../../../../web.core/interactors/role/queries/find-role/FindRoleQuery';
+import { FindRoleCommonQuery } from '../../../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQuery';
+import { FindRoleQuery } from '../../../../../web.core/usecases/role/queries/find-role/FindRoleQuery';
 import { IRoleRepository } from '../../../../../web.core/gateways/repositories/role/IRoleRepository';
 import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
 import { Role } from '../../../../../web.core/domain/entities/role/Role';

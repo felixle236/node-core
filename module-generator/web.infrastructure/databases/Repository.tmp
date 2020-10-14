@@ -1,11 +1,11 @@
-import { BaseRepository } from './base/BaseRepository';
-import { Find{PascalName}Query } from '../../../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
-import { I{PascalName}Repository } from '../../../../web.core/gateways/repositories/I{PascalName}Repository';
-import { {UPPER_CASE_NAME}_SCHEMA } from '../schemas/{PascalName}Schema';
-import { {PascalName} } from '../../../../web.core/domain/entities/{PascalName}';
-import { {PascalName}Db } from '../entities/{PascalName}Db';
+import { BaseRepository } from '../base/BaseRepository';
+import { Find{PascalName}Query } from '../../../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
+import { I{PascalName}Repository } from '../../../../../web.core/gateways/repositories/{camelName}/I{PascalName}Repository';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{camelName}/{PascalName}Schema';
+import { {PascalName} } from '../../../../../web.core/domain/entities/{camelName}/{PascalName}';
+import { {PascalName}Db } from '../../entities/{camelName}/{PascalName}Db';
 import { Service } from 'typedi';
-import { SortType } from '../../../../web.core/domain/common/database/SortType';
+import { SortType } from '../../../../../web.core/domain/common/database/SortType';
 
 @Service('{camelName}.repository')
 export class {PascalName}Repository extends BaseRepository<{PascalName}, {PascalName}Db, string> implements I{PascalName}Repository {

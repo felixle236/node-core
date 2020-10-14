@@ -1,15 +1,15 @@
 import { Body, JsonController, Post } from 'routing-controllers';
-import { ActiveUserCommand } from '../../web.core/interactors/user/commands/active-user/ActiveUserCommand';
-import { ActiveUserCommandHandler } from '../../web.core/interactors/user/commands/active-user/ActiveUserCommandHandler';
-import { ForgotPasswordCommand } from '../../web.core/interactors/user/commands/forgot-password/ForgotPasswordCommand';
-import { ForgotPasswordCommandHandler } from '../../web.core/interactors/user/commands/forgot-password/ForgotPasswordCommandHandler';
-import { ResendActivationCommand } from '../../web.core/interactors/user/commands/resend-activation/ResendActivationCommand';
-import { ResendActivationCommandHandler } from '../../web.core/interactors/user/commands/resend-activation/ResendActivationCommandHandler';
-import { ResetPasswordCommand } from '../../web.core/interactors/user/commands/reset-password/ResetPasswordCommand';
-import { ResetPasswordCommandHandler } from '../../web.core/interactors/user/commands/reset-password/ResetPasswordCommandHandler';
+import { ActiveUserCommand } from '../../web.core/usecases/user/commands/active-user/ActiveUserCommand';
+import { ActiveUserCommandHandler } from '../../web.core/usecases/user/commands/active-user/ActiveUserCommandHandler';
+import { ForgotPasswordCommand } from '../../web.core/usecases/user/commands/forgot-password/ForgotPasswordCommand';
+import { ForgotPasswordCommandHandler } from '../../web.core/usecases/user/commands/forgot-password/ForgotPasswordCommandHandler';
+import { ResendActivationCommand } from '../../web.core/usecases/user/commands/resend-activation/ResendActivationCommand';
+import { ResendActivationCommandHandler } from '../../web.core/usecases/user/commands/resend-activation/ResendActivationCommandHandler';
+import { ResetPasswordCommand } from '../../web.core/usecases/user/commands/reset-password/ResetPasswordCommand';
+import { ResetPasswordCommandHandler } from '../../web.core/usecases/user/commands/reset-password/ResetPasswordCommandHandler';
 import { Service } from 'typedi';
-import { SignupCommand } from '../../web.core/interactors/user/commands/signup/SignupCommand';
-import { SignupCommandHandler } from '../../web.core/interactors/user/commands/signup/SignupCommandHandler';
+import { SignupCommand } from '../../web.core/usecases/user/commands/signup/SignupCommand';
+import { SignupCommandHandler } from '../../web.core/usecases/user/commands/signup/SignupCommandHandler';
 
 @Service()
 @JsonController('/v1')

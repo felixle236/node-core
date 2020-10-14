@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
 import { GetUserByIdResult } from './GetUserByIdResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
@@ -24,7 +25,7 @@ export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, 
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         if (!this._filterRolePermissions(param.roleAuthId, user.roleId).length)
-            throw new SystemError(MessageError.ACCESS_DENIED);
+            throw new AccessDeniedError();
 
         return new GetUserByIdResult(user);
     }

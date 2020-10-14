@@ -1,9 +1,9 @@
 import { Body, HeaderParam, JsonController, Post } from 'routing-controllers';
-import { JwtAuthUserQuery } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
-import { JwtAuthUserQueryHandler } from '../../../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
+import { JwtAuthUserQuery } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { Service } from 'typedi';
-import { SigninQuery } from '../../../web.core/interactors/user/queries/signin/SigninQuery';
-import { SigninQueryHandler } from '../../../web.core/interactors/user/queries/signin/SigninQueryHandler';
+import { SigninQuery } from '../../../web.core/usecases/user/queries/signin/SigninQuery';
+import { SigninQueryHandler } from '../../../web.core/usecases/user/queries/signin/SigninQueryHandler';
 import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 
 @Service()

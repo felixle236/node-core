@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserResult } from './FindUserResult';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
@@ -19,7 +20,7 @@ export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, Pagina
 
         param.roleIds = this._filterRolePermissions(param.roleAuthId, param.roleIds);
         if (!param.roleIds.length)
-            throw new SystemError(MessageError.ACCESS_DENIED);
+            throw new AccessDeniedError();
 
         const [users, count] = await this._userRepository.findAndCount(param);
         const list = users.map(user => new FindUserResult(user));

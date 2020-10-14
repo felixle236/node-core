@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { ArchiveUserCommand } from './ArchiveUserCommand';
 import { ICommandHandler } from '../../../../domain/common/interactor/interfaces/ICommandHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
@@ -25,7 +26,7 @@ export class ArchiveUserCommandHandler implements ICommandHandler<ArchiveUserCom
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         if (!(param.roleAuthId === RoleId.SUPER_ADMIN || (param.roleAuthId === RoleId.MANAGER && [RoleId.CLIENT].includes(user.roleId))))
-            throw new SystemError(MessageError.ACCESS_DENIED);
+            throw new AccessDeniedError();
 
         const data = new User();
         data.status = UserStatus.ARCHIVED;

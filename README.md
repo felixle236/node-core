@@ -322,10 +322,10 @@ Usage:
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 ....
+throw new AccessDeniedError();
 throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 throw new SystemError(MessageError.DATA_NOT_FOUND);
-throw new SystemError(MessageError.ACCESS_DENIED);
 throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 ```
 
@@ -345,15 +345,29 @@ throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 @Inject('db.context')
 private readonly _dbContext: IDbContext;
 ....
+
 await this._dbContext.getConnection().runTransaction(async queryRunner => {
    const user = await this.userRepository.getByEmail(item.email, queryRunner);
-   ....
+   // Handle something here.
+
    const id = await this.userRepository.create(user, queryRunner);
-   ....
+   // Handle something here.
+   
+});
+
+await this._dbContext.getConnection().runTransaction(async queryRunner => {
+   const user = await this.userRepository.getByEmail(item.email, queryRunner);
+   // Handle something here.
+
+   const id = await this.userRepository.create(user, queryRunner);
+   // Handle something here.
+
 }, async (err) => {
-   // Rollback....
+   // Handle something after rollback.
+
 }, async () => {
-   // Done!
+   // Handle something after committed.
+
 });
 ```
 

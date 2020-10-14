@@ -1,5 +1,6 @@
 import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IQueryHandler } from '../../../../domain/common/interactor/interfaces/IQueryHandler';
 import { JwtAuthUserQuery } from './JwtAuthUserQuery';
@@ -34,7 +35,7 @@ export class JwtAuthUserQueryHandler implements IQueryHandler<JwtAuthUserQuery, 
             throw new UnauthorizedError(MessageError.PARAM_INVALID, 'token');
 
         if (param.roleIds && param.roleIds.length && !param.roleIds.find(roleId => roleId === payload.roleId))
-            throw new UnauthorizedError(MessageError.ACCESS_DENIED);
+            throw new AccessDeniedError();
 
         return new UserAuthenticated(payload.sub, payload.roleId);
     }

@@ -22,41 +22,41 @@ const entity = getFileContent(path.join(__dirname, './web.core/domain/Entity.tmp
 const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${camelName}/I${pascalName}Repository.ts`);
 const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'));
 
-const findQueryInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
-const findQueryInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/find/FindQuery.tmp'));
+const findQueryInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
+const findQueryInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQuery.tmp'));
 
-const findQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/find-${camelName}/Find${pascalName}QueryHandler.ts`);
-const findQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/find/FindQueryHandler.tmp'));
+const findQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryHandler.ts`);
+const findQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryHandler.tmp'));
 
-const findResultInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/find-${camelName}/Find${pascalName}Result.ts`);
-const findResultInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/find/FindResult.tmp'));
+const findResultInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Result.ts`);
+const findResultInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindResult.tmp'));
 
-const getByIdQueryInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQuery.ts`);
-const getByIdQueryInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/get-by-id/GetByIdQuery.tmp'));
+const getByIdQueryInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQuery.ts`);
+const getByIdQueryInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQuery.tmp'));
 
-const getByIdQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
-const getByIdQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/get-by-id/GetByIdQueryHandler.tmp'));
+const getByIdQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
+const getByIdQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryHandler.tmp'));
 
-const getByIdResultInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdResult.ts`);
-const getByIdResultInteractor = getFileContent(path.join(__dirname, './web.core/interactors/queries/get-by-id/GetByIdResult.tmp'));
+const getByIdResultInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdResult.ts`);
+const getByIdResultInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdResult.tmp'));
 
-const createCommandInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/create-${camelName}/Create${pascalName}Command.ts`);
-const createCommandInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/create/CreateCommand.tmp'));
+const createCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}Command.ts`);
+const createCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommand.tmp'));
 
-const createCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/create-${camelName}/Create${pascalName}CommandHandler.ts`);
-const createCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/create/CreateCommandHandler.tmp'));
+const createCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}CommandHandler.ts`);
+const createCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommandHandler.tmp'));
 
-const updateCommandInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/update-${camelName}/Update${pascalName}Command.ts`);
-const updateCommandInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/update/UpdateCommand.tmp'));
+const updateCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}Command.ts`);
+const updateCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommand.tmp'));
 
-const updateCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/update-${camelName}/Update${pascalName}CommandHandler.ts`);
-const updateCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/update/UpdateCommandHandler.tmp'));
+const updateCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}CommandHandler.ts`);
+const updateCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommandHandler.tmp'));
 
-const deleteCommandInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/delete-${camelName}/Delete${pascalName}Command.ts`);
-const deleteCommandInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/delete/DeleteCommand.tmp'));
+const deleteCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}Command.ts`);
+const deleteCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommand.tmp'));
 
-const deleteCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/interactors/${camelName}/commands/delete-${camelName}/Delete${pascalName}CommandHandler.ts`);
-const deleteCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/interactors/commands/delete/DeleteCommandHandler.tmp'));
+const deleteCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}CommandHandler.ts`);
+const deleteCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommandHandler.tmp'));
 
 // web.infrastructure
 

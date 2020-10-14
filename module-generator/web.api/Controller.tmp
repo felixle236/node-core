@@ -1,18 +1,18 @@
 import { Body, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
-import { Create{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/create-{camelName}/Create{PascalName}Command';
-import { Create{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/create-{camelName}/Create{PascalName}CommandHandler';
-import { Delete{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/delete-{camelName}/Delete{PascalName}Command';
-import { Delete{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/delete-{camelName}/Delete{PascalName}CommandHandler';
-import { Find{PascalName}Query } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
-import { Find{PascalName}QueryHandler } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}QueryHandler';
-import { Find{PascalName}Result } from '../../web.core/interactors/{camelName}/queries/find-{camelName}/Find{PascalName}Result';
-import { Get{PascalName}ByIdQuery } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQuery';
-import { Get{PascalName}ByIdQueryHandler } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQueryHandler';
-import { Get{PascalName}ByIdResult } from '../../web.core/interactors/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdResult';
+import { Create{PascalName}Command } from '../../web.core/usecases/{camelName}/commands/create-{camelName}/Create{PascalName}Command';
+import { Create{PascalName}CommandHandler } from '../../web.core/usecases/{camelName}/commands/create-{camelName}/Create{PascalName}CommandHandler';
+import { Delete{PascalName}Command } from '../../web.core/usecases/{camelName}/commands/delete-{camelName}/Delete{PascalName}Command';
+import { Delete{PascalName}CommandHandler } from '../../web.core/usecases/{camelName}/commands/delete-{camelName}/Delete{PascalName}CommandHandler';
+import { Find{PascalName}Query } from '../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
+import { Find{PascalName}QueryHandler } from '../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}QueryHandler';
+import { Find{PascalName}Result } from '../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Result';
+import { Get{PascalName}ByIdQuery } from '../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQuery';
+import { Get{PascalName}ByIdQueryHandler } from '../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQueryHandler';
+import { Get{PascalName}ByIdResult } from '../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdResult';
 import { PaginationResult } from '../../web.core/domain/common/interactor/PaginationResult';
 import { Service } from 'typedi';
-import { Update{PascalName}Command } from '../../web.core/interactors/{camelName}/commands/update-{camelName}/Update{PascalName}Command';
-import { Update{PascalName}CommandHandler } from '../../web.core/interactors/{camelName}/commands/update-{camelName}/Update{PascalName}CommandHandler';
+import { Update{PascalName}Command } from '../../web.core/usecases/{camelName}/commands/update-{camelName}/Update{PascalName}Command';
+import { Update{PascalName}CommandHandler } from '../../web.core/usecases/{camelName}/commands/update-{camelName}/Update{PascalName}CommandHandler';
 
 @Service()
 @JsonController('/v1/{camelName}s')

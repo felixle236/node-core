@@ -1,6 +1,6 @@
 import { Action } from 'routing-controllers';
-import { JwtAuthUserQuery } from '../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQuery';
-import { JwtAuthUserQueryHandler } from '../web.core/interactors/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
+import { JwtAuthUserQuery } from '../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQuery';
+import { JwtAuthUserQueryHandler } from '../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
 import { Service } from 'typedi';
 
 @Service()

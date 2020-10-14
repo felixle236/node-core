@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'mocha';
 import * as uuid from 'uuid';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { Container } from 'typedi';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserQueryHandler } from './FindUserQueryHandler';
@@ -54,7 +55,7 @@ describe('User - Find users', () => {
         param.roleAuthId = RoleId.CLIENT;
 
         const result = await findUserQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.ACCESS_DENIED));
+        expect(result).to.include(new AccessDeniedError());
     });
 
     it('Find users successfully', async () => {

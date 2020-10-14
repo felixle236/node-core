@@ -1,5 +1,6 @@
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import { Request, Response } from 'express';
+import { AccessDeniedError } from '../../web.core/domain/common/exceptions/AccessDeniedError';
 import { ILogService } from '../../web.core/gateways/services/ILogService';
 import { Inject } from 'typedi';
 import { SystemError } from '../../web.core/domain/common/exceptions/SystemError';
@@ -11,6 +12,9 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
 
     error(err: SystemError, req: Request, res: Response) {
         const stack = err.stack;
+
+        if (err.httpCode === 403)
+            err = new AccessDeniedError();
 
         // Handle internal server error.
         if (!err.code || !err.httpCode) {
