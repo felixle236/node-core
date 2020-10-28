@@ -10,8 +10,6 @@ USER node
 
 RUN npm install && \
     npm run build && \
-    # npm run migration:run && \
-    rm -rf node_modules && rm -rf src && \
-    npm install --production
+    npm run migration:run
 
 CMD ["npm", "start"]

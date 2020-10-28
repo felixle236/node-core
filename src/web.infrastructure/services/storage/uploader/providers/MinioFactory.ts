@@ -72,8 +72,11 @@ export class MinioFactory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
-        return this._client.putObject(bucketName, objectName, buffer).then(result => !!result);
+    upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
+        const metaData = {} as minio.ItemBucketMetadata;
+        if (mimetype)
+            metaData['Content-Type'] = mimetype;
+        return this._client.putObject(bucketName, objectName, buffer, metaData).then(result => !!result);
     }
 
     download(bucketName: string, objectName: string): Promise<Buffer> {

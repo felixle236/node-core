@@ -30,7 +30,7 @@ export class {PascalName}Controller {
         return await this._find{PascalName}QueryHandler.handle(param);
     }
 
-    @Get('/:id')
+    @Get('/:id([0-9a-f-]{36})')
     async getById(@Params() param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdResult> {
         return await this._get{PascalName}ByIdQueryHandler.handle(param);
     }
@@ -40,13 +40,13 @@ export class {PascalName}Controller {
         return await this._create{PascalName}CommandHandler.handle(param);
     }
 
-    @Put('/:id')
+    @Put('/:id([0-9a-f-]{36})')
     async update(@Param('id') id: string, @Body() param: Update{PascalName}Command): Promise<boolean> {
         param.id = id;
         return await this._update{PascalName}CommandHandler.handle(param);
     }
 
-    @Delete('/:id')
+    @Delete('/:id([0-9a-f-]{36})')
     async delete(@Params() param: Delete{PascalName}Command): Promise<boolean> {
         return await this._delete{PascalName}CommandHandler.handle(param);
     }

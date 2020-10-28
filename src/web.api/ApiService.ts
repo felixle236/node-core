@@ -41,6 +41,12 @@ export class ApiService {
             res.status(200).end('ok');
         });
 
+        httpServer.app.use(function(req, res, next) {
+            if (!res.writableEnded && req.method !== 'OPTIONS')
+                res.status(404).send();
+            next();
+        });
+
         httpServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         return httpServer.start(API_PORT, callback);
     }

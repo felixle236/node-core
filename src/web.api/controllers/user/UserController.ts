@@ -46,7 +46,7 @@ export class UserController {
         return await this._findUserQueryHandler.handle(param);
     }
 
-    @Get('/:id')
+    @Get('/:id([0-9a-f-]{36})')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
     async getById(@Params() param: GetUserByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdResult> {
         param.roleAuthId = userAuth.roleId;
@@ -65,21 +65,21 @@ export class UserController {
         return await this._createUserCommandHandler.handle(param);
     }
 
-    @Put('/:id')
+    @Put('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     async update(@Param('id') id: string, @Body() param: UpdateUserCommand): Promise<boolean> {
         param.id = id;
         return await this._updateUserCommandHandler.handle(param);
     }
 
-    @Post('/:id/archive')
+    @Post('/:id([0-9a-f-]{36})/archive')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
     async archive(@Params() param: ArchiveUserCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
         param.roleAuthId = userAuth.roleId;
         return await this._archiveUserCommandHandler.handle(param);
     }
 
-    @Delete('/:id')
+    @Delete('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     async delete(@Params() param: DeleteUserCommand): Promise<boolean> {
         return await this._deleteUserCommandHandler.handle(param);

@@ -4,6 +4,7 @@ import { IFilter } from '../../usecase/interfaces/IFilter';
 export interface IBaseRepository<TEntity, TIdentityType> {
     findAndCount(filter: IFilter): Promise<[TEntity[], number]>;
 
+    count(): Promise<number>;
     count(filter: IFilter): Promise<number>;
     count(filter: IFilter, queryRunner: IDbQueryRunner): Promise<number>;
 

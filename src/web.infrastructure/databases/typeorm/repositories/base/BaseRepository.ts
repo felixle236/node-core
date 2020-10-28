@@ -26,7 +26,7 @@ export abstract class BaseRepository<TEntity extends IEntity, TDbEntity extends 
         return [list.map(item => item.toEntity()), count];
     }
 
-    async count(_filter: IFilter, queryRunner?: IDbQueryRunner): Promise<number> {
+    async count(_filter?: IFilter, queryRunner?: IDbQueryRunner): Promise<number> {
         return await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner).getCount();
     }
 

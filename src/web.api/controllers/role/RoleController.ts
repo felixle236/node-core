@@ -42,7 +42,7 @@ export class RoleController {
         return await this._findRoleCommonQueryHandler.handle(param);
     }
 
-    @Get('/:id')
+    @Get('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     async getById(@Params() param: GetRoleByIdQuery): Promise<GetRoleByIdResult> {
         return await this._getRoleByIdQueryHandler.handle(param);
@@ -54,14 +54,14 @@ export class RoleController {
         return await this._createRoleCommandHandler.handle(param);
     }
 
-    @Put('/:id')
+    @Put('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     async update(@Param('id') id: string, @Body() param: UpdateRoleCommand): Promise<boolean> {
         param.id = id;
         return await this._updateRoleCommandHandler.handle(param);
     }
 
-    @Delete('/:id')
+    @Delete('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     async delete(@Params() param: DeleteRoleCommand): Promise<boolean> {
         return await this._deleteRoleCommandHandler.handle(param);

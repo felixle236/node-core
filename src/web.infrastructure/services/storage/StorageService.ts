@@ -19,8 +19,8 @@ export class StorageService implements IStorageService {
         }
     }
 
-    async upload(urlPath: string, buffer: Buffer): Promise<boolean> {
-        return await this._uploader.upload(BUCKET_NAME, urlPath, buffer);
+    async upload(urlPath: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
+        return await this._uploader.upload(BUCKET_NAME, urlPath, buffer, mimetype);
     }
 
     async download(urlPath: string): Promise<Buffer> {

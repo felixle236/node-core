@@ -38,8 +38,8 @@ export class StorageConsoleFactory implements IStorageProvider {
         return [];
     }
 
-    async upload(bucketName: string, objectName: string, _buffer: Buffer): Promise<boolean> {
-        console.log('StorageService.upload', { bucketName, objectName });
+    async upload(bucketName: string, objectName: string, _buffer: Buffer, mimetype?: string): Promise<boolean> {
+        console.log('StorageService.upload', { bucketName, objectName, mimetype });
         return true;
     }
 

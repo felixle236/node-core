@@ -107,13 +107,18 @@ export class AwsS3Factory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
+    upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this._client.upload({
+            const param = {
                 Bucket: bucketName, // eslint-disable-line
                 Key: objectName, // eslint-disable-line
                 Body: buffer // eslint-disable-line
-            }, err => {
+            } as S3.PutObjectRequest;
+
+            if (mimetype)
+                param.ContentType = mimetype;
+
+            this._client.upload(param, err => {
                 if (err) return reject(err);
                 resolve(true);
             });

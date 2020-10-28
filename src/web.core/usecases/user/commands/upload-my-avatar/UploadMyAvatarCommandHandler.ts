@@ -32,7 +32,7 @@ export class UploadMyAvatarCommandHandler implements ICommandHandler<UploadMyAva
         const data = new User();
         data.avatar = avatarPath;
 
-        let hasSucceed = await this._storageService.upload(avatarPath, param.file.buffer);
+        let hasSucceed = await this._storageService.upload(avatarPath, param.file.buffer, param.file.mimetype);
         if (!hasSucceed)
             throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar file');
 

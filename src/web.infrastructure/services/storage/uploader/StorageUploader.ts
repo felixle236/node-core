@@ -63,8 +63,8 @@ export class StorageUploader implements IStorageProvider {
         return await this._provider.getObjects(bucketName, prefix);
     }
 
-    async upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean> {
-        return await this._provider.upload(bucketName, objectName, buffer);
+    async upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
+        return await this._provider.upload(bucketName, objectName, buffer, mimetype);
     }
 
     async download(bucketName: string, objectName: string): Promise<Buffer> {
