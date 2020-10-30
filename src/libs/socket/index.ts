@@ -33,12 +33,12 @@ export function sendAllWithSender(socket: Socket, event: string, data: any): Boo
  * Send data to room by emitter
  */
 export function sendByEmitter(socketEmitter: SocketIOEmitter, namespace: string, event: string, room: string, data: any): void {
-    socketEmitter.of(namespace).to(room).emit(event, data);
+    socketEmitter.of('/' + namespace).to(room).emit(event, data);
 }
 
 /**
  * Send data to all rooms by emitter
  */
 export function sendAllByEmitter(socketEmitter: SocketIOEmitter, namespace: string, event: string, data: any): void {
-    socketEmitter.of(namespace).emit(event, data);
+    socketEmitter.of('/' + namespace).emit(event, data);
 }
