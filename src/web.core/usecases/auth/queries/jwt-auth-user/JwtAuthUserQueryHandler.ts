@@ -28,7 +28,7 @@ export class JwtAuthUserQueryHandler implements IQueryHandler<JwtAuthUserQuery, 
             if (error.name === 'TokenExpiredError')
                 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
             else
-                throw new UnauthorizedError(MessageError.SOMETHING_WRONG);
+                throw new UnauthorizedError(MessageError.PARAM_INVALID, 'token');
         }
 
         if (!payload || !payload.sub || !payload.roleId)

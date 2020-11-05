@@ -86,7 +86,7 @@ describe('Auth - Authenticate user', () => {
         param.token = generateToken(uuid.v4(), uuid.v4());
 
         const result = await jwtAuthUserQueryHandler.handle(param).catch(error => error);
-        expect(result).to.include(new UnauthorizedError(MessageError.SOMETHING_WRONG));
+        expect(result).to.include(new UnauthorizedError(MessageError.PARAM_INVALID, 'token'));
     });
 
     it('Authenticate user with user info is invalid', async () => {

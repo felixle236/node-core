@@ -2,6 +2,7 @@ import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_PROVIDER, SENDINBLUE_A
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { IMailProvider } from './interfaces/IMailProvider';
 import { MailConsoleFactory } from './providers/MailConsoleFactory';
+import { MailGunFactory } from './providers/MailGunFactory';
 import { MailProvider } from '../../../../configs/ServiceProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 
@@ -12,6 +13,10 @@ export class MailSender implements IMailProvider {
         switch (MAIL_PROVIDER) {
         case MailProvider.GOOGLE_SMTP:
             this._provider = new GoogleSmtpFactory(GOOGLE_SMTP_USERNAME, GOOGLE_SMTP_PASSWORD);
+            break;
+
+        case MailProvider.MAIL_GUN:
+            this._provider = new MailGunFactory();
             break;
 
         case MailProvider.SEND_IN_BLUE:

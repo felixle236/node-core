@@ -7,10 +7,10 @@ dotenv.config();
 
 export const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === 'development';
 
-export const PROJECT_ID: string = process.env.PROJECT_ID ?? 'node-core';
-export const PROJECT_NAME: string = process.env.PROJECT_NAME ?? 'Node Core';
-export const PROTOTYPE: string = process.env.PROTOTYPE ?? 'http';
-export const DOMAIN: string = process.env.DOMAIN ?? 'localhost';
+export const PROJECT_ID: string = process.env.PROJECT_ID ?? '';
+export const PROJECT_NAME: string = process.env.PROJECT_NAME ?? '';
+export const PROTOTYPE: string = process.env.PROTOTYPE ?? '';
+export const DOMAIN: string = process.env.DOMAIN ?? '';
 
 // API SERVICE
 
@@ -29,17 +29,17 @@ export const SOCKET_PORT: number = Number(process.env.SOCKET_PORT);
 
 // CONFIGURATION OF DATABASE
 
-export const DB_TYPE: string = process.env.DB_TYPE ?? 'postgres';
-export const DB_HOST: string = process.env.DB_HOST ?? 'localhost';
-export const DB_PORT: number = process.env.DB_PORT ? Number(process.env.DB_PORT) : 5432;
-export const DB_NAME: string = process.env.DB_NAME ?? 'node_core';
-export const DB_USER: string = process.env.DB_USER ?? 'postgres';
-export const DB_PASS: string = process.env.DB_PASS ?? '123456';
+export const DB_TYPE: string = process.env.DB_TYPE ?? '';
+export const DB_HOST: string = process.env.DB_HOST ?? '';
+export const DB_PORT: number = process.env.DB_PORT ? Number(process.env.DB_PORT) : 0;
+export const DB_NAME: string = process.env.DB_NAME ?? '';
+export const DB_USER: string = process.env.DB_USER ?? '';
+export const DB_PASS: string = process.env.DB_PASS ?? '';
 
 // CONFIGURATION OF REDIS
 
-export const REDIS_CONFIG_HOST: string = process.env.REDIS_CONFIG_HOST ?? 'localhost';
-export const REDIS_CONFIG_PORT: number = process.env.REDIS_CONFIG_PORT ? Number(process.env.REDIS_CONFIG_PORT) : 6379;
+export const REDIS_CONFIG_HOST: string = process.env.REDIS_CONFIG_HOST ?? '';
+export const REDIS_CONFIG_PORT: number = process.env.REDIS_CONFIG_PORT ? Number(process.env.REDIS_CONFIG_PORT) : 0;
 
 // AUTHENTICATION SERVICE
 
@@ -54,17 +54,21 @@ export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.en
 // STORAGE SERVICE
 
 export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.CONSOLE;
-export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? 'node-core';
+export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? '';
 
-export const STORAGE_CONFIG_HOST: string = process.env.STORAGE_CONFIG_HOST ?? 'localhost';
-export const STORAGE_CONFIG_PORT: number = process.env.STORAGE_CONFIG_PORT ? Number(process.env.STORAGE_CONFIG_PORT) : 9000;
+export const STORAGE_CONFIG_HOST: string = process.env.STORAGE_CONFIG_HOST ?? '';
+export const STORAGE_CONFIG_PORT: number = process.env.STORAGE_CONFIG_PORT ? Number(process.env.STORAGE_CONFIG_PORT) : 0;
 export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY ?? '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
 export const IS_USE_SSL_MINIO: boolean = convertStringToBoolean(process.env.IS_USE_SSL_MINIO);
 
-export const S3_REGION: string = process.env.S3_REGION ?? 'ap-southeast-1';
+export const S3_REGION: string = process.env.S3_REGION ?? '';
 export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';
 export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
+
+export const GOOGLE_APPLICATION_CREDENTIALS: string = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? '';
+export const GOOGLE_STORAGE_LOCATION: string = process.env.GOOGLE_STORAGE_LOCATION ?? '';
+export const GOOGLE_STORAGE_CLASS: string = process.env.GOOGLE_STORAGE_CLASS ?? '';
 
 export const STORAGE_URL: string = STORAGE_PROVIDER === StorageProvider.MINIO
     ? `http://${STORAGE_CONFIG_HOST}` + (STORAGE_CONFIG_PORT === 80 ? '' : `:${STORAGE_CONFIG_PORT}`) + `/${BUCKET_NAME}/`
@@ -78,6 +82,9 @@ export const MAIL_SENDER_EMAIL: string = process.env.MAIL_SENDER_EMAIL ?? '';
 
 export const GOOGLE_SMTP_USERNAME: string = process.env.GOOGLE_SMTP_USERNAME ?? '';
 export const GOOGLE_SMTP_PASSWORD: string = process.env.GOOGLE_SMTP_PASSWORD ?? '';
+
+export const MAILGUN_DOMAIN: string = process.env.MAILGUN_DOMAIN ?? '';
+export const MAILGUN_API_KEY: string = process.env.MAILGUN_API_KEY ?? '';
 
 export const SENDINBLUE_API_KEY: string = process.env.SENDINBLUE_API_KEY ?? '';
 

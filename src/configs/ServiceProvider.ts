@@ -13,7 +13,8 @@ export enum StorageProvider {
 export enum MailProvider {
     CONSOLE = 1,
     GOOGLE_SMTP = 2,
-    SEND_IN_BLUE = 3
+    MAIL_GUN = 3,
+    SEND_IN_BLUE = 4
 }
 
 export enum SmsProvider {

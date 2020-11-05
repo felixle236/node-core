@@ -1,25 +1,72 @@
+import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION } from '../../../../../configs/Configuration';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
+import { Storage } from '@google-cloud/storage';
 
 export class GoogleStorageFactory implements IStorageProvider {
-    getBuckets(): any { }
+    private readonly _storage: Storage;
 
-    getBucketPolicy(): any { }
+    constructor() {
+        this._storage = new Storage();
+    }
 
-    checkBucketExist(): any { }
+    async getBuckets(): Promise<string[]> {
+        const [buckets] = await this._storage.getBuckets();
+        return buckets.map(bucket => bucket.name);
+    }
 
-    createBucket(): any { }
+    async getBucketPolicy(bucketName: string): Promise<any> {
+        const bucket = this._storage.bucket(bucketName);
+        const [policy] = await bucket.iam.getPolicy({ requestedPolicyVersion: 3 });
+        return policy;
+    }
 
-    setBucketPolicy(): any { }
+    async checkBucketExist(bucketName): Promise<boolean> {
+        const bucket = this._storage.bucket(bucketName);
+        return !!bucket;
+    }
 
-    deleteBucket(): any { }
+    async createBucket(bucketName: string): Promise<void> {
+        await this._storage.createBucket(bucketName, {
+            location: GOOGLE_STORAGE_LOCATION && 'ASIA',
+            storageClass: GOOGLE_STORAGE_CLASS && 'STANDARD'
+        });
+    }
 
-    deleteBucketPolicy(): any { }
+    async setBucketPolicy(bucketName: string, policy: any): Promise<void> {
+        const bucket = this._storage.bucket(bucketName);
+        await bucket.iam.setPolicy(policy);
+    }
 
-    getObjects(): any { }
+    async deleteBucket(bucketName: string): Promise<void> {
+        await this._storage.bucket(bucketName).delete();
+    }
 
-    upload(): any { }
+    async deleteBucketPolicy(bucketName: string): Promise<void> {
+        const bucket = this._storage.bucket(bucketName);
+        const [policy] = await bucket.iam.getPolicy({ requestedPolicyVersion: 3 });
+        if (policy) {
+            policy.bindings = [];
+            await bucket.iam.setPolicy(policy);
+        }
+    }
 
-    download(): any { }
+    async getObjects(bucketName: string): Promise<any[]> {
+        const [files] = await this._storage.bucket(bucketName).getFiles();
+        return files;
+    }
 
-    delete(): any { }
+    async upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<any> {
+        const file = this._storage.bucket(bucketName).file(objectName);
+        await file.save(buffer, { contentType: mimetype });
+    }
+
+    async download(bucketName: string, objectName: string): Promise<Buffer> {
+        const [data] = await this._storage.bucket(bucketName).file(objectName).download();
+        return data;
+    }
+
+    async delete(bucketName: string, objectName: string): Promise<boolean> {
+        await this._storage.bucket(bucketName).file(objectName).delete();
+        return true;
+    }
 }
