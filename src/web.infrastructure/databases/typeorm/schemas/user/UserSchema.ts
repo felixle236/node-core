@@ -26,7 +26,10 @@ export const USER_SCHEMA = {
         FORGOT_EXPIRE: 'forgot_expire'
     },
     RELATED_ONE: {
-        // The field name that we're defined into entity.
+        // The field name that we're defined into entity to map the entity related.
         ROLE: 'role'
+    },
+    RELATED_MANY: {
+
     }
 };

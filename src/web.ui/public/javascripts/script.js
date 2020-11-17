@@ -26,7 +26,7 @@ function deleteCookie(name) {
 
 window.onload = function() {
     if (userAuth) {
-        socket = io(baseSocket + '/configurations', {
+        socket = io(baseSocket + '/messages', {
             query: {
                 token: getCookie('token')
             },

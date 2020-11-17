@@ -7,8 +7,11 @@ export const ROLE_SCHEMA = {
         ID: 'id',
         NAME: 'name'
     },
+    RELATED_ONE: {
+
+    },
     RELATED_MANY: {
-        // The field name that we're defined into entity.
+        // The field name that we're defined into entity to map the entity related.
         USER: 'users'
     }
 };
