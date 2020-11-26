@@ -13,7 +13,9 @@ module.exports = {
         type: 'redis',
         options: {
             host: process.env.REDIS_CONFIG_HOST,
-            port: Number(process.env.REDIS_CONFIG_PORT)
+            port: Number(process.env.REDIS_CONFIG_PORT),
+            password: process.env.REDIS_CONFIG_PASS,
+            prefix: process.env.PROJECT_ID
         }
     },
     synchronize: false,

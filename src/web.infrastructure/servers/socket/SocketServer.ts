@@ -1,3 +1,4 @@
+import * as redis from 'redis';
 import * as socketIOEmitter from 'socket.io-emitter';
 import { Container } from 'typedi';
 import { RedisClient } from 'redis';
@@ -18,16 +19,19 @@ export class SocketServer {
         // Initalize socket adapter
         const pubClient = new RedisClient({
             host: options.redisAdapter.host,
-            port: options.redisAdapter.port
+            port: options.redisAdapter.port,
+            password: options.redisAdapter.pass,
+            prefix: options.redisAdapter.prefix
         });
         const subClient = pubClient.duplicate();
         this.server.adapter(createAdapter({ pubClient, subClient }));
 
         // Initialize socket emitter
-        const socketEmitter = socketIOEmitter({
-            host: options.redisAdapter.host,
-            port: options.redisAdapter.port
+        const redisClient = redis.createClient(options.redisAdapter.port, options.redisAdapter.host, {
+            password: options.redisAdapter.pass,
+            prefix: options.redisAdapter.prefix
         });
+        const socketEmitter = socketIOEmitter(redisClient as any);
         Container.set('socket.io-emitter', socketEmitter);
 
         return this.server;

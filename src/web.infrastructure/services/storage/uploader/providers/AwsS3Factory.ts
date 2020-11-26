@@ -30,7 +30,7 @@ export class AwsS3Factory implements IStorageProvider {
                 Bucket: bucketName // eslint-disable-line
             }, (err, data) => {
                 if (err) return reject(err);
-                resolve(data.Policy);
+                resolve(data.Policy ?? '');
             });
         });
     }
