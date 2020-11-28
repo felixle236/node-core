@@ -1,6 +1,6 @@
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
-import { PROJECT_ID, REDIS_CONFIG_HOST, REDIS_CONFIG_PASS, REDIS_CONFIG_PORT } from '../../../configs/Configuration';
+import { REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
 import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { Service } from 'typedi';
@@ -25,8 +25,8 @@ export class RedisContext {
             return this._connection;
 
         this._connection = promisifyRedis(redisLib).createClient(REDIS_CONFIG_PORT, REDIS_CONFIG_HOST, {
-            password: REDIS_CONFIG_PASS,
-            prefix: PROJECT_ID
+            password: REDIS_CONFIG_PASSWORD,
+            prefix: REDIS_CONFIG_PREFIX
         }) as IRedisClient;
         return this._connection;
     }

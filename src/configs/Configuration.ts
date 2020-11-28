@@ -40,7 +40,8 @@ export const DB_PASS: string = process.env.DB_PASS ?? '';
 
 export const REDIS_CONFIG_HOST: string = process.env.REDIS_CONFIG_HOST ?? '';
 export const REDIS_CONFIG_PORT: number = process.env.REDIS_CONFIG_PORT ? Number(process.env.REDIS_CONFIG_PORT) : 0;
-export const REDIS_CONFIG_PASS: string | undefined = process.env.REDIS_CONFIG_PASS || undefined;
+export const REDIS_CONFIG_PASSWORD: string | undefined = process.env.REDIS_CONFIG_PASSWORD || undefined;
+export const REDIS_CONFIG_PREFIX: string | undefined = process.env.REDIS_CONFIG_PREFIX || undefined;
 
 // AUTHENTICATION SERVICE
 

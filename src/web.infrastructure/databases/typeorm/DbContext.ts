@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
-import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, PROJECT_ID, REDIS_CONFIG_HOST, REDIS_CONFIG_PASS, REDIS_CONFIG_PORT } from '../../../configs/Configuration';
+import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
 import { DbConnection } from './DbConnection';
 import { IDbConnection } from '../../../web.core/domain/common/database/interfaces/IDbConnection';
 import { IDbContext } from '../../../web.core/domain/common/database/interfaces/IDbContext';
@@ -43,8 +43,8 @@ export class DbContext implements IDbContext {
                 options: {
                     host: REDIS_CONFIG_HOST,
                     port: REDIS_CONFIG_PORT,
-                    password: REDIS_CONFIG_PASS,
-                    prefix: PROJECT_ID
+                    password: REDIS_CONFIG_PASSWORD,
+                    prefix: REDIS_CONFIG_PREFIX
                 }
             },
             synchronize: false,
