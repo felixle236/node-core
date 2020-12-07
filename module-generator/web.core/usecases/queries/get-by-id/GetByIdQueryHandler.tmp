@@ -1,17 +1,17 @@
 import { Inject, Service } from 'typedi';
 import { Get{PascalName}ByIdQuery } from './Get{PascalName}ByIdQuery';
-import { Get{PascalName}ByIdResult } from './Get{PascalName}ByIdResult';
+import { Get{PascalName}ByIdQueryResult } from './Get{PascalName}ByIdQueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
-export class Get{PascalName}ByIdQueryHandler implements IQueryHandler<Get{PascalName}ByIdQuery, Get{PascalName}ByIdResult> {
+export class Get{PascalName}ByIdQueryHandler implements IQueryHandler<Get{PascalName}ByIdQuery, Get{PascalName}ByIdQueryResult> {
     @Inject('{camelName}.repository')
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
-    async handle(param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdResult> {
+    async handle(param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdQueryResult> {
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
@@ -19,6 +19,6 @@ export class Get{PascalName}ByIdQueryHandler implements IQueryHandler<Get{Pascal
         if (!{camelName})
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
-        return new Get{PascalName}ByIdResult({camelName});
+        return new Get{PascalName}ByIdQueryResult({camelName});
     }
 }

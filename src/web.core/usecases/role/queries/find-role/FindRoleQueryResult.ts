@@ -1,13 +1,13 @@
-import { {PascalName} } from '../../../../domain/entities/{camelName}/{PascalName}';
+import { Role } from '../../../../domain/entities/role/Role';
 
-export class Get{PascalName}ByIdResult {
+export class FindRoleQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
     name: string;
 
-    constructor(data: {PascalName}) {
+    constructor(data: Role) {
         this.id = data.id;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;

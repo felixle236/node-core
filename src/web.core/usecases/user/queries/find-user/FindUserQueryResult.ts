@@ -12,11 +12,9 @@ class RoleResult {
     }
 }
 
-export class GetUserByIdResult {
+export class FindUserQueryResult {
     id: string;
     createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
     roleId: string;
     firstName: string;
     lastName?: string;
@@ -28,16 +26,12 @@ export class GetUserByIdResult {
     address?: string;
     culture?: string;
     currency?: string;
-    activedAt?: Date;
-    archivedAt?: Date;
 
     role?: RoleResult;
 
     constructor(data: User) {
         this.id = data.id;
         this.createdAt = data.createdAt;
-        this.updatedAt = data.updatedAt;
-        this.deletedAt = data.deletedAt;
         this.roleId = data.roleId;
         this.firstName = data.firstName;
         this.lastName = data.lastName;
@@ -49,8 +43,6 @@ export class GetUserByIdResult {
         this.address = data.address;
         this.culture = data.culture;
         this.currency = data.currency;
-        this.activedAt = data.activedAt;
-        this.archivedAt = data.archivedAt;
 
         this.role = data.role && new RoleResult(data.role);
     }

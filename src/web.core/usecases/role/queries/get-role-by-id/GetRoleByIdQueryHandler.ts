@@ -1,17 +1,17 @@
 import { Inject, Service } from 'typedi';
 import { GetRoleByIdQuery } from './GetRoleByIdQuery';
-import { GetRoleByIdResult } from './GetRoleByIdResult';
+import { GetRoleByIdQueryResult } from './GetRoleByIdQueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
-export class GetRoleByIdQueryHandler implements IQueryHandler<GetRoleByIdQuery, GetRoleByIdResult> {
+export class GetRoleByIdQueryHandler implements IQueryHandler<GetRoleByIdQuery, GetRoleByIdQueryResult> {
     @Inject('role.repository')
     private readonly _roleRepository: IRoleRepository;
 
-    async handle(param: GetRoleByIdQuery): Promise<GetRoleByIdResult> {
+    async handle(param: GetRoleByIdQuery): Promise<GetRoleByIdQueryResult> {
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
@@ -19,6 +19,6 @@ export class GetRoleByIdQueryHandler implements IQueryHandler<GetRoleByIdQuery, 
         if (!role)
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
-        return new GetRoleByIdResult(role);
+        return new GetRoleByIdQueryResult(role);
     }
 }

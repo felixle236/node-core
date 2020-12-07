@@ -21,6 +21,8 @@ export class MessageError {
 
     static PARAM_EXISTED = new ErrorObject(ErrorCode.DATA_EXISTED, 'The {0} is already existed!');
 
+    static PARAM_SENT = new ErrorObject(ErrorCode.DATA_SENT, 'The {0} has been sent!');
+
     static PARAM_NOT_EXISTS = new ErrorObject(ErrorCode.DATA_NOT_EXISTS, 'The {0} is not exists!');
 
     static PARAM_EXPIRED = new ErrorObject(ErrorCode.DATA_EXPIRED, 'The {0} has expired!');

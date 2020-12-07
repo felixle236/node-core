@@ -10,13 +10,13 @@ import { DeleteUserCommand } from '../../../web.core/usecases/user/commands/dele
 import { DeleteUserCommandHandler } from '../../../web.core/usecases/user/commands/delete-user/DeleteUserCommandHandler';
 import { FindUserQuery } from '../../../web.core/usecases/user/queries/find-user/FindUserQuery';
 import { FindUserQueryHandler } from '../../../web.core/usecases/user/queries/find-user/FindUserQueryHandler';
-import { FindUserResult } from '../../../web.core/usecases/user/queries/find-user/FindUserResult';
+import { FindUserQueryResult } from '../../../web.core/usecases/user/queries/find-user/FindUserQueryResult';
 import { GetListOnlineStatusByIdsQuery } from '../../../web.core/usecases/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQuery';
 import { GetListOnlineStatusByIdsQueryHandler } from '../../../web.core/usecases/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
-import { GetListOnlineStatusByIdsResult } from '../../../web.core/usecases/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsResult';
+import { GetListOnlineStatusByIdsQueryResult } from '../../../web.core/usecases/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryResult';
 import { GetUserByIdQuery } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQuery';
 import { GetUserByIdQueryHandler } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQueryHandler';
-import { GetUserByIdResult } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdResult';
+import { GetUserByIdQueryResult } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQueryResult';
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
@@ -40,7 +40,7 @@ export class UserController {
 
     @Get('/')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
-    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('roleId') roleId?: RoleId): Promise<PaginationResult<FindUserResult>> {
+    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('roleId') roleId?: RoleId): Promise<PaginationResult<FindUserQueryResult>> {
         param.roleAuthId = userAuth.roleId;
         param.roleIds = roleId ? [roleId] : [];
         return await this._findUserQueryHandler.handle(param);
@@ -48,14 +48,14 @@ export class UserController {
 
     @Get('/:id([0-9a-f-]{36})')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
-    async getById(@Params() param: GetUserByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdResult> {
+    async getById(@Params() param: GetUserByIdQuery, @CurrentUser() userAuth: UserAuthenticated): Promise<GetUserByIdQueryResult> {
         param.roleAuthId = userAuth.roleId;
         return await this._getUserByIdQueryHandler.handle(param);
     }
 
     @Post('/list-online-status')
     @Authorized()
-    async getListOnlineStatusByIds(@Body() param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsResult[]> {
+    async getListOnlineStatusByIds(@Body() param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsQueryResult[]> {
         return await this._getListOnlineStatusByIdsQueryHandler.handle(param);
     }
 
@@ -88,7 +88,7 @@ export class UserController {
     @Post('/dummy-managers')
     @Authorized(RoleId.SUPER_ADMIN)
     async createDummyManagers(): Promise<BulkActionResult> {
-        const list: DummyUser[] = require('../../resources/data/dummy-managers');
+        const list: DummyUser[] = require('../../../resources/data/dummy-managers');
         const param = new CreateDummyUserCommand();
         param.users = [];
         list.forEach(item => {
@@ -108,7 +108,7 @@ export class UserController {
     @Post('/dummy-clients')
     @Authorized(RoleId.SUPER_ADMIN)
     async createDummyClients(): Promise<BulkActionResult> {
-        const list: DummyUser[] = require('../../resources/data/dummy-clients');
+        const list: DummyUser[] = require('../../../resources/data/dummy-clients');
         const param = new CreateDummyUserCommand();
         param.users = [];
         list.forEach(item => {

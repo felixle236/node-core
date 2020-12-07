@@ -24,10 +24,12 @@ export class RedisContext {
         if (this._connection && this._connection.connected)
             return this._connection;
 
-        this._connection = promisifyRedis(redisLib).createClient(REDIS_CONFIG_PORT, REDIS_CONFIG_HOST, {
+        this._connection = promisifyRedis(redisLib).createClient({
+            host: REDIS_CONFIG_HOST,
+            port: REDIS_CONFIG_PORT,
             password: REDIS_CONFIG_PASSWORD,
             prefix: REDIS_CONFIG_PREFIX
-        }) as IRedisClient;
+        } as redis.ClientOpts) as IRedisClient;
         return this._connection;
     }
 }

@@ -25,9 +25,15 @@ export class SocketNamespace {
         NAME: 'messages',
         EVENTS: {
             USER_ONLINE_STATUS_CHANGED: 'user_online_status_changed',
-            MESSAGE_SEND: 'message_send',
-            MESSAGE_RECEIVED: 'message_received',
-            MESSAGE_STATUS_CHANGED: 'message_status_changed'
+            FRIEND_REQUEST: 'friend_request',
+            FRIEND_ACCEPT: 'friend_accept',
+            FRIEND_DECLINE: 'friend_decline',
+            FRIEND_BLOCK: 'friend_block',
+            CHAT_MESSAGE_CREATE: 'message_create',
+            CHAT_MESSAGE_UPDATE: 'message_update',
+            CHAT_MESSAGE_DELETE: 'message_delete',
+            CHAT_MESSAGE_RECEIVED: 'message_received',
+            CHAT_MESSAGE_READED: 'message_readed'
         }
     };
 }

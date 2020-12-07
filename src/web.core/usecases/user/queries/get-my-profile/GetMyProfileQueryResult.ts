@@ -12,7 +12,7 @@ class RoleResult {
     }
 }
 
-export class GetMyProfileResult {
+export class GetMyProfileQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;

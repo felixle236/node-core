@@ -1,6 +1,6 @@
 import { {PascalName} } from '../../../../domain/entities/{camelName}/{PascalName}';
 
-export class Find{PascalName}Result {
+export class Get{PascalName}ByIdQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;

@@ -5,13 +5,13 @@ import { DeleteRoleCommand } from '../../../web.core/usecases/role/commands/dele
 import { DeleteRoleCommandHandler } from '../../../web.core/usecases/role/commands/delete-role/DeleteRoleCommandHandler';
 import { FindRoleCommonQuery } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQuery';
 import { FindRoleCommonQueryHandler } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQueryHandler';
-import { FindRoleCommonResult } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonResult';
+import { FindRoleCommonQueryResult } from '../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQueryResult';
 import { FindRoleQuery } from '../../../web.core/usecases/role/queries/find-role/FindRoleQuery';
 import { FindRoleQueryHandler } from '../../../web.core/usecases/role/queries/find-role/FindRoleQueryHandler';
-import { FindRoleResult } from '../../../web.core/usecases/role/queries/find-role/FindRoleResult';
+import { FindRoleQueryResult } from '../../../web.core/usecases/role/queries/find-role/FindRoleQueryResult';
 import { GetRoleByIdQuery } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQuery';
 import { GetRoleByIdQueryHandler } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQueryHandler';
-import { GetRoleByIdResult } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdResult';
+import { GetRoleByIdQueryResult } from '../../../web.core/usecases/role/queries/get-role-by-id/GetRoleByIdQueryResult';
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { Service } from 'typedi';
@@ -32,19 +32,19 @@ export class RoleController {
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
-    async find(@QueryParams() param: FindRoleQuery): Promise<PaginationResult<FindRoleResult>> {
+    async find(@QueryParams() param: FindRoleQuery): Promise<PaginationResult<FindRoleQueryResult>> {
         return await this._findRoleQueryHandler.handle(param);
     }
 
     @Get('/common')
     @Authorized(RoleId.SUPER_ADMIN)
-    async findCommon(@QueryParams() param: FindRoleCommonQuery): Promise<PaginationResult<FindRoleCommonResult>> {
+    async findCommon(@QueryParams() param: FindRoleCommonQuery): Promise<PaginationResult<FindRoleCommonQueryResult>> {
         return await this._findRoleCommonQueryHandler.handle(param);
     }
 
     @Get('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
-    async getById(@Params() param: GetRoleByIdQuery): Promise<GetRoleByIdResult> {
+    async getById(@Params() param: GetRoleByIdQuery): Promise<GetRoleByIdQueryResult> {
         return await this._getRoleByIdQueryHandler.handle(param);
     }
 

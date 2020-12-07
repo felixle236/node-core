@@ -9,6 +9,7 @@ export class ErrorCode {
     static DATA_INVALID = 'DATA_INVALID_ERR';
     static DATA_INCORRECT = 'DATA_INCORRECT_ERR';
     static DATA_EXISTED = 'DATA_EXISTED_ERR';
+    static DATA_SENT = 'DATA_SENT_ERR';
     static DATA_NOT_EXISTS = 'DATA_NOT_EXISTS_ERR';
     static DATA_EXPIRED = 'DATA_EXPIRED_ERR';
     static DATA_NOT_ACTIVATED = 'DATA_NOT_ACTIVATED_ERR';

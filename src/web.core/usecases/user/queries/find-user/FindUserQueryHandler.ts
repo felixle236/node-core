@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { FindUserQuery } from './FindUserQuery';
-import { FindUserResult } from './FindUserResult';
+import { FindUserQueryResult } from './FindUserQueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
@@ -10,11 +10,11 @@ import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
-export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, PaginationResult<FindUserResult>> {
+export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, PaginationResult<FindUserQueryResult>> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: FindUserQuery): Promise<PaginationResult<FindUserResult>> {
+    async handle(param: FindUserQuery): Promise<PaginationResult<FindUserQueryResult>> {
         if (!param.roleAuthId)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
@@ -23,7 +23,7 @@ export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, Pagina
             throw new AccessDeniedError();
 
         const [users, count] = await this._userRepository.findAndCount(param);
-        const list = users.map(user => new FindUserResult(user));
+        const list = users.map(user => new FindUserQueryResult(user));
 
         return new PaginationResult(list, count, param.skip, param.limit);
     }

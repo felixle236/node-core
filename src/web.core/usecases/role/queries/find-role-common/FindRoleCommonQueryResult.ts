@@ -1,6 +1,6 @@
 import { Role } from '../../../../domain/entities/role/Role';
 
-export class FindRoleCommonResult {
+export class FindRoleCommonQueryResult {
     id: string;
     name: string;
 

@@ -2,7 +2,7 @@ import * as multer from 'multer';
 import { Authorized, Body, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
 import { GetMyProfileQuery } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQuery';
 import { GetMyProfileQueryHandler } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryHandler';
-import { GetMyProfileResult } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileResult';
+import { GetMyProfileQueryResult } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryResult';
 import { Service } from 'typedi';
 import { UpdateMyPasswordCommand } from '../../../web.core/usecases/user/commands/update-my-password/UpdateMyPasswordCommand';
 import { UpdateMyPasswordCommandHandler } from '../../../web.core/usecases/user/commands/update-my-password/UpdateMyPasswordCommandHandler';
@@ -24,7 +24,7 @@ export class MeController {
 
     @Get('/')
     @Authorized()
-    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileResult> {
+    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileQueryResult> {
         const param = new GetMyProfileQuery();
         param.id = userAuth.userId;
 

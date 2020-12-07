@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
-import { GetUserByIdResult } from './GetUserByIdResult';
+import { GetUserByIdQueryResult } from './GetUserByIdQueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
@@ -9,11 +9,11 @@ import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
-export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, GetUserByIdResult> {
+export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, GetUserByIdQueryResult> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
-    async handle(param: GetUserByIdQuery): Promise<GetUserByIdResult> {
+    async handle(param: GetUserByIdQuery): Promise<GetUserByIdQueryResult> {
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
@@ -27,7 +27,7 @@ export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, 
         if (!this._filterRolePermissions(param.roleAuthId, user.roleId).length)
             throw new AccessDeniedError();
 
-        return new GetUserByIdResult(user);
+        return new GetUserByIdQueryResult(user);
     }
 
     private _filterRolePermissions(roleAuthId: RoleId, roleId: RoleId): RoleId[] {

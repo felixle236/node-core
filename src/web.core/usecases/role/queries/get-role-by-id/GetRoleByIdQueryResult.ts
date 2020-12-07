@@ -1,6 +1,6 @@
 import { Role } from '../../../../domain/entities/role/Role';
 
-export class FindRoleResult {
+export class GetRoleByIdQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;

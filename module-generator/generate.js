@@ -22,41 +22,41 @@ const entity = getFileContent(path.join(__dirname, './web.core/domain/Entity.tmp
 const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${camelName}/I${pascalName}Repository.ts`);
 const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'));
 
-const findQueryInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
-const findQueryInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQuery.tmp'));
+const findQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
+const findQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQuery.tmp'));
 
-const findQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryHandler.ts`);
-const findQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryHandler.tmp'));
+const findQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryHandler.ts`);
+const findQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryHandler.tmp'));
 
-const findResultInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Result.ts`);
-const findResultInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindResult.tmp'));
+const findQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryResult.ts`);
+const findQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryResult.tmp'));
 
-const getByIdQueryInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQuery.ts`);
-const getByIdQueryInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQuery.tmp'));
+const getByIdQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQuery.ts`);
+const getByIdQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQuery.tmp'));
 
-const getByIdQueryHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
-const getByIdQueryHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryHandler.tmp'));
+const getByIdQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
+const getByIdQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryHandler.tmp'));
 
-const getByIdResultInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdResult.ts`);
-const getByIdResultInteractor = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdResult.tmp'));
+const getByIdQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryResult.ts`);
+const getByIdQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryResult.tmp'));
 
-const createCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}Command.ts`);
-const createCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommand.tmp'));
+const createCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}Command.ts`);
+const createCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommand.tmp'));
 
-const createCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}CommandHandler.ts`);
-const createCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommandHandler.tmp'));
+const createCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}CommandHandler.ts`);
+const createCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommandHandler.tmp'));
 
-const updateCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}Command.ts`);
-const updateCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommand.tmp'));
+const updateCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}Command.ts`);
+const updateCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommand.tmp'));
 
-const updateCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}CommandHandler.ts`);
-const updateCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommandHandler.tmp'));
+const updateCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}CommandHandler.ts`);
+const updateCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommandHandler.tmp'));
 
-const deleteCommandInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}Command.ts`);
-const deleteCommandInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommand.tmp'));
+const deleteCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}Command.ts`);
+const deleteCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommand.tmp'));
 
-const deleteCommandHandlerInteractorPath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}CommandHandler.ts`);
-const deleteCommandHandlerInteractor = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommandHandler.tmp'));
+const deleteCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}CommandHandler.ts`);
+const deleteCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommandHandler.tmp'));
 
 // web.infrastructure
 
@@ -80,18 +80,18 @@ createDirectories(
     entityInterfacePath,
     entityPath,
     repositoryInterfacePath,
-    findQueryInteractorPath,
-    findQueryHandlerInteractorPath,
-    findResultInteractorPath,
-    getByIdQueryInteractorPath,
-    getByIdQueryHandlerInteractorPath,
-    getByIdResultInteractorPath,
-    createCommandInteractorPath,
-    createCommandHandlerInteractorPath,
-    updateCommandInteractorPath,
-    updateCommandHandlerInteractorPath,
-    deleteCommandInteractorPath,
-    deleteCommandHandlerInteractorPath,
+    findQueryUsecasePath,
+    findQueryHandlerUsecasePath,
+    findQueryResultUsecasePath,
+    getByIdQueryUsecasePath,
+    getByIdQueryHandlerUsecasePath,
+    getByIdQueryResultUsecasePath,
+    createCommandUsecasePath,
+    createCommandHandlerUsecasePath,
+    updateCommandUsecasePath,
+    updateCommandHandlerUsecasePath,
+    deleteCommandUsecasePath,
+    deleteCommandHandlerUsecasePath,
     schemaPath,
     entityDbPath,
     repositoryPath,
@@ -101,18 +101,18 @@ createDirectories(
 fs.writeFileSync(entityInterfacePath, entityInterface);
 fs.writeFileSync(entityPath, entity);
 fs.writeFileSync(repositoryInterfacePath, repositoryInterface);
-fs.writeFileSync(findQueryInteractorPath, findQueryInteractor);
-fs.writeFileSync(findQueryHandlerInteractorPath, findQueryHandlerInteractor);
-fs.writeFileSync(findResultInteractorPath, findResultInteractor);
-fs.writeFileSync(getByIdQueryInteractorPath, getByIdQueryInteractor);
-fs.writeFileSync(getByIdQueryHandlerInteractorPath, getByIdQueryHandlerInteractor);
-fs.writeFileSync(getByIdResultInteractorPath, getByIdResultInteractor);
-fs.writeFileSync(createCommandInteractorPath, createCommandInteractor);
-fs.writeFileSync(createCommandHandlerInteractorPath, createCommandHandlerInteractor);
-fs.writeFileSync(updateCommandInteractorPath, updateCommandInteractor);
-fs.writeFileSync(updateCommandHandlerInteractorPath, updateCommandHandlerInteractor);
-fs.writeFileSync(deleteCommandInteractorPath, deleteCommandInteractor);
-fs.writeFileSync(deleteCommandHandlerInteractorPath, deleteCommandHandlerInteractor);
+fs.writeFileSync(findQueryUsecasePath, findQueryUsecase);
+fs.writeFileSync(findQueryHandlerUsecasePath, findQueryHandlerUsecase);
+fs.writeFileSync(findQueryResultUsecasePath, findQueryResultUsecase);
+fs.writeFileSync(getByIdQueryUsecasePath, getByIdQueryUsecase);
+fs.writeFileSync(getByIdQueryHandlerUsecasePath, getByIdQueryHandlerUsecase);
+fs.writeFileSync(getByIdQueryResultUsecasePath, getByIdQueryResultUsecase);
+fs.writeFileSync(createCommandUsecasePath, createCommandUsecase);
+fs.writeFileSync(createCommandHandlerUsecasePath, createCommandHandlerUsecase);
+fs.writeFileSync(updateCommandUsecasePath, updateCommandUsecase);
+fs.writeFileSync(updateCommandHandlerUsecasePath, updateCommandHandlerUsecase);
+fs.writeFileSync(deleteCommandUsecasePath, deleteCommandUsecase);
+fs.writeFileSync(deleteCommandHandlerUsecasePath, deleteCommandHandlerUsecase);
 fs.writeFileSync(schemaPath, schema);
 fs.writeFileSync(entityDbPath, entityDb);
 fs.writeFileSync(repositoryPath, repository);
@@ -124,9 +124,9 @@ fs.writeFileSync(controllerPath, controller);
  */
 function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
-        .replace(new RegExp('{camelName}', 'g'), camelName)
-        .replace(new RegExp('{PascalName}', 'g'), pascalName)
-        .replace(new RegExp('{UPPER_CASE_NAME}', 'g'), upperCaseName);
+        .replace(/{camelName}/g, camelName)
+        .replace(/{PascalName}/g, pascalName)
+        .replace(/{UPPER_CASE_NAME}/g, upperCaseName);
 }
 
 /**

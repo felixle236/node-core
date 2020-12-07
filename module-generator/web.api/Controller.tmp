@@ -5,10 +5,10 @@ import { Delete{PascalName}Command } from '../../../web.core/usecases/{camelName
 import { Delete{PascalName}CommandHandler } from '../../../web.core/usecases/{camelName}/commands/delete-{camelName}/Delete{PascalName}CommandHandler';
 import { Find{PascalName}Query } from '../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
 import { Find{PascalName}QueryHandler } from '../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}QueryHandler';
-import { Find{PascalName}Result } from '../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Result';
+import { Find{PascalName}QueryResult } from '../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}QueryResult';
 import { Get{PascalName}ByIdQuery } from '../../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQuery';
 import { Get{PascalName}ByIdQueryHandler } from '../../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQueryHandler';
-import { Get{PascalName}ByIdResult } from '../../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdResult';
+import { Get{PascalName}ByIdQueryResult } from '../../../web.core/usecases/{camelName}/queries/get-{camelName}-by-id/Get{PascalName}ByIdQueryResult';
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { Service } from 'typedi';
 import { Update{PascalName}Command } from '../../../web.core/usecases/{camelName}/commands/update-{camelName}/Update{PascalName}Command';
@@ -26,12 +26,12 @@ export class {PascalName}Controller {
     ) {}
 
     @Get('/')
-    async find(@QueryParams() param: Find{PascalName}Query): Promise<PaginationResult<Find{PascalName}Result>> {
+    async find(@QueryParams() param: Find{PascalName}Query): Promise<PaginationResult<Find{PascalName}QueryResult>> {
         return await this._find{PascalName}QueryHandler.handle(param);
     }
 
     @Get('/:id([0-9a-f-]{36})')
-    async getById(@Params() param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdResult> {
+    async getById(@Params() param: Get{PascalName}ByIdQuery): Promise<Get{PascalName}ByIdQueryResult> {
         return await this._get{PascalName}ByIdQueryHandler.handle(param);
     }
 
