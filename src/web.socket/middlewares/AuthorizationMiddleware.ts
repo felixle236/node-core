@@ -9,7 +9,7 @@ import { UpdateUserOnlineStatusCommand } from '../../web.core/usecases/user/comm
 import { UpdateUserOnlineStatusCommandHandler } from '../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 
 @Middleware()
-export class CompressionMiddleware implements MiddlewareInterface {
+export class AuthorizationMiddleware implements MiddlewareInterface {
     @Inject()
     private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler;
 
