@@ -1,9 +1,9 @@
-import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import { Request, Response } from 'express';
-import { AccessDeniedError } from '../../web.core/domain/common/exceptions/AccessDeniedError';
-import { ILogService } from '../../web.core/gateways/services/ILogService';
+import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import { Inject } from 'typedi';
+import { AccessDeniedError } from '../../web.core/domain/common/exceptions/AccessDeniedError';
 import { SystemError } from '../../web.core/domain/common/exceptions/SystemError';
+import { ILogService } from '../../web.core/gateways/services/ILogService';
 
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {

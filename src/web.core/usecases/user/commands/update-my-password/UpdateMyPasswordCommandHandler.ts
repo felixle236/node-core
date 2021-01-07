@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { UpdateMyPasswordCommand } from './UpdateMyPasswordCommand';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { UpdateMyPasswordCommand } from './UpdateMyPasswordCommand';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class UpdateMyPasswordCommandHandler implements ICommandHandler<UpdateMyPasswordCommand, boolean> {

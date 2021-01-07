@@ -1,21 +1,21 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { CreateUserCommand } from './CreateUserCommand';
 import { CreateUserCommandHandler } from './CreateUserCommandHandler';
-import { GenderType } from '../../../../domain/enums/user/GenderType';
-import { IRole } from '../../../../domain/types/role/IRole';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { IUser } from '../../../../domain/types/user/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { addDays } from '../../../../../libs/date';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { addDays } from '../../../../../libs/date';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { GenderType } from '../../../../domain/enums/user/GenderType';
+import { IRole } from '../../../../domain/types/role/IRole';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 Container.set('role.repository', {
     async getById() {}

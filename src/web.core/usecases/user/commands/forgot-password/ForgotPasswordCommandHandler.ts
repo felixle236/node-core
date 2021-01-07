@@ -2,14 +2,14 @@ import * as crypto from 'crypto';
 import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { ForgotPasswordCommand } from './ForgotPasswordCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IMailService } from '../../../../gateways/services/IMailService';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { addSeconds } from '../../../../../libs/date';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { addSeconds } from '../../../../../libs/date';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IMailService } from '../../../../gateways/services/IMailService';
 
 @Service()
 export class ForgotPasswordCommandHandler implements ICommandHandler<ForgotPasswordCommand, boolean> {

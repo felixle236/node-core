@@ -1,6 +1,6 @@
-import { IPaypalPaymentParam, IPaypalPaymentService } from '../../../web.core/gateways/services/IPaypalPaymentService';
-import { IS_DEVELOPMENT, PAYPAL_KEY } from '../../../configs/Configuration';
 import { Service } from 'typedi';
+import { IS_DEVELOPMENT, PAYPAL_KEY } from '../../../configs/Configuration';
+import { IPaypalPaymentParam, IPaypalPaymentService } from '../../../web.core/gateways/services/IPaypalPaymentService';
 
 @Service('paypal.payment.service')
 export class PaypalPaymentService implements IPaypalPaymentService {

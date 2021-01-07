@@ -1,6 +1,6 @@
 import * as path from 'path';
-import { ILogProvider } from '../interfaces/ILogProvider';
 import { appendFile } from '../../../../../libs/file';
+import { ILogProvider } from '../interfaces/ILogProvider';
 
 export class LogFileFactory implements ILogProvider {
     async writeLog(content: string): Promise<void> {

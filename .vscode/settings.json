@@ -12,7 +12,6 @@
         "**/.git": true
     },
     "editor.tabSize": 4,
-    "eslint.enable": true,
     "eslint.options": {
         "extensions": [
             ".html",

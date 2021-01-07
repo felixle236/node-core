@@ -1,6 +1,6 @@
-import { FindRoleCommonQuery } from '../../../usecases/role/queries/find-role-common/FindRoleCommonQuery';
 import { IBaseRepository } from '../../../domain/common/database/interfaces/IBaseRepository';
 import { Role } from '../../../domain/entities/role/Role';
+import { FindRoleCommonQuery } from '../../../usecases/role/queries/find-role-common/FindRoleCommonQuery';
 
 export interface IRoleRepository extends IBaseRepository<Role, string> {
     /**

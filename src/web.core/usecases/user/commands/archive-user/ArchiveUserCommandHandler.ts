@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { ArchiveUserCommand } from './ArchiveUserCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class ArchiveUserCommandHandler implements ICommandHandler<ArchiveUserCommand, boolean> {

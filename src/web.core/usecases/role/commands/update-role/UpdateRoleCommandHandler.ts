@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { Role } from '../../../../domain/entities/role/Role';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { UpdateRoleCommand } from './UpdateRoleCommand';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { Role } from '../../../../domain/entities/role/Role';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 
 @Service()
 export class UpdateRoleCommandHandler implements ICommandHandler<UpdateRoleCommand, boolean> {

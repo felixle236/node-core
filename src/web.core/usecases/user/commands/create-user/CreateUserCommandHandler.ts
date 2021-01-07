@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { CreateUserCommand } from './CreateUserCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand, string> {

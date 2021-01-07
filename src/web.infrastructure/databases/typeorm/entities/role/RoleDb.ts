@@ -1,8 +1,8 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseDbEntity } from '../base/BaseDBEntity';
+import { Role } from '../../../../../web.core/domain/entities/role/Role';
 import { IRole } from '../../../../../web.core/domain/types/role/IRole';
 import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
-import { Role } from '../../../../../web.core/domain/entities/role/Role';
+import { BaseDbEntity } from '../base/BaseDBEntity';
 import { UserDb } from '../user/UserDb';
 
 @Entity(ROLE_SCHEMA.TABLE_NAME)

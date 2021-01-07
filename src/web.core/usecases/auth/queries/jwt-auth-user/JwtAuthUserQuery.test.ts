@@ -1,20 +1,20 @@
 import 'reflect-metadata';
 import 'mocha';
+import { expect } from 'chai';
 import * as jwt from 'jsonwebtoken';
-import * as uuid from 'uuid';
-import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../../../configs/Configuration';
-import { IJwtAuthService, IJwtPayloadExtend } from '../../../../gateways/services/IJwtAuthService';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IRole } from '../../../../domain/types/role/IRole';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
+import * as uuid from 'uuid';
 import { JwtAuthUserQuery } from './JwtAuthUserQuery';
 import { JwtAuthUserQueryHandler } from './JwtAuthUserQueryHandler';
+import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../../../configs/Configuration';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { Role } from '../../../../domain/entities/role/Role';
 import { UnauthorizedError } from '../../../../domain/common/exceptions/UnauthorizedError';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { Role } from '../../../../domain/entities/role/Role';
+import { IRole } from '../../../../domain/types/role/IRole';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
+import { IJwtAuthService, IJwtPayloadExtend } from '../../../../gateways/services/IJwtAuthService';
 
 Container.set('role.repository', {
     async getAll() {}

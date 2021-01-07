@@ -1,10 +1,10 @@
 import { Body, HeaderParam, JsonController, Post } from 'routing-controllers';
+import { Service } from 'typedi';
+import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 import { JwtAuthUserQuery } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQuery';
 import { JwtAuthUserQueryHandler } from '../../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
-import { Service } from 'typedi';
 import { SigninQuery } from '../../../web.core/usecases/user/queries/signin/SigninQuery';
 import { SigninQueryHandler } from '../../../web.core/usecases/user/queries/signin/SigninQueryHandler';
-import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/v1/auth')

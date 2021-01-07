@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { GetListOnlineStatusByIdsQuery } from './GetListOnlineStatusByIdsQuery';
 import { GetListOnlineStatusByIdsQueryHandler } from './GetListOnlineStatusByIdsQueryHandler';
 import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('user.online.status.repository', {
     async getListOnlineStatusByIds() {}

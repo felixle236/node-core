@@ -1,13 +1,19 @@
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Params, Post, Put, QueryParam, QueryParams } from 'routing-controllers';
-import { CreateDummyUserCommand, DummyUser } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommand';
+import { Service } from 'typedi';
+import { BulkActionResult } from '../../../web.core/domain/common/usecase/BulkActionResult';
+import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
+import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
+import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
 import { ArchiveUserCommand } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommandHandler';
-import { BulkActionResult } from '../../../web.core/domain/common/usecase/BulkActionResult';
+import { CreateDummyUserCommand, DummyUser } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommand';
 import { CreateDummyUserCommandHandler } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommandHandler';
 import { CreateUserCommand } from '../../../web.core/usecases/user/commands/create-user/CreateUserCommand';
 import { CreateUserCommandHandler } from '../../../web.core/usecases/user/commands/create-user/CreateUserCommandHandler';
 import { DeleteUserCommand } from '../../../web.core/usecases/user/commands/delete-user/DeleteUserCommand';
 import { DeleteUserCommandHandler } from '../../../web.core/usecases/user/commands/delete-user/DeleteUserCommandHandler';
+import { UpdateUserCommand } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommand';
+import { UpdateUserCommandHandler } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommandHandler';
 import { FindUserQuery } from '../../../web.core/usecases/user/queries/find-user/FindUserQuery';
 import { FindUserQueryHandler } from '../../../web.core/usecases/user/queries/find-user/FindUserQueryHandler';
 import { FindUserQueryResult } from '../../../web.core/usecases/user/queries/find-user/FindUserQueryResult';
@@ -17,12 +23,6 @@ import { GetListOnlineStatusByIdsQueryResult } from '../../../web.core/usecases/
 import { GetUserByIdQuery } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQuery';
 import { GetUserByIdQueryHandler } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQueryHandler';
 import { GetUserByIdQueryResult } from '../../../web.core/usecases/user/queries/get-user-by-id/GetUserByIdQueryResult';
-import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
-import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
-import { Service } from 'typedi';
-import { UpdateUserCommand } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommand';
-import { UpdateUserCommandHandler } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommandHandler';
-import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 
 @Service()
 @JsonController('/v1/users')

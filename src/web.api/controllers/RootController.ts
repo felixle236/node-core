@@ -1,4 +1,5 @@
 import { Body, JsonController, Post } from 'routing-controllers';
+import { Service } from 'typedi';
 import { ActiveUserCommand } from '../../web.core/usecases/user/commands/active-user/ActiveUserCommand';
 import { ActiveUserCommandHandler } from '../../web.core/usecases/user/commands/active-user/ActiveUserCommandHandler';
 import { ForgotPasswordCommand } from '../../web.core/usecases/user/commands/forgot-password/ForgotPasswordCommand';
@@ -7,7 +8,6 @@ import { ResendActivationCommand } from '../../web.core/usecases/user/commands/r
 import { ResendActivationCommandHandler } from '../../web.core/usecases/user/commands/resend-activation/ResendActivationCommandHandler';
 import { ResetPasswordCommand } from '../../web.core/usecases/user/commands/reset-password/ResetPasswordCommand';
 import { ResetPasswordCommandHandler } from '../../web.core/usecases/user/commands/reset-password/ResetPasswordCommandHandler';
-import { Service } from 'typedi';
 import { SignupCommand } from '../../web.core/usecases/user/commands/signup/SignupCommand';
 import { SignupCommandHandler } from '../../web.core/usecases/user/commands/signup/SignupCommandHandler';
 

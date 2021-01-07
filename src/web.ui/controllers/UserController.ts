@@ -1,9 +1,9 @@
-import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
-import { FindUserQuery } from '../../web.core/usecases/user/queries/find-user/FindUserQuery';
-import { FindUserQueryHandler } from '../../web.core/usecases/user/queries/find-user/FindUserQueryHandler';
 import { Response } from 'express';
+import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
 import { Service } from 'typedi';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
+import { FindUserQuery } from '../../web.core/usecases/user/queries/find-user/FindUserQuery';
+import { FindUserQueryHandler } from '../../web.core/usecases/user/queries/find-user/FindUserQueryHandler';
 
 @Service()
 @Controller('/users')

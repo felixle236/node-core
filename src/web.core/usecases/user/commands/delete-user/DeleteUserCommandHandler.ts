@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { DeleteUserCommand } from './DeleteUserCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class DeleteUserCommandHandler implements ICommandHandler<DeleteUserCommand, boolean> {

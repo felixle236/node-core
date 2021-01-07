@@ -1,7 +1,7 @@
 import { ILogProvider } from './interfaces/ILogProvider';
-import { LOG_PROVIDER } from '../../../../configs/Configuration';
 import { LogConsoleFactory } from './providers/LogConsoleFactory';
 import { LogFileFactory } from './providers/LogFileFactory';
+import { LOG_PROVIDER } from '../../../../configs/Configuration';
 import { LogProvider } from '../../../../configs/ServiceProvider';
 
 export class Logger implements ILogProvider {

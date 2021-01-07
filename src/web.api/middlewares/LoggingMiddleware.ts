@@ -1,8 +1,8 @@
-import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { NextFunction, Request, Response } from 'express';
-import { ILogService } from '../../web.core/gateways/services/ILogService';
-import { IS_DEVELOPMENT } from '../../configs/Configuration';
+import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { Inject } from 'typedi';
+import { IS_DEVELOPMENT } from '../../configs/Configuration';
+import { ILogService } from '../../web.core/gateways/services/ILogService';
 
 @Middleware({ type: 'before', priority: 2 })
 export class LoggingMiddleware implements ExpressMiddlewareInterface {

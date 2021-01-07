@@ -1,6 +1,6 @@
-import { ILogService } from '../../../web.core/gateways/services/ILogService';
-import { Logger } from './logger/Logger';
 import { Service } from 'typedi';
+import { Logger } from './logger/Logger';
+import { ILogService } from '../../../web.core/gateways/services/ILogService';
 
 @Service('log.service')
 export class LogService implements ILogService {

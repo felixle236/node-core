@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
-import { IMailService } from '../../../../gateways/services/IMailService';
+import * as uuid from 'uuid';
+import { SignupCommand } from './SignupCommand';
+import { SignupCommandHandler } from './SignupCommandHandler';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { SignupCommand } from './SignupCommand';
-import { SignupCommandHandler } from './SignupCommandHandler';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/user/User';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
+import { IMailService } from '../../../../gateways/services/IMailService';
 
 Container.set('user.repository', {
     async getById() {},

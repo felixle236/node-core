@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { CreateRoleCommand } from './CreateRoleCommand';
 import { CreateRoleCommandHandler } from './CreateRoleCommandHandler';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { Role } from '../../../../domain/entities/role/Role';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { Role } from '../../../../domain/entities/role/Role';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('role.repository', {
     async checkNameExist() {},

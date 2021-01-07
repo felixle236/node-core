@@ -1,6 +1,6 @@
-import { GenderType } from '../../../../domain/enums/user/GenderType';
 import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { GenderType } from '../../../../domain/enums/user/GenderType';
 
 export class CreateUserCommand implements ICommand {
     roleId: RoleId;

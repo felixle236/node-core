@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { FindRoleCommonQuery } from './FindRoleCommonQuery';
 import { FindRoleCommonQueryHandler } from './FindRoleCommonQueryHandler';
+import { Role } from '../../../../domain/entities/role/Role';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { Role } from '../../../../domain/entities/role/Role';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('role.repository', {
     async findCommonAndCount() {}

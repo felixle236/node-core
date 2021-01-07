@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { GetMyProfileQuery } from './GetMyProfileQuery';
 import { GetMyProfileQueryResult } from './GetMyProfileQueryResult';
-import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class GetMyProfileQueryHandler implements IQueryHandler<GetMyProfileQuery, GetMyProfileQueryResult> {

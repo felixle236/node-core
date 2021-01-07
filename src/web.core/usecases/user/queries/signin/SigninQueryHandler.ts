@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SigninQuery } from './SigninQuery';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 
 @Service()
 export class SigninQueryHandler implements ICommandHandler<SigninQuery, string> {

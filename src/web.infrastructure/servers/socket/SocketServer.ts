@@ -1,10 +1,10 @@
-import * as createAdapter from 'socket.io-redis';
-import * as socketIOEmitter from 'socket.io-emitter';
-import { Container } from 'typedi';
 import { RedisClient } from 'redis';
-import { Server } from 'socket.io';
-import { SocketServerOptions } from './SocketServerOptions';
 import { createSocketServer } from 'socket-controllers';
+import { Server } from 'socket.io';
+import * as socketIOEmitter from 'socket.io-emitter';
+import * as createAdapter from 'socket.io-redis';
+import { Container } from 'typedi';
+import { SocketServerOptions } from './SocketServerOptions';
 
 export class SocketServer {
     server: Server;

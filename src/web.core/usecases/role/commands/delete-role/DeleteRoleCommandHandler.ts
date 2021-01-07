@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { DeleteRoleCommand } from './DeleteRoleCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 
 @Service()
 export class DeleteRoleCommandHandler implements ICommandHandler<DeleteRoleCommand, boolean> {

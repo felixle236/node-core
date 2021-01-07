@@ -1,13 +1,13 @@
+import { Server } from 'http';
+import * as path from 'path';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
-import * as path from 'path';
-import { IS_DEVELOPMENT, WEB_PORT } from '../configs/Configuration';
-import { Container } from 'typedi';
-import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
-import { Server } from 'http';
+import { Container } from 'typedi';
 import { WebAuthenticator } from './WebAuthenticator';
+import { IS_DEVELOPMENT, WEB_PORT } from '../configs/Configuration';
+import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class WebService {
     setup(callback?: any): Server {

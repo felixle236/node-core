@@ -1,9 +1,9 @@
-import { ISmsService } from '../../../web.core/gateways/services/ISmsService';
-import { IUser } from '../../../web.core/domain/types/user/IUser';
-import { SMS_SENDER_OR_PHONE } from '../../../configs/Configuration';
 import { Service } from 'typedi';
 import { SmsSender } from './sender/SmsSender';
 import { UserActivationCodeTemplate } from './templates/UserActivationCodeTemplate';
+import { SMS_SENDER_OR_PHONE } from '../../../configs/Configuration';
+import { IUser } from '../../../web.core/domain/types/user/IUser';
+import { ISmsService } from '../../../web.core/gateways/services/ISmsService';
 
 @Service('sms.service')
 export class SmsService implements ISmsService {

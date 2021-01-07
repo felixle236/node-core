@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import * as uuid from 'uuid';
 import { UpdateUserOnlineStatusCommand } from './UpdateUserOnlineStatusCommand';
 import { UpdateUserOnlineStatusCommandHandler } from './UpdateUserOnlineStatusCommandHandler';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
 Container.set('user.online.status.repository', {
     async addUserOnlineStatus() {},

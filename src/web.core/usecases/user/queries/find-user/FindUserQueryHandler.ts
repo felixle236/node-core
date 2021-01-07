@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserQueryResult } from './FindUserQueryResult';
-import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { PaginationResult } from '../../../../domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, PaginationResult<FindUserQueryResult>> {

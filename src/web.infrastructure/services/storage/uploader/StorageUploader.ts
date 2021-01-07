@@ -1,10 +1,10 @@
-import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_CONFIG_HOST, STORAGE_CONFIG_PORT, STORAGE_PROVIDER } from '../../../../configs/Configuration';
-import { AwsS3Factory } from './providers/AwsS3Factory';
-import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
 import { IBucketItem } from './interfaces/IBucketItem';
 import { IStorageProvider } from './interfaces/IStorageProvider';
+import { AwsS3Factory } from './providers/AwsS3Factory';
+import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
 import { MinioFactory } from './providers/MinioFactory';
 import { StorageConsoleFactory } from './providers/StorageConsoleFactory';
+import { IS_USE_SSL_MINIO, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_CONFIG_HOST, STORAGE_CONFIG_PORT, STORAGE_PROVIDER } from '../../../../configs/Configuration';
 import { StorageProvider } from '../../../../configs/ServiceProvider';
 
 export class StorageUploader implements IStorageProvider {

@@ -1,7 +1,7 @@
-import { BUCKET_NAME } from '../../../configs/Configuration';
-import { IStorageService } from '../../../web.core/gateways/services/IStorageService';
 import { Service } from 'typedi';
 import { StorageUploader } from './uploader/StorageUploader';
+import { BUCKET_NAME } from '../../../configs/Configuration';
+import { IStorageService } from '../../../web.core/gateways/services/IStorageService';
 
 @Service('storage.service')
 export class StorageService implements IStorageService {

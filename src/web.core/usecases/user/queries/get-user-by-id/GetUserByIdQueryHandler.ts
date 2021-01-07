@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
 import { GetUserByIdQueryResult } from './GetUserByIdQueryResult';
-import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 @Service()
 export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery, GetUserByIdQueryResult> {

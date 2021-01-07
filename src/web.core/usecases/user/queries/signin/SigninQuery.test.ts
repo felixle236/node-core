@@ -1,20 +1,20 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
+import * as uuid from 'uuid';
+import { SigninQuery } from './SigninQuery';
+import { SigninQueryHandler } from './SigninQueryHandler';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
-import { SigninQuery } from './SigninQuery';
-import { SigninQueryHandler } from './SigninQueryHandler';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 
 Container.set('user.repository', {
     async getByEmailPassword() {}

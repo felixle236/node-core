@@ -1,16 +1,16 @@
 import * as crypto from 'crypto';
 import { Inject, Service } from 'typedi';
+import { SignupCommand } from './SignupCommand';
+import { addSeconds } from '../../../../../libs/date';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { User } from '../../../../domain/entities/user/User';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 import { IMailService } from '../../../../gateways/services/IMailService';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
-import { SignupCommand } from './SignupCommand';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { addSeconds } from '../../../../../libs/date';
 
 @Service()
 export class SignupCommandHandler implements ICommandHandler<SignupCommand, string> {

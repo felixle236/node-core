@@ -1,11 +1,11 @@
 import './web.infrastructure/SingletonRegister';
 import * as cluster from 'cluster';
 import * as os from 'os';
+import { Container } from 'typedi';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './configs/Configuration';
 import { ApiService } from './web.api/ApiService';
-import { Container } from 'typedi';
-import { DbContext } from './web.infrastructure/databases/typeorm/DbContext';
 import { RedisContext } from './web.infrastructure/databases/redis/RedisContext';
+import { DbContext } from './web.infrastructure/databases/typeorm/DbContext';
 import { SocketService } from './web.socket/SocketService';
 import { WebService } from './web.ui/WebService';
 

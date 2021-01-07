@@ -1,7 +1,7 @@
-import { BaseEntity } from '../base/BaseEntity';
-import { IRole } from '../../types/role/IRole';
 import { MessageError } from '../../common/exceptions/message/MessageError';
 import { SystemError } from '../../common/exceptions/SystemError';
+import { IRole } from '../../types/role/IRole';
+import { BaseEntity } from '../base/BaseEntity';
 import { User } from '../user/User';
 
 export class Role extends BaseEntity<IRole> implements IRole {

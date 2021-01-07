@@ -1,10 +1,10 @@
-import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_PROVIDER, SENDINBLUE_API_KEY } from '../../../../configs/Configuration';
-import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { IMailProvider } from './interfaces/IMailProvider';
+import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { MailConsoleFactory } from './providers/MailConsoleFactory';
 import { MailGunFactory } from './providers/MailGunFactory';
-import { MailProvider } from '../../../../configs/ServiceProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
+import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME, MAIL_PROVIDER, SENDINBLUE_API_KEY } from '../../../../configs/Configuration';
+import { MailProvider } from '../../../../configs/ServiceProvider';
 
 export class MailSender implements IMailProvider {
     private readonly _provider: IMailProvider;

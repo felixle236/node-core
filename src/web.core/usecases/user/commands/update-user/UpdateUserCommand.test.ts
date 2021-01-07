@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
+import { UpdateUserCommand } from './UpdateUserCommand';
+import { UpdateUserCommandHandler } from './UpdateUserCommandHandler';
+import { addDays } from '../../../../../libs/date';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
 import { GenderType } from '../../../../domain/enums/user/GenderType';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { UpdateUserCommand } from './UpdateUserCommand';
-import { UpdateUserCommandHandler } from './UpdateUserCommandHandler';
-import { User } from '../../../../domain/entities/user/User';
-import { addDays } from '../../../../../libs/date';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('user.repository', {
     async getById() {},

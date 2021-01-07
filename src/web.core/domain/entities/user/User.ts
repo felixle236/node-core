@@ -1,14 +1,14 @@
 import * as validator from 'class-validator';
-import { BaseEntity } from '../base/BaseEntity';
-import { GenderType } from '../../enums/user/GenderType';
-import { IUser } from '../../types/user/IUser';
-import { MessageError } from '../../common/exceptions/message/MessageError';
-import { Role } from '../role/Role';
-import { RoleId } from '../../enums/role/RoleId';
 import { STORAGE_URL } from '../../../../configs/Configuration';
-import { SystemError } from '../../common/exceptions/SystemError';
-import { UserStatus } from '../../enums/user/UserStatus';
 import { hashMD5 } from '../../../../libs/crypt';
+import { MessageError } from '../../common/exceptions/message/MessageError';
+import { SystemError } from '../../common/exceptions/SystemError';
+import { RoleId } from '../../enums/role/RoleId';
+import { GenderType } from '../../enums/user/GenderType';
+import { UserStatus } from '../../enums/user/UserStatus';
+import { IUser } from '../../types/user/IUser';
+import { BaseEntity } from '../base/BaseEntity';
+import { Role } from '../role/Role';
 
 export class User extends BaseEntity<IUser> implements IUser {
     constructor(data?: IUser) {

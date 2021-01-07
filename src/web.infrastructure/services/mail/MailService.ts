@@ -1,11 +1,11 @@
-import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../configs/Configuration';
-import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
-import { IMailService } from '../../../web.core/gateways/services/IMailService';
-import { IUser } from '../../../web.core/domain/types/user/IUser';
+import { Service } from 'typedi';
 import { MailGenerator } from './MailGenerator';
 import { MailSender } from './sender/MailSender';
-import { Service } from 'typedi';
+import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { UserActivationTemplate } from './templates/UserActivationTemplate';
+import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../configs/Configuration';
+import { IUser } from '../../../web.core/domain/types/user/IUser';
+import { IMailService } from '../../../web.core/gateways/services/IMailService';
 
 @Service('mail.service')
 export class MailService implements IMailService {

@@ -1,6 +1,6 @@
+import { Storage } from '@google-cloud/storage';
 import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION } from '../../../../../configs/Configuration';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
-import { Storage } from '@google-cloud/storage';
 
 export class GoogleStorageFactory implements IStorageProvider {
     private readonly _storage: Storage;

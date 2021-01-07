@@ -1,12 +1,12 @@
 import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IStorageService } from '../../../../gateways/services/IStorageService';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { UploadMyAvatarCommand } from './UploadMyAvatarCommand';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { UploadMyAvatarCommand } from './UploadMyAvatarCommand';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IStorageService } from '../../../../gateways/services/IStorageService';
 
 @Service()
 export class UploadMyAvatarCommandHandler implements ICommandHandler<UploadMyAvatarCommand, string> {

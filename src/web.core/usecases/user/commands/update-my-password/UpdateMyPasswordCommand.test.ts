@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IUser } from '../../../../domain/types/user/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import * as uuid from 'uuid';
 import { UpdateMyPasswordCommand } from './UpdateMyPasswordCommand';
 import { UpdateMyPasswordCommandHandler } from './UpdateMyPasswordCommandHandler';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 Container.set('user.repository', {
     async getById() {},

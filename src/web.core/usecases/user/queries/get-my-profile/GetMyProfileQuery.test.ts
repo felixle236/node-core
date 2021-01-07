@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { GetMyProfileQuery } from './GetMyProfileQuery';
 import { GetMyProfileQueryHandler } from './GetMyProfileQueryHandler';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/user/User';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('user.repository', {
     async getById() {}

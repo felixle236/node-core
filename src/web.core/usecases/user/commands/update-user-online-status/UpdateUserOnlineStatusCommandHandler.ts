@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
+import { UpdateUserOnlineStatusCommand } from './UpdateUserOnlineStatusCommand';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { UpdateUserOnlineStatusCommand } from './UpdateUserOnlineStatusCommand';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
 @Service()
 export class UpdateUserOnlineStatusCommandHandler implements ICommandHandler<UpdateUserOnlineStatusCommand, boolean> {

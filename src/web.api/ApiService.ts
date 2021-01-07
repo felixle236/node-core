@@ -1,11 +1,11 @@
-import * as compression from 'compression';
-import * as path from 'path';
-import { API_PORT, IS_DEVELOPMENT } from '../configs/Configuration';
-import { ApiAuthenticator } from './ApiAuthenticator';
-import { Container } from 'typedi';
-import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
-import { RoutingControllersOptions } from 'routing-controllers';
 import { Server } from 'http';
+import * as path from 'path';
+import * as compression from 'compression';
+import { RoutingControllersOptions } from 'routing-controllers';
+import { Container } from 'typedi';
+import { ApiAuthenticator } from './ApiAuthenticator';
+import { API_PORT, IS_DEVELOPMENT } from '../configs/Configuration';
+import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class ApiService {
     setup(callback?: any): Server {

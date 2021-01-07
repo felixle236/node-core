@@ -1,21 +1,21 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as mime from 'mime-types';
 import * as path from 'path';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import * as mime from 'mime-types';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IStorageService } from '../../../../gateways/services/IStorageService';
-import { IUser } from '../../../../domain/types/user/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { STORAGE_URL } from '../../../../../configs/Configuration';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import * as uuid from 'uuid';
 import { UploadMyAvatarCommand } from './UploadMyAvatarCommand';
 import { UploadMyAvatarCommandHandler } from './UploadMyAvatarCommandHandler';
-import { User } from '../../../../domain/entities/user/User';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { STORAGE_URL } from '../../../../../configs/Configuration';
 import { readFile } from '../../../../../libs/file';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IStorageService } from '../../../../gateways/services/IStorageService';
 
 Container.set('user.repository', {
     async update() {}

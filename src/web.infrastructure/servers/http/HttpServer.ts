@@ -1,6 +1,6 @@
-import { RoutingControllersOptions, createExpressServer, useExpressServer } from 'routing-controllers';
-import { Express } from 'express';
 import { Server } from 'http';
+import { Express } from 'express';
+import { createExpressServer, RoutingControllersOptions, useExpressServer } from 'routing-controllers';
 
 export class HttpServer {
     app: Express;

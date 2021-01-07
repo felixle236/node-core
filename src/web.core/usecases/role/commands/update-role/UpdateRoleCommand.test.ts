@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
-import { IRole } from '../../../../domain/types/role/IRole';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { Role } from '../../../../domain/entities/role/Role';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import * as uuid from 'uuid';
 import { UpdateRoleCommand } from './UpdateRoleCommand';
 import { UpdateRoleCommandHandler } from './UpdateRoleCommandHandler';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { Role } from '../../../../domain/entities/role/Role';
+import { IRole } from '../../../../domain/types/role/IRole';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 
 Container.set('role.repository', {
     async getById() {},

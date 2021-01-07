@@ -1,11 +1,11 @@
 import * as path from 'path';
+import { Service } from 'typedi';
 import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm';
-import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
 import { DbConnection } from './DbConnection';
+import { DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, IS_DEVELOPMENT, REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
 import { IDbConnection } from '../../../web.core/domain/common/database/interfaces/IDbConnection';
 import { IDbContext } from '../../../web.core/domain/common/database/interfaces/IDbContext';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
-import { Service } from 'typedi';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
 
 @Service('db.context')

@@ -1,12 +1,12 @@
 import * as validator from 'class-validator';
 import { Inject, Service } from 'typedi';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
-import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
-import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { JwtAuthUserQuery } from './JwtAuthUserQuery';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { UnauthorizedError } from '../../../../domain/common/exceptions/UnauthorizedError';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
 import { UserAuthenticated } from '../../../../domain/common/UserAuthenticated';
+import { IJwtAuthService } from '../../../../gateways/services/IJwtAuthService';
 
 @Service()
 export class JwtAuthUserQueryHandler implements IQueryHandler<JwtAuthUserQuery, UserAuthenticated> {

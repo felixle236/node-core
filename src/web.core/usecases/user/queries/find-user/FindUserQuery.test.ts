@@ -1,20 +1,20 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
-import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { FindUserQuery } from './FindUserQuery';
 import { FindUserQueryHandler } from './FindUserQueryHandler';
+import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
+import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { User } from '../../../../domain/entities/user/User';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
+import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { RoleId } from '../../../../domain/enums/role/RoleId';
-import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { User } from '../../../../domain/entities/user/User';
-import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
 
 Container.set('user.repository', {
     async findAndCount() {}

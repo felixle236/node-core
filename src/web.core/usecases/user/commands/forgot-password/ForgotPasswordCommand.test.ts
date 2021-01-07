@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import 'mocha';
-import * as uuid from 'uuid';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
 import { Container } from 'typedi';
+import * as uuid from 'uuid';
 import { ForgotPasswordCommand } from './ForgotPasswordCommand';
 import { ForgotPasswordCommandHandler } from './ForgotPasswordCommandHandler';
-import { IMailService } from '../../../../gateways/services/IMailService';
-import { IUser } from '../../../../domain/types/user/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IMailService } from '../../../../gateways/services/IMailService';
 
 Container.set('user.repository', {
     async getByEmail() {},

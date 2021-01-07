@@ -10,27 +10,23 @@ export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
     private readonly _onlineStatusKey = 'user_online_status';
 
     async getListOnlineStatusByIds(ids: string[]): Promise<string[]> {
-        const list = await this._redisContext.redisClient.mgetAsync(ids.map(id => `${this._onlineStatusKey}:${id}`));
-        return list.filter(item => !!item);
+        const list = await this._redisContext.redisClient.hmgetAsync(this._onlineStatusKey, ids);
+        return list;
     }
 
-    async addUserOnlineStatus(id: string, expireSecond: number = 24 * 60 * 60): Promise<boolean> {
-        const key = `${this._onlineStatusKey}:${id}`;
-        const data = await this._redisContext.redisClient.getAsync(key);
-        if (!data) {
-            const result = await this._redisContext.redisClient.setAsync(key, id, 'EX', expireSecond);
-            return result === 'OK';
-        }
-        return true;
+    async addUserOnlineStatus(id: string): Promise<boolean> {
+        const infoUser = JSON.stringify({
+            isOnline: true, onlineAt: new Date()
+        });
+        const result = await this._redisContext.redisClient.hmsetAsync(this._onlineStatusKey, id, infoUser);
+        return result === 'OK';
     }
 
     async removeUserOnlineStatus(id: string): Promise<boolean> {
-        const key = `${this._onlineStatusKey}:${id}`;
-        const data = await this._redisContext.redisClient.getAsync(key);
-        if (data) {
-            const result = await this._redisContext.redisClient.delAsync(key);
-            return !!result;
-        }
-        return true;
+        const infoUser = JSON.stringify({
+            isOnline: false, onlineAt: new Date()
+        });
+        const result = await this._redisContext.redisClient.hmsetAsync(this._onlineStatusKey, id, infoUser);
+        return result === 'OK';
     }
 }

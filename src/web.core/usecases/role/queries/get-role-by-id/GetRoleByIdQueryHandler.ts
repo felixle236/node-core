@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { GetRoleByIdQuery } from './GetRoleByIdQuery';
 import { GetRoleByIdQueryResult } from './GetRoleByIdQueryResult';
-import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 
 @Service()
 export class GetRoleByIdQueryHandler implements IQueryHandler<GetRoleByIdQuery, GetRoleByIdQueryResult> {

@@ -1,17 +1,17 @@
 import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
-import { BulkActionResult } from '../../../../domain/common/usecase/BulkActionResult';
 import { CreateDummyUserCommand } from './CreateDummyUserCommand';
-import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
+import { readFile } from '../../../../../libs/file';
 import { IDbContext } from '../../../../domain/common/database/interfaces/IDbContext';
-import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
-import { IStorageService } from '../../../../gateways/services/IStorageService';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
+import { BulkActionResult } from '../../../../domain/common/usecase/BulkActionResult';
+import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { readFile } from '../../../../../libs/file';
+import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { IStorageService } from '../../../../gateways/services/IStorageService';
 
 @Service()
 export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDummyUserCommand, BulkActionResult> {

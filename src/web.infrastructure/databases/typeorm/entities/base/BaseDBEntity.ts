@@ -1,6 +1,6 @@
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
-import { BASE_SCHEMA } from '../../schemas/base/BaseSchema';
 import { IEntity } from '../../../../../web.core/domain/types/base/IEntity';
+import { BASE_SCHEMA } from '../../schemas/base/BaseSchema';
 
 export abstract class BaseDbEntity<T extends IEntity> {
     @CreateDateColumn({ name: BASE_SCHEMA.COLUMNS.CREATED_AT, type: 'timestamptz' })

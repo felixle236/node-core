@@ -1,6 +1,8 @@
 module.exports = {
     root: true,
-    extends: 'standard',
+    extends: [
+        'standard'
+    ],
     parser: '@typescript-eslint/parser',
     env: {
         commonjs: true,
@@ -15,7 +17,10 @@ module.exports = {
         project: './tsconfig.json',
         createDefaultProgram: true // Tempory solution for IDE.
     },
-    plugins: ['@typescript-eslint'],
+    plugins: [
+        '@typescript-eslint',
+        'import'
+    ],
     overrides: [{
         files: ['**/*.ts'],
         rules: {
@@ -98,10 +103,18 @@ module.exports = {
             asyncArrow: 'always'
         }],
         'sort-imports': ['error', {
-            ignoreCase: false,
+            ignoreCase: true,
             ignoreMemberSort: false,
-            ignoreDeclarationSort: false,
+            ignoreDeclarationSort: true,
             memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
-        }]
+        }],
+        'import/order': [
+            'error',
+            {
+                'newlines-between': 'never',
+                alphabetize: { order: 'asc', caseInsensitive: true },
+                groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object']
+            }
+        ]
     }
 };

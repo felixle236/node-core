@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import 'mocha';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
+import { Container } from 'typedi';
 import * as uuid from 'uuid';
 import { ActiveUserCommand } from './ActiveUserCommand';
 import { ActiveUserCommandHandler } from './ActiveUserCommandHandler';
-import { Container } from 'typedi';
-import { IUser } from '../../../../domain/types/user/IUser';
-import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { addDays } from '../../../../../libs/date';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { User } from '../../../../domain/entities/user/User';
 import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-import { addDays } from '../../../../../libs/date';
-import { createSandbox } from 'sinon';
-import { expect } from 'chai';
+import { IUser } from '../../../../domain/types/user/IUser';
+import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
 
 Container.set('user.repository', {
     async getByEmail() {},

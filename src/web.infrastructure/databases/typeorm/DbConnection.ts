@@ -2,9 +2,9 @@ import { Connection } from 'typeorm';
 import { IDbConnection } from '../../../web.core/domain/common/database/interfaces/IDbConnection';
 import { IDbMigration } from '../../../web.core/domain/common/database/interfaces/IDbMigration';
 import { IDbQueryRunner } from '../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
+import { TransactionIsolationLevel } from '../../../web.core/domain/common/database/TransactionIsolationLevel';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
-import { TransactionIsolationLevel } from '../../../web.core/domain/common/database/TransactionIsolationLevel';
 
 export class DbConnection implements IDbConnection {
     constructor(private _connection: Connection) {}

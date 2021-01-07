@@ -1,7 +1,7 @@
 import { INotificationProvider } from './interfaces/INotificationProvider';
-import { NOTIFICATION_PROVIDER } from '../../../../configs/Configuration';
 import { NodePushNotificationFactory } from './providers/NodePushNotificationFactory';
 import { NotificationConsoleFactory } from './providers/NotificationConsoleFactory';
+import { NOTIFICATION_PROVIDER } from '../../../../configs/Configuration';
 import { NotificationProvider } from '../../../../configs/ServiceProvider';
 
 export class NotificationSender implements INotificationProvider {

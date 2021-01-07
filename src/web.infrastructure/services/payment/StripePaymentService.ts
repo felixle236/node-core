@@ -1,7 +1,7 @@
+import { Stripe } from 'stripe';
+import { Service } from 'typedi';
 import { IS_DEVELOPMENT, STRIPE_KEY } from '../../../configs/Configuration';
 import { IStripePaymentParam, IStripePaymentService } from '../../../web.core/gateways/services/IStripePaymentService';
-import { Service } from 'typedi';
-import { Stripe } from 'stripe';
 
 @Service('stripe.payment.service')
 export class StripePaymentService implements IStripePaymentService {
