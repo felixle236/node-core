@@ -1,15 +1,19 @@
 module.exports = {
     root: true,
-    extends: [
-        'standard'
-    ],
-    parser: '@typescript-eslint/parser',
     env: {
         commonjs: true,
         es6: true,
         node: true,
         mocha: true
     },
+    extends: [
+        'standard'
+    ],
+    plugins: [
+        '@typescript-eslint',
+        'import'
+    ],
+    parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 2019,
         sourceType: 'module',
@@ -17,10 +21,40 @@ module.exports = {
         project: './tsconfig.json',
         createDefaultProgram: true // Tempory solution for IDE.
     },
-    plugins: [
-        '@typescript-eslint',
-        'import'
-    ],
+    rules: {
+        indent: ['error', 4],
+        semi: ['error', 'always'],
+        'no-var': ['error'],
+        'one-var': ['error', 'never'],
+        'require-jsdoc': 'error',
+        camelcase: ['error'],
+        'eol-last': ['error', 'always'],
+        curly: ['error', 'multi-or-nest'],
+        eqeqeq: ['error', 'always', { null: 'ignore' }],
+        'brace-style': ['error', 'stroustrup'],
+        'no-return-await': 'off',
+        'no-useless-constructor': 'off',
+        'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+        'space-before-function-paren': ['error', {
+            anonymous: 'never',
+            named: 'never',
+            asyncArrow: 'always'
+        }],
+        'sort-imports': ['error', {
+            ignoreCase: true,
+            ignoreMemberSort: false,
+            ignoreDeclarationSort: true,
+            memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
+        }],
+        'import/order': [
+            'error',
+            {
+                'newlines-between': 'never',
+                alphabetize: { order: 'asc', caseInsensitive: true },
+                groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object']
+            }
+        ]
+    },
     overrides: [{
         files: ['**/*.ts'],
         rules: {
@@ -82,39 +116,5 @@ module.exports = {
                 }
             ]
         }
-    }],
-    rules: {
-        indent: ['error', 4],
-        semi: ['error', 'always'],
-        'no-var': ['error'],
-        'one-var': ['error', 'never'],
-        'require-jsdoc': 'error',
-        camelcase: ['error'],
-        'eol-last': ['error', 'always'],
-        curly: ['error', 'multi-or-nest'],
-        eqeqeq: ['error', 'always', { null: 'ignore' }],
-        'brace-style': ['error', 'stroustrup'],
-        'no-return-await': 'off',
-        'no-useless-constructor': 'off',
-        'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-        'space-before-function-paren': ['error', {
-            anonymous: 'never',
-            named: 'never',
-            asyncArrow: 'always'
-        }],
-        'sort-imports': ['error', {
-            ignoreCase: true,
-            ignoreMemberSort: false,
-            ignoreDeclarationSort: true,
-            memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
-        }],
-        'import/order': [
-            'error',
-            {
-                'newlines-between': 'never',
-                alphabetize: { order: 'asc', caseInsensitive: true },
-                groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object']
-            }
-        ]
-    }
+    }]
 };

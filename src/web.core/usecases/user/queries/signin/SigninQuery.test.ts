@@ -121,6 +121,6 @@ describe('User - Signin', () => {
         param.password = 'Nodecore@2';
 
         const result = await signinQueryHandler.handle(param);
-        expect(result).to.eq('token');
+        expect(result.token === 'token' && result.userId === user.id && result.roleId === user.roleId).to.eq(true);
     });
 });

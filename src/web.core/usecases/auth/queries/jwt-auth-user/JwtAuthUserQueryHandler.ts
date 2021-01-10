@@ -37,6 +37,6 @@ export class JwtAuthUserQueryHandler implements IQueryHandler<JwtAuthUserQuery, 
         if (param.roleIds && param.roleIds.length && !param.roleIds.find(roleId => roleId === payload.roleId))
             throw new AccessDeniedError();
 
-        return new UserAuthenticated(payload.sub, payload.roleId);
+        return new UserAuthenticated(param.token, payload.sub, payload.roleId);
     }
 }
