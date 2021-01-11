@@ -20,7 +20,7 @@
             getUserOnlineStatusByIds(users.map(function(user) { return user.id; }));
 
         if (socket) {
-            socket.on('user_online_status_changed', function(onlineStatus) {
+            socket.on('online_status', function(onlineStatus) {
                 var item = $('#item-' + onlineStatus.id + ' .dot-online');
                 if (onlineStatus.isOnline)
                     item.removeClass('d-none');

@@ -27,11 +27,9 @@ function deleteCookie(name) {
 window.onload = function() {
     if (userAuth) {
         socket = io(baseSocket + '/messages', {
-            query: {
-                token: getCookie('token')
-            },
-            reconnection: true,
-            transports: ['websocket']
+            reconnectionDelayMax: 10000,
+            transports: ['websocket'],
+            auth: { token: getCookie('token') }
         });
 
         socket.on('connect', function() {
@@ -40,6 +38,10 @@ window.onload = function() {
 
         socket.on('disconnect', function() {
             console.log('You have disconnected!');
+        });
+
+        socket.on('connect_error', err => {
+            console.log('connect_error', err);
         });
     }
 
