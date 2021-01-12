@@ -14,8 +14,10 @@ export class UpdateUserOnlineStatusCommandHandler implements ICommandHandler<Upd
         if (!param.id)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
 
-        if (param.isOnline)
-            return await this._userOnlineStatusRepository.addUserOnlineStatus(param.id);
-        return await this._userOnlineStatusRepository.removeUserOnlineStatus(param.id);
+        const onlineStatus = {
+            isOnline: param.isOnline,
+            onlineAt: param.onlineAt
+        };
+        return await this._userOnlineStatusRepository.updateUserOnlineStatus(param.id, JSON.stringify(onlineStatus));
     }
 }

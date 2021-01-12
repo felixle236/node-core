@@ -11,8 +11,7 @@ import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
 Container.set('user.online.status.repository', {
-    async addUserOnlineStatus() {},
-    async removeUserOnlineStatus() {}
+    async updateUserOnlineStatus() {}
 });
 const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user.online.status.repository');
 const updateUserOnlineStatusCommandHandler = Container.get(UpdateUserOnlineStatusCommandHandler);
@@ -32,20 +31,22 @@ describe('User - Update user online status', () => {
     });
 
     it('Update user online status with offline status', async () => {
-        sandbox.stub(userOnlineStatusRepository, 'removeUserOnlineStatus').resolves(true);
+        sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
         const param = new UpdateUserOnlineStatusCommand();
         param.id = uuid.v4();
         param.isOnline = false;
+        param.onlineAt = new Date();
 
         const hasSucceed = await updateUserOnlineStatusCommandHandler.handle(param);
         expect(hasSucceed).to.eq(true);
     });
 
     it('Update user online status with online status', async () => {
-        sandbox.stub(userOnlineStatusRepository, 'addUserOnlineStatus').resolves(true);
+        sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
         const param = new UpdateUserOnlineStatusCommand();
         param.id = uuid.v4();
         param.isOnline = true;
+        param.onlineAt = new Date();
 
         const hasSucceed = await updateUserOnlineStatusCommandHandler.handle(param);
         expect(hasSucceed).to.eq(true);

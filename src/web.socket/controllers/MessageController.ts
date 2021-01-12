@@ -38,6 +38,7 @@ export default class MessageController {
             const param = new UpdateUserOnlineStatusCommand();
             param.id = userAuth.userId;
             param.isOnline = true;
+            param.onlineAt = new Date();
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
             if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)
@@ -54,6 +55,7 @@ export default class MessageController {
                 const param = new UpdateUserOnlineStatusCommand();
                 param.id = userAuth.userId;
                 param.isOnline = false;
+                param.onlineAt = new Date();
 
                 const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
                 if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)

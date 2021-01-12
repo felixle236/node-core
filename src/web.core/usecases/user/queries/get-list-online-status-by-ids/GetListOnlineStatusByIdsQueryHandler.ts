@@ -11,7 +11,11 @@ export class GetListOnlineStatusByIdsQueryHandler implements IQueryHandler<GetLi
 
     async handle(param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsQueryResult[]> {
         const ids = param.ids ?? [];
-        const onlineIds = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
-        return ids.map(id => new GetListOnlineStatusByIdsQueryResult(id, onlineIds.indexOf(id) !== -1));
+        const onlineStatuses = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
+
+        return ids.map((id, index) => {
+            const onlineStatus: {isOnline: boolean, onlineAt?: Date} = onlineStatuses[index] ? JSON.parse(onlineStatuses[index]) : { isOnline: false, onlineAt: undefined };
+            return new GetListOnlineStatusByIdsQueryResult(id, onlineStatus.isOnline, onlineStatus.onlineAt);
+        });
     }
 }

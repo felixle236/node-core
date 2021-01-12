@@ -32,7 +32,9 @@ describe('User - Get list online status by ids', () => {
     it('Get list online status by ids with online list', async () => {
         const id = uuid.v4();
         const id2 = uuid.v4();
-        sandbox.stub(userOnlineStatusRepository, 'getListOnlineStatusByIds').resolves([id, id2]);
+        const onlineStatus1 = { isOnline: true, onlineAt: new Date() };
+        const onlineStatus2 = { isOnline: true, onlineAt: new Date() };
+        sandbox.stub(userOnlineStatusRepository, 'getListOnlineStatusByIds').resolves([JSON.stringify(onlineStatus1), JSON.stringify(onlineStatus2)]);
         const param = new GetListOnlineStatusByIdsQuery();
         param.ids = [id, id2];
 
@@ -43,7 +45,9 @@ describe('User - Get list online status by ids', () => {
     it('Get list online status by ids with offline list', async () => {
         const id = uuid.v4();
         const id2 = uuid.v4();
-        sandbox.stub(userOnlineStatusRepository, 'getListOnlineStatusByIds').resolves([]);
+        const onlineStatus1 = { isOnline: false, onlineAt: new Date() };
+        const onlineStatus2 = null as any;
+        sandbox.stub(userOnlineStatusRepository, 'getListOnlineStatusByIds').resolves([JSON.stringify(onlineStatus1), onlineStatus2]);
         const param = new GetListOnlineStatusByIdsQuery();
         param.ids = [id, id2];
 

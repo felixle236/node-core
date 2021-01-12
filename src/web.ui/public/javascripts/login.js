@@ -12,8 +12,10 @@ function login() {
             password: password
         })
     }).done(function(result) {
-        setCookie('token', result.data, 1);
-        setTimeout(function() { location.reload() }, 100);
+        if (result.data && result.data.token) {
+            setCookie('token', result.data.token, 1);
+            setTimeout(function() { location.reload() }, 100);
+        }
     }).fail(function(jqXHR, textStatus) {
         $('#login-error').html(jqXHR.responseJSON.message);
     });

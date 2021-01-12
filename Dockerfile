@@ -1,12 +1,10 @@
-FROM node:15.4-alpine
+FROM node:14.15.4-alpine
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+# Change working directory
+WORKDIR /usr/app
 
-WORKDIR /home/node/app
-
-COPY --chown=node:node . ./
-
-USER node
+# Bundle app source
+COPY . .
 
 RUN npm install && \
     npm run build && \

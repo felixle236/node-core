@@ -10,23 +10,16 @@ export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
     private readonly _onlineStatusKey = 'user_online_status';
 
     async getListOnlineStatusByIds(ids: string[]): Promise<string[]> {
-        const list = await this._redisContext.redisClient.hmgetAsync(this._onlineStatusKey, ids);
-        return list;
+        return await this._redisContext.redisClient.hmgetAsync(this._onlineStatusKey, ids);
     }
 
-    async addUserOnlineStatus(id: string): Promise<boolean> {
-        const infoUser = JSON.stringify({
-            isOnline: true, onlineAt: new Date()
-        });
-        const result = await this._redisContext.redisClient.hmsetAsync(this._onlineStatusKey, id, infoUser);
+    async updateUserOnlineStatus(id: string, data: string): Promise<boolean> {
+        const result = await this._redisContext.redisClient.hmsetAsync(this._onlineStatusKey, id, data);
         return result === 'OK';
     }
 
-    async removeUserOnlineStatus(id: string): Promise<boolean> {
-        const infoUser = JSON.stringify({
-            isOnline: false, onlineAt: new Date()
-        });
-        const result = await this._redisContext.redisClient.hmsetAsync(this._onlineStatusKey, id, infoUser);
+    async demoAddKeyWithExpireTime(id: string, data: string, expireSecond: number = 24 * 60 * 60): Promise<boolean> {
+        const result = await this._redisContext.redisClient.setAsync(id, data, 'EX', expireSecond);
         return result === 'OK';
     }
 }

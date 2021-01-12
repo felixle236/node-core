@@ -15,7 +15,7 @@ export class UserController {
     @Get('/')
     @Render('users/list')
     @Authorized()
-    async find(@Res() response: Response, @CurrentUser() userAuth: UserAuthenticated, @QueryParams() param: FindUserQuery) {
+    async find(@Res() response: Response, @QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated) {
         if (!userAuth)
             return response.redirect('/');
 
