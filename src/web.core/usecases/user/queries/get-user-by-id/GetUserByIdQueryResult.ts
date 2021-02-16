@@ -16,22 +16,22 @@ export class GetUserByIdQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: Date | null;
     roleId: string;
     firstName: string;
-    lastName?: string;
+    lastName: string | null;
     email: string;
-    avatar?: string;
-    gender?: GenderType;
-    birthday?: string;
-    phone?: string;
-    address?: string;
-    culture?: string;
-    currency?: string;
-    activedAt?: Date;
-    archivedAt?: Date;
+    avatar: string | null;
+    gender: GenderType | null;
+    birthday: string | null;
+    phone: string | null;
+    address: string | null;
+    culture: string | null;
+    currency: string | null;
+    activedAt: Date | null;
+    archivedAt: Date | null;
 
-    role?: RoleResult;
+    role: RoleResult | null;
 
     constructor(data: User) {
         this.id = data.id;

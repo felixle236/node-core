@@ -277,7 +277,7 @@ describe('User - Create user', () => {
 
     it('Create user with role not found', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(roleRepository, 'getById').resolves(undefined);
+        sandbox.stub(roleRepository, 'getById').resolves(null);
         const param = new CreateUserCommand();
         param.roleId = user.roleId;
         param.firstName = 'Test';
@@ -292,7 +292,7 @@ describe('User - Create user', () => {
     it('Create user with data cannot save', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
         sandbox.stub(roleRepository, 'getById').resolves(user.role);
-        sandbox.stub(userRepository, 'create').resolves(undefined);
+        sandbox.stub(userRepository, 'create').resolves(null);
         const param = new CreateUserCommand();
         param.roleId = user.roleId;
         param.firstName = 'Test';

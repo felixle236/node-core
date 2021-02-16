@@ -3,6 +3,7 @@ import { User } from '../../../../../web.core/domain/entities/user/User';
 import { RoleId } from '../../../../../web.core/domain/enums/role/RoleId';
 import { GenderType } from '../../../../../web.core/domain/enums/user/GenderType';
 import { UserStatus } from '../../../../../web.core/domain/enums/user/UserStatus';
+import { IRole } from '../../../../../web.core/domain/types/role/IRole';
 import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 import { DateTransformer } from '../../transformers/DateTransformer';
@@ -14,69 +15,69 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @PrimaryGeneratedColumn('uuid', { name: USER_SCHEMA.COLUMNS.ID })
     id: string;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.ROLE_ID })
+    @Column('uuid', { name: USER_SCHEMA.COLUMNS.ROLE_ID })
     roleId: RoleId;
 
     @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.ACTIVED })
     status: UserStatus;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.FIRST_NAME, length: 20 })
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.FIRST_NAME, length: 20 })
     firstName: string;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.LAST_NAME, length: 20, nullable: true })
-    lastName?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.LAST_NAME, length: 20, nullable: true })
+    lastName: string | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.EMAIL, length: 120 })
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.EMAIL, length: 120 })
     @Index({ unique: true, where: UserDb.getIndexFilterDeletedColumn() })
     email: string;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.PASSWORD, length: 32 })
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.PASSWORD, length: 32 })
     password: string;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.AVATAR, length: 200, nullable: true })
-    avatar?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.AVATAR, length: 200, nullable: true })
+    avatar: string | null;
 
     @Column('enum', { name: USER_SCHEMA.COLUMNS.GENDER, enum: GenderType, nullable: true })
-    gender?: GenderType;
+    gender: GenderType | null;
 
     @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })
-    birthday?: Date;
+    birthday: Date | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.PHONE, length: 20, nullable: true })
-    phone?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.PHONE, length: 20, nullable: true })
+    phone: string | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.ADDRESS, length: 200, nullable: true })
-    address?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.ADDRESS, length: 200, nullable: true })
+    address: string | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.CULTURE, length: 5, nullable: true })
-    culture?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.CULTURE, length: 5, nullable: true })
+    culture: string | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.CURRENCY, length: 3, nullable: true })
-    currency?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.CURRENCY, length: 3, nullable: true })
+    currency: string | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.ACTIVE_KEY, length: 64, nullable: true })
-    activeKey?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.ACTIVE_KEY, length: 64, nullable: true })
+    activeKey: string | null;
 
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.ACTIVE_EXPIRE, nullable: true })
-    activeExpire?: Date;
+    activeExpire: Date | null;
 
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.ACTIVED_AT, nullable: true })
-    activedAt?: Date;
+    activedAt: Date | null;
 
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
-    archivedAt?: Date;
+    archivedAt: Date | null;
 
-    @Column({ name: USER_SCHEMA.COLUMNS.FORGOT_KEY, length: 64, nullable: true })
-    forgotKey?: string;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.FORGOT_KEY, length: 64, nullable: true })
+    forgotKey: string | null;
 
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.FORGOT_EXPIRE, nullable: true })
-    forgotExpire?: Date;
+    forgotExpire: Date | null;
 
     /* Relationship */
 
     @ManyToOne(() => RoleDb, role => role.users)
     @JoinColumn({ name: USER_SCHEMA.COLUMNS.ROLE_ID })
-    role: RoleDb;
+    role: IRole | null;
 
     /* handlers */
 
@@ -84,69 +85,7 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
         return new User(this);
     }
 
-    fromEntity(entity: User): this {
-        const data = entity.toData();
-
-        if (data.id !== undefined)
-            this.id = data.id;
-
-        if (data.roleId !== undefined)
-            this.roleId = data.roleId;
-
-        if (data.status !== undefined)
-            this.status = data.status;
-
-        if (data.firstName !== undefined)
-            this.firstName = data.firstName;
-
-        if (data.lastName !== undefined)
-            this.lastName = data.lastName;
-
-        if (data.email !== undefined)
-            this.email = data.email;
-
-        if (data.password !== undefined)
-            this.password = data.password;
-
-        if (data.avatar !== undefined)
-            this.avatar = data.avatar;
-
-        if (data.gender !== undefined)
-            this.gender = data.gender;
-
-        if (data.birthday !== undefined)
-            this.birthday = data.birthday;
-
-        if (data.phone !== undefined)
-            this.phone = data.phone;
-
-        if (data.address !== undefined)
-            this.address = data.address;
-
-        if (data.culture !== undefined)
-            this.culture = data.culture;
-
-        if (data.currency !== undefined)
-            this.currency = data.currency;
-
-        if (data.activeKey !== undefined)
-            this.activeKey = data.activeKey;
-
-        if (data.activeExpire !== undefined)
-            this.activeExpire = data.activeExpire;
-
-        if (data.activedAt !== undefined)
-            this.activedAt = data.activedAt;
-
-        if (data.archivedAt !== undefined)
-            this.archivedAt = data.archivedAt;
-
-        if (data.forgotKey !== undefined)
-            this.forgotKey = data.forgotKey;
-
-        if (data.forgotExpire !== undefined)
-            this.forgotExpire = data.forgotExpire;
-
-        return this;
+    fromEntity(entity: User) {
+        return entity.toData();
     }
 }

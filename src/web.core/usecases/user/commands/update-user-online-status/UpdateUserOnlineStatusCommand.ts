@@ -1,6 +1,4 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class UpdateUserOnlineStatusCommand implements ICommand {
+export class UpdateUserOnlineStatusCommand {
     id: string;
     isOnline: boolean;
     onlineAt: Date;

@@ -1,5 +1,6 @@
 export class ErrorCode {
     static SOMETHING_WRONG = 'SOMETHING_WRONG_ERR';
+    static OTHER = 'OTHER_ERR';
     static NOT_SUPPORTED = 'NOT_SUPPORTED_ERR';
     static ACCESS_DENIED = 'ACCESS_DENIED_ERR';
     static DATA_NOT_FOUND = 'DATA_NOT_FOUND_ERR';

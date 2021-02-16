@@ -11,7 +11,7 @@ import { SystemError } from '../../../web.core/domain/common/exceptions/SystemEr
 @Service('db.context')
 export class DbContext implements IDbContext {
     getConnection(connectionName?: string): IDbConnection {
-        let connection: Connection | undefined;
+        let connection: Connection | null = null;
         try {
             connection = getConnection(connectionName);
         }
@@ -22,7 +22,7 @@ export class DbContext implements IDbContext {
     }
 
     async createConnection(connectionName?: string): Promise<IDbConnection> {
-        let connection: Connection | undefined;
+        let connection: Connection | null = null;
         try {
             connection = getConnection(connectionName);
         }

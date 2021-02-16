@@ -1,6 +1,14 @@
+import { DbPagination } from '../../../domain/common/database/DbPagination';
 import { IBaseRepository } from '../../../domain/common/database/interfaces/IBaseRepository';
 import { Role } from '../../../domain/entities/role/Role';
-import { FindRoleCommonQuery } from '../../../usecases/role/queries/find-role-common/FindRoleCommonQuery';
+
+export class FindRoleFilter extends DbPagination {
+    keyword: string | null;
+}
+
+export class FindRoleCommonFilter extends DbPagination {
+    keyword: string | null;
+}
 
 export interface IRoleRepository extends IBaseRepository<Role, string> {
     /**
@@ -14,7 +22,9 @@ export interface IRoleRepository extends IBaseRepository<Role, string> {
      */
     getAll(expireTimeCaching: number): Promise<Role[]>;
 
-    findCommonAndCount(filter: FindRoleCommonQuery): Promise<[Role[], number]>;
+    findAndCount(param: FindRoleFilter): Promise<[Role[], number]>;
+
+    findCommonAndCount(filter: FindRoleCommonFilter): Promise<[Role[], number]>;
 
     checkNameExist(name: string): Promise<boolean>;
     checkNameExist(name: string, excludeId: string): Promise<boolean>;

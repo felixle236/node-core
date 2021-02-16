@@ -44,7 +44,7 @@ describe('Role - Delete role', () => {
     });
 
     it('Delete role with role is not exists', async () => {
-        sandbox.stub(roleRepository, 'getById').resolves(undefined);
+        sandbox.stub(roleRepository, 'getById').resolves(null);
         const param = new DeleteRoleCommand();
         param.id = role.id;
 

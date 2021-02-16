@@ -1,5 +1,3 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class ResendActivationCommand implements ICommand {
+export class ResendActivationCommand {
     email: string;
 }

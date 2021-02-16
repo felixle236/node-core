@@ -29,7 +29,7 @@ export class Role extends BaseEntity<IRole> implements IRole {
 
     /* Relationship */
 
-    get users(): User[] | undefined {
+    get users(): User[] | null {
         return this.data.users && this.data.users.map(user => new User(user));
     }
 }

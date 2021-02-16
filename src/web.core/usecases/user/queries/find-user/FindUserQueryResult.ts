@@ -17,17 +17,17 @@ export class FindUserQueryResult {
     createdAt: Date;
     roleId: string;
     firstName: string;
-    lastName?: string;
+    lastName: string | null;
     email: string;
-    avatar?: string;
-    gender?: GenderType;
-    birthday?: string;
-    phone?: string;
-    address?: string;
-    culture?: string;
-    currency?: string;
+    avatar: string | null;
+    gender: GenderType | null;
+    birthday: string | null;
+    phone: string | null;
+    address: string | null;
+    culture: string | null;
+    currency: string | null;
 
-    role?: RoleResult;
+    role: RoleResult | null;
 
     constructor(data: User) {
         this.id = data.id;

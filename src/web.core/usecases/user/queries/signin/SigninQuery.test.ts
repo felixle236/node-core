@@ -93,7 +93,7 @@ describe('User - Signin', () => {
     });
 
     it('Signin with wrong email or password', async () => {
-        sandbox.stub(userRepository, 'getByEmailPassword').resolves(undefined);
+        sandbox.stub(userRepository, 'getByEmailPassword').resolves(null);
         const param = new SigninQuery();
         param.email = 'test@localhost.com';
         param.password = 'Nodecore@2';

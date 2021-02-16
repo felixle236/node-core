@@ -4,7 +4,9 @@ import { ErrorObject } from './ErrorObject';
 export class MessageError {
     static SOMETHING_WRONG = new ErrorObject(ErrorCode.SOMETHING_WRONG, 'Something went wrong!');
 
-    static NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
+    static OTHER = new ErrorObject(ErrorCode.OTHER, '{0}');
+
+    static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
 
     static ACCESS_DENIED = new ErrorObject(ErrorCode.ACCESS_DENIED, 'Access is denied!');
 
@@ -35,6 +37,7 @@ export class MessageError {
     static PARAM_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The {0} is invalid!');
     static PARAM_FORMAT_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'The format of {0} is invalid or not supported! The following formats are supported: {1}');
     static PARAM_MAX_NUMBER = new ErrorObject(ErrorCode.DATA_INVALID, 'The maximum number of {0} is {1}!');
+    static PARAM_MIN_MAX_NUMBER = new ErrorObject(ErrorCode.DATA_INVALID, 'The {0} number field must be at least {1} and a maximum of {2}!');
     static PARAM_SIZE_MAX = new ErrorObject(ErrorCode.DATA_INVALID, 'The size of {0} must be a maximum of {1} ({2})!');
     static PARAM_LEN_EQUAL = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be {1}!');
     static PARAM_LEN_AT_LEAST = new ErrorObject(ErrorCode.DATA_INVALID, 'The length of {0} must be at least {1}!');

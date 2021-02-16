@@ -1,9 +1,7 @@
 import { Service } from 'typedi';
 import { SortType } from '../../../../../web.core/domain/common/database/SortType';
 import { Role } from '../../../../../web.core/domain/entities/role/Role';
-import { IRoleRepository } from '../../../../../web.core/gateways/repositories/role/IRoleRepository';
-import { FindRoleCommonQuery } from '../../../../../web.core/usecases/role/queries/find-role-common/FindRoleCommonQuery';
-import { FindRoleQuery } from '../../../../../web.core/usecases/role/queries/find-role/FindRoleQuery';
+import { FindRoleCommonFilter, FindRoleFilter, IRoleRepository } from '../../../../../web.core/gateways/repositories/role/IRoleRepository';
 import { RoleDb } from '../../entities/role/RoleDb';
 import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
 import { BaseRepository } from '../base/BaseRepository';
@@ -24,7 +22,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
         return list.map(item => item.toEntity());
     }
 
-    async findAndCount(param: FindRoleQuery): Promise<[Role[], number]> {
+    async findAndCount(param: FindRoleFilter): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME);
 
         if (param.keyword) {
@@ -41,7 +39,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
         return [list.map(item => item.toEntity()), count];
     }
 
-    async findCommonAndCount(param: FindRoleCommonQuery): Promise<[Role[], number]> {
+    async findCommonAndCount(param: FindRoleCommonFilter): Promise<[Role[], number]> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
             .select([
                 `${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.ID}`,
@@ -62,7 +60,7 @@ export class RoleRepository extends BaseRepository<Role, RoleDb, string> impleme
         return [list.map(item => item.toEntity()), count];
     }
 
-    async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
+    async checkNameExist(name: string, excludeId: string | null = null): Promise<boolean> {
         let query = this.repository.createQueryBuilder(ROLE_SCHEMA.TABLE_NAME)
             .where(`lower(${ROLE_SCHEMA.TABLE_NAME}.${ROLE_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 

@@ -62,7 +62,7 @@ describe('Role - Create role', () => {
 
     it('Create role with data cannot save', async () => {
         sandbox.stub(roleRepository, 'checkNameExist').resolves(false);
-        sandbox.stub(roleRepository, 'create').resolves(undefined);
+        sandbox.stub(roleRepository, 'create').resolves(null);
         const param = new CreateRoleCommand();
         param.name = 'Role test';
 

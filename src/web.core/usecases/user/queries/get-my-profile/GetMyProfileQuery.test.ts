@@ -45,7 +45,7 @@ describe('User - Get my profile', () => {
     });
 
     it('Get user by id with data not found', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(undefined);
+        sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new GetMyProfileQuery();
         param.id = user.id;
 

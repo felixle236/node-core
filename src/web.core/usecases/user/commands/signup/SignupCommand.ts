@@ -1,8 +1,6 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class SignupCommand implements ICommand {
+export class SignupCommand {
     firstName: string;
-    lastName?: string;
+    lastName: string | null;
     email: string;
     password: string;
 }

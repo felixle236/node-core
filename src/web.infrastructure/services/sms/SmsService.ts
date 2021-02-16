@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { SmsSender } from './sender/SmsSender';
 import { UserActivationCodeTemplate } from './templates/UserActivationCodeTemplate';
 import { SMS_SENDER_OR_PHONE } from '../../../configs/Configuration';
-import { IUser } from '../../../web.core/domain/types/user/IUser';
 import { ISmsService } from '../../../web.core/gateways/services/ISmsService';
 
 @Service('sms.service')
@@ -13,8 +12,8 @@ export class SmsService implements ISmsService {
         this._sender = new SmsSender();
     }
 
-    async sendVerificationCode(user: IUser): Promise<void> {
+    async sendVerificationCode(phone: string): Promise<void> {
         const content = UserActivationCodeTemplate.getTemplate(Date.now().toString());
-        await this._sender.send(SMS_SENDER_OR_PHONE, user.phone!, content);
+        await this._sender.send(SMS_SENDER_OR_PHONE, phone, content);
     }
 }

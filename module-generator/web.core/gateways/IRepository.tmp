@@ -1,5 +1,5 @@
 import { IBaseRepository } from '../../../domain/common/database/interfaces/IBaseRepository';
-import { {PascalName} } from '../../../domain/entities/{camelName}/{PascalName}';
+import { {PascalName} } from '../../../domain/entities/{folder}/{PascalName}';
 
 export interface I{PascalName}Repository extends IBaseRepository<{PascalName}, string> {
     checkNameExist(name: string): Promise<boolean>;

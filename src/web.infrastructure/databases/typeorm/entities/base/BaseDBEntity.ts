@@ -10,12 +10,12 @@ export abstract class BaseDbEntity<T extends IEntity> {
     updatedAt: Date;
 
     @DeleteDateColumn({ name: BASE_SCHEMA.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
-    deletedAt?: Date;
+    deletedAt: Date | null;
 
     /* handlers */
 
     abstract toEntity(): T;
-    abstract fromEntity(entity: T): this;
+    abstract fromEntity(entity: T): IEntity;
 
     static getIndexFilterDeletedColumn(): string {
         return `${BASE_SCHEMA.COLUMNS.DELETED_AT} IS NULL`;

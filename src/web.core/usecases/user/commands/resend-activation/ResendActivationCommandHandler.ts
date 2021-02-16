@@ -38,9 +38,8 @@ export class ResendActivationCommandHandler implements ICommandHandler<ResendAct
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        user.activeKey = data.activeKey;
-        user.activeExpire = data.activeExpire;
-        this._mailService.resendUserActivation(user);
+        const name = `${user.firstName} ${user.lastName}`;
+        this._mailService.resendUserActivation(name, user.email, data.activeKey);
         return hasSucceed;
     }
 }

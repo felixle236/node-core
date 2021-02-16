@@ -1,6 +1,4 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class ActiveUserCommand implements ICommand {
+export class ActiveUserCommand {
     email: string;
     activeKey: string;
 }

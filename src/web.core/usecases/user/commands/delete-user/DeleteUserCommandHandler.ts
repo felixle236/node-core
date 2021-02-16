@@ -18,7 +18,7 @@ export class DeleteUserCommandHandler implements ICommandHandler<DeleteUserComma
         if (!user)
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
-        const hasSucceed = await this._userRepository.delete(param.id);
+        const hasSucceed = await this._userRepository.softDelete(param.id);
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 

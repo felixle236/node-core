@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { Find{PascalName}Query } from './Find{PascalName}Query';
 import { Find{PascalName}QueryResult } from './Find{PascalName}QueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{folder}/I{PascalName}Repository';
 import { PaginationResult } from '../../../../domain/common/usecase/PaginationResult';
 
 @Service()

@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { Create{PascalName}Command } from './Create{PascalName}Command';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{folder}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-import { {PascalName} } from '../../../../domain/entities/{camelName}/{PascalName}';
+import { {PascalName} } from '../../../../domain/entities/{folder}/{PascalName}';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()

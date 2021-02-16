@@ -1,9 +1,8 @@
 import { BaseRepository } from '../base/BaseRepository';
-import { Find{PascalName}Query } from '../../../../../web.core/usecases/{camelName}/queries/find-{camelName}/Find{PascalName}Query';
-import { I{PascalName}Repository } from '../../../../../web.core/gateways/repositories/{camelName}/I{PascalName}Repository';
-import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{camelName}/{PascalName}Schema';
-import { {PascalName} } from '../../../../../web.core/domain/entities/{camelName}/{PascalName}';
-import { {PascalName}Db } from '../../entities/{camelName}/{PascalName}Db';
+import { Find{PascalName}Filter, I{PascalName}Repository } from '../../../../../web.core/gateways/repositories/{folder}/I{PascalName}Repository';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Schema';
+import { {PascalName} } from '../../../../../web.core/domain/entities/{folder}/{PascalName}';
+import { {PascalName}Db } from '../../entities/{folder}/{PascalName}Db';
 import { Service } from 'typedi';
 import { SortType } from '../../../../../web.core/domain/common/database/SortType';
 
@@ -13,7 +12,7 @@ export class {PascalName}Repository extends BaseRepository<{PascalName}, {Pascal
         super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);
     }
 
-    async findAndCount(param: Find{PascalName}Query): Promise<[{PascalName}[], number]> {
+    async findAndCount(param: Find{PascalName}Filter): Promise<[{PascalName}[], number]> {
         let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
 
         if (param.keyword) {
@@ -30,7 +29,7 @@ export class {PascalName}Repository extends BaseRepository<{PascalName}, {Pascal
         return [list.map(item => item.toEntity()), count];
     }
 
-    async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
+    async checkNameExist(name: string, excludeId: string | null = null): Promise<boolean> {
         let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
             .where(`lower(${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 

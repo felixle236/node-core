@@ -1,6 +1,6 @@
-import { IFilter } from './interfaces/IFilter';
+import { IQueryPagination } from './interfaces/IQueryPagination';
 
-export abstract class Filter implements IFilter {
+export abstract class QueryPagination implements IQueryPagination {
     private readonly _limitDefault = 10;
     private readonly _maxLimitDefault = 30;
 

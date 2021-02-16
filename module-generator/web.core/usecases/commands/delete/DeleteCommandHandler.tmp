@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Delete{PascalName}Command } from './Delete{PascalName}Command';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{folder}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
@@ -18,7 +18,7 @@ export class Delete{PascalName}CommandHandler implements ICommandHandler<Delete{
         if (!{camelName})
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
-        const hasSucceed = await this._{camelName}Repository.delete(param.id);
+        const hasSucceed = await this._{camelName}Repository.softDelete(param.id);
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return hasSucceed;

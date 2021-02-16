@@ -1,5 +1,3 @@
-import { IQuery } from './IQuery';
-
-export interface IQueryHandler<TIn extends IQuery, TOut> {
+export interface IQueryHandler<TIn, TOut> {
     handle(param: TIn): Promise<TOut>;
 }

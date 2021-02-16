@@ -18,7 +18,7 @@ export class DeleteRoleCommandHandler implements ICommandHandler<DeleteRoleComma
         if (!role)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'role');
 
-        const hasSucceed = await this._roleRepository.delete(param.id);
+        const hasSucceed = await this._roleRepository.softDelete(param.id);
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 

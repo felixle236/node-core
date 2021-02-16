@@ -2,10 +2,14 @@ import { ILogProvider } from '../interfaces/ILogProvider';
 
 export class LogConsoleFactory implements ILogProvider {
     async writeLog(content: string): Promise<void> {
-        console.log('LogService.writeLog', content);
+        console.log('Log:', content);
+    }
+
+    async writeWarningLog(content: string): Promise<void> {
+        console.error('Warning log:', content);
     }
 
     async writeErrorLog(content: string): Promise<void> {
-        console.error('LogService.writeErrorLog', content);
+        console.error('Error log:', content);
     }
 }

@@ -1,15 +1,15 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseDbEntity } from '../base/BaseDBEntity';
-import { I{PascalName} } from '../../../../../web.core/domain/types/{camelName}/I{PascalName}';
-import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{camelName}/{PascalName}Schema';
-import { {PascalName} } from '../../../../../web.core/domain/entities/{camelName}/{PascalName}';
+import { I{PascalName} } from '../../../../../web.core/domain/types/{folder}/I{PascalName}';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Schema';
+import { {PascalName} } from '../../../../../web.core/domain/entities/{folder}/{PascalName}';
 
 @Entity({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
 export class {PascalName}Db extends BaseDbEntity<{PascalName}> implements I{PascalName} {
     @PrimaryGeneratedColumn('uuid', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID })
     id: string;
 
-    @Column({ name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME, length: 50 })
+    @Column('varchar', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME, length: 50 })
     @Index({ unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
     name: string;
 
@@ -19,15 +19,7 @@ export class {PascalName}Db extends BaseDbEntity<{PascalName}> implements I{Pasc
         return new {PascalName}(this);
     }
 
-    fromEntity(entity: {PascalName}): this {
-        const data = entity.toData();
-
-        if (data.id !== undefined)
-            this.id = data.id;
-
-        if (data.name !== undefined)
-            this.name = data.name;
-
-        return this;
+    fromEntity(entity: {PascalName}) {
+        return entity.toData();
     }
 }

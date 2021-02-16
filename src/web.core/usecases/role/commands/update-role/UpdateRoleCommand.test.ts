@@ -62,7 +62,7 @@ describe('Role - Update role', () => {
     });
 
     it('Update role with role is not exists', async () => {
-        sandbox.stub(roleRepository, 'getById').resolves(undefined);
+        sandbox.stub(roleRepository, 'getById').resolves(null);
         const param = new UpdateRoleCommand();
         param.id = role.id;
         param.name = 'Role test';

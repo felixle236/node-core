@@ -57,7 +57,7 @@ describe('User - Resend activation', () => {
     });
 
     it('Resend activation with email not found', async () => {
-        sandbox.stub(userRepository, 'getByEmail').resolves(undefined);
+        sandbox.stub(userRepository, 'getByEmail').resolves(null);
         const param = new ResendActivationCommand();
         param.email = 'test@localhost.com';
 

@@ -39,11 +39,12 @@ export class SignupCommandHandler implements ICommandHandler<SignupCommand, stri
         data.activeKey = crypto.randomBytes(32).toString('hex');
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
-        const user = await this._userRepository.createGet(data);
-        if (!user)
+        const id = await this._userRepository.create(data);
+        if (!id)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        this._mailService.sendUserActivation(user);
-        return this._jwtAuthService.sign(user);
+        const name = `${data.firstName} ${data.lastName}`;
+        this._mailService.sendUserActivation(name, data.email, data.activeKey);
+        return this._jwtAuthService.sign(id, data.roleId);
     }
 }

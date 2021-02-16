@@ -1,5 +1,3 @@
-import { IUser } from '../../domain/types/user/IUser';
-
 export interface IJwtPayload {
     sub: string; // Subject
     exp: number; // Expiration time
@@ -13,7 +11,7 @@ export interface IJwtPayloadExtend extends IJwtPayload {
 }
 
 export interface IJwtAuthService {
-    sign(user: IUser): string;
+    sign(userId: string, roleId: string): string;
 
     verify(token: string): IJwtPayloadExtend;
 }

@@ -1,6 +1,4 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class ResetPasswordCommand implements ICommand {
+export class ResetPasswordCommand {
     forgotKey: string;
     email: string;
     password: string;

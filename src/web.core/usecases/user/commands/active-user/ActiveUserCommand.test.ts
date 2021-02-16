@@ -61,7 +61,7 @@ describe('User - Active user', () => {
     });
 
     it('Active user with email not found', async () => {
-        sandbox.stub(userRepository, 'getByEmail').resolves(undefined);
+        sandbox.stub(userRepository, 'getByEmail').resolves(null);
         const param = new ActiveUserCommand();
         param.email = 'test@localhost.com';
         param.activeKey = 'key';

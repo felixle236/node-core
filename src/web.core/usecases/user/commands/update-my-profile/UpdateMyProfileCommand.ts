@@ -1,14 +1,13 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
 import { GenderType } from '../../../../domain/enums/user/GenderType';
 
-export class UpdateMyProfileCommand implements ICommand {
+export class UpdateMyProfileCommand {
     userAuthId: string;
     firstName: string;
-    lastName?: string;
-    gender?: GenderType;
-    birthday?: string;
-    phone?: string;
-    address?: string;
-    culture?: string;
-    currency?: string;
+    lastName: string | null;
+    gender: GenderType | null;
+    birthday: string | null;
+    phone: string | null;
+    address: string | null;
+    culture: string | null;
+    currency: string | null;
 }

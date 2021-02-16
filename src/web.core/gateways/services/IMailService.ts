@@ -1,9 +1,7 @@
-import { IUser } from '../../domain/types/user/IUser';
-
 export interface IMailService {
-    sendUserActivation(user: IUser): Promise<void>;
+    sendUserActivation(name: string, email: string, activeKey: string): Promise<void>;
 
-    resendUserActivation(user: IUser): Promise<void>;
+    resendUserActivation(name: string, email: string, activeKey: string): Promise<void>;
 
-    sendForgotPassword(user: IUser): Promise<void>;
+    sendForgotPassword(name: string, email: string, forgotKey: string): Promise<void>;
 }

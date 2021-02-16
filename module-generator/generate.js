@@ -7,71 +7,80 @@ if (!moduleName) {
     return;
 }
 
+let folder = moduleName;
+let match;
+while ((match = /[A-Z]/g.exec(folder)) != null) {
+    if (match.index === 0)
+        folder = folder[match.index].toLowerCase() + folder.substr(match.index + 1);
+    else
+        folder = folder.substr(0, match.index) + '-' + folder[match.index].toLowerCase() + folder.substr(match.index + 1);
+}
+
 const camelName = moduleName.substr(0, 1).toLowerCase() + moduleName.substr(1);
 const pascalName = moduleName.substr(0, 1).toUpperCase() + moduleName.substr(1);
-const upperCaseName = moduleName.toUpperCase();
+const upperCaseName = folder.replace(/-/g, '_').toUpperCase();
 
 // web.core
 
-const entityInterfacePath = path.join(__dirname, `../src/web.core/domain/types/${camelName}/I${pascalName}.ts`);
+const entityInterfacePath = path.join(__dirname, `../src/web.core/domain/types/${folder}/I${pascalName}.ts`);
 const entityInterface = getFileContent(path.join(__dirname, './web.core/domain/Type.tmp'));
 
-const entityPath = path.join(__dirname, `../src/web.core/domain/entities/${camelName}/${pascalName}.ts`);
+const entityPath = path.join(__dirname, `../src/web.core/domain/entities/${folder}/${pascalName}.ts`);
 const entity = getFileContent(path.join(__dirname, './web.core/domain/Entity.tmp'));
 
-const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${camelName}/I${pascalName}Repository.ts`);
+const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${folder}/I${pascalName}Repository.ts`);
 const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'));
 
-const findQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}Query.ts`);
+const findQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}Query.ts`);
 const findQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQuery.tmp'));
 
-const findQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryHandler.ts`);
+const findQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}QueryHandler.ts`);
 const findQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryHandler.tmp'));
 
-const findQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/find-${camelName}/Find${pascalName}QueryResult.ts`);
+const findQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}QueryResult.ts`);
 const findQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryResult.tmp'));
 
-const getByIdQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQuery.ts`);
+const getByIdQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQuery.ts`);
 const getByIdQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQuery.tmp'));
 
-const getByIdQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
+const getByIdQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
 const getByIdQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryHandler.tmp'));
 
-const getByIdQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/queries/get-${camelName}-by-id/Get${pascalName}ByIdQueryResult.ts`);
+const getByIdQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQueryResult.ts`);
 const getByIdQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryResult.tmp'));
 
-const createCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}Command.ts`);
+const createCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${folder}/Create${pascalName}Command.ts`);
 const createCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommand.tmp'));
 
-const createCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/create-${camelName}/Create${pascalName}CommandHandler.ts`);
+const createCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${folder}/Create${pascalName}CommandHandler.ts`);
 const createCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommandHandler.tmp'));
 
-const updateCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}Command.ts`);
+const updateCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${folder}/Update${pascalName}Command.ts`);
 const updateCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommand.tmp'));
 
-const updateCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/update-${camelName}/Update${pascalName}CommandHandler.ts`);
+const updateCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${folder}/Update${pascalName}CommandHandler.ts`);
 const updateCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommandHandler.tmp'));
 
-const deleteCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}Command.ts`);
+const deleteCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${folder}/Delete${pascalName}Command.ts`);
 const deleteCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommand.tmp'));
 
-const deleteCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${camelName}/commands/delete-${camelName}/Delete${pascalName}CommandHandler.ts`);
+const deleteCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${folder}/Delete${pascalName}CommandHandler.ts`);
 const deleteCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommandHandler.tmp'));
 
 // web.infrastructure
 
-const schemaPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/schemas/${camelName}/${pascalName}Schema.ts`);
+const schemaPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/schemas/${folder}/${pascalName}Schema.ts`);
 const schema = getFileContent(path.join(__dirname, './web.infrastructure/databases/Schema.tmp'));
 
-const entityDbPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/entities/${camelName}/${pascalName}Db.ts`);
+const entityDbPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/entities/${folder}/${pascalName}Db.ts`);
 const entityDb = getFileContent(path.join(__dirname, './web.infrastructure/databases/EntityDb.tmp'));
 
-const repositoryPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/repositories/${camelName}/${pascalName}Repository.ts`);
+const repositoryPath = path.join(__dirname, `../src/web.infrastructure/databases/typeorm/repositories/${folder}/${pascalName}Repository.ts`);
 const repository = getFileContent(path.join(__dirname, './web.infrastructure/databases/Repository.tmp'));
 
 // web.api
 
-const controllerPath = path.join(__dirname, `../src/web.api/controllers/${camelName}/${pascalName}Controller.ts`);
+const controllerPath = path.join(__dirname, `../src/web.api/controllers/${folder}/${pascalName}Controller.ts`);
 const controller = getFileContent(path.join(__dirname, './web.api/Controller.tmp'));
 
 // Handle
@@ -124,6 +133,7 @@ fs.writeFileSync(controllerPath, controller);
  */
 function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
+        .replace(/{folder}/g, folder)
         .replace(/{camelName}/g, camelName)
         .replace(/{PascalName}/g, pascalName)
         .replace(/{UPPER_CASE_NAME}/g, upperCaseName);

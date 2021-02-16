@@ -1,5 +1,5 @@
 import { BaseEntity } from '../base/BaseEntity';
-import { I{PascalName} } from '../../types/{camelName}/I{PascalName}';
+import { I{PascalName} } from '../../types/{folder}/I{PascalName}';
 import { MessageError } from '../../common/exceptions/message/MessageError';
 import { SystemError } from '../../common/exceptions/SystemError';
 
@@ -19,6 +19,7 @@ export class {PascalName} extends BaseEntity<I{PascalName}> implements I{PascalN
     set name(val: string) {
         if (!val)
             throw new SystemError(MessageError.PARAM_REQUIRED, 'name');
+
         if (val.length > 50)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
 

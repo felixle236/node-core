@@ -1,6 +1,4 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
-
-export class UpdateRoleCommand implements ICommand {
+export class UpdateRoleCommand {
     id: string;
     name: string;
 }

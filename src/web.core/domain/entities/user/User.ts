@@ -25,10 +25,10 @@ export class User extends BaseEntity<IUser> implements IUser {
 
     set roleId(val: RoleId) {
         if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role id');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'role');
 
         if (!validator.isUUID(val) || !validator.isEnum(val, RoleId))
-            throw new SystemError(MessageError.PARAM_INVALID, 'role id');
+            throw new SystemError(MessageError.PARAM_INVALID, 'role');
 
         this.data.roleId = val;
     }
@@ -38,6 +38,12 @@ export class User extends BaseEntity<IUser> implements IUser {
     }
 
     set status(val: UserStatus) {
+        if (!val)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'status');
+
+        if (!validator.isEnum(val, UserStatus))
+            throw new SystemError(MessageError.PARAM_INVALID, 'status');
+
         this.data.status = val;
     }
 
@@ -56,11 +62,11 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.firstName = val;
     }
 
-    get lastName(): string | undefined {
+    get lastName(): string | null {
         return this.data.lastName;
     }
 
-    set lastName(val: string | undefined) {
+    set lastName(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length > 20)
@@ -78,7 +84,6 @@ export class User extends BaseEntity<IUser> implements IUser {
             throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
 
         val = val.trim().toLowerCase();
-
         if (!validator.isEmail(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'email');
 
@@ -106,11 +111,11 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.password = this._hashPassword(val);
     }
 
-    get avatar(): string | undefined {
+    get avatar(): string | null {
         return this.data.avatar && STORAGE_URL + this.data.avatar;
     }
 
-    set avatar(val: string | undefined) {
+    set avatar(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length > 100)
@@ -119,21 +124,23 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.avatar = val;
     }
 
-    get gender(): GenderType | undefined {
+    get gender(): GenderType | null {
         return this.data.gender;
     }
 
-    set gender(val: GenderType | undefined) {
-        if (val && !validator.isEnum(val, GenderType))
-            throw new SystemError(MessageError.PARAM_INVALID, 'gender');
+    set gender(val: GenderType | null) {
+        if (val) {
+            if (!validator.isEnum(val, GenderType))
+                throw new SystemError(MessageError.PARAM_INVALID, 'gender');
+        }
         this.data.gender = val;
     }
 
-    get birthday(): Date | undefined {
+    get birthday(): Date | null {
         return this.data.birthday;
     }
 
-    set birthday(val: Date | undefined) {
+    set birthday(val: Date | null) {
         if (val) {
             if (!validator.isDate(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
@@ -146,15 +153,15 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.birthday = val;
     }
 
-    get birthdayDisplay(): string | undefined {
+    get birthdayDisplay(): string | null {
         return this.data.birthday && `${this.data.birthday.getFullYear()}-${this.data.birthday.getMonth() + 1}-${this.data.birthday.getDate()}`;
     }
 
-    get phone(): string | undefined {
+    get phone(): string | null {
         return this.data.phone;
     }
 
-    set phone(val: string | undefined) {
+    set phone(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length > 20)
@@ -164,11 +171,11 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.phone = val;
     }
 
-    get address(): string | undefined {
+    get address(): string | null {
         return this.data.address;
     }
 
-    set address(val: string | undefined) {
+    set address(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length > 200)
@@ -178,11 +185,11 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.address = val;
     }
 
-    get culture(): string | undefined {
+    get culture(): string | null {
         return this.data.culture;
     }
 
-    set culture(val: string | undefined) {
+    set culture(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length !== 5)
@@ -192,11 +199,11 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.culture = val;
     }
 
-    get currency(): string | undefined {
+    get currency(): string | null {
         return this.data.currency;
     }
 
-    set currency(val: string | undefined) {
+    set currency(val: string | null) {
         if (val) {
             val = val.trim();
             if (val.length !== 3)
@@ -206,57 +213,57 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.currency = val;
     }
 
-    get activeKey(): string | undefined {
+    get activeKey(): string | null {
         return this.data.activeKey;
     }
 
-    set activeKey(val: string | undefined) {
+    set activeKey(val: string | null) {
         this.data.activeKey = val;
     }
 
-    get activeExpire(): Date | undefined {
+    get activeExpire(): Date | null {
         return this.data.activeExpire;
     }
 
-    set activeExpire(val: Date | undefined) {
+    set activeExpire(val: Date | null) {
         this.data.activeExpire = val;
     }
 
-    get activedAt(): Date | undefined {
+    get activedAt(): Date | null {
         return this.data.activedAt;
     }
 
-    set activedAt(val: Date | undefined) {
+    set activedAt(val: Date | null) {
         this.data.activedAt = val;
     }
 
-    get archivedAt(): Date | undefined {
+    get archivedAt(): Date | null {
         return this.data.archivedAt;
     }
 
-    set archivedAt(val: Date | undefined) {
+    set archivedAt(val: Date | null) {
         this.data.archivedAt = val;
     }
 
-    get forgotKey(): string | undefined {
+    get forgotKey(): string | null {
         return this.data.forgotKey;
     }
 
-    set forgotKey(val: string | undefined) {
+    set forgotKey(val: string | null) {
         this.data.forgotKey = val;
     }
 
-    get forgotExpire(): Date | undefined {
+    get forgotExpire(): Date | null {
         return this.data.forgotExpire;
     }
 
-    set forgotExpire(val: Date | undefined) {
+    set forgotExpire(val: Date | null) {
         this.data.forgotExpire = val;
     }
 
     /* Relationship */
 
-    get role(): Role | undefined {
+    get role(): Role | null {
         return this.data.role && new Role(this.data.role);
     }
 

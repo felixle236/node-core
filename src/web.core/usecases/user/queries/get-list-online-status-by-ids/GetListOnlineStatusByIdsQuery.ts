@@ -1,5 +1,3 @@
-import { IQuery } from '../../../../domain/common/usecase/interfaces/IQuery';
-
-export class GetListOnlineStatusByIdsQuery implements IQuery {
+export class GetListOnlineStatusByIdsQuery {
     ids: string[];
 }

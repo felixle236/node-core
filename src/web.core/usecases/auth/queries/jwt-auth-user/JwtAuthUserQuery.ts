@@ -1,7 +1,4 @@
-
-import { IQuery } from '../../../../domain/common/usecase/interfaces/IQuery';
-
-export class JwtAuthUserQuery implements IQuery {
+export class JwtAuthUserQuery {
     token: string;
-    roleIds?: string[];
+    roleIds: string[] | null;
 }

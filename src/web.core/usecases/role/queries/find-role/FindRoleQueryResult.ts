@@ -4,7 +4,7 @@ export class FindRoleQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: Date | null;
     name: string;
 
     constructor(data: Role) {

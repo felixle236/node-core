@@ -42,7 +42,7 @@ describe('Role - Get role by id', () => {
     });
 
     it('Get role by id with data not found', async () => {
-        sandbox.stub(roleRepository, 'getById').resolves(undefined);
+        sandbox.stub(roleRepository, 'getById').resolves(null);
         const param = new GetRoleByIdQuery();
         param.id = role.id;
 

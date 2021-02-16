@@ -1,5 +1,3 @@
-import { ICommand } from './ICommand';
-
-export interface ICommandHandler<TIn extends ICommand, TOut> {
+export interface ICommandHandler<TIn, TOut> {
     handle(param: TIn): Promise<TOut>;
 }

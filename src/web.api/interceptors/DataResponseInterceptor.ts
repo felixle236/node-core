@@ -6,6 +6,6 @@ export class DataResponseInterceptor implements InterceptorInterface {
     intercept(_action: Action, data: any) {
         if (data instanceof PaginationResult || Buffer.isBuffer(data))
             return data;
-        return { data };
+        return { data: data ?? null };
     }
 }

@@ -6,14 +6,14 @@ export class HttpServer {
     app: Express;
     server: Server;
 
-    constructor(options: RoutingControllersOptions, app?: Express) {
+    constructor(options: RoutingControllersOptions, app: Express | null = null) {
         if (app)
             this.app = useExpressServer(app, options);
         else
             this.app = createExpressServer(options);
     }
 
-    start(port: number, callback?: any): Server {
+    start(port: number, callback: any = null): Server {
         this.server = this.app.listen(port, '0.0.0.0', callback);
         return this.server;
     }

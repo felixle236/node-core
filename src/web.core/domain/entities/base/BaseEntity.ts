@@ -11,7 +11,7 @@ export abstract class BaseEntity<TEntity extends IEntity> implements IEntity {
         return this.data.updatedAt;
     }
 
-    get deletedAt(): Date | undefined {
+    get deletedAt(): Date | null {
         return this.data.deletedAt;
     }
 

@@ -45,7 +45,7 @@ describe('User - Delete user', () => {
     });
 
     it('Delete user with data not found', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(undefined);
+        sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new DeleteUserCommand();
         param.id = user.id;
 

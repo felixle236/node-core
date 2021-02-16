@@ -39,13 +39,13 @@ export function convertToCurrency(value: number, option): string {
 /**
  * Convert string to boolean.
  */
-export function convertStringToBoolean(val?: string, defaultValue?: boolean): boolean {
+export function convertStringToBoolean(val: string | undefined | null, defaultValue: boolean = false): boolean {
     if (!val)
-        return defaultValue !== undefined ? defaultValue : false;
+        return defaultValue;
 
     switch (val.toLowerCase().trim()) {
     case 'true': case 'yes': case '1': return true;
     case 'false': case 'no': case '0': return false;
-    default: return defaultValue !== undefined ? defaultValue : false;
+    default: return defaultValue;
     }
 }

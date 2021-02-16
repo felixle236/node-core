@@ -1,10 +1,10 @@
-import { {PascalName} } from '../../../../domain/entities/{camelName}/{PascalName}';
+import { {PascalName} } from '../../../../domain/entities/{folder}/{PascalName}';
 
 export class Get{PascalName}ByIdQueryResult {
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: Date | null;
     name: string;
 
     constructor(data: {PascalName}) {

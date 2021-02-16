@@ -14,7 +14,7 @@ export class GetListOnlineStatusByIdsQueryHandler implements IQueryHandler<GetLi
         const onlineStatuses = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
 
         return ids.map((id, index) => {
-            const onlineStatus: {isOnline: boolean, onlineAt?: Date} = onlineStatuses[index] ? JSON.parse(onlineStatuses[index]) : { isOnline: false, onlineAt: undefined };
+            const onlineStatus: {isOnline: boolean, onlineAt: Date | null} = onlineStatuses[index] ? JSON.parse(onlineStatuses[index]) : { isOnline: false, onlineAt: null };
             return new GetListOnlineStatusByIdsQueryResult(id, onlineStatus.isOnline, onlineStatus.onlineAt);
         });
     }

@@ -1,8 +1,8 @@
 /**
  * Convert to start day
  */
-export function convertToStartDay(date: string | Date): Date | undefined {
-    if (!date) return undefined;
+export function convertToStartDay(date: string | Date): Date | null {
+    if (!date) return null;
 
     const d = typeof date === 'string' ? new Date(date) : date;
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -11,8 +11,8 @@ export function convertToStartDay(date: string | Date): Date | undefined {
 /**
  * Convert to end day
  */
-export function convertToEndDay(date: string | Date): Date | undefined {
-    if (!date) return undefined;
+export function convertToEndDay(date: string | Date): Date | null {
+    if (!date) return null;
 
     let d = typeof date === 'string' ? new Date(date) : date;
     d = new Date(d.getFullYear(), d.getMonth(), d.getDate());

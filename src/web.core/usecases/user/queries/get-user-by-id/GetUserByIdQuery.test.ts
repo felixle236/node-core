@@ -54,7 +54,7 @@ describe('User - Get user by id', () => {
     });
 
     it('Get user by id with data not found', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(undefined);
+        sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new GetUserByIdQuery();
         param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;

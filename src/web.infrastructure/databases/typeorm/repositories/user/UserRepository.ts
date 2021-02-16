@@ -3,8 +3,7 @@ import { Brackets, QueryRunner } from 'typeorm';
 import { IDbQueryRunner } from '../../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
 import { User } from '../../../../../web.core/domain/entities/user/User';
 import { UserStatus } from '../../../../../web.core/domain/enums/user/UserStatus';
-import { IUserRepository } from '../../../../../web.core/gateways/repositories/user/IUserRepository';
-import { FindUserQuery } from '../../../../../web.core/usecases/user/queries/find-user/FindUserQuery';
+import { FindUserFilter, IUserRepository } from '../../../../../web.core/gateways/repositories/user/IUserRepository';
 import { UserDb } from '../../entities/user/UserDb';
 import { ROLE_SCHEMA } from '../../schemas/role/RoleSchema';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
@@ -16,11 +15,10 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
         super(UserDb, USER_SCHEMA);
     }
 
-    async findAndCount(param: FindUserQuery): Promise<[User[], number]> {
+    async findAndCount(param: FindUserFilter): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME);
-
-        query = query.where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
+            .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
+            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
 
         if (param.roleIds)
             query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: param.roleIds });
@@ -44,22 +42,22 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
         return [list.map(item => item.toEntity()), count];
     }
 
-    async getById(id: string, queryRunner?: IDbQueryRunner): Promise<User | undefined> {
+    async getById(id: string, queryRunner: IDbQueryRunner | null = null): Promise<User | null> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .whereInIds(id)
             .getOne();
-        return result?.toEntity();
+        return result ? result.toEntity() : null;
     }
 
-    async getByEmail(email: string): Promise<User | undefined> {
+    async getByEmail(email: string): Promise<User | null> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
-        return result?.toEntity();
+        return result ? result.toEntity() : null;
     }
 
-    async checkEmailExist(email: string, queryRunner?: IDbQueryRunner): Promise<boolean> {
+    async checkEmailExist(email: string, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .select(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ID}`)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
@@ -67,12 +65,12 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
         return !!result;
     }
 
-    async getByEmailPassword(email: string, password: string): Promise<User | undefined> {
+    async getByEmailPassword(email: string, password: string): Promise<User | null> {
         const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
             .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.PASSWORD} = :password`, { password })
             .getOne();
-        return result?.toEntity();
+        return result ? result.toEntity() : null;
     }
 }

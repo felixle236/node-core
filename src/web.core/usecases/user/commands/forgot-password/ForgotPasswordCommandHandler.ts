@@ -38,9 +38,8 @@ export class ForgotPasswordCommandHandler implements ICommandHandler<ForgotPassw
         if (!hasSucceed)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        user.forgotKey = data.forgotKey;
-        user.forgotExpire = data.forgotExpire;
-        this._mailService.sendForgotPassword(user);
+        const name = `${user.firstName} ${user.lastName}`;
+        this._mailService.sendForgotPassword(name, user.email, data.forgotKey);
         return hasSucceed;
     }
 }

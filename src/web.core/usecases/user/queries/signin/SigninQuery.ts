@@ -1,6 +1,4 @@
-import { IQuery } from '../../../../domain/common/usecase/interfaces/IQuery';
-
-export class SigninQuery implements IQuery {
+export class SigninQuery {
     email: string;
     password: string;
 }

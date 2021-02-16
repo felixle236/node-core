@@ -147,7 +147,7 @@ describe('User - Signup', () => {
 
     it('Signup with data cannot save', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
-        sandbox.stub(userRepository, 'createGet').resolves(undefined);
+        sandbox.stub(userRepository, 'createGet').resolves(null);
         const param = new SignupCommand();
         param.firstName = 'Test';
         param.lastName = '1';

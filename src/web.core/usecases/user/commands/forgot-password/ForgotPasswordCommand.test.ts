@@ -57,7 +57,7 @@ describe('User - Forgot password', () => {
     });
 
     it('Forgot password with email not found', async () => {
-        sandbox.stub(userRepository, 'getByEmail').resolves(undefined);
+        sandbox.stub(userRepository, 'getByEmail').resolves(null);
         const param = new ForgotPasswordCommand();
         param.email = 'test@localhost.com';
 

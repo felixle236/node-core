@@ -10,7 +10,7 @@ import { IS_DEVELOPMENT, WEB_PORT } from '../configs/Configuration';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class WebService {
-    setup(callback?: any): Server {
+    setup(callback: any = null): Server {
         const authenticator = Container.get(WebAuthenticator);
         const app = express();
 

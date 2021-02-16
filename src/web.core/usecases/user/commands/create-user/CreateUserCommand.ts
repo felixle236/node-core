@@ -1,17 +1,16 @@
-import { ICommand } from '../../../../domain/common/usecase/interfaces/ICommand';
 import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { GenderType } from '../../../../domain/enums/user/GenderType';
 
-export class CreateUserCommand implements ICommand {
+export class CreateUserCommand {
     roleId: RoleId;
     firstName: string;
-    lastName?: string;
+    lastName: string | null;
     email: string;
     password: string;
-    gender?: GenderType;
-    birthday?: string;
-    phone?: string;
-    address?: string;
-    culture?: string;
-    currency?: string;
+    gender: GenderType | null;
+    birthday: string | null;
+    phone: string | null;
+    address: string | null;
+    culture: string | null;
+    currency: string | null;
 }

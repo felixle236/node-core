@@ -29,7 +29,7 @@ export class SigninQueryHandler implements ICommandHandler<SigninQuery, UserAuth
         if (user.status !== UserStatus.ACTIVED)
             throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
 
-        const token = this._jwtAuthService.sign(user);
+        const token = this._jwtAuthService.sign(user.id, user.roleId);
         return new UserAuthenticated(token, user.id, user.roleId);
     }
 }

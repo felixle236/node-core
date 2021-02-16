@@ -8,7 +8,7 @@ import { API_PORT, IS_DEVELOPMENT } from '../configs/Configuration';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class ApiService {
-    setup(callback?: any): Server {
+    setup(callback: any = null): Server {
         const authenticator = Container.get(ApiAuthenticator);
         const options: RoutingControllersOptions = {
             cors: {

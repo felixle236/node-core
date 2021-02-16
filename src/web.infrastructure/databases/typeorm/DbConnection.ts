@@ -14,7 +14,7 @@ export class DbConnection implements IDbConnection {
             throw new SystemError(MessageError.PARAM_REQUIRED, 'key caching');
 
         if (!this._connection.queryResultCache)
-            throw new SystemError(MessageError.NOT_SUPPORTED, 'caching feature');
+            throw new SystemError(MessageError.PARAM_NOT_SUPPORTED, 'caching feature');
 
         await this._connection.queryResultCache.remove([keyCaching]);
     }
@@ -24,8 +24,8 @@ export class DbConnection implements IDbConnection {
         rollback?: (error: Error)=> Promise<void>,
         done?: ()=> Promise<void>,
         isolationLevel?: TransactionIsolationLevel
-    ): Promise<T | undefined> {
-        let result: T | undefined;
+    ): Promise<T | null> {
+        let result: T | null = null;
         let err;
         const query = this._connection.createQueryRunner();
         await query.startTransaction(isolationLevel);
@@ -52,7 +52,7 @@ export class DbConnection implements IDbConnection {
         return result;
     }
 
-    async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' | undefined }): Promise<IDbMigration[]> {
+    async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' }): Promise<IDbMigration[]> {
         return await this._connection.runMigrations(options);
     }
 }

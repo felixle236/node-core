@@ -168,7 +168,7 @@ describe('User - Update user', () => {
     });
 
     it('Update user with data not found', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(undefined);
+        sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new UpdateUserCommand();
         param.id = user.id;
         param.firstName = 'Test';

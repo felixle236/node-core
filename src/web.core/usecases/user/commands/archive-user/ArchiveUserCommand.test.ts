@@ -55,7 +55,7 @@ describe('User - Archive user', () => {
     });
 
     it('Archive user with data not found', async () => {
-        sandbox.stub(userRepository, 'getById').resolves(undefined);
+        sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new ArchiveUserCommand();
         param.roleAuthId = RoleId.SUPER_ADMIN;
         param.id = user.id;

@@ -70,7 +70,7 @@ describe('User - Reset password', () => {
     });
 
     it('Reset password with email not found', async () => {
-        sandbox.stub(userRepository, 'getByEmail').resolves(undefined);
+        sandbox.stub(userRepository, 'getByEmail').resolves(null);
         const param = new ResetPasswordCommand();
         param.email = 'test@localhost.com';
         param.forgotKey = 'key';

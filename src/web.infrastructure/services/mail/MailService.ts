@@ -4,7 +4,6 @@ import { MailSender } from './sender/MailSender';
 import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { UserActivationTemplate } from './templates/UserActivationTemplate';
 import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '../../../configs/Configuration';
-import { IUser } from '../../../web.core/domain/types/user/IUser';
 import { IMailService } from '../../../web.core/gateways/services/IMailService';
 
 @Service('mail.service')
@@ -17,21 +16,21 @@ export class MailService implements IMailService {
         this._generator = new MailGenerator();
     }
 
-    async sendUserActivation(user: IUser): Promise<void> {
-        const template = UserActivationTemplate.getTemplate(user);
+    async sendUserActivation(name: string, email: string, activeKey: string): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(name, email, activeKey);
         const content = this._generator.generateHtmlContent(template);
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, user.email, 'Account Activation', content);
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, 'Account Activation', content);
     }
 
-    async resendUserActivation(user: IUser): Promise<void> {
-        const template = UserActivationTemplate.getTemplate(user);
+    async resendUserActivation(name: string, email: string, activeKey: string): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(name, email, activeKey);
         const content = this._generator.generateHtmlContent(template);
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, user.email, 'Re-Sending Account Activation', content);
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, 'Re-Sending Account Activation', content);
     }
 
-    async sendForgotPassword(user: IUser): Promise<void> {
-        const template = ForgotPasswordTemplate.getTemplate(user);
+    async sendForgotPassword(name: string, email: string, forgotKey: string): Promise<void> {
+        const template = ForgotPasswordTemplate.getTemplate(name, email, forgotKey);
         const content = this._generator.generateHtmlContent(template);
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, user.email, 'Forgot Your Password', content);
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, 'Forgot Your Password', content);
     }
 }

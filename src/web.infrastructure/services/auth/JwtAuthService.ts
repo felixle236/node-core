@@ -1,16 +1,15 @@
 import * as jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SECRET_OR_PUBLIC_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '../../../configs/Configuration';
-import { IUser } from '../../../web.core/domain/types/user/IUser';
 import { IJwtAuthService, IJwtPayloadExtend } from '../../../web.core/gateways/services/IJwtAuthService';
 
 @Service('jwt.auth.service')
 export class JwtAuthService implements IJwtAuthService {
-    sign(user: IUser): string {
+    sign(userId: string, roleId: string): string {
         return jwt.sign({
-            roleId: user.roleId
+            roleId
         }, AUTH_SECRET_OR_PRIVATE_KEY, {
-            subject: user.id,
+            subject: userId,
             expiresIn: 24 * 60 * 60,
             issuer: PROJECT_NAME,
             audience: `${PROTOTYPE}://${DOMAIN}`,

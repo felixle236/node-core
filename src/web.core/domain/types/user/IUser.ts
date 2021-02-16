@@ -9,22 +9,22 @@ export interface IUser extends IEntity {
     roleId: RoleId;
     status: UserStatus;
     firstName: string;
-    lastName?: string;
+    lastName: string | null;
     email: string;
     password: string;
-    avatar?: string;
-    gender?: GenderType;
-    birthday?: Date;
-    phone?: string;
-    address?: string;
-    culture?: string;
-    currency?: string;
-    activeKey?: string;
-    activeExpire?: Date;
-    activedAt?: Date;
-    archivedAt?: Date;
-    forgotKey?: string;
-    forgotExpire?: Date;
+    avatar: string | null;
+    gender: GenderType | null;
+    birthday: Date | null;
+    phone: string | null;
+    address: string | null;
+    culture: string | null;
+    currency: string | null;
+    activeKey: string | null;
+    activeExpire: Date | null;
+    activedAt: Date | null;
+    archivedAt: Date | null;
+    forgotKey: string | null;
+    forgotExpire: Date | null;
 
-    role?: IRole;
+    role: IRole | null;
 }

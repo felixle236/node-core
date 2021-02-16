@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { Get{PascalName}ByIdQuery } from './Get{PascalName}ByIdQuery';
 import { Get{PascalName}ByIdQueryResult } from './Get{PascalName}ByIdQueryResult';
 import { IQueryHandler } from '../../../../domain/common/usecase/interfaces/IQueryHandler';
-import { I{PascalName}Repository } from '../../../../gateways/repositories/{camelName}/I{PascalName}Repository';
+import { I{PascalName}Repository } from '../../../../gateways/repositories/{folder}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
@@ -17,7 +17,7 @@ export class Get{PascalName}ByIdQueryHandler implements IQueryHandler<Get{Pascal
 
         const {camelName} = await this._{camelName}Repository.getById(param.id);
         if (!{camelName})
-            throw new SystemError(MessageError.DATA_NOT_FOUND);
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
         return new Get{PascalName}ByIdQueryResult({camelName});
     }

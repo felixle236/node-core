@@ -301,7 +301,9 @@ We should define message error into `src\web.core\domain\common\exceptions\messa
 ```
 static SOMETHING_WRONG = new ErrorObject(ErrorCode.SOMETHING_WRONG, 'Something went wrong!');
 
-static NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
+static OTHER = new ErrorObject(ErrorCode.OTHER, '{0}');
+
+static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
 
 static ACCESS_DENIED = new ErrorObject(ErrorCode.ACCESS_DENIED, 'Access is denied!');
 
