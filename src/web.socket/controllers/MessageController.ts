@@ -3,15 +3,15 @@ import { Service } from 'typedi';
 import { SocketNamespace } from '../../web.core/domain/common/socket/SocketNamespace';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 import { RoleId } from '../../web.core/domain/enums/role/RoleId';
-import { JwtAuthUserQuery } from '../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQuery';
-import { JwtAuthUserQueryHandler } from '../../web.core/usecases/auth/queries/jwt-auth-user/JwtAuthUserQueryHandler';
+import { GetUserAuthByJwtQuery } from '../../web.core/usecases/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQuery';
+import { GetUserAuthByJwtQueryHandler } from '../../web.core/usecases/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
 import { UpdateUserOnlineStatusCommand } from '../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommand';
 import { UpdateUserOnlineStatusCommandHandler } from '../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 
 @Service()
 export default class MessageController {
     constructor(
-        private readonly _jwtAuthUserQueryHandler: JwtAuthUserQueryHandler,
+        private readonly _getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler,
         private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
     ) {}
 
@@ -21,9 +21,9 @@ export default class MessageController {
         // Ensure the socket is authorized
         nsp.use(async (socket: Socket, next: Function) => {
             try {
-                const param = new JwtAuthUserQuery();
+                const param = new GetUserAuthByJwtQuery();
                 param.token = (socket.handshake.auth as {token: string}).token;
-                const userAuth = await this._jwtAuthUserQueryHandler.handle(param);
+                const userAuth = await this._getUserAuthByJwtQueryHandler.handle(param);
                 (socket as any).userAuth = userAuth;
                 next();
             }

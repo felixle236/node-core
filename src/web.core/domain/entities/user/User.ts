@@ -1,6 +1,5 @@
 import * as validator from 'class-validator';
 import { STORAGE_URL } from '../../../../configs/Configuration';
-import { hashMD5 } from '../../../../libs/crypt';
 import { MessageError } from '../../common/exceptions/message/MessageError';
 import { SystemError } from '../../common/exceptions/SystemError';
 import { RoleId } from '../../enums/role/RoleId';
@@ -91,24 +90,6 @@ export class User extends BaseEntity<IUser> implements IUser {
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120);
 
         this.data.email = val;
-    }
-
-    get password(): string {
-        return this.data.password;
-    }
-
-    set password(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
-
-        if (val.length > 20)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20);
-
-        const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{6,20}/;
-        if (!regExp.test(val))
-            throw new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20);
-
-        this.data.password = this._hashPassword(val);
     }
 
     get avatar(): string | null {
@@ -245,37 +226,13 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.archivedAt = val;
     }
 
-    get forgotKey(): string | null {
-        return this.data.forgotKey;
-    }
-
-    set forgotKey(val: string | null) {
-        this.data.forgotKey = val;
-    }
-
-    get forgotExpire(): Date | null {
-        return this.data.forgotExpire;
-    }
-
-    set forgotExpire(val: Date | null) {
-        this.data.forgotExpire = val;
-    }
-
     /* Relationship */
 
     get role(): Role | null {
-        return this.data.role && new Role(this.data.role);
+        return this.data.role ? new Role(this.data.role) : null;
     }
 
     /* handlers */
-
-    private _hashPassword(password: string): string {
-        return hashMD5(password, '$$88');
-    }
-
-    comparePassword(password: string): boolean {
-        return this.password === this._hashPassword(password);
-    }
 
     static validateAvatarFile(file: Express.Multer.File): void {
         const maxSize = 1024 * 100; // 100KB

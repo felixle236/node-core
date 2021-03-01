@@ -23,6 +23,7 @@ Container.set('user.repository', {
 Container.set('storage.service', {
     async upload() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const storageService = Container.get<IStorageService>('storage.service');
 const uploadMyAvatarCommandHandler = Container.get(UploadMyAvatarCommandHandler);
@@ -37,7 +38,6 @@ describe('User - Update my avatar', () => {
 
     beforeEach(() => {
         user = generateUser();
-        user.password = 'Nodecore@123';
     });
 
     afterEach(() => {

@@ -11,6 +11,7 @@ import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/u
 Container.set('user.online.status.repository', {
     async getListOnlineStatusByIds() {}
 });
+
 const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user.online.status.repository');
 const getListOnlineStatusByIdsQueryHandler = Container.get(GetListOnlineStatusByIdsQueryHandler);
 

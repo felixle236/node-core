@@ -6,4 +6,7 @@ export interface IDbContext {
 
     createConnection(): Promise<IDbConnection>;
     createConnection(connectionName: string): Promise<IDbConnection>;
+
+    destroyConnection(): Promise<void>;
+    destroyConnection(connectionName: string): Promise<void>;
 }

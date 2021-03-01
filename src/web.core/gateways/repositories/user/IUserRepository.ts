@@ -16,8 +16,6 @@ export interface IUserRepository extends IBaseRepository<User, string> {
 
     getByEmail(email: string): Promise<User | null>;
 
-    getByEmailPassword(email: string, password: string): Promise<User | null>;
-
     checkEmailExist(email: string): Promise<boolean>;
     checkEmailExist(email: string, queryRunner: IDbQueryRunner): Promise<boolean>;
 }

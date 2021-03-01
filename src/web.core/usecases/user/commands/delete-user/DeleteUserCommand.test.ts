@@ -15,8 +15,9 @@ import { IUserRepository } from '../../../../gateways/repositories/user/IUserRep
 
 Container.set('user.repository', {
     async getById() {},
-    async delete() {}
+    async softDelete() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const deleteUserCommandHandler = Container.get(DeleteUserCommandHandler);
 
@@ -55,7 +56,7 @@ describe('User - Delete user', () => {
 
     it('Delete user with data cannot save', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
-        sandbox.stub(userRepository, 'delete').resolves(false);
+        sandbox.stub(userRepository, 'softDelete').resolves(false);
         const param = new DeleteUserCommand();
         param.id = user.id;
 
@@ -65,7 +66,7 @@ describe('User - Delete user', () => {
 
     it('Delete user successfully', async () => {
         sandbox.stub(userRepository, 'getById').resolves(user);
-        sandbox.stub(userRepository, 'delete').resolves(true);
+        sandbox.stub(userRepository, 'softDelete').resolves(true);
         const param = new DeleteUserCommand();
         param.id = user.id;
 

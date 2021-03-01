@@ -18,6 +18,7 @@ Container.set('role.repository', {
     async update() {},
     async clearCaching() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const updateRoleCommandHandler = Container.get(UpdateRoleCommandHandler);
 

@@ -13,6 +13,7 @@ import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/u
 Container.set('user.online.status.repository', {
     async updateUserOnlineStatus() {}
 });
+
 const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user.online.status.repository');
 const updateUserOnlineStatusCommandHandler = Container.get(UpdateUserOnlineStatusCommandHandler);
 

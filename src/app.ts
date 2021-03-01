@@ -4,11 +4,13 @@ import * as os from 'os';
 import { Container } from 'typedi';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, IS_DEVELOPMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from './configs/Configuration';
 import { ApiService } from './web.api/ApiService';
+import { ILogService } from './web.core/gateways/services/ILogService';
 import { RedisContext } from './web.infrastructure/databases/redis/RedisContext';
 import { DbContext } from './web.infrastructure/databases/typeorm/DbContext';
 import { SocketService } from './web.socket/SocketService';
 import { WebService } from './web.ui/WebService';
 
+const logService = Container.get<ILogService>('log.service');
 const dbContext = Container.get<DbContext>('db.context');
 const redisContext = Container.get<RedisContext>('redis.context');
 
@@ -24,53 +26,58 @@ const startApplication = async () => {
 };
 
 const runMigrations = async () => {
-    console.log('\nRun migrations.\n');
+    logService.info('Run migrations...');
     const conn = dbContext.getConnection();
     const migrations = await conn.runMigrations();
     if (!migrations.length)
-        console.log('\nNot found new migration.\n');
-    migrations.forEach(migration => console.log('\nMigrated: ', '\x1b[32m', migration.name, '\x1b[0m', '\n'));
+        logService.info('Not found new migration.');
+    migrations.forEach(migration => logService.info('Migrated: \x1b[32m' + migration.name + '\x1b[0m\n'));
 };
 
 const showServiceStatus = () => {
     if (ENABLE_API_SERVICE)
-        console.log('Api service is ready', '\x1b[32m', `http://localhost:${API_PORT}`, '\x1b[0m', !ENABLE_WEB_SERVICE ? '\n' : '');
+        logService.info(`Api service is ready \x1b[32m http://localhost:${API_PORT} \x1b[0m`);
     if (ENABLE_WEB_SERVICE)
-        console.log('Web service is ready', '\x1b[32m', `http://localhost:${WEB_PORT}`, '\x1b[0m', !ENABLE_SOCKET_SERVICE ? '\n' : '');
+        logService.info(`Web service is ready \x1b[32m http://localhost:${WEB_PORT} \x1b[0m`);
     if (ENABLE_SOCKET_SERVICE)
-        console.log('Socket service is ready', '\x1b[32m', `http://localhost:${SOCKET_PORT}`, '\x1b[0m', '\n');
+        logService.info(`Socket service is ready \x1b[32m http://localhost:${SOCKET_PORT} \x1b[0m`);
 };
 
-if (IS_DEVELOPMENT) {
-    console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode....\n');
+const start = async () => {
+    if (IS_DEVELOPMENT) {
+        logService.info('Starting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode...');
 
-    startApplication().then(async () => {
+        await startApplication();
         await runMigrations();
         showServiceStatus();
-    });
-}
-else {
-    if (cluster.isMaster) {
-        console.log('\n\nStarting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m....\n');
-        showServiceStatus();
-
-        const numCPUs = os.cpus().length;
-        // Fork workers.
-        for (let i = 0; i < numCPUs; i++)
-            cluster.fork();
-
-        cluster.on('exit', worker => {
-            cluster.fork();
-            console.log(`Worker ${worker.process.pid} is died.`);
-        });
-        console.log(`Master ${process.pid} is started.`);
     }
     else {
-        startApplication().then(() => {
-            console.log(`Worker ${process.pid} is started.`);
-        }).catch(error => {
-            console.log('\x1b[31m', error.message, '\x1b[0m');
-            setTimeout(() => process.exit(), 2000);
-        });
+        if (cluster.isMaster) {
+            logService.info('Starting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m...');
+            showServiceStatus();
+
+            const numCPUs = os.cpus().length;
+            // Fork workers.
+            for (let i = 0; i < numCPUs; i++)
+                cluster.fork();
+
+            cluster.on('exit', worker => {
+                cluster.fork();
+                logService.error(`Worker ${worker.process.pid} is died.`);
+            });
+            logService.info(`Master ${process.pid} is started.`);
+        }
+        else {
+            try {
+                await startApplication();
+                logService.info(`Worker ${process.pid} is started.`);
+            }
+            catch (error) {
+                logService.error('\x1b[31m', error.message, '\x1b[0m');
+                await dbContext.destroyConnection();
+                setTimeout(() => process.exit(), 2000);
+            }
+        }
     }
-}
+};
+start();

@@ -18,6 +18,7 @@ import { IUserRepository } from '../../../../gateways/repositories/user/IUserRep
 Container.set('user.repository', {
     async getById() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const getUserByIdQueryHandler = Container.get(GetUserByIdQueryHandler);
 

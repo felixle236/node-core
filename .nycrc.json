@@ -12,7 +12,7 @@
     ],
     "exclude": [
         "src/**/*.test.ts",
-        "src/**/Filter.ts"
+        "src/web.core/domain/common/**/*.ts"
     ],
     "extension": [
         ".ts"

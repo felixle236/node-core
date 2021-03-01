@@ -18,6 +18,7 @@ Container.set('user.repository', {
     async getByEmail() {},
     async update() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const activeUserCommandHandler = Container.get(ActiveUserCommandHandler);
 

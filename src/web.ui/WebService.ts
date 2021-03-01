@@ -7,10 +7,12 @@ import { RoutingControllersOptions } from 'routing-controllers';
 import { Container } from 'typedi';
 import { WebAuthenticator } from './WebAuthenticator';
 import { IS_DEVELOPMENT, WEB_PORT } from '../configs/Configuration';
+import { ILogService } from '../web.core/gateways/services/ILogService';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class WebService {
-    setup(callback: any = null): Server {
+    async setup(callback?: any): Promise<Server> {
+        const logger = Container.get<ILogService>('log.service');
         const authenticator = Container.get(WebAuthenticator);
         const app = express();
 
@@ -37,17 +39,22 @@ export class WebService {
             authorizationChecker: authenticator.authorizationHttpChecker,
             currentUserChecker: authenticator.userAuthChecker
         };
-        const httpServer = new HttpServer(options, app);
+
+        const loggingMiddleware = await logger.createMiddleware();
+        app.use(loggingMiddleware);
+
+        const httpServer = new HttpServer();
+        httpServer.createApp(options, app);
 
         // catch 404 and forward to error handler
-        httpServer.app.use(function(_req, res) {
+        app.use(function(_req, res) {
             if (!res.writableEnded) {
                 res.status(404);
                 res.render('404');
             }
         });
 
-        httpServer.app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
+        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         return httpServer.start(WEB_PORT, callback);
     }
 }

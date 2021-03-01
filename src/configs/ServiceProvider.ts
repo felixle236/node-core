@@ -1,6 +1,6 @@
 export enum LogProvider {
-    CONSOLE = 1,
-    LOG_FILE = 2
+    WINSTON = 1,
+    GOOGLE_WINSTON = 2
 }
 
 export enum StorageProvider {

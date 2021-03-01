@@ -1,34 +1,30 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
-import { Inject } from 'typedi';
 import { AccessDeniedError } from '../../web.core/domain/common/exceptions/AccessDeniedError';
 import { SystemError } from '../../web.core/domain/common/exceptions/SystemError';
-import { ILogService } from '../../web.core/gateways/services/ILogService';
+import { IRequest } from '../../web.core/domain/common/IRequest';
 
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
-    @Inject('log.service')
-    private readonly _logService: ILogService;
-
-    error(err: SystemError, req: Request, res: Response) {
-        const stack = err.stack;
-
+    error(err: SystemError, req: IRequest, res: Response) {
         if (err.httpCode === 403)
             err = new AccessDeniedError();
 
         // Handle internal server error.
         if (!err.code || !err.httpCode) {
-            this._logService.writeErrorLog({
-                type: 'Request',
-                method: req.method,
-                url: req.originalUrl,
-                query: req.query,
-                body: req.body,
-                message: err.message,
+            req.log.error(err.message, {
+                httpRequest: {
+                    requestMethod: req.method,
+                    requestUrl: req.originalUrl,
+                    requestSize: req.get('content-length') ? Number(req.get('content-length')) : 0,
+                    userAgent: req.get('user-agent'),
+                    remoteIp: req.get('x-forwarded-for') || req.socket.remoteAddress,
+                    referer: req.get('referer'),
+                    protocol: req.protocol
+                },
                 stack: err.stack
             });
             err = new SystemError();
-            err.stack = stack;
         }
 
         res.status(err.httpCode);

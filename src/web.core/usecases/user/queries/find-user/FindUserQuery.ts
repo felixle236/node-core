@@ -6,7 +6,7 @@ import { UserStatus } from '../../../../domain/enums/user/UserStatus';
 export class FindUserQuery extends QueryPagination {
     roleAuthId: RoleId;
     keyword: string | null;
-    roleIds: RoleId[] | null;
+    roleIds: string[] | null;
     status: UserStatus | null;
 
     @IsBoolean()

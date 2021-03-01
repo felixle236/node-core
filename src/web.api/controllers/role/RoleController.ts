@@ -1,4 +1,5 @@
 import { Authorized, Body, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
@@ -32,30 +33,45 @@ export class RoleController {
 
     @Get('/')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Find roles.'
+    })
     async find(@QueryParams() param: FindRoleQuery): Promise<PaginationResult<FindRoleQueryResult>> {
         return await this._findRoleQueryHandler.handle(param);
     }
 
     @Get('/common')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Find roles for using the dropdown list.'
+    })
     async findCommon(@QueryParams() param: FindRoleCommonQuery): Promise<PaginationResult<FindRoleCommonQueryResult>> {
         return await this._findRoleCommonQueryHandler.handle(param);
     }
 
     @Get('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Get role by id.'
+    })
     async getById(@Params() param: GetRoleByIdQuery): Promise<GetRoleByIdQueryResult> {
         return await this._getRoleByIdQueryHandler.handle(param);
     }
 
     @Post('/')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Create role.'
+    })
     async create(@Body() param: CreateRoleCommand): Promise<string> {
         return await this._createRoleCommandHandler.handle(param);
     }
 
     @Put('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Update role.'
+    })
     async update(@Param('id') id: string, @Body() param: UpdateRoleCommand): Promise<boolean> {
         param.id = id;
         return await this._updateRoleCommandHandler.handle(param);
@@ -63,6 +79,9 @@ export class RoleController {
 
     @Delete('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
+    @OpenAPI({
+        description: 'Delete role.'
+    })
     async delete(@Params() param: DeleteRoleCommand): Promise<boolean> {
         return await this._deleteRoleCommandHandler.handle(param);
     }

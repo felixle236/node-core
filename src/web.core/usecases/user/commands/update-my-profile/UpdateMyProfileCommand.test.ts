@@ -18,6 +18,7 @@ Container.set('user.repository', {
     async getById() {},
     async update() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const updateMyProfileCommandHandler = Container.get(UpdateMyProfileCommandHandler);
 
@@ -31,7 +32,6 @@ describe('User - Update my profile', () => {
 
     beforeEach(() => {
         user = generateUser();
-        user.password = 'Nodecore@123';
     });
 
     afterEach(() => {

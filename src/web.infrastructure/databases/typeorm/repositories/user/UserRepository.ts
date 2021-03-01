@@ -64,13 +64,4 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
             .getOne();
         return !!result;
     }
-
-    async getByEmailPassword(email: string, password: string): Promise<User | null> {
-        const result = await this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
-            .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
-            .where(`LOWER(${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
-            .andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.PASSWORD} = :password`, { password })
-            .getOne();
-        return result ? result.toEntity() : null;
-    }
 }

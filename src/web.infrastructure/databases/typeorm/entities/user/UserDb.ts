@@ -1,12 +1,14 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../../../../web.core/domain/entities/user/User';
 import { RoleId } from '../../../../../web.core/domain/enums/role/RoleId';
 import { GenderType } from '../../../../../web.core/domain/enums/user/GenderType';
 import { UserStatus } from '../../../../../web.core/domain/enums/user/UserStatus';
+import { IAuth } from '../../../../../web.core/domain/types/auth/IAuth';
 import { IRole } from '../../../../../web.core/domain/types/role/IRole';
 import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 import { DateTransformer } from '../../transformers/DateTransformer';
+import { AuthDb } from '../auth/AuthDb';
 import { BaseDbEntity } from '../base/BaseDBEntity';
 import { RoleDb } from '../role/RoleDb';
 
@@ -30,9 +32,6 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('varchar', { name: USER_SCHEMA.COLUMNS.EMAIL, length: 120 })
     @Index({ unique: true, where: UserDb.getIndexFilterDeletedColumn() })
     email: string;
-
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.PASSWORD, length: 32 })
-    password: string;
 
     @Column('varchar', { name: USER_SCHEMA.COLUMNS.AVATAR, length: 200, nullable: true })
     avatar: string | null;
@@ -67,17 +66,14 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
     archivedAt: Date | null;
 
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.FORGOT_KEY, length: 64, nullable: true })
-    forgotKey: string | null;
-
-    @Column('timestamptz', { name: USER_SCHEMA.COLUMNS.FORGOT_EXPIRE, nullable: true })
-    forgotExpire: Date | null;
-
     /* Relationship */
 
     @ManyToOne(() => RoleDb, role => role.users)
     @JoinColumn({ name: USER_SCHEMA.COLUMNS.ROLE_ID })
     role: IRole | null;
+
+    @OneToMany(() => AuthDb, auth => auth.user)
+    auths: IAuth[] | null;
 
     /* handlers */
 

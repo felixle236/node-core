@@ -13,6 +13,7 @@ import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRep
 Container.set('role.repository', {
     async findCommonAndCount() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const findRoleCommonQueryHandler = Container.get(FindRoleCommonQueryHandler);
 

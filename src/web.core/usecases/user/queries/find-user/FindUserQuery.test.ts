@@ -19,6 +19,7 @@ import { IUserRepository } from '../../../../gateways/repositories/user/IUserRep
 Container.set('user.repository', {
     async findAndCount() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const findUserQueryHandler = Container.get(FindUserQueryHandler);
 

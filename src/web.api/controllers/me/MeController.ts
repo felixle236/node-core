@@ -1,9 +1,10 @@
 import * as multer from 'multer';
-import { Authorized, Body, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
+import { Authorized, Body, BodyParam, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
-import { UpdateMyPasswordCommand } from '../../../web.core/usecases/user/commands/update-my-password/UpdateMyPasswordCommand';
-import { UpdateMyPasswordCommandHandler } from '../../../web.core/usecases/user/commands/update-my-password/UpdateMyPasswordCommandHandler';
+import { UpdateMyPasswordByEmailCommand } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommand';
+import { UpdateMyPasswordByEmailCommandHandler } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandHandler';
 import { UpdateMyProfileCommand } from '../../../web.core/usecases/user/commands/update-my-profile/UpdateMyProfileCommand';
 import { UpdateMyProfileCommandHandler } from '../../../web.core/usecases/user/commands/update-my-profile/UpdateMyProfileCommandHandler';
 import { UploadMyAvatarCommand } from '../../../web.core/usecases/user/commands/upload-my-avatar/UploadMyAvatarCommand';
@@ -18,12 +19,15 @@ export class MeController {
     constructor(
         private readonly _getMyProfileQueryHandler: GetMyProfileQueryHandler,
         private readonly _updateMyProfileCommandHandler: UpdateMyProfileCommandHandler,
-        private readonly _updateMyPasswordCommandHandler: UpdateMyPasswordCommandHandler,
+        private readonly _updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler,
         private readonly _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
     ) {}
 
     @Get('/')
     @Authorized()
+    @OpenAPI({
+        description: 'Get my profile information.'
+    })
     async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileQueryResult> {
         const param = new GetMyProfileQuery();
         param.id = userAuth.userId;
@@ -33,6 +37,9 @@ export class MeController {
 
     @Put('/')
     @Authorized()
+    @OpenAPI({
+        description: 'Update my profile information.'
+    })
     async updateMyProfile(@Body() param: UpdateMyProfileCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
         param.userAuthId = userAuth.userId;
         return await this._updateMyProfileCommandHandler.handle(param);
@@ -40,13 +47,23 @@ export class MeController {
 
     @Patch('/password')
     @Authorized()
-    async updateMyPassword(@Body() param: UpdateMyPasswordCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+    @OpenAPI({
+        description: 'Update my password.'
+    })
+    async updateMyPassword(@BodyParam('password') password: string, @BodyParam('newPassword') newPassword: string, @CurrentUser() userAuth: UserAuthenticated) {
+        const param = new UpdateMyPasswordByEmailCommand();
         param.userAuthId = userAuth.userId;
-        return await this._updateMyPasswordCommandHandler.handle(param);
+        param.oldPassword = password;
+        param.password = newPassword;
+
+        return await this._updateMyPasswordByEmailCommandHandler.handle(param);
     }
 
     @Post('/avatar')
     @Authorized()
+    @OpenAPI({
+        description: 'Upload my avatar.'
+    })
     async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage: multer.memoryStorage() } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
         const param = new UploadMyAvatarCommand();
         param.userAuthId = userAuth.userId;

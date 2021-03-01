@@ -16,6 +16,7 @@ import { IRole } from '../../../../domain/types/role/IRole';
 import { IUser } from '../../../../domain/types/user/IUser';
 import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRepository';
 import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
+import { CreateAuthByEmailCommandHandler } from '../../../auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 
 Container.set('role.repository', {
     async getById() {}
@@ -24,9 +25,11 @@ Container.set('user.repository', {
     async checkEmailExist() {},
     async create() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const userRepository = Container.get<IUserRepository>('user.repository');
 const createUserCommandHandler = Container.get(CreateUserCommandHandler);
+const createAuthByEmailCommandHandler = Container.get(CreateAuthByEmailCommandHandler);
 
 const roleData = { id: RoleId.SUPER_ADMIN, name: 'Role 2' } as IRole;
 const generateUser = () => {
@@ -49,7 +52,7 @@ describe('User - Create user', () => {
         const param = new CreateUserCommand();
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'role id'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'role'));
     });
 
     it('Create user with role is invalid', async () => {
@@ -57,7 +60,7 @@ describe('User - Create user', () => {
         param.roleId = 'test' as RoleId;
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_INVALID, 'role id'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_INVALID, 'role'));
     });
 
     it('Create user without first name', async () => {
@@ -117,41 +120,6 @@ describe('User - Create user', () => {
 
         const result = await createUserCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 120));
-    });
-
-    it('Create user without password', async () => {
-        const param = new CreateUserCommand();
-        param.roleId = user.roleId;
-        param.firstName = 'Test';
-        param.lastName = '1';
-        param.email = 'test@localhost.com';
-
-        const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'password'));
-    });
-
-    it('Create user with the length of password greater than 20 characters', async () => {
-        const param = new CreateUserCommand();
-        param.roleId = user.roleId;
-        param.firstName = 'Test';
-        param.lastName = '1';
-        param.email = 'test@localhost.com';
-        param.password = 'This is the password with length greater than 20 characters!';
-
-        const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20));
-    });
-
-    it('Create user with password is not secure', async () => {
-        const param = new CreateUserCommand();
-        param.roleId = user.roleId;
-        param.firstName = 'Test';
-        param.lastName = '1';
-        param.email = 'test@localhost.com';
-        param.password = '123456';
-
-        const result = await createUserCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20));
     });
 
     it('Create user with gender is invalid', async () => {
@@ -275,7 +243,7 @@ describe('User - Create user', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_EXISTED, 'email'));
     });
 
-    it('Create user with role not found', async () => {
+    it('Create user with role is not exist', async () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
         sandbox.stub(roleRepository, 'getById').resolves(null);
         const param = new CreateUserCommand();
@@ -308,6 +276,7 @@ describe('User - Create user', () => {
         sandbox.stub(userRepository, 'checkEmailExist').resolves(false);
         sandbox.stub(roleRepository, 'getById').resolves(user.role);
         sandbox.stub(userRepository, 'create').resolves(user.id);
+        sandbox.stub(createAuthByEmailCommandHandler, 'handle').resolves();
         const param = new CreateUserCommand();
         param.roleId = user.roleId;
         param.firstName = 'Test';

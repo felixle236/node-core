@@ -34,8 +34,8 @@ export class FindUserQueryHandler implements IQueryHandler<FindUserQuery, Pagina
         return new PaginationResult(list, count, param.skip, param.limit);
     }
 
-    private _filterRolePermissions(roleAuthId: RoleId, roleIds: RoleId[] | null): RoleId[] {
-        const limitRoleIds: RoleId[] = [];
+    private _filterRolePermissions(roleAuthId: RoleId, roleIds: string[] | null): string[] {
+        const limitRoleIds: string[] = [];
 
         if (roleAuthId === RoleId.SUPER_ADMIN)
             limitRoleIds.push(RoleId.MANAGER, RoleId.CLIENT);

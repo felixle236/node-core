@@ -4,6 +4,8 @@ import { BulkActionResult } from '../../../web.core/domain/common/usecase/BulkAc
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
+import { ActiveUserCommand } from '../../../web.core/usecases/user/commands/active-user/ActiveUserCommand';
+import { ActiveUserCommandHandler } from '../../../web.core/usecases/user/commands/active-user/ActiveUserCommandHandler';
 import { ArchiveUserCommand } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommand';
 import { ArchiveUserCommandHandler } from '../../../web.core/usecases/user/commands/archive-user/ArchiveUserCommandHandler';
 import { CreateDummyUserCommand, DummyUser } from '../../../web.core/usecases/user/commands/create-dummy-user/CreateDummyUserCommand';
@@ -12,6 +14,10 @@ import { CreateUserCommand } from '../../../web.core/usecases/user/commands/crea
 import { CreateUserCommandHandler } from '../../../web.core/usecases/user/commands/create-user/CreateUserCommandHandler';
 import { DeleteUserCommand } from '../../../web.core/usecases/user/commands/delete-user/DeleteUserCommand';
 import { DeleteUserCommandHandler } from '../../../web.core/usecases/user/commands/delete-user/DeleteUserCommandHandler';
+import { RegisterUserCommand } from '../../../web.core/usecases/user/commands/register-user/RegisterUserCommand';
+import { RegisterUserCommandHandler } from '../../../web.core/usecases/user/commands/register-user/RegisterUserCommandHandler';
+import { ResendActivationCommand } from '../../../web.core/usecases/user/commands/resend-activation/ResendActivationCommand';
+import { ResendActivationCommandHandler } from '../../../web.core/usecases/user/commands/resend-activation/ResendActivationCommandHandler';
 import { UpdateUserCommand } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommand';
 import { UpdateUserCommandHandler } from '../../../web.core/usecases/user/commands/update-user/UpdateUserCommandHandler';
 import { FindUserQuery } from '../../../web.core/usecases/user/queries/find-user/FindUserQuery';
@@ -31,6 +37,9 @@ export class UserController {
         private readonly _findUserQueryHandler: FindUserQueryHandler,
         private readonly _getUserByIdQueryHandler: GetUserByIdQueryHandler,
         private readonly _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler,
+        private readonly _registerUserCommandHandler: RegisterUserCommandHandler,
+        private readonly _activeUserCommandHandler: ActiveUserCommandHandler,
+        private readonly _resendActivationCommandHandler: ResendActivationCommandHandler,
         private readonly _createUserCommandHandler: CreateUserCommandHandler,
         private readonly _updateUserCommandHandler: UpdateUserCommandHandler,
         private readonly _archiveUserCommandHandler: ArchiveUserCommandHandler,
@@ -40,7 +49,7 @@ export class UserController {
 
     @Get('/')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
-    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('roleId') roleId: RoleId | null): Promise<PaginationResult<FindUserQueryResult>> {
+    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('role_id') roleId?: string): Promise<PaginationResult<FindUserQueryResult>> {
         param.roleAuthId = userAuth.roleId;
         param.roleIds = roleId ? [roleId] : [];
         return await this._findUserQueryHandler.handle(param);
@@ -57,6 +66,21 @@ export class UserController {
     @Authorized()
     async getListOnlineStatusByIds(@Body() param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsQueryResult[]> {
         return await this._getListOnlineStatusByIdsQueryHandler.handle(param);
+    }
+
+    @Post('/register')
+    async register(@Body() param: RegisterUserCommand): Promise<boolean> {
+        return await this._registerUserCommandHandler.handle(param);
+    }
+
+    @Post('/active')
+    async active(@Body() param: ActiveUserCommand): Promise<boolean> {
+        return await this._activeUserCommandHandler.handle(param);
+    }
+
+    @Post('/resend-activation')
+    async resendActivation(@Body() param: ResendActivationCommand): Promise<boolean> {
+        return await this._resendActivationCommandHandler.handle(param);
     }
 
     @Post('/')

@@ -1,10 +1,20 @@
+import { NextFunction, Request, Response } from 'express';
+
 export interface ILogService {
-    writeLog(content: string): Promise<void>;
-    writeLog(content: object): Promise<void>;
+    info(content: string): void;
+    info(content: Object): void;
+    info(content: string, meta: any): void;
+    info(content: string, ...meta: any[]): void;
 
-    writeWarningLog(content: string): Promise<void>;
-    writeWarningLog(content: object): Promise<void>;
+    warn(content: string): void;
+    warn(content: Object): void;
+    warn(content: string, meta: any): void;
+    warn(content: string, ...meta: any[]): void;
 
-    writeErrorLog(content: string): Promise<void>;
-    writeErrorLog(content: object): Promise<void>;
+    error(content: string): void;
+    error(content: Object): void;
+    error(content: string, meta: any): void;
+    error(content: string, ...meta: any[]): void;
+
+    createMiddleware(): Promise<(req: Request, res: Response, next: NextFunction)=> void>;
 }

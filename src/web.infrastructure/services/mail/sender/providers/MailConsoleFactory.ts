@@ -1,6 +1,10 @@
+import Container from 'typedi';
+import { ILogService } from '../../../../../web.core/gateways/services/ILogService';
 import { IMailProvider } from '../interfaces/IMailProvider';
 
 export class MailConsoleFactory implements IMailProvider {
+    private readonly _logService = Container.get<ILogService>('log.service');
+
     async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
         const data = {
             senderName,
@@ -9,7 +13,7 @@ export class MailConsoleFactory implements IMailProvider {
             subject,
             content
         };
-        console.log('MailService.send', data);
+        this._logService.info('MailService.send', data);
         return data;
     }
 
@@ -21,7 +25,7 @@ export class MailConsoleFactory implements IMailProvider {
             subject,
             htmlContent
         };
-        console.log('MailService.sendHtml', data);
+        this._logService.info('MailService.sendHtml', data);
         return data;
     }
 }

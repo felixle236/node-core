@@ -17,6 +17,7 @@ Container.set('role.repository', {
     async create() {},
     async clearCaching() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const createRoleCommandHandler = Container.get(CreateRoleCommandHandler);
 

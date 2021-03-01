@@ -14,9 +14,10 @@ import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRep
 
 Container.set('role.repository', {
     async getById() {},
-    async delete() {},
+    async softDelete() {},
     async clearCaching() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const deleteRoleCommandHandler = Container.get(DeleteRoleCommandHandler);
 
@@ -54,7 +55,7 @@ describe('Role - Delete role', () => {
 
     it('Delete role with data cannot save', async () => {
         sandbox.stub(roleRepository, 'getById').resolves(role);
-        sandbox.stub(roleRepository, 'delete').resolves(false);
+        sandbox.stub(roleRepository, 'softDelete').resolves(false);
         const param = new DeleteRoleCommand();
         param.id = role.id;
 
@@ -64,7 +65,7 @@ describe('Role - Delete role', () => {
 
     it('Delete role successfully', async () => {
         sandbox.stub(roleRepository, 'getById').resolves(role);
-        sandbox.stub(roleRepository, 'delete').resolves(true);
+        sandbox.stub(roleRepository, 'softDelete').resolves(true);
         sandbox.stub(roleRepository, 'clearCaching').resolves();
         const param = new DeleteRoleCommand();
         param.id = role.id;

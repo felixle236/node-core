@@ -3,18 +3,19 @@ import { Express } from 'express';
 import { createExpressServer, RoutingControllersOptions, useExpressServer } from 'routing-controllers';
 
 export class HttpServer {
-    app: Express;
-    server: Server;
+    private _server: Server;
+    private _app: Express;
 
-    constructor(options: RoutingControllersOptions, app: Express | null = null) {
+    createApp(options: RoutingControllersOptions, app?: Express) {
         if (app)
-            this.app = useExpressServer(app, options);
+            this._app = useExpressServer(app, options);
         else
-            this.app = createExpressServer(options);
+            this._app = createExpressServer(options);
+        return this._app;
     }
 
-    start(port: number, callback: any = null): Server {
-        this.server = this.app.listen(port, '0.0.0.0', callback);
-        return this.server;
+    start(port: number, callback?: any): Server {
+        this._server = this._app.listen(port, '0.0.0.0', callback);
+        return this._server;
     }
 }

@@ -21,6 +21,7 @@ Container.set('user.repository', {
 Container.set('mail.service', {
     async resendUserActivation() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const mailService = Container.get<IMailService>('mail.service');
 const resendActivationCommandHandler = Container.get(ResendActivationCommandHandler);

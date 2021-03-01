@@ -13,6 +13,7 @@ import { IRoleRepository } from '../../../../gateways/repositories/role/IRoleRep
 Container.set('role.repository', {
     async findAndCount() {}
 });
+
 const roleRepository = Container.get<IRoleRepository>('role.repository');
 const findRoleQueryHandler = Container.get(FindRoleQueryHandler);
 

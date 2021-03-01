@@ -10,7 +10,6 @@ export const USER_SCHEMA = {
         FIRST_NAME: 'first_name',
         LAST_NAME: 'last_name',
         EMAIL: 'email',
-        PASSWORD: 'password',
         AVATAR: 'avatar',
         GENDER: 'gender',
         BIRTHDAY: 'birthday',
@@ -21,15 +20,13 @@ export const USER_SCHEMA = {
         ACTIVE_KEY: 'active_key',
         ACTIVE_EXPIRE: 'active_expire',
         ACTIVED_AT: 'actived_at',
-        ARCHIVED_AT: 'archived_at',
-        FORGOT_KEY: 'forgot_key',
-        FORGOT_EXPIRE: 'forgot_expire'
+        ARCHIVED_AT: 'archived_at'
     },
     RELATED_ONE: {
         // The field name that we're defined into entity to map the entity related.
         ROLE: 'role'
     },
     RELATED_MANY: {
-
+        AUTHS: 'auths'
     }
 };

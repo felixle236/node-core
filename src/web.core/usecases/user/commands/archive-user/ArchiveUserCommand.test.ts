@@ -19,6 +19,7 @@ Container.set('user.repository', {
     async getById() {},
     async update() {}
 });
+
 const userRepository = Container.get<IUserRepository>('user.repository');
 const archiveUserCommandHandler = Container.get(ArchiveUserCommandHandler);
 
