@@ -1,11 +1,10 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { Auth } from '../../../../../web.core/domain/entities/auth/Auth';
 import { AuthType } from '../../../../../web.core/domain/enums/auth/AuthType';
 import { IAuth } from '../../../../../web.core/domain/types/auth/IAuth';
 import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { AUTH_SCHEMA } from '../../schemas/auth/AuthSchema';
 import { BaseDbEntity } from '../base/BaseDBEntity';
-import { UserDb } from '../user/UserDb';
 
 @Entity(AUTH_SCHEMA.TABLE_NAME)
 @Index((authDb: AuthDb) => [authDb.userId, authDb.type], { unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
@@ -34,8 +33,6 @@ export class AuthDb extends BaseDbEntity<Auth> implements IAuth {
 
     /* Relationship */
 
-    @ManyToOne(() => UserDb, user => user.auths)
-    @JoinColumn({ name: AUTH_SCHEMA.COLUMNS.USER_ID })
     user: IUser | null;
 
     /* handlers */

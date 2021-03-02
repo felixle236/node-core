@@ -2,23 +2,32 @@ import * as multer from 'multer';
 import { Authorized, Body, BodyParam, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
+import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
+import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
 import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
+import { RoleId } from '../../../web.core/domain/enums/role/RoleId';
+import { GenderType } from '../../../web.core/domain/enums/user/GenderType';
 import { UpdateMyPasswordByEmailCommand } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommand';
 import { UpdateMyPasswordByEmailCommandHandler } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandHandler';
-import { UpdateMyProfileCommand } from '../../../web.core/usecases/user/commands/update-my-profile/UpdateMyProfileCommand';
-import { UpdateMyProfileCommandHandler } from '../../../web.core/usecases/user/commands/update-my-profile/UpdateMyProfileCommandHandler';
+import { UpdateMyProfileClientCommand } from '../../../web.core/usecases/client/commands/update-my-profile-client/UpdateMyProfileClientCommand';
+import { UpdateMyProfileClientCommandHandler } from '../../../web.core/usecases/client/commands/update-my-profile-client/UpdateMyProfileClientCommandHandler';
+import { GetMyProfileClientQuery } from '../../../web.core/usecases/client/queries/get-my-profile-client/GetMyProfileClientQuery';
+import { GetMyProfileClientQueryHandler } from '../../../web.core/usecases/client/queries/get-my-profile-client/GetMyProfileClientQueryHandler';
+import { UpdateMyProfileManagerCommand } from '../../../web.core/usecases/manager/commands/update-my-profile-manager/UpdateMyProfileManagerCommand';
+import { UpdateMyProfileManagerCommandHandler } from '../../../web.core/usecases/manager/commands/update-my-profile-manager/UpdateMyProfileManagerCommandHandler';
+import { GetMyProfileManagerQuery } from '../../../web.core/usecases/manager/queries/get-my-profile-manager/GetMyProfileManagerQuery';
+import { GetMyProfileManagerQueryHandler } from '../../../web.core/usecases/manager/queries/get-my-profile-manager/GetMyProfileManagerQueryHandler';
 import { UploadMyAvatarCommand } from '../../../web.core/usecases/user/commands/upload-my-avatar/UploadMyAvatarCommand';
 import { UploadMyAvatarCommandHandler } from '../../../web.core/usecases/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
-import { GetMyProfileQuery } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQuery';
-import { GetMyProfileQueryHandler } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryHandler';
-import { GetMyProfileQueryResult } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryResult';
 
 @Service()
 @JsonController('/v1/me')
 export class MeController {
     constructor(
-        private readonly _getMyProfileQueryHandler: GetMyProfileQueryHandler,
-        private readonly _updateMyProfileCommandHandler: UpdateMyProfileCommandHandler,
+        private readonly _getMyProfileClientQueryHandler: GetMyProfileClientQueryHandler,
+        private readonly _getMyProfileManagerQueryHandler: GetMyProfileManagerQueryHandler,
+        private readonly _updateMyProfileClientCommandHandler: UpdateMyProfileClientCommandHandler,
+        private readonly _updateMyProfileManagerCommandHandler: UpdateMyProfileManagerCommandHandler,
         private readonly _updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler,
         private readonly _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
     ) {}
@@ -28,11 +37,18 @@ export class MeController {
     @OpenAPI({
         description: 'Get my profile information.'
     })
-    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileQueryResult> {
-        const param = new GetMyProfileQuery();
-        param.id = userAuth.userId;
+    async getMyProfile(@CurrentUser() userAuth: UserAuthenticated) {
+        switch (userAuth.roleId) {
+        case RoleId.SUPER_ADMIN:
+        case RoleId.MANAGER:
+            return await this._getMyProfileManagerQueryHandler.handle(new GetMyProfileManagerQuery(userAuth.userId));
 
-        return await this._getMyProfileQueryHandler.handle(param);
+        case RoleId.CLIENT:
+            return await this._getMyProfileClientQueryHandler.handle(new GetMyProfileClientQuery(userAuth.userId));
+
+        default:
+            throw new SystemError(MessageError.DATA_INVALID);
+        }
     }
 
     @Put('/')
@@ -40,9 +56,43 @@ export class MeController {
     @OpenAPI({
         description: 'Update my profile information.'
     })
-    async updateMyProfile(@Body() param: UpdateMyProfileCommand, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
-        param.userAuthId = userAuth.userId;
-        return await this._updateMyProfileCommandHandler.handle(param);
+    async updateMyProfile(@Body() body: {
+        firstName: string,
+        lastName: string | null,
+        gender: GenderType | null,
+        birthday: string | null,
+        phone: string | null,
+        address: string | null,
+        culture: string | null,
+        currency: string | null
+    }, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
+        switch (userAuth.roleId) {
+        case RoleId.SUPER_ADMIN:
+        case RoleId.MANAGER: {
+            const param = new UpdateMyProfileManagerCommand();
+            param.userAuthId = userAuth.userId;
+            param.firstName = body.firstName;
+            param.lastName = body.lastName;
+
+            return await this._updateMyProfileManagerCommandHandler.handle(param);
+        }
+        case RoleId.CLIENT: {
+            const param = new UpdateMyProfileClientCommand();
+            param.userAuthId = userAuth.userId;
+            param.firstName = body.firstName;
+            param.lastName = body.lastName;
+            param.gender = body.gender;
+            param.birthday = body.birthday;
+            param.phone = body.phone;
+            param.address = body.address;
+            param.culture = body.culture;
+            param.currency = body.currency;
+
+            return await this._updateMyProfileClientCommandHandler.handle(param);
+        }
+        default:
+            throw new SystemError(MessageError.DATA_INVALID);
+        }
     }
 
     @Patch('/password')

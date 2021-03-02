@@ -4,13 +4,23 @@ import { MessageError } from '../../../../domain/common/exceptions/message/Messa
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { Auth } from '../../../../domain/entities/auth/Auth';
-import { UserStatus } from '../../../../domain/enums/user/UserStatus';
+import { ClientStatus } from '../../../../domain/enums/client/ClientStatus';
+import { ManagerStatus } from '../../../../domain/enums/manager/ManagerStatus';
+import { RoleId } from '../../../../domain/enums/role/RoleId';
 import { IAuthRepository } from '../../../../gateways/repositories/auth/IAuthRepository';
+import { IClientRepository } from '../../../../gateways/repositories/client/IClientRepository';
+import { IManagerRepository } from '../../../../gateways/repositories/manager/IManagerRepository';
 
 @Service()
 export class ResetPasswordByEmailCommandHandler implements ICommandHandler<ResetPasswordByEmailCommand, boolean> {
     @Inject('auth.repository')
     private readonly _authRepository: IAuthRepository;
+
+    @Inject('client.repository')
+    private readonly _clientRepository: IClientRepository;
+
+    @Inject('manager.repository')
+    private readonly _managerRepository: IManagerRepository;
 
     async handle(param: ResetPasswordByEmailCommand): Promise<boolean> {
         if (!param.forgotKey)
@@ -24,8 +34,20 @@ export class ResetPasswordByEmailCommandHandler implements ICommandHandler<Reset
         if (!auth || !auth.user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
 
-        if (auth.user.status !== UserStatus.ACTIVED)
-            throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
+        if (auth.user.roleId === RoleId.CLIENT) {
+            const client = await this._clientRepository.getById(auth.userId);
+            if (!client)
+                throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
+            if (client.status !== ClientStatus.ACTIVED)
+                throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
+        }
+        else {
+            const manager = await this._managerRepository.getById(auth.userId);
+            if (!manager)
+                throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
+            if (manager.status !== ManagerStatus.ACTIVED)
+                throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
+        }
 
         if (auth.forgotKey !== param.forgotKey)
             throw new SystemError(MessageError.PARAM_INCORRECT, 'forgot key');
