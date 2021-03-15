@@ -17,6 +17,14 @@ export class ApiService {
         const authenticator = Container.get(ApiAuthenticator);
         const app = express();
 
+        app.get('/healthz', (_req, res) => {
+            res.status(200).end('ok');
+        });
+
+        const loggingMiddleware = await logger.createMiddleware();
+        app.use(loggingMiddleware);
+        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
+
         const options: RoutingControllersOptions = {
             cors: {
                 origin: '*',
@@ -43,13 +51,6 @@ export class ApiService {
             currentUserChecker: authenticator.userAuthChecker
         };
 
-        app.get('/healthz', (_req, res) => {
-            res.status(200).end('ok');
-        });
-
-        const loggingMiddleware = await logger.createMiddleware();
-        app.use(loggingMiddleware);
-
         const httpServer = new HttpServer();
         httpServer.createApp(options, app);
 
@@ -62,7 +63,6 @@ export class ApiService {
             next();
         });
 
-        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         return httpServer.start(API_PORT, callback);
     }
 }

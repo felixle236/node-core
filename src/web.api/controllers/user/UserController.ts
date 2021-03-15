@@ -49,7 +49,7 @@ export class UserController {
 
     @Get('/')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
-    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('role_id') roleId?: string): Promise<PaginationResult<FindUserQueryResult>> {
+    async find(@QueryParams() param: FindUserQuery, @CurrentUser() userAuth: UserAuthenticated, @QueryParam('role_id') roleId: string | null): Promise<PaginationResult<FindUserQueryResult>> {
         param.roleAuthId = userAuth.roleId;
         param.roleIds = roleId ? [roleId] : [];
         return await this._findUserQueryHandler.handle(param);

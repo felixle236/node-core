@@ -68,7 +68,7 @@ describe('Authentication - Create authentication by email', () => {
     it('Create authentication by email with the length of username less than 6 characters', async () => {
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = 'test';
+        param.email = 'test';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_LEN_GREATER_OR_EQUAL, 'username', 6));
@@ -77,7 +77,7 @@ describe('Authentication - Create authentication by email', () => {
     it('Create authentication by email with the length of username greater than 120 characters', async () => {
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = 'test.localhost.test.localhost.test.localhost.localhost.localhost@test-asdfaasdfasfdgsgdsfasdfaasdfasfdgsgdsf-localhost.com';
+        param.email = 'test.localhost.test.localhost.test.localhost.localhost.localhost@test-asdfaasdfasfdgsgdsfasdfaasdfasfdgsgdsf-localhost.com';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'username', 120));
@@ -86,7 +86,7 @@ describe('Authentication - Create authentication by email', () => {
     it('Create authentication by email without password', async () => {
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'password'));
@@ -95,7 +95,7 @@ describe('Authentication - Create authentication by email', () => {
     it('Create authentication by email with the length of password greater than 20 characters', async () => {
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = 'This is the password with length greater than 20 characters!';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
@@ -105,7 +105,7 @@ describe('Authentication - Create authentication by email', () => {
     it('Create authentication by email with password is not secure', async () => {
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = '123456';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
@@ -116,7 +116,7 @@ describe('Authentication - Create authentication by email', () => {
         sandbox.stub(userRepository, 'getById').resolves(null);
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = 'Nodecore@123';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
@@ -128,7 +128,7 @@ describe('Authentication - Create authentication by email', () => {
         sandbox.stub(authRepository, 'getAllByUser').resolves([auth]);
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = 'Nodecore@123';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
@@ -141,7 +141,7 @@ describe('Authentication - Create authentication by email', () => {
         sandbox.stub(authRepository, 'create').resolves('');
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = 'Nodecore@123';
 
         const result = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
@@ -154,7 +154,7 @@ describe('Authentication - Create authentication by email', () => {
         sandbox.stub(authRepository, 'create').resolves(auth.id);
         const param = new CreateAuthByEmailCommand();
         param.userId = auth.userId;
-        param.username = auth.username;
+        param.email = auth.username;
         param.password = 'Nodecore@123';
 
         const id = await createAuthByEmailCommandHandler.handle(param);

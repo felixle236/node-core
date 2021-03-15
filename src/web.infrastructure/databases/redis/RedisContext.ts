@@ -2,12 +2,13 @@ import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
 import { Service } from 'typedi';
 import { REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
+import { IRedisClient } from '../../../web.core/domain/common/database/interfaces/IRedisClient';
+import { IRedisContext } from '../../../web.core/domain/common/database/interfaces/IRedisContext';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../web.core/domain/common/exceptions/SystemError';
-import { IRedisClient } from '../../../web.core/domain/common/IRedisClient';
 
 @Service('redis.context')
-export class RedisContext {
+export class RedisContext implements IRedisContext {
     private _connection: IRedisClient;
 
     constructor(connection?: IRedisClient) {

@@ -20,7 +20,7 @@ export class CreateAuthByEmailCommandHandler implements ICommandHandler<CreateAu
         const data = new Auth();
         data.userId = param.userId;
         data.type = AuthType.PERSONAL_EMAIL;
-        data.username = param.username;
+        data.username = param.email;
         data.password = param.password;
 
         const user = await this._userRepository.getById(param.userId);

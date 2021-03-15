@@ -1,6 +1,7 @@
 import { BodyParam, HeaderParam, JsonController, Post } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
+import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 import { ForgotPasswordByEmailCommand } from '../../../web.core/usecases/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommand';
 import { ForgotPasswordByEmailCommandHandler } from '../../../web.core/usecases/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
 import { ResetPasswordByEmailCommand } from '../../../web.core/usecases/auth/commands/reset-password-by-email/ResetPasswordByEmailCommand';
@@ -28,7 +29,7 @@ export class AuthController {
         description: 'Verify access token by header param or body param.',
         security: []
     })
-    async authenticate(@HeaderParam('authorization') authorization: string, @BodyParam('token') token: string) {
+    async authenticate(@HeaderParam('authorization') authorization: string, @BodyParam('token') token: string): Promise<UserAuthenticated> {
         const param = new GetUserAuthByJwtQuery();
         if (authorization) {
             const parts = (authorization || '').split(' ');
@@ -44,7 +45,7 @@ export class AuthController {
         description: 'Authenticate user by email and password. Applies to any user.',
         security: []
     })
-    async login(@BodyParam('email') email: string, @BodyParam('password') password: string) {
+    async login(@BodyParam('email') email: string, @BodyParam('password') password: string): Promise<UserAuthenticated> {
         const param = new LoginByEmailQuery();
         param.email = email;
         param.password = password;
@@ -57,7 +58,7 @@ export class AuthController {
         description: 'Forgot user\'s password by email.',
         security: []
     })
-    async forgotPassword(@BodyParam('email') email: string) {
+    async forgotPassword(@BodyParam('email') email: string): Promise<boolean> {
         const param = new ForgotPasswordByEmailCommand();
         param.email = email;
         return await this._forgotPasswordByEmailCommandHandler.handle(param);
@@ -68,7 +69,7 @@ export class AuthController {
         description: 'Validate the forgot key by email and key.',
         security: []
     })
-    async validateForgotKey(@BodyParam('forgotKey') forgotKey: string, @BodyParam('email') email: string) {
+    async validateForgotKey(@BodyParam('forgotKey') forgotKey: string, @BodyParam('email') email: string): Promise<boolean> {
         const param = new ValidateForgotKeyForEmailCommand();
         param.forgotKey = forgotKey;
         param.email = email;
@@ -80,7 +81,7 @@ export class AuthController {
         description: 'Reset user\'s password.',
         security: []
     })
-    async resetPassword(@BodyParam('forgotKey') forgotKey: string, @BodyParam('email') email: string, @BodyParam('password') password: string) {
+    async resetPassword(@BodyParam('forgotKey') forgotKey: string, @BodyParam('email') email: string, @BodyParam('password') password: string): Promise<boolean> {
         const param = new ResetPasswordByEmailCommand();
         param.forgotKey = forgotKey;
         param.email = email;

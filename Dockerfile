@@ -1,4 +1,4 @@
-FROM node:14.15.4-alpine
+FROM node:14.16.0-alpine
 
 # Change working directory
 WORKDIR /usr/app

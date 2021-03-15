@@ -42,7 +42,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
 
         const auth = new CreateAuthByEmailCommand();
         auth.userId = data.id;
-        auth.username = data.email;
+        auth.email = data.email;
         auth.password = param.password;
 
         const isExist = await this._userRepository.checkEmailExist(data.email);

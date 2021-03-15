@@ -1,11 +1,11 @@
 import { Inject, Service } from 'typedi';
+import { IRedisContext } from '../../../../../web.core/domain/common/database/interfaces/IRedisContext';
 import { IUserOnlineStatusRepository } from '../../../../../web.core/gateways/repositories/user/IUserOnlineStatusRepository';
-import { RedisContext } from '../../RedisContext';
 
 @Service('user.online.status.repository')
 export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
     @Inject('redis.context')
-    private readonly _redisContext: RedisContext;
+    private readonly _redisContext: IRedisContext;
 
     private readonly _onlineStatusKey = 'user_online_status';
 

@@ -32,4 +32,4 @@ export class NodePushNotificationFactory implements INotificationProvider {
             sound: 'ping.aiff'
         });
     }
-};
+}

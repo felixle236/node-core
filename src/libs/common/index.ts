@@ -49,3 +49,17 @@ export function convertStringToBoolean(val: string | undefined | null, defaultVa
     default: return defaultValue;
     }
 }
+
+/**
+ * Convert json to string.
+ */
+export function convertJsonToString(val: object): string {
+    if (!val)
+        return '';
+    if (typeof val === 'string')
+        return val;
+    if (typeof val !== 'object')
+        return '';
+
+    return JSON.stringify(val, undefined, 2).replace(/\n/g, '').replace(/\s\s+/g, ' ');
+}

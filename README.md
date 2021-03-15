@@ -144,7 +144,6 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |-- Dockerfile --------------------------------// Used by `docker-compose.yml`.
 - |-- gruntfile.js
 - |-- nodemon.json
-- |-- ormconfig.js ------------------------------// TypeORM configuration, this file only use for running migration commands.
 - |-- package.json
 - |-- package-lock.json -------------------------// Lock package version.
 - |-- README.md ---------------------------------// `IMPORTANT` to start the project.
@@ -246,7 +245,6 @@ npm test
 - `.eslintrc.js` is Eslint configuration.
 - `.gitignore` is Git ignore configuration.
 - `.nycrc.json` is Nyc configuration for testing coverage.
-- `ormconfig.js` is TypeORM configuration.
 - `tsconfig.json` is Typescript configuration.
 
 > If server PostgreSQL is running on the same server Web API and start with docker, you must set `DB_HOST` environment is service name of PostgreSQL container as `DB_HOST=postgresql` and the same Redis, MinIO.
@@ -282,7 +280,7 @@ npm test
 
 - We are using `mailgen` package to generate the mail template. There are a lot of the mail template to use, refer to [mailgen](https://github.com/eladnava/mailgen).
 - We can use Google SMTP or SendInBlue to send mail by change the configuration of environment `MAIL_PROVIDER` in `.env`. Also you can integrate another service that you want to use.
-- Refer with values `CONSOLE (1) - GOOGLE_SMTP (2) - SEND_IN_BLUE (3)`.
+- Refer with values `CONSOLE (1) - GOOGLE_SMTP (2) - MAILGUN (3) - SEND_IN_BLUE (4)`.
 
 ### Common Type
 
