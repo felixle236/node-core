@@ -1,63 +1,49 @@
 import { express, LoggingWinston } from '@google-cloud/logging-winston';
 import { NextFunction, Request, Response } from 'express';
+import * as expressWinston from 'express-winston';
 import { Service } from 'typedi';
-import * as winston from 'winston';
+import { createLogger, format, Logger, transports } from 'winston';
 import { LOG_PROVIDER, PROJECT_ID } from '../../../configs/Configuration';
 import { LogProvider } from '../../../configs/ServiceProvider';
+import { convertJsonToString } from '../../../libs/common';
 import { IRequest } from '../../../web.core/domain/common/IRequest';
 import { ILogService } from '../../../web.core/gateways/services/ILogService';
 
 @Service('log.service')
 export class LogService implements ILogService {
-    private readonly _logger: winston.Logger;
+    private readonly _logger: Logger;
 
     constructor() {
-        const { combine, timestamp, label, printf, colorize } = winston.format;
+        const { combine, colorize, simple } = format;
 
         switch (LOG_PROVIDER) {
-        case LogProvider.GOOGLE_WINSTON:
-            this._logger = winston.createLogger({
-                level: 'info',
-                transports: [
-                    new LoggingWinston()
-                ]
-            });
-            break;
         case LogProvider.WINSTON:
-        default:
-            this._logger = winston.createLogger({
-                level: 'info',
+            this._logger = createLogger({
                 transports: [
-                    new winston.transports.Console({
+                    new transports.Console({
                         format: combine(
-                            label({ label: PROJECT_ID }),
-                            timestamp(),
                             colorize(),
-                            printf((info: winston.Logform.TransformableInfo) => {
-                                const meta = { ...info } as any;
-                                const { timestamp, label, level, message } = info;
-
-                                delete meta.timestamp;
-                                delete meta.label;
-                                delete meta.level;
-                                delete meta.message;
-
-                                return `\n${timestamp} [${label}] ${level}: ${message} ${Object.keys(meta).length ? '\n' + JSON.stringify(meta, undefined, 2).replace(/\n/g, '').replace(/\s\s+/g, ' ') + '\n' : ''}`;
-                            })
+                            simple()
                         )
                     }),
-                    new winston.transports.File({
+                    new transports.File({
                         level: 'error',
                         filename: process.cwd() + '/logs/error.log',
                         maxsize: 10485760,
                         maxFiles: 5,
                         format: combine(
-                            label({ label: PROJECT_ID }),
-                            timestamp(),
-                            printf((info: winston.Logform.TransformableInfo) => {
-                                return `${info.timestamp} [${info.label}] ${info.level}: ${info.message} ${JSON.stringify(info, undefined, 2).replace(/\n/g, '').replace(/\s\s+/g, ' ')}`;
-                            })
+                            simple()
                         )
+                    })
+                ]
+            });
+            break;
+        case LogProvider.GOOGLE_WINSTON:
+        default:
+            this._logger = createLogger({
+                transports: [
+                    new LoggingWinston({
+                        prefix: PROJECT_ID
                     })
                 ]
             });
@@ -69,41 +55,72 @@ export class LogService implements ILogService {
         if (typeof content === 'string')
             this._logger.info(content, meta);
         else
-            this._logger.info(content);
+            this._logger.info(convertJsonToString(content), meta);
+    }
+
+    debug(content: string | Object, meta?: any | any[]) {
+        if (typeof content === 'string')
+            this._logger.debug(content, meta);
+        else
+            this._logger.debug(convertJsonToString(content), meta);
     }
 
     warn(content: string | Object, meta?: any | any[]) {
         if (typeof content === 'string')
             this._logger.warn(content, meta);
         else
-            this._logger.warn(content);
+            this._logger.warn(convertJsonToString(content), meta);
     }
 
     error(content: string | Object, meta?: any | any[]) {
         if (typeof content === 'string')
             this._logger.error(content, meta);
         else
-            this._logger.error(content);
+            this._logger.error(convertJsonToString(content), meta);
     }
 
     async createMiddleware(): Promise<(req: Request, res: Response, next: NextFunction)=> void> {
-        if (LOG_PROVIDER === LogProvider.GOOGLE_WINSTON)
-            return await express.makeMiddleware(this._logger);
+        if (LOG_PROVIDER === LogProvider.GOOGLE_WINSTON) {
+            return await express.makeMiddleware(createLogger({
+                transports: [
+                    new LoggingWinston({
+                        prefix: PROJECT_ID
+                    })
+                ]
+            }));
+        }
 
-        return (req: Request, _res: Response, next: NextFunction) => {
-            (req as IRequest).log = this._logger;
-            this._logger.info(`${req.method} ${req.originalUrl}`, {
-                httpRequest: {
-                    requestMethod: req.method,
-                    requestUrl: req.originalUrl,
-                    requestSize: req.get('content-length') ? Number(req.get('content-length')) : 0,
-                    userAgent: req.get('user-agent'),
-                    remoteIp: req.get('x-forwarded-for') || req.socket.remoteAddress,
-                    referer: req.get('referer'),
-                    protocol: req.protocol
+        const handler = expressWinston.logger({
+            winstonInstance: this._logger,
+            msg: function(req, res) {
+                let responseSize = 0;
+                const remoteIp = req.get('x-forwarded-for') || req.connection.remoteAddress || req.socket.remoteAddress;
+                const latencySeconds = (res as any).responseTime / 1000;
+                const body = (res as any).body;
+                if (body) {
+                    if (typeof body === 'object')
+                        responseSize = JSON.stringify(body).length;
+                    else if (typeof body === 'string')
+                        responseSize = body.length;
                 }
-            });
-            next();
+                return `[${new Date().toISOString()}]: ${remoteIp} ${req.method} ${res.statusCode} ${req.socket.bytesRead}B ${responseSize}B ${latencySeconds}s ${req.url} ${req.get('user-agent')}`;
+            },
+            metaField: null, // this causes the metadata to be stored at the root of the log entry
+            responseField: null, // this prevents the response from being included in the metadata (including body and status code)
+            requestWhitelist: ['headers', 'query'], // these are not included in the standard StackDriver httpRequest
+            responseWhitelist: ['body'], // this populates the `res.body` so we can get the response size (not required)
+            ignoreRoute: function(req, _res) {
+                if (req.path === '/healthz')
+                    return true;
+                return false;
+            },
+            statusLevels: true,
+            meta: true
+        });
+
+        return (req: Request, res: Response, next: NextFunction) => {
+            (req as IRequest).log = this._logger;
+            handler(req, res, next);
         };
     }
 }

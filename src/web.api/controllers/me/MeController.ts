@@ -100,7 +100,7 @@ export class MeController {
     @OpenAPI({
         description: 'Update my password.'
     })
-    async updateMyPassword(@BodyParam('password') password: string, @BodyParam('newPassword') newPassword: string, @CurrentUser() userAuth: UserAuthenticated) {
+    async updateMyPassword(@BodyParam('password') password: string, @BodyParam('newPassword') newPassword: string, @CurrentUser() userAuth: UserAuthenticated): Promise<boolean> {
         const param = new UpdateMyPasswordByEmailCommand();
         param.userAuthId = userAuth.userId;
         param.oldPassword = password;

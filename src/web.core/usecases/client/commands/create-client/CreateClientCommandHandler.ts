@@ -50,7 +50,7 @@ export class CreateClientCommandHandler implements ICommandHandler<CreateClientC
 
         const auth = new CreateAuthByEmailCommand();
         auth.userId = data.id;
-        auth.username = data.email;
+        auth.email = data.email;
         auth.password = param.password;
 
         const isExistEmail = await this._clientRepository.checkEmailExist(data.email);

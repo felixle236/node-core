@@ -2,14 +2,14 @@ import { Inject } from 'typedi';
 import { getRepository, QueryRunner, Repository } from 'typeorm';
 import { DbPagination } from '../../../../../web.core/domain/common/database/DbPagination';
 import { IBaseRepository } from '../../../../../web.core/domain/common/database/interfaces/IBaseRepository';
+import { IDbContext } from '../../../../../web.core/domain/common/database/interfaces/IDbContext';
 import { IDbQueryRunner } from '../../../../../web.core/domain/common/database/interfaces/IDbQueryRunner';
 import { IEntity } from '../../../../../web.core/domain/types/base/IEntity';
-import { DbContext } from '../../DbContext';
 import { BaseDbEntity } from '../../entities/base/BaseDBEntity';
 
 export abstract class BaseRepository<TEntity extends IEntity, TDbEntity extends BaseDbEntity<TEntity>, TIdentityType> implements IBaseRepository<TEntity, TIdentityType> {
     @Inject('db.context')
-    protected readonly dbContext: DbContext;
+    protected readonly dbContext: IDbContext;
 
     protected readonly repository: Repository<TDbEntity>;
 

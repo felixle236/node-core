@@ -41,7 +41,7 @@ export class CreateManagerCommandHandler implements ICommandHandler<CreateManage
 
         const auth = new CreateAuthByEmailCommand();
         auth.userId = data.id;
-        auth.username = data.email;
+        auth.email = data.email;
         auth.password = param.password;
 
         const isExistEmail = await this._managerRepository.checkEmailExist(data.email);

@@ -7,7 +7,8 @@ module.exports = {
         mocha: true
     },
     extends: [
-        'standard'
+        'standard',
+        'eslint:recommended'
     ],
     plugins: [
         '@typescript-eslint',

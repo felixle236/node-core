@@ -16,10 +16,14 @@ export class WebService {
         const authenticator = Container.get(WebAuthenticator);
         const app = express();
 
+        const loggingMiddleware = await logger.createMiddleware();
+        app.use(loggingMiddleware);
+
         // view engine setup
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'ejs');
 
+        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         app.use(express.static(path.join(__dirname, 'public')));
         app.use(cookieParser());
 
@@ -40,9 +44,6 @@ export class WebService {
             currentUserChecker: authenticator.userAuthChecker
         };
 
-        const loggingMiddleware = await logger.createMiddleware();
-        app.use(loggingMiddleware);
-
         const httpServer = new HttpServer();
         httpServer.createApp(options, app);
 
@@ -54,7 +55,6 @@ export class WebService {
             }
         });
 
-        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         return httpServer.start(WEB_PORT, callback);
     }
 }
