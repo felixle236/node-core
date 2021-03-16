@@ -12,7 +12,7 @@ import { ILogService } from '../web.core/gateways/services/ILogService';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class ApiService {
-    async setup(callback: any = null): Promise<Server> {
+    setup(callback: any = null): Server {
         const logger = Container.get<ILogService>('log.service');
         const authenticator = Container.get(ApiAuthenticator);
         const app = express();
@@ -21,7 +21,7 @@ export class ApiService {
             res.status(200).end('ok');
         });
 
-        const loggingMiddleware = await logger.createMiddleware();
+        const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
         app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
 
@@ -56,12 +56,6 @@ export class ApiService {
 
         const spec = new ApiDocument(options).generate();
         app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
-
-        app.use(function(req, res, next) {
-            if (!res.writableEnded && req.method !== 'OPTIONS')
-                res.status(404).send();
-            next();
-        });
 
         return httpServer.start(API_PORT, callback);
     }
