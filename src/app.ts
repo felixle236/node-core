@@ -19,10 +19,10 @@ const startApplication = async () => {
     await dbContext.createConnection();
 
     if (ENABLE_API_SERVICE)
-        await new ApiService().setup();
+        new ApiService().setup();
 
     if (ENABLE_WEB_SERVICE)
-        await new WebService().setup();
+        new WebService().setup();
 
     if (ENABLE_SOCKET_SERVICE)
         new SocketService().setup();

@@ -11,12 +11,12 @@ import { ILogService } from '../web.core/gateways/services/ILogService';
 import { HttpServer } from '../web.infrastructure/servers/http/HttpServer';
 
 export class WebService {
-    async setup(callback?: any): Promise<Server> {
+    setup(callback?: any): Server {
         const logger = Container.get<ILogService>('log.service');
         const authenticator = Container.get(WebAuthenticator);
         const app = express();
 
-        const loggingMiddleware = await logger.createMiddleware();
+        const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
 
         // view engine setup
