@@ -16,6 +16,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 ### Patterns and Principles
 
 - Clean architecture design pattern
+- Domain driven design
 - Repository pattern
 - CQRS pattern
 - Transfer object pattern
@@ -52,7 +53,6 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - [JavaScript Standard Style](https://standardjs.com/rules.html)
 - [TypeORM](https://github.com/typeorm/typeorm) & [Migrations](https://github.com/typeorm/typeorm/blob/master/docs/migrations.md#migrations)
 - [Routing controllers](https://github.com/typestack/routing-controllers#routing-controllers)
-- [Socket controllers](https://github.com/typestack/socket-controllers#socket-controllers)
 - [Socket IO](https://web.socket/docs/) & [Emit cheatsheet](https://web.socket/docs/emit-cheatsheet/)
 
 ### Source Structure

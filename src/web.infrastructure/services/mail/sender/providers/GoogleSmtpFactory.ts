@@ -1,4 +1,5 @@
 import * as nodeMailer from 'nodemailer';
+import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME } from '../../../../../configs/Configuration';
 import { IMailProvider } from '../interfaces/IMailProvider';
 
 /**
@@ -10,12 +11,12 @@ import { IMailProvider } from '../interfaces/IMailProvider';
 export class GoogleSmtpFactory implements IMailProvider {
     private readonly _transporter: nodeMailer.Transporter;
 
-    constructor(userName: string, password: string) {
+    constructor() {
         this._transporter = nodeMailer.createTransport({
             service: 'gmail',
             auth: {
-                user: userName,
-                pass: password
+                user: GOOGLE_SMTP_USERNAME,
+                pass: GOOGLE_SMTP_PASSWORD
             }
         });
     }

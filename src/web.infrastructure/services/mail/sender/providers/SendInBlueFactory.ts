@@ -1,3 +1,4 @@
+import { SENDINBLUE_API_KEY } from '../../../../../configs/Configuration';
 import { IMailProvider } from '../interfaces/IMailProvider';
 const sibApiV3Sdk = require('sib-api-v3-sdk');
 
@@ -10,9 +11,9 @@ const sibApiV3Sdk = require('sib-api-v3-sdk');
 export class SendInBlueFactory implements IMailProvider {
     private readonly _smtpApi;
 
-    constructor(apiKey: string) {
-        sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
-        this._smtpApi = new sibApiV3Sdk.SMTPApi();
+    constructor() {
+        sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = SENDINBLUE_API_KEY;
+        this._smtpApi = new sibApiV3Sdk.TransactionalEmailsApi();
     }
 
     async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
