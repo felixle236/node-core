@@ -1,5 +1,5 @@
 import * as NodePushNotification from 'node-pushnotifications';
-import { ANDROID_KEY, IOS_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../../../configs/Configuration';
+import { APN_KEY, FCM_KEY, IS_DEVELOPMENT, PROJECT_NAME } from '../../../../../configs/Configuration';
 import { INotificationProvider } from '../interfaces/INotificationProvider';
 
 export class NodePushNotificationFactory implements INotificationProvider {
@@ -8,12 +8,12 @@ export class NodePushNotificationFactory implements INotificationProvider {
     constructor() {
         this._sender = new NodePushNotification({
             gcm: {
-                id: ANDROID_KEY
+                id: FCM_KEY
             },
             apn: {
                 token: {
                     key: './certs/key.p8', // optionally: fs.readFileSync('./certs/key.p8')
-                    keyId: IOS_KEY,
+                    keyId: APN_KEY,
                     teamId: 'EFGH'
                 },
                 production: !IS_DEVELOPMENT // true for APN production environment, false for APN sandbox environment,

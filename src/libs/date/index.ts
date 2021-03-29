@@ -1,19 +1,33 @@
 /**
- * Convert to start day
+ * Get begin of month
  */
-export function convertToStartDay(date: string | Date): Date | null {
-    if (!date) return null;
+export function getBeginOfMonth(date: string | Date): Date {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+}
 
+/**
+ * Get begin of month
+ */
+export function getEndOfMonth(date: string | Date): Date {
+    let d = typeof date === 'string' ? new Date(date) : date;
+    d = new Date(d.getFullYear(), d.getMonth(), 1);
+    d = addMonths(d, 1);
+    return addDays(d, -1);
+}
+
+/**
+ * Get begin of day
+ */
+export function getBeginOfDay(date: string | Date): Date {
     const d = typeof date === 'string' ? new Date(date) : date;
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 /**
- * Convert to end day
+ * Get end of day
  */
-export function convertToEndDay(date: string | Date): Date | null {
-    if (!date) return null;
-
+export function getEndOfDay(date: string | Date): Date {
     let d = typeof date === 'string' ? new Date(date) : date;
     d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     d = this.addDays(d, 1);
