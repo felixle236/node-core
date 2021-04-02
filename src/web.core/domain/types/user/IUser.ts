@@ -10,7 +10,9 @@ export interface IUser extends IEntity {
     lastName: string | null;
     avatar: string | null;
     gender: GenderType | null;
-    birthday: Date | null;
+    birthday: string | null;
+
+    /* Relationship */
 
     role: IRole | null;
 }

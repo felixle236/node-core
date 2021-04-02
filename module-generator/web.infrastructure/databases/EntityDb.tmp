@@ -13,7 +13,9 @@ export class {PascalName}Db extends BaseDbEntity<{PascalName}> implements I{Pasc
     @Index({ unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
     name: string;
 
-    /* handlers */
+    /* Relationship */
+
+    /* Handlers */
 
     toEntity(): {PascalName} {
         return new {PascalName}(this);

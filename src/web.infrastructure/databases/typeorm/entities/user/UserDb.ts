@@ -14,7 +14,6 @@ import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { CLIENT_SCHEMA } from '../../schemas/client/ClientSchema';
 import { MANAGER_SCHEMA } from '../../schemas/manager/ManagerSchema';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
-import { DateTransformer } from '../../transformers/DateTransformer';
 import { BaseDbEntity } from '../base/BaseDBEntity';
 import { RoleDb } from '../role/RoleDb';
 
@@ -38,8 +37,8 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('enum', { name: USER_SCHEMA.COLUMNS.GENDER, enum: GenderType, nullable: true })
     gender: GenderType | null;
 
-    @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })
-    birthday: Date | null;
+    @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true })
+    birthday: string | null;
 
     /* Relationship */
 

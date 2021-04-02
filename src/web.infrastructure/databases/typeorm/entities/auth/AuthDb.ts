@@ -35,7 +35,7 @@ export class AuthDb extends BaseDbEntity<Auth> implements IAuth {
 
     user: IUser | null;
 
-    /* handlers */
+    /* Handlers */
 
     toEntity(): Auth {
         return new Auth(this);

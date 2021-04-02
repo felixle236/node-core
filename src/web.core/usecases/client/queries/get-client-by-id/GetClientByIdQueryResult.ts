@@ -44,7 +44,7 @@ export class GetClientByIdQueryResult {
         this.email = data.email;
         this.avatar = data.avatar;
         this.gender = data.gender;
-        this.birthday = data.birthdayDisplay;
+        this.birthday = data.birthday;
         this.phone = data.phone;
         this.address = data.address;
         this.culture = data.culture;

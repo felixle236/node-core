@@ -102,7 +102,7 @@ export class Auth extends BaseEntity<IAuth> implements IAuth {
         return this.data.user ? new User(this.data.user) : null;
     }
 
-    /* handlers */
+    /* Handlers */
 
     private _hashPassword(password: string): string {
         return hashMD5(password, '$$');

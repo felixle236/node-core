@@ -6,7 +6,7 @@ import { {PascalName}Db } from '../../entities/{folder}/{PascalName}Db';
 import { Service } from 'typedi';
 import { SortType } from '../../../../../web.core/domain/common/database/SortType';
 
-@Service('{camelName}.repository')
+@Service('{lower_case_name}.repository')
 export class {PascalName}Repository extends BaseRepository<{PascalName}, {PascalName}Db, string> implements I{PascalName}Repository {
     constructor() {
         super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);

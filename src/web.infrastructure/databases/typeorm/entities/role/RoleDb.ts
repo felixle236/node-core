@@ -20,7 +20,7 @@ export class RoleDb extends BaseDbEntity<Role> implements IRole {
     @OneToMany(() => UserDb, user => user.role)
     users: IUser[] | null;
 
-    /* handlers */
+    /* Handlers */
 
     toEntity(): Role {
         return new Role(this);

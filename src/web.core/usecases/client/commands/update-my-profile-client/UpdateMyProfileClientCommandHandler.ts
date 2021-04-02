@@ -19,10 +19,7 @@ export class UpdateMyProfileClientCommandHandler implements ICommandHandler<Upda
         data.firstName = param.firstName;
         data.lastName = param.lastName;
         data.gender = param.gender;
-
-        if (param.birthday)
-            data.birthday = new Date(param.birthday);
-
+        data.birthday = param.birthday;
         data.phone = param.phone;
         data.address = param.address;
         data.currency = param.currency;

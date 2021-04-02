@@ -7,7 +7,7 @@ import { Find{PascalName}Filter, I{PascalName}Repository } from '../../../../gat
 
 @Service()
 export class Find{PascalName}QueryHandler implements IQueryHandler<Find{PascalName}Query, PaginationResult<Find{PascalName}QueryResult>> {
-    @Inject('{camelName}.repository')
+    @Inject('{lower_case_name}.repository')
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async handle(param: Find{PascalName}Query): Promise<PaginationResult<Find{PascalName}QueryResult>> {

@@ -12,7 +12,7 @@ export abstract class BaseDbEntity<T extends IEntity> {
     @DeleteDateColumn({ name: BASE_SCHEMA.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
     deletedAt: Date | null;
 
-    /* handlers */
+    /* Handlers */
 
     abstract toEntity(): T;
     abstract fromEntity(entity: T): IEntity;

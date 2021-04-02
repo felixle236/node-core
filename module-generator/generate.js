@@ -1,24 +1,37 @@
 const fs = require('fs');
 const path = require('path');
 
-const moduleName = process.argv.length > 2 && process.argv[2].trim();
+let moduleName = process.argv.length > 2 && process.argv[2].trim();
 if (!moduleName) {
     console.error('\x1b[35mMissing name of the module!\n\x1b[0m');
     return;
 }
 
 let folder = moduleName;
-let match;
-while ((match = /[A-Z]/g.exec(folder)) != null) {
-    if (match.index === 0)
-        folder = folder[match.index].toLowerCase() + folder.substr(match.index + 1);
-    else
-        folder = folder.substr(0, match.index) + '-' + folder[match.index].toLowerCase() + folder.substr(match.index + 1);
-}
+if (moduleName.includes('#')) {
+    folder = moduleName.split('#')[0];
+    moduleName = moduleName.split('#')[1];
 
+    if (!folder || !moduleName) {
+        console.error('\x1b[35mMissing name of the module or sub module!\n\x1b[0m');
+        return;
+    }
+    if (folder === moduleName) {
+        console.error('\x1b[35mThe name of module cannot match sub module!\n\x1b[0m');
+        return;
+    }
+    console.log('Module:\x1b[32m', folder, '\x1b[0m');
+    console.log('Sub-Module:\x1b[32m', moduleName, '\x1b[0m');
+}
+else
+    console.log('Module:\x1b[32m', moduleName, '\x1b[0m');
+
+folder = convertToDirectoryName(folder);
+const usecaseFncFolder = convertToDirectoryName(moduleName);
 const camelName = moduleName.substr(0, 1).toLowerCase() + moduleName.substr(1);
 const pascalName = moduleName.substr(0, 1).toUpperCase() + moduleName.substr(1);
-const upperCaseName = folder.replace(/-/g, '_').toUpperCase();
+const upperCaseName = convertToDirectoryName(moduleName).replace(/-/g, '_').toUpperCase();
+const lowerCaseName = upperCaseName.toLowerCase();
 
 // web.core
 
@@ -31,40 +44,40 @@ const entity = getFileContent(path.join(__dirname, './web.core/domain/Entity.tmp
 const repositoryInterfacePath = path.join(__dirname, `../src/web.core/gateways/repositories/${folder}/I${pascalName}Repository.ts`);
 const repositoryInterface = getFileContent(path.join(__dirname, './web.core/gateways/IRepository.tmp'));
 
-const findQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}Query.ts`);
+const findQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${usecaseFncFolder}/Find${pascalName}Query.ts`);
 const findQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQuery.tmp'));
 
-const findQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}QueryHandler.ts`);
+const findQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${usecaseFncFolder}/Find${pascalName}QueryHandler.ts`);
 const findQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryHandler.tmp'));
 
-const findQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${folder}/Find${pascalName}QueryResult.ts`);
+const findQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/find-${usecaseFncFolder}/Find${pascalName}QueryResult.ts`);
 const findQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/find/FindQueryResult.tmp'));
 
-const getByIdQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQuery.ts`);
+const getByIdQueryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${usecaseFncFolder}-by-id/Get${pascalName}ByIdQuery.ts`);
 const getByIdQueryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQuery.tmp'));
 
-const getByIdQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
+const getByIdQueryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${usecaseFncFolder}-by-id/Get${pascalName}ByIdQueryHandler.ts`);
 const getByIdQueryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryHandler.tmp'));
 
-const getByIdQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${folder}-by-id/Get${pascalName}ByIdQueryResult.ts`);
+const getByIdQueryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/get-${usecaseFncFolder}-by-id/Get${pascalName}ByIdQueryResult.ts`);
 const getByIdQueryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/get-by-id/GetByIdQueryResult.tmp'));
 
-const createCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${folder}/Create${pascalName}Command.ts`);
+const createCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${usecaseFncFolder}/Create${pascalName}Command.ts`);
 const createCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommand.tmp'));
 
-const createCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${folder}/Create${pascalName}CommandHandler.ts`);
+const createCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/create-${usecaseFncFolder}/Create${pascalName}CommandHandler.ts`);
 const createCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/create/CreateCommandHandler.tmp'));
 
-const updateCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${folder}/Update${pascalName}Command.ts`);
+const updateCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${usecaseFncFolder}/Update${pascalName}Command.ts`);
 const updateCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommand.tmp'));
 
-const updateCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${folder}/Update${pascalName}CommandHandler.ts`);
+const updateCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/update-${usecaseFncFolder}/Update${pascalName}CommandHandler.ts`);
 const updateCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/update/UpdateCommandHandler.tmp'));
 
-const deleteCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${folder}/Delete${pascalName}Command.ts`);
+const deleteCommandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${usecaseFncFolder}/Delete${pascalName}Command.ts`);
 const deleteCommandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommand.tmp'));
 
-const deleteCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${folder}/Delete${pascalName}CommandHandler.ts`);
+const deleteCommandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/delete-${usecaseFncFolder}/Delete${pascalName}CommandHandler.ts`);
 const deleteCommandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/delete/DeleteCommandHandler.tmp'));
 
 // web.infrastructure
@@ -127,6 +140,8 @@ fs.writeFileSync(entityDbPath, entityDb);
 fs.writeFileSync(repositoryPath, repository);
 fs.writeFileSync(controllerPath, controller);
 
+console.log('\n\x1b[32mGenerate module "' + moduleName + '" successfully.\x1b[0m\n');
+
 /**
  * Get content of special file
  * @param {string} path Generate source code to directory
@@ -134,9 +149,11 @@ fs.writeFileSync(controllerPath, controller);
 function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
         .replace(/{folder}/g, folder)
+        .replace(/{usecaseFncFolder}/g, usecaseFncFolder)
         .replace(/{camelName}/g, camelName)
         .replace(/{PascalName}/g, pascalName)
-        .replace(/{UPPER_CASE_NAME}/g, upperCaseName);
+        .replace(/{UPPER_CASE_NAME}/g, upperCaseName)
+        .replace(/{lower_case_name}/g, lowerCaseName);
 }
 
 /**
@@ -149,4 +166,19 @@ function createDirectories(...files) {
         if (!fs.existsSync(directory))
             fs.mkdirSync(directory, { recursive: true });
     }
+}
+
+/**
+ * Convert directory name
+ * @param {string} directoryName directory name
+ */
+function convertToDirectoryName(directoryName) {
+    let match;
+    while ((match = /[A-Z]/g.exec(directoryName)) != null) {
+        if (match.index === 0)
+            directoryName = directoryName[match.index].toLowerCase() + directoryName.substr(match.index + 1);
+        else
+            directoryName = directoryName.substr(0, match.index) + '-' + directoryName[match.index].toLowerCase() + directoryName.substr(match.index + 1);
+    }
+    return directoryName;
 }

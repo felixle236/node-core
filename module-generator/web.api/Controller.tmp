@@ -1,18 +1,18 @@
 import { Body, Delete, Get, JsonController, Param, Params, Post, Put, QueryParams } from 'routing-controllers';
-import { Create{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/create-{folder}/Create{PascalName}Command';
-import { Create{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/create-{folder}/Create{PascalName}CommandHandler';
-import { Delete{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/delete-{folder}/Delete{PascalName}Command';
-import { Delete{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/delete-{folder}/Delete{PascalName}CommandHandler';
-import { Find{PascalName}Query } from '../../../web.core/usecases/{folder}/queries/find-{folder}/Find{PascalName}Query';
-import { Find{PascalName}QueryHandler } from '../../../web.core/usecases/{folder}/queries/find-{folder}/Find{PascalName}QueryHandler';
-import { Find{PascalName}QueryResult } from '../../../web.core/usecases/{folder}/queries/find-{folder}/Find{PascalName}QueryResult';
-import { Get{PascalName}ByIdQuery } from '../../../web.core/usecases/{folder}/queries/get-{folder}-by-id/Get{PascalName}ByIdQuery';
-import { Get{PascalName}ByIdQueryHandler } from '../../../web.core/usecases/{folder}/queries/get-{folder}-by-id/Get{PascalName}ByIdQueryHandler';
-import { Get{PascalName}ByIdQueryResult } from '../../../web.core/usecases/{folder}/queries/get-{folder}-by-id/Get{PascalName}ByIdQueryResult';
+import { Create{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}Command';
+import { Create{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandHandler';
+import { Delete{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}Command';
+import { Delete{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}CommandHandler';
+import { Find{PascalName}Query } from '../../../web.core/usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}Query';
+import { Find{PascalName}QueryHandler } from '../../../web.core/usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryHandler';
+import { Find{PascalName}QueryResult } from '../../../web.core/usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryResult';
+import { Get{PascalName}ByIdQuery } from '../../../web.core/usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQuery';
+import { Get{PascalName}ByIdQueryHandler } from '../../../web.core/usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryHandler';
+import { Get{PascalName}ByIdQueryResult } from '../../../web.core/usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryResult';
 import { PaginationResult } from '../../../web.core/domain/common/usecase/PaginationResult';
 import { Service } from 'typedi';
-import { Update{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/update-{folder}/Update{PascalName}Command';
-import { Update{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/update-{folder}/Update{PascalName}CommandHandler';
+import { Update{PascalName}Command } from '../../../web.core/usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}Command';
+import { Update{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandHandler';
 
 @Service()
 @JsonController('/v1/{folder}s')

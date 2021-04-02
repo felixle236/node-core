@@ -1,30 +1,27 @@
 import { Inject, Service } from 'typedi';
+import { {UsecaseName}Command } from './{UsecaseName}Command';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
 import { I{PascalName}Repository } from '../../../../gateways/repositories/{folder}/I{PascalName}Repository';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { {PascalName} } from '../../../../domain/entities/{folder}/{PascalName}';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-import { Update{PascalName}Command } from './Update{PascalName}Command';
 
 @Service()
-export class Update{PascalName}CommandHandler implements ICommandHandler<Update{PascalName}Command, boolean> {
+export class {UsecaseName}CommandHandler implements ICommandHandler<{UsecaseName}Command, string> {
     @Inject('{lower_case_name}.repository')
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
-    async handle(param: Update{PascalName}Command): Promise<boolean> {
-        if (!param.id)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'id');
-
+    async handle(param: {UsecaseName}Command): Promise<string> {
         const data = new {PascalName}();
         data.name = param.name;
 
-        const isExist = await this._{camelName}Repository.checkNameExist(data.name, param.id);
+        const isExist = await this._{camelName}Repository.checkNameExist(data.name);
         if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
-        const hasSucceed = await this._{camelName}Repository.update(param.id, data);
-        if (!hasSucceed)
+        const id = await this._{camelName}Repository.create(data);
+        if (!id)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-        return hasSucceed;
+        return id;
     }
 }
