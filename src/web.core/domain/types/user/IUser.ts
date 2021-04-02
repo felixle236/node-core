@@ -13,7 +13,7 @@ export interface IUser extends IEntity {
     email: string;
     avatar: string | null;
     gender: GenderType | null;
-    birthday: Date | null;
+    birthday: string | null;
     phone: string | null;
     address: string | null;
     culture: string | null;
@@ -22,6 +22,8 @@ export interface IUser extends IEntity {
     activeExpire: Date | null;
     activedAt: Date | null;
     archivedAt: Date | null;
+
+    /* Relationship */
 
     role: IRole | null;
 }

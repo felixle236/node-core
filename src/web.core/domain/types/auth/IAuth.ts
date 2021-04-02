@@ -12,5 +12,7 @@ export interface IAuth extends IEntity {
     forgotKey: string | null;
     forgotExpire: Date | null;
 
+    /* Relationship */
+
     user: IUser | null;
 }

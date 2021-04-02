@@ -38,7 +38,7 @@ export class AuthDb extends BaseDbEntity<Auth> implements IAuth {
     @JoinColumn({ name: AUTH_SCHEMA.COLUMNS.USER_ID })
     user: IUser | null;
 
-    /* handlers */
+    /* Handlers */
 
     toEntity(): Auth {
         return new Auth(this);

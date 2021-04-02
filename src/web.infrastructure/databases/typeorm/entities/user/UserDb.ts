@@ -7,7 +7,6 @@ import { IAuth } from '../../../../../web.core/domain/types/auth/IAuth';
 import { IRole } from '../../../../../web.core/domain/types/role/IRole';
 import { IUser } from '../../../../../web.core/domain/types/user/IUser';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
-import { DateTransformer } from '../../transformers/DateTransformer';
 import { AuthDb } from '../auth/AuthDb';
 import { BaseDbEntity } from '../base/BaseDBEntity';
 import { RoleDb } from '../role/RoleDb';
@@ -39,8 +38,8 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('enum', { name: USER_SCHEMA.COLUMNS.GENDER, enum: GenderType, nullable: true })
     gender: GenderType | null;
 
-    @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })
-    birthday: Date | null;
+    @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true })
+    birthday: string | null;
 
     @Column('varchar', { name: USER_SCHEMA.COLUMNS.PHONE, length: 20, nullable: true })
     phone: string | null;
@@ -75,7 +74,7 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @OneToMany(() => AuthDb, auth => auth.user)
     auths: IAuth[] | null;
 
-    /* handlers */
+    /* Handlers */
 
     toEntity(): User {
         return new User(this);

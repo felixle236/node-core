@@ -5,5 +5,7 @@ export interface IRole extends IEntity {
     id: string;
     name: string;
 
+    /* Relationship */
+
     users: IUser[] | null;
 }

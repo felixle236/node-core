@@ -31,10 +31,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
         data.lastName = param.lastName;
         data.email = param.email;
         data.gender = param.gender;
-
-        if (param.birthday)
-            data.birthday = new Date(param.birthday);
-
+        data.birthday = param.birthday;
         data.phone = param.phone;
         data.address = param.address;
         data.culture = param.culture;

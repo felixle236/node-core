@@ -7,7 +7,7 @@ import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
 export class Delete{PascalName}CommandHandler implements ICommandHandler<Delete{PascalName}Command, boolean> {
-    @Inject('{camelName}.repository')
+    @Inject('{lower_case_name}.repository')
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async handle(param: Delete{PascalName}Command): Promise<boolean> {

@@ -15,6 +15,8 @@ export abstract class BaseEntity<TEntity extends IEntity> implements IEntity {
         return this.data.deletedAt;
     }
 
+    /* Handlers */
+
     toData(): TEntity {
         return this.data;
     }

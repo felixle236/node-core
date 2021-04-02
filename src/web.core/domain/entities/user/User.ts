@@ -117,25 +117,19 @@ export class User extends BaseEntity<IUser> implements IUser {
         this.data.gender = val;
     }
 
-    get birthday(): Date | null {
+    get birthday(): string | null {
         return this.data.birthday;
     }
 
-    set birthday(val: Date | null) {
+    set birthday(val: string | null) {
         if (val) {
-            if (!validator.isDate(val))
+            if (!validator.isDateString(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
 
-            val = new Date(val.getFullYear(), val.getMonth(), val.getDate());
-            const now = new Date();
-            if (val.getTime() > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() || now.getFullYear() - val.getFullYear() > 100)
+            if (new Date(val) > new Date())
                 throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
         }
         this.data.birthday = val;
-    }
-
-    get birthdayDisplay(): string | null {
-        return this.data.birthday && `${this.data.birthday.getFullYear()}-${this.data.birthday.getMonth() + 1}-${this.data.birthday.getDate()}`;
     }
 
     get phone(): string | null {
@@ -232,7 +226,7 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.data.role ? new Role(this.data.role) : null;
     }
 
-    /* handlers */
+    /* Handlers */
 
     static validateAvatarFile(file: Express.Multer.File): void {
         const maxSize = 1024 * 100; // 100KB

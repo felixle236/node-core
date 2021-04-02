@@ -25,4 +25,8 @@ export class {PascalName} extends BaseEntity<I{PascalName}> implements I{PascalN
 
         this.data.name = val;
     }
+
+    /* Relationship */
+
+    /* Handlers */
 }

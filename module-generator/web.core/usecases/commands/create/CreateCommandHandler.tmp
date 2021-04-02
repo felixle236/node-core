@@ -8,7 +8,7 @@ import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 
 @Service()
 export class Create{PascalName}CommandHandler implements ICommandHandler<Create{PascalName}Command, string> {
-    @Inject('{camelName}.repository')
+    @Inject('{lower_case_name}.repository')
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async handle(param: Create{PascalName}Command): Promise<string> {

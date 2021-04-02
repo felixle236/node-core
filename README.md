@@ -92,7 +92,7 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 - |------------ gateways
 - |------------------ repositories --------------// Interface of repositories.
 - |------------------ services ------------------// Interface of services.
-- |------------ interactors ---------------------// Business logic (usecase).
+- |------------ usecases ------------------------// Business logic.
 - |------ web.infrastructure
 - |------------ databases -----------------------// Data storage services.
 - |------------------ redis ---------------------// In-memory database service.
@@ -153,11 +153,12 @@ The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript,
 ### NPM Commands
 
 ```s
+npm run generate:module {param} -------------------// Generate module or sub-module: entity, schema, repository, usecase, controller,....
+npm run generate:usecase {param} ------------------// Generate usecase for module or sub-module.
 npm run cache:clear -------------------------------// Clear cache of TypeORM.
 npm run migration:generate {Migration_Name} -------// Generate migration for update database structure.
 npm run migration:run -----------------------------// Run the next migrations for update database structure.
 npm run migration:revert --------------------------// Revert migration for update database structure.
-npm run generate:module {ModuleName} --------------// Generate module: entity, schema, repository, interactor, controller,....
 npm run lint
 npm run build -------------------------------------// Build source before start with production environment.
 npm test ------------------------------------------// Start unit test.
@@ -234,7 +235,12 @@ npm test
 ### Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- If you want to create module Client, you can execute: `npm run generate:module Client`. It will generate entity, schema, repository, interactor, controller,....
+- Create `Client` module, you can execute: `npm run generate:module Client`. It will generate entity, schema, repository, usecase, controller,....
+- Create sub module as `ClientCategory` into `Client` module, execute: `npm run generate:module Client#ClientCategory`. It will generate entity, schema, repository, usecase, controller,...into `Client` module (`client` folders).
+- Create `FindClientByOwner` usecase, execute: `npm run generate:usecase Client:Query:FindClientByOwner`. It will generate that usecase only. We have 2 methods: `Query`, `Command`.
+- Create `CreateClientTest` usecase for sub-module `ClientTest` into `Client` module, execute: `npm run generate:usecase Client#ClientTest:Command:CreateClientTest`.
+
+> After generate usecase, we need to modify the content of them for suited.
 
 ### Configuration
 
@@ -334,7 +340,6 @@ throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 ### Data Transformer
 
 - If you use column numeric type in PostgreSQL, it will return a string (not number), you should use transformer option to convert to number. Ex: `@Column('numeric', { transformer: new NumericTransformer() })`
-- If you have a field `birthday` with data type is string and store into db with data type is Date. Ex: `@Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true, transformer: new DateTransformer() })`
 
 ### Database Execution
 
@@ -396,7 +401,7 @@ npm run migration:revert
 ### Permission
 
 - We are using the role for checking permission.
-- We validate and check permission in controllers and pass user info (user authenticated) into interactor handler (if necessary).
+- We validate and check permission in controllers and pass user info (user authenticated) into usecase handler (if necessary).
 - Usually, we have 3 cases:
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
@@ -538,7 +543,7 @@ DELETE http://localhost/api/v1/users/{:id}
          - Types
          - Entities
          - Enums
-      - Interactors
+      - Usecases
       - Gateways
    - Web Infrastructure
       - Databases (typeorm/redis)
