@@ -34,7 +34,7 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('varchar', { name: USER_SCHEMA.COLUMNS.AVATAR, length: 200, nullable: true })
     avatar: string | null;
 
-    @Column('enum', { name: USER_SCHEMA.COLUMNS.GENDER, enum: GenderType, nullable: true })
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.GENDER, length: 6, nullable: true })
     gender: GenderType | null;
 
     @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true })

@@ -29,13 +29,10 @@ export class Initialize1614653951116 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('CREATE TABLE "role" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(50) NOT NULL, CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_8457b7e62d5348ea4579f1bf45" ON "role" ("name") WHERE deleted_at IS NULL');
-        await queryRunner.query('CREATE TYPE "users_gender_enum" AS ENUM(\'male\', \'female\')');
-        await queryRunner.query('CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "role_id" uuid NOT NULL, "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "avatar" character varying(200), "gender" "users_gender_enum", "birthday" date, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
-        await queryRunner.query('CREATE TYPE "manager_gender_enum" AS ENUM(\'male\', \'female\')');
+        await queryRunner.query('CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "role_id" uuid NOT NULL, "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "avatar" character varying(200), "gender" character varying(6), "birthday" date, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE TYPE "manager_status_enum" AS ENUM(\'actived\', \'archived\')');
         await queryRunner.query('CREATE TABLE "manager" ("status" "manager_status_enum" NOT NULL, "email" character varying(120) NOT NULL, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_b3ac840005ee4ed76a7f1c51d01" PRIMARY KEY ("id")) INHERITS ("users")');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_c94753b4da020c90870ab40b7a" ON "manager" ("email") WHERE deleted_at IS NULL');
-        await queryRunner.query('CREATE TYPE "client_gender_enum" AS ENUM(\'male\', \'female\')');
         await queryRunner.query('CREATE TYPE "client_status_enum" AS ENUM(\'inactive\', \'actived\', \'archived\')');
         await queryRunner.query('CREATE TABLE "client" ("status" "client_status_enum" NOT NULL DEFAULT \'inactive\', "email" character varying(120) NOT NULL, "phone" character varying(20), "address" character varying(200), "culture" character varying(5), "currency" character varying(3), "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_96da49381769303a6515a8785c7" PRIMARY KEY ("id")) INHERITS ("users")');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_6376cac90cf2c7378f369a271c" ON "client" ("email") WHERE deleted_at IS NULL');
@@ -62,13 +59,10 @@ export class Initialize1614653951116 implements MigrationInterface {
         await queryRunner.query('DROP INDEX "IDX_6376cac90cf2c7378f369a271c"');
         await queryRunner.query('DROP TABLE "client"');
         await queryRunner.query('DROP TYPE "client_status_enum"');
-        await queryRunner.query('DROP TYPE "client_gender_enum"');
         await queryRunner.query('DROP INDEX "IDX_c94753b4da020c90870ab40b7a"');
         await queryRunner.query('DROP TABLE "manager"');
         await queryRunner.query('DROP TYPE "manager_status_enum"');
-        await queryRunner.query('DROP TYPE "manager_gender_enum"');
         await queryRunner.query('DROP TABLE "users"');
-        await queryRunner.query('DROP TYPE "users_gender_enum"');
         await queryRunner.query('DROP INDEX "IDX_8457b7e62d5348ea4579f1bf45"');
         await queryRunner.query('DROP TABLE "role"');
     }
