@@ -56,6 +56,8 @@ export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.en
 // STORAGE SERVICE
 
 export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.CONSOLE;
+export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
+export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? '';
 export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? '';
 
 export const STORAGE_CONFIG_HOST: string = process.env.STORAGE_CONFIG_HOST ?? '';
@@ -71,10 +73,6 @@ export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
 export const GOOGLE_APPLICATION_CREDENTIALS: string = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? '';
 export const GOOGLE_STORAGE_LOCATION: string = process.env.GOOGLE_STORAGE_LOCATION ?? '';
 export const GOOGLE_STORAGE_CLASS: string = process.env.GOOGLE_STORAGE_CLASS ?? '';
-
-export const STORAGE_URL: string = STORAGE_PROVIDER === StorageProvider.MINIO
-    ? `http://${STORAGE_CONFIG_HOST}` + (STORAGE_CONFIG_PORT === 80 ? '' : `:${STORAGE_CONFIG_PORT}`) + `/${BUCKET_NAME}/`
-    : STORAGE_PROVIDER === StorageProvider.AWS_S3 ? `https://s3.${S3_REGION}.amazonaws.com/${BUCKET_NAME}/` : `http://localhost/${BUCKET_NAME}/`;
 
 // MAIL SERVICE
 

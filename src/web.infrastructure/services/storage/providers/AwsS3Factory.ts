@@ -1,4 +1,6 @@
 import * as S3 from 'aws-sdk/clients/s3';
+import { Readable } from 'node:stream';
+import { STORAGE_URL } from '../../../../configs/Configuration';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 
@@ -107,12 +109,16 @@ export class AwsS3Factory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
+    mapUrl(bucketName: string, urlPath: string): string {
+        return `${STORAGE_URL}/${bucketName}/${urlPath}`;
+    }
+
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, mimetype?: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const param = {
                 Bucket: bucketName, // eslint-disable-line
                 Key: objectName, // eslint-disable-line
-                Body: buffer // eslint-disable-line
+                Body: stream // eslint-disable-line
             } as S3.PutObjectRequest;
 
             if (mimetype)

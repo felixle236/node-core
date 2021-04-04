@@ -1,5 +1,6 @@
 import * as validator from 'class-validator';
-import { STORAGE_URL } from '../../../../configs/Configuration';
+import { Container } from 'typedi';
+import { IStorageService } from '../../../gateways/services/IStorageService';
 import { MessageError } from '../../common/exceptions/message/MessageError';
 import { SystemError } from '../../common/exceptions/SystemError';
 import { RoleId } from '../../enums/role/RoleId';
@@ -60,7 +61,8 @@ export class UserBase<T extends IUser> extends BaseEntity<T> implements IUser {
     }
 
     get avatar(): string | null {
-        return this.data.avatar && STORAGE_URL + this.data.avatar;
+        const storageService = Container.get<IStorageService>('storage.service');
+        return this.data.avatar ? storageService.mapUrl(this.data.avatar) : null;
     }
 
     set avatar(val: string | null) {
@@ -108,7 +110,7 @@ export class UserBase<T extends IUser> extends BaseEntity<T> implements IUser {
     /* Handlers */
 
     static validateAvatarFile(file: Express.Multer.File): void {
-        const maxSize = 1024 * 100; // 100KB
+        const maxSize = 100 * 1024; // 100KB
         const formats = ['jpeg', 'jpg', 'png', 'gif'];
 
         const format = file.mimetype.replace('image/', '');

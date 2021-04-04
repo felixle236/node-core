@@ -1,4 +1,6 @@
 import * as minio from 'minio';
+import { Readable } from 'node:stream';
+import { STORAGE_URL } from '../../../../configs/Configuration';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 
@@ -72,11 +74,15 @@ export class MinioFactory implements IStorageProvider {
         });
     }
 
-    upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<boolean> {
+    mapUrl(bucketName: string, urlPath: string): string {
+        return `${STORAGE_URL}/${bucketName}/${urlPath}`;
+    }
+
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, mimetype?: string): Promise<boolean> {
         const metaData = {} as minio.ItemBucketMetadata;
         if (mimetype)
             metaData['Content-Type'] = mimetype;
-        return this._client.putObject(bucketName, objectName, buffer, metaData).then(result => !!result);
+        return this._client.putObject(bucketName, objectName, stream, metaData).then(result => !!result);
     }
 
     download(bucketName: string, objectName: string): Promise<Buffer> {
