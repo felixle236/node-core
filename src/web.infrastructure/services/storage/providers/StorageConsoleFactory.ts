@@ -1,5 +1,7 @@
+import { Readable } from 'node:stream';
 import Container from 'typedi';
-import { ILogService } from '../../../../../web.core/gateways/services/ILogService';
+import { STORAGE_URL } from '../../../../configs/Configuration';
+import { ILogService } from '../../../../web.core/gateways/services/ILogService';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 
@@ -42,7 +44,11 @@ export class StorageConsoleFactory implements IStorageProvider {
         return [];
     }
 
-    async upload(bucketName: string, objectName: string, _buffer: Buffer, mimetype?: string): Promise<boolean> {
+    mapUrl(bucketName: string, urlPath: string): string {
+        return `${STORAGE_URL}/${bucketName}/${urlPath}`;
+    }
+
+    async upload(bucketName: string, objectName: string, _stream: string | Readable | Buffer, mimetype?: string): Promise<boolean> {
         this._logService.info('StorageService.upload', { bucketName, objectName, mimetype });
         return true;
     }

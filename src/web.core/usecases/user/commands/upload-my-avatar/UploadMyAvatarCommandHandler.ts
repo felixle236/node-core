@@ -1,6 +1,7 @@
 import * as mime from 'mime-types';
 import { Inject, Service } from 'typedi';
 import { UploadMyAvatarCommand } from './UploadMyAvatarCommand';
+import { removeFile } from '../../../../../libs/file';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { ICommandHandler } from '../../../../domain/common/usecase/interfaces/ICommandHandler';
@@ -32,7 +33,8 @@ export class UploadMyAvatarCommandHandler implements ICommandHandler<UploadMyAva
         const data = new User();
         data.avatar = avatarPath;
 
-        let hasSucceed = await this._storageService.upload(avatarPath, param.file.buffer, param.file.mimetype);
+        let hasSucceed = await this._storageService.upload(avatarPath, param.file.path, param.file.mimetype)
+            .finally(() => removeFile(param.file.path));
         if (!hasSucceed)
             throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar file');
 

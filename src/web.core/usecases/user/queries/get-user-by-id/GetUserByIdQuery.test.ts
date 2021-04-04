@@ -6,7 +6,7 @@ import { Container } from 'typedi';
 import * as uuid from 'uuid';
 import { GetUserByIdQuery } from './GetUserByIdQuery';
 import { GetUserByIdQueryHandler } from './GetUserByIdQueryHandler';
-import { formatDateString } from '../../../../../libs/date';
+import { addDays, formatDateString } from '../../../../../libs/date';
 import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
@@ -25,7 +25,7 @@ const getUserByIdQueryHandler = Container.get(GetUserByIdQueryHandler);
 
 const roleData = { id: RoleId.MANAGER, name: 'Role 2' } as IRole;
 const generateUser = () => {
-    return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com', birthday: formatDateString(new Date()) } as IUser);
+    return new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com', birthday: formatDateString(addDays(new Date(), -1)) } as IUser);
 };
 
 describe('User - Get user by id', () => {

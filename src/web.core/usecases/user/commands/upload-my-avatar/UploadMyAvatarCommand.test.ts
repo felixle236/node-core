@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import 'mocha';
+import * as fs from 'fs';
 import * as path from 'path';
 import { expect } from 'chai';
 import * as mime from 'mime-types';
@@ -8,7 +9,6 @@ import { Container } from 'typedi';
 import * as uuid from 'uuid';
 import { UploadMyAvatarCommand } from './UploadMyAvatarCommand';
 import { UploadMyAvatarCommandHandler } from './UploadMyAvatarCommandHandler';
-import { STORAGE_URL } from '../../../../../configs/Configuration';
 import { readFile } from '../../../../../libs/file';
 import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
@@ -21,6 +21,9 @@ Container.set('user.repository', {
     async update() {}
 });
 Container.set('storage.service', {
+    mapUrl(path) {
+        return path;
+    },
     async upload() {}
 });
 
@@ -38,6 +41,7 @@ describe('User - Update my avatar', () => {
 
     beforeEach(() => {
         user = generateUser();
+        sandbox.stub(fs, 'existsSync').returns(false);
     });
 
     afterEach(() => {
@@ -79,7 +83,7 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('tiff'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
@@ -95,7 +99,7 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('png'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
@@ -112,7 +116,7 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
@@ -129,7 +133,7 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
@@ -147,7 +151,7 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
@@ -167,10 +171,10 @@ describe('User - Update my avatar', () => {
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
-            buffer
+            path: filePath
         } as Express.Multer.File;
 
         const url = await uploadMyAvatarCommandHandler.handle(param);
-        expect(url).to.eq(STORAGE_URL + avatarPath);
+        expect(url).to.eq(storageService.mapUrl(avatarPath));
     });
 });

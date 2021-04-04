@@ -113,7 +113,7 @@ describe('User - Update my profile', () => {
         param.firstName = 'Test';
         param.lastName = '1';
         param.gender = GenderType.MALE;
-        param.birthday = formatDateString(new Date());
+        param.birthday = formatDateString(addDays(new Date(), -1));
         param.phone = 'This is the phone number with length greater than 20 characters!';
 
         const result = await updateMyProfileCommandHandler.handle(param).catch(error => error);
@@ -126,7 +126,7 @@ describe('User - Update my profile', () => {
         param.firstName = 'Test';
         param.lastName = '1';
         param.gender = GenderType.MALE;
-        param.birthday = formatDateString(new Date());
+        param.birthday = formatDateString(addDays(new Date(), -1));
         param.phone = '0123456789';
         param.address = 'This is the address with length greater than 200 characters!';
         while (param.address.length <= 200) param.address += param.address;
@@ -141,7 +141,7 @@ describe('User - Update my profile', () => {
         param.firstName = 'Test';
         param.lastName = '1';
         param.gender = GenderType.MALE;
-        param.birthday = formatDateString(new Date());
+        param.birthday = formatDateString(addDays(new Date(), -1));
         param.phone = '0123456789';
         param.address = '123abc';
         param.culture = 'This is the culture with length is not 5 characters!';
@@ -156,7 +156,7 @@ describe('User - Update my profile', () => {
         param.firstName = 'Test';
         param.lastName = '1';
         param.gender = GenderType.MALE;
-        param.birthday = formatDateString(new Date());
+        param.birthday = formatDateString(addDays(new Date(), -1));
         param.phone = '0123456789';
         param.address = '123abc';
         param.culture = 'US-en';

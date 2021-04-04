@@ -1,5 +1,6 @@
 import { Storage } from '@google-cloud/storage';
-import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION } from '../../../../../configs/Configuration';
+import { Readable } from 'node:stream';
+import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION, STORAGE_URL } from '../../../../configs/Configuration';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 
 export class GoogleStorageFactory implements IStorageProvider {
@@ -55,9 +56,13 @@ export class GoogleStorageFactory implements IStorageProvider {
         return files;
     }
 
-    async upload(bucketName: string, objectName: string, buffer: Buffer, mimetype?: string): Promise<any> {
+    mapUrl(bucketName: string, urlPath: string): string {
+        return `${STORAGE_URL}/${bucketName}/${urlPath}`;
+    }
+
+    async upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, mimetype?: string): Promise<any> {
         const file = this._storage.bucket(bucketName).file(objectName);
-        await file.save(buffer, { contentType: mimetype });
+        await file.save(stream as any, { contentType: mimetype });
     }
 
     async download(bucketName: string, objectName: string): Promise<Buffer> {

@@ -2,6 +2,7 @@ import * as multer from 'multer';
 import { Authorized, Body, BodyParam, CurrentUser, Get, JsonController, Patch, Post, Put, UploadedFile } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
+import { STORAGE_UPLOAD_DIR } from '../../../configs/Configuration';
 import { UserAuthenticated } from '../../../web.core/domain/common/UserAuthenticated';
 import { UpdateMyPasswordByEmailCommand } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommand';
 import { UpdateMyPasswordByEmailCommandHandler } from '../../../web.core/usecases/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandHandler';
@@ -12,6 +13,15 @@ import { UploadMyAvatarCommandHandler } from '../../../web.core/usecases/user/co
 import { GetMyProfileQuery } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQuery';
 import { GetMyProfileQueryHandler } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryHandler';
 import { GetMyProfileQueryResult } from '../../../web.core/usecases/user/queries/get-my-profile/GetMyProfileQueryResult';
+
+const storage = multer.diskStorage({
+    destination(_req, _file, cb) {
+        cb(null, STORAGE_UPLOAD_DIR);
+    },
+    filename(_req, file, cb) {
+        cb(null, `${file.fieldname}-${Date.now()}`);
+    }
+});
 
 @Service()
 @JsonController('/v1/me')
@@ -64,7 +74,7 @@ export class MeController {
     @OpenAPI({
         description: 'Upload my avatar.'
     })
-    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage: multer.memoryStorage() } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
+    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<string> {
         const param = new UploadMyAvatarCommand();
         param.userAuthId = userAuth.userId;
         param.file = file;

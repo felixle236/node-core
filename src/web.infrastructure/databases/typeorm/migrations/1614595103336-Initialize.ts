@@ -129,7 +129,11 @@ async function initBucket(): Promise<void> {
             Resource: [`arn:aws:s3:::${BUCKET_NAME}`],
             Condition: {
                 StringEquals: {
-                    's3:prefix': ['images/']
+                    's3:prefix': [
+                        'images/',
+                        'videos/',
+                        'documents/'
+                    ]
                 }
             }
         }, {
@@ -137,7 +141,11 @@ async function initBucket(): Promise<void> {
             Effect: 'Allow',
             Principal: '*',
             Action: ['s3:GetObject'],
-            Resource: [`arn:aws:s3:::${BUCKET_NAME}/images/*`]
+            Resource: [
+                `arn:aws:s3:::${BUCKET_NAME}/images/*`,
+                `arn:aws:s3:::${BUCKET_NAME}/videos/*`,
+                `arn:aws:s3:::${BUCKET_NAME}/documents/*`
+            ]
         }]
     };
 

@@ -75,13 +75,11 @@ export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDumm
                             const buffer = await readFile(item.avatar);
                             const mimetype = mime.lookup(item.avatar) || '';
                             const ext = mime.extension(mimetype);
-
                             if (!ext)
                                 throw new SystemError(MessageError.PARAM_INVALID, 'avatar');
 
                             User.validateAvatarFile({
                                 mimetype,
-                                buffer,
                                 size: buffer.length
                             } as Express.Multer.File);
 
