@@ -26,12 +26,21 @@ export interface IBaseRepository<TEntity, TIdentityType> {
     updateGet(id: TIdentityType, data: TEntity): Promise<TEntity | null>;
     updateGet(id: TIdentityType, data: TEntity, queryRunner: IDbQueryRunner): Promise<TEntity | null>;
 
-    delete(id: TIdentityType | TIdentityType[]): Promise<boolean>;
-    delete(id: TIdentityType | TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
+    delete(id: TIdentityType): Promise<boolean>;
+    delete(id: TIdentityType, queryRunner: IDbQueryRunner): Promise<boolean>;
 
-    softDelete(ids: TIdentityType | TIdentityType[]): Promise<boolean>;
-    softDelete(ids: TIdentityType | TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
+    deleteMultiple(ids: TIdentityType[]): Promise<boolean>;
+    deleteMultiple(ids: TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
 
-    restore(ids: TIdentityType | TIdentityType[]): Promise<boolean>;
-    restore(ids: TIdentityType | TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
+    softDelete(id: TIdentityType): Promise<boolean>;
+    softDelete(id: TIdentityType, queryRunner: IDbQueryRunner): Promise<boolean>;
+
+    softDeleteMultiple(ids: TIdentityType[]): Promise<boolean>;
+    softDeleteMultiple(ids: TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
+
+    restore(id: TIdentityType): Promise<boolean>;
+    restore(id: TIdentityType, queryRunner: IDbQueryRunner): Promise<boolean>;
+
+    restoreMultiple(id: TIdentityType[]): Promise<boolean>;
+    restoreMultiple(id: TIdentityType[], queryRunner: IDbQueryRunner): Promise<boolean>;
 }

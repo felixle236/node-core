@@ -55,12 +55,12 @@ describe('User - Update my avatar', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
     });
 
-    it('Update my avatar without avatar file', async () => {
+    it('Update my avatar without avatar', async () => {
         const param = new UploadMyAvatarCommand();
         param.userAuthId = user.id;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'avatar file'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'avatar'));
     });
 
     it('Update my avatar with avatar extension is invalid', async () => {
@@ -71,7 +71,7 @@ describe('User - Update my avatar', () => {
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_INVALID, 'avatar file'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_INVALID, 'avatar'));
     });
 
     it('Update my avatar with the format of file is not supported', async () => {
@@ -87,7 +87,7 @@ describe('User - Update my avatar', () => {
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar file', 'jpeg, jpg, png, gif'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', 'jpeg, jpg, png, gif'));
     });
 
     it('Update my avatar with large size', async () => {
@@ -103,7 +103,7 @@ describe('User - Update my avatar', () => {
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar file', 100, 'KB'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', 100, 'KB'));
     });
 
     it('Update my avatar with the length of avatar path greater than 100 characters', async () => {
@@ -123,7 +123,7 @@ describe('User - Update my avatar', () => {
         expect(result).to.include(new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 100));
     });
 
-    it('Update my avatar with avatar file cannot upload', async () => {
+    it('Update my avatar with avatar cannot upload', async () => {
         sandbox.stub(storageService, 'upload').resolves(false);
         const filePath = path.join(__dirname, '../../../../../resources/images/test/workplace.jpg');
         const buffer = await readFile(filePath);
@@ -137,7 +137,7 @@ describe('User - Update my avatar', () => {
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar file'));
+        expect(result).to.include(new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar'));
     });
 
     it('Update my avatar with data cannot save', async () => {
@@ -155,7 +155,7 @@ describe('User - Update my avatar', () => {
         } as Express.Multer.File;
 
         const result = await uploadMyAvatarCommandHandler.handle(param).catch(error => error);
-        expect(result).to.include(new SystemError(MessageError.DATA_CANNOT_SAVE, 'avatar file'));
+        expect(result).to.include(new SystemError(MessageError.DATA_CANNOT_SAVE, 'avatar'));
     });
 
     it('Update my avatar successfully', async () => {

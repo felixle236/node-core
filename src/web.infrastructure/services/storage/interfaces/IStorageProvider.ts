@@ -1,5 +1,6 @@
 import { Readable } from 'node:stream';
 import { IBucketItem } from './IBucketItem';
+import { IStorageProviderUploadOption } from './IStorageProviderUploadOption';
 
 export interface IStorageProvider {
     getBuckets(): Promise<string[]>;
@@ -22,11 +23,11 @@ export interface IStorageProvider {
     mapUrl(bucketName: string, urlPath: string): string;
 
     upload(bucketName: string, objectName: string, filePath: string): Promise<boolean>;
-    upload(bucketName: string, objectName: string, filePath: string, mimetype: string): Promise<boolean>;
+    upload(bucketName: string, objectName: string, filePath: string, options: IStorageProviderUploadOption): Promise<boolean>;
     upload(bucketName: string, objectName: string, stream: Readable): Promise<boolean>;
-    upload(bucketName: string, objectName: string, stream: Readable, mimetype: string): Promise<boolean>;
+    upload(bucketName: string, objectName: string, stream: Readable, options: IStorageProviderUploadOption): Promise<boolean>;
     upload(bucketName: string, objectName: string, buffer: Buffer): Promise<boolean>;
-    upload(bucketName: string, objectName: string, buffer: Buffer, mimetype: string): Promise<boolean>;
+    upload(bucketName: string, objectName: string, buffer: Buffer, options: IStorageProviderUploadOption): Promise<boolean>;
 
     download(bucketName: string, objectName: string): Promise<Buffer>;
 

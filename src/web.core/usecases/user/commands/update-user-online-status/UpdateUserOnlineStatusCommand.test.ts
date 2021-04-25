@@ -10,11 +10,11 @@ import { MessageError } from '../../../../domain/common/exceptions/message/Messa
 import { SystemError } from '../../../../domain/common/exceptions/SystemError';
 import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
-Container.set('user.online.status.repository', {
+Container.set('user_online_status.repository', {
     async updateUserOnlineStatus() {}
 });
 
-const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user.online.status.repository');
+const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user_online_status.repository');
 const updateUserOnlineStatusCommandHandler = Container.get(UpdateUserOnlineStatusCommandHandler);
 
 describe('User - Update user online status', () => {

@@ -7,7 +7,7 @@ import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/u
 
 @Service()
 export class UpdateUserOnlineStatusCommandHandler implements ICommandHandler<UpdateUserOnlineStatusCommand, boolean> {
-    @Inject('user.online.status.repository')
+    @Inject('user_online_status.repository')
     private readonly _userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     async handle(param: UpdateUserOnlineStatusCommand): Promise<boolean> {

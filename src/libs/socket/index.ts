@@ -42,3 +42,23 @@ export function sendByEmitter(socketEmitter: SocketIOEmitter, namespace: string,
 export function sendAllByEmitter(socketEmitter: SocketIOEmitter, namespace: string, event: string, data: any): SocketIOEmitter {
     return socketEmitter.of('/' + namespace).emit(event, data);
 }
+
+/**
+ * Return the ack function when we use emit with ack.
+ */
+export function ackTimeout(onSuccess: Function, onTimeout: Function, timeout: number) {
+    let isCalled = false;
+
+    const timer = setTimeout(() => {
+        if (isCalled) return;
+        isCalled = true;
+        onTimeout();
+    }, timeout);
+
+    return (...args) => {
+        if (isCalled) return;
+        isCalled = true;
+        clearTimeout(timer);
+        onSuccess.apply(this, args);
+    };
+}

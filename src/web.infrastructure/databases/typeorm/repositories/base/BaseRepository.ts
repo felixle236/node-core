@@ -81,27 +81,51 @@ export abstract class BaseRepository<TEntity extends IEntity, TDbEntity extends 
         return await this.getById(id, queryRunner);
     }
 
-    async delete(ids: TIdentityType | TIdentityType[]): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME)
+    async delete(id: TIdentityType, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .delete()
+            .whereInIds(id)
+            .execute();
+        return !!result.affected;
+    }
+
+    async deleteMultiple(ids: TIdentityType[], queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .delete()
             .whereInIds(ids)
             .execute();
+        return !!result.affected && result.affected === ids.length;
+    }
+
+    async softDelete(id: TIdentityType, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .softDelete()
+            .whereInIds(id)
+            .execute();
         return !!result.affected;
     }
 
-    async softDelete(ids: TIdentityType | TIdentityType[]): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME)
+    async softDeleteMultiple(ids: TIdentityType[], queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .softDelete()
             .whereInIds(ids)
             .execute();
+        return !!result.affected && result.affected === ids.length;
+    }
+
+    async restore(id: TIdentityType, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .restore()
+            .whereInIds(id)
+            .execute();
         return !!result.affected;
     }
 
-    async restore(ids: TIdentityType | TIdentityType[]): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME)
+    async restoreMultiple(ids: TIdentityType[], queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .restore()
             .whereInIds(ids)
             .execute();
-        return !!result.affected;
+        return !!result.affected && result.affected === ids.length;
     }
 }

@@ -1,7 +1,7 @@
 import { BASE_SCHEMA } from '../base/BaseSchema';
 
 export const {UPPER_CASE_NAME}_SCHEMA = {
-    TABLE_NAME: '{camelName}',
+    TABLE_NAME: '{lower_case_name}',
     COLUMNS: {
         ...BASE_SCHEMA.COLUMNS,
         ID: 'id',

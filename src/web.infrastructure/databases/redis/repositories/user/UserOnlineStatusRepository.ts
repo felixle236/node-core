@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IRedisContext } from '../../../../../web.core/domain/common/database/interfaces/IRedisContext';
 import { IUserOnlineStatusRepository } from '../../../../../web.core/gateways/repositories/user/IUserOnlineStatusRepository';
 
-@Service('user.online.status.repository')
+@Service('user_online_status.repository')
 export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
     @Inject('redis.context')
     private readonly _redisContext: IRedisContext;

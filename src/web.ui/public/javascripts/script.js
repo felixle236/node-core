@@ -26,7 +26,7 @@ function deleteCookie(name) {
 
 window.onload = function() {
     if (userAuth) {
-        socket = io(baseSocket + '/messages', {
+        socket = io(baseSocket + '/chat', {
             reconnectionDelayMax: 10000,
             transports: ['websocket'],
             auth: { token: getCookie('token') }

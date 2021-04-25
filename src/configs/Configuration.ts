@@ -58,13 +58,14 @@ export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.en
 export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.CONSOLE;
 export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
 export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? '';
-export const BUCKET_NAME: string = process.env.BUCKET_NAME ?? '';
+export const STORAGE_BUCKET_NAME: string = process.env.STORAGE_BUCKET_NAME ?? '';
 
-export const STORAGE_CONFIG_HOST: string = process.env.STORAGE_CONFIG_HOST ?? '';
-export const STORAGE_CONFIG_PORT: number = process.env.STORAGE_CONFIG_PORT ? Number(process.env.STORAGE_CONFIG_PORT) : 0;
+export const MINIO_HOST: string = process.env.MINIO_HOST ?? '';
+export const MINIO_PORT: number = process.env.MINIO_PORT ? Number(process.env.MINIO_PORT) : 0;
 export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY ?? '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
-export const IS_USE_SSL_MINIO: boolean = convertStringToBoolean(process.env.IS_USE_SSL_MINIO);
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const MINIO_USE_SSL: boolean = convertStringToBoolean(process.env.MINIO_USE_SSL);
 
 export const S3_REGION: string = process.env.S3_REGION ?? '';
 export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';

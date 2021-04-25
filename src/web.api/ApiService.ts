@@ -23,7 +23,6 @@ export class ApiService {
 
         const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
-        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
 
         const options: RoutingControllersOptions = {
             cors: {
@@ -56,6 +55,7 @@ export class ApiService {
 
         const spec = new ApiDocument(options).generate();
         app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
+        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
 
         return httpServer.start(API_PORT, callback);
     }

@@ -18,6 +18,10 @@ export class Update{PascalName}CommandHandler implements ICommandHandler<Update{
         const data = new {PascalName}();
         data.name = param.name;
 
+        const {camelName} = await this._{camelName}Repository.getById(param.id);
+        if (!{camelName})
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+
         const isExist = await this._{camelName}Repository.checkNameExist(data.name, param.id);
         if (isExist)
             throw new SystemError(MessageError.PARAM_EXISTED, 'name');

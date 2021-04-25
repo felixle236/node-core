@@ -22,21 +22,21 @@ export class UploadMyAvatarCommandHandler implements ICommandHandler<UploadMyAva
             throw new SystemError(MessageError.PARAM_REQUIRED, 'permission');
 
         if (!param.file)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'avatar file');
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'avatar');
 
         const ext = mime.extension(param.file.mimetype);
         if (!ext)
-            throw new SystemError(MessageError.PARAM_INVALID, 'avatar file');
+            throw new SystemError(MessageError.PARAM_INVALID, 'avatar');
 
         User.validateAvatarFile(param.file);
         const avatarPath = User.getAvatarPath(param.userAuthId, ext);
         const data = new User();
         data.avatar = avatarPath;
 
-        let hasSucceed = await this._storageService.upload(avatarPath, param.file.path, param.file.mimetype)
+        let hasSucceed = await this._storageService.upload(avatarPath, param.file.path, { mimetype: param.file.mimetype, size: param.file.size })
             .finally(() => removeFile(param.file.path));
         if (!hasSucceed)
-            throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar file');
+            throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar');
 
         hasSucceed = await this._userRepository.update(param.userAuthId, data);
         if (!hasSucceed)

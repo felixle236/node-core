@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { v4 } from 'uuid';
-import { BUCKET_NAME } from '../../../../configs/Configuration';
+import { STORAGE_BUCKET_NAME } from '../../../../configs/Configuration';
 import { Auth } from '../../../../web.core/domain/entities/auth/Auth';
 import { Role } from '../../../../web.core/domain/entities/role/Role';
 import { User } from '../../../../web.core/domain/entities/user/User';
@@ -120,19 +120,17 @@ async function initBucket(): Promise<void> {
             Effect: 'Allow',
             Principal: '*',
             Action: ['s3:GetBucketLocation'],
-            Resource: [`arn:aws:s3:::${BUCKET_NAME}`]
+            Resource: [`arn:aws:s3:::${STORAGE_BUCKET_NAME}`]
         }, {
             Sid: '',
             Effect: 'Allow',
             Principal: '*',
             Action: ['s3:ListBucket'],
-            Resource: [`arn:aws:s3:::${BUCKET_NAME}`],
+            Resource: [`arn:aws:s3:::${STORAGE_BUCKET_NAME}`],
             Condition: {
                 StringEquals: {
                     's3:prefix': [
-                        'images/',
-                        'videos/',
-                        'documents/'
+                        'users/'
                     ]
                 }
             }
@@ -142,9 +140,7 @@ async function initBucket(): Promise<void> {
             Principal: '*',
             Action: ['s3:GetObject'],
             Resource: [
-                `arn:aws:s3:::${BUCKET_NAME}/images/*`,
-                `arn:aws:s3:::${BUCKET_NAME}/videos/*`,
-                `arn:aws:s3:::${BUCKET_NAME}/documents/*`
+                `arn:aws:s3:::${STORAGE_BUCKET_NAME}/users/*`
             ]
         }]
     };

@@ -86,7 +86,7 @@ export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDumm
                             const avatarPath = User.getAvatarPath(user.id, ext);
                             const data = new User();
                             data.avatar = avatarPath;
-                            await this._storageService.upload(avatarPath, buffer, mimetype);
+                            await this._storageService.upload(avatarPath, buffer, { mimetype, size: buffer.length });
                             await this._userRepository.update(user.id, data, queryRunner);
                         }
                     }

@@ -1,8 +1,10 @@
+import * as fs from 'fs';
 import * as S3 from 'aws-sdk/clients/s3';
 import { Readable } from 'node:stream';
 import { STORAGE_URL } from '../../../../configs/Configuration';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
+import { IStorageProviderUploadOption } from '../interfaces/IStorageProviderUploadOption';
 
 export class AwsS3Factory implements IStorageProvider {
     private readonly _client: S3;
@@ -113,17 +115,23 @@ export class AwsS3Factory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, mimetype?: string): Promise<boolean> {
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
         return new Promise((resolve, reject) => {
+            if (typeof stream === 'string')
+                stream = fs.createReadStream(stream);
+
             const param = {
                 Bucket: bucketName, // eslint-disable-line
                 Key: objectName, // eslint-disable-line
                 Body: stream // eslint-disable-line
             } as S3.PutObjectRequest;
 
-            if (mimetype)
-                param.ContentType = mimetype;
-
+            if (options) {
+                if (options.mimetype)
+                    param.ContentType = options.mimetype;
+                if (options.size)
+                    param.ContentLength = options.size;
+            }
             this._client.upload(param, err => {
                 if (err) return reject(err);
                 resolve(true);

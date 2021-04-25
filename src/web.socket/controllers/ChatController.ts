@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { Service } from 'typedi';
-import { SocketNamespace } from '../../web.core/domain/common/socket/SocketNamespace';
+import { ChatNS } from '../../web.core/domain/common/socket/namespaces/ChatNS';
 import { UserAuthenticated } from '../../web.core/domain/common/UserAuthenticated';
 import { RoleId } from '../../web.core/domain/enums/role/RoleId';
 import { GetUserAuthByJwtQuery } from '../../web.core/usecases/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQuery';
@@ -9,14 +9,14 @@ import { UpdateUserOnlineStatusCommand } from '../../web.core/usecases/user/comm
 import { UpdateUserOnlineStatusCommandHandler } from '../../web.core/usecases/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 
 @Service()
-export default class MessageController {
+export default class ChatController {
     constructor(
         private readonly _getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler,
         private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
     ) {}
 
     init(io: Server) {
-        const nsp = io.of('/' + SocketNamespace.MESSAGE.NAME);
+        const nsp = io.of('/' + ChatNS.NAME);
 
         // Ensure the socket is authorized
         nsp.use(async (socket: Socket, next: Function) => {
@@ -42,7 +42,7 @@ export default class MessageController {
 
             const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
             if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)
-                socket.nsp.emit(SocketNamespace.MESSAGE.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
+                socket.nsp.emit(ChatNS.EVENTS.ONLINE_STATUS_CHANGED, param);
 
             socket.join(userAuth.roleId);
             socket.join(userAuth.userId);
@@ -59,7 +59,10 @@ export default class MessageController {
 
                 const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(param);
                 if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)
-                    socket.nsp.emit(SocketNamespace.MESSAGE.EVENTS.USER_ONLINE_STATUS_CHANGED, param);
+                    socket.nsp.emit(ChatNS.EVENTS.ONLINE_STATUS_CHANGED, param);
+
+                socket.leave(userAuth.roleId);
+                socket.leave(userAuth.userId);
             });
         });
     }

@@ -6,7 +6,7 @@ import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/u
 
 @Service()
 export class GetListOnlineStatusByIdsQueryHandler implements IQueryHandler<GetListOnlineStatusByIdsQuery, GetListOnlineStatusByIdsQueryResult[]> {
-    @Inject('user.online.status.repository')
+    @Inject('user_online_status.repository')
     private readonly _userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     async handle(param: GetListOnlineStatusByIdsQuery): Promise<GetListOnlineStatusByIdsQueryResult[]> {

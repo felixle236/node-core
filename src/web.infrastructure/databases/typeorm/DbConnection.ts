@@ -24,32 +24,25 @@ export class DbConnection implements IDbConnection {
         rollback?: (error: Error)=> Promise<void>,
         done?: ()=> Promise<void>,
         isolationLevel?: TransactionIsolationLevel
-    ): Promise<T | null> {
-        let result: T | null = null;
-        let err;
-        const query = this._connection.createQueryRunner();
-        await query.startTransaction(isolationLevel);
+    ): Promise<T> {
+        const queryRunner = this._connection.createQueryRunner();
+        await queryRunner.startTransaction(isolationLevel);
 
-        try {
-            result = await runInTransaction(query);
-            await query.commitTransaction();
-        }
-        catch (error) {
-            err = error;
-            await query.rollbackTransaction();
-        }
-        finally {
-            await query.release();
-        }
+        return await runInTransaction(queryRunner).then(async result => {
+            await queryRunner.commitTransaction();
+            await queryRunner.release();
 
-        if (err) {
+            if (done)
+                await done();
+            return result;
+        }).catch(async error => {
+            await queryRunner.rollbackTransaction();
+            await queryRunner.release();
+
             if (rollback)
-                await rollback(err);
-            throw err;
-        }
-        else if (done)
-            await done();
-        return result;
+                await rollback(error);
+            throw error;
+        });
     }
 
     async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' }): Promise<IDbMigration[]> {

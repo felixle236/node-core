@@ -7,6 +7,7 @@ import { RoleId } from '../../enums/role/RoleId';
 import { GenderType } from '../../enums/user/GenderType';
 import { UserStatus } from '../../enums/user/UserStatus';
 import { IUser } from '../../types/user/IUser';
+import { Auth } from '../auth/Auth';
 import { BaseEntity } from '../base/BaseEntity';
 import { Role } from '../role/Role';
 
@@ -228,6 +229,10 @@ export class User extends BaseEntity<IUser> implements IUser {
         return this.data.role ? new Role(this.data.role) : null;
     }
 
+    get auths(): Auth[] | null {
+        return this.data.auths ? this.data.auths.map(auth => new Auth(auth)) : null;
+    }
+
     /* Handlers */
 
     static validateAvatarFile(file: Express.Multer.File): void {
@@ -236,13 +241,13 @@ export class User extends BaseEntity<IUser> implements IUser {
 
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
-            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar file', formats.join(', '));
+            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
 
         if (file.size > maxSize)
-            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar file', maxSize / 1024, 'KB');
+            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
     }
 
     static getAvatarPath(id: string, ext: string): string {
-        return `images/users/${id}/avatar.${ext}`;
+        return `users/${id}/images/avatar.${ext}`;
     }
 }

@@ -8,11 +8,11 @@ import { GetListOnlineStatusByIdsQuery } from './GetListOnlineStatusByIdsQuery';
 import { GetListOnlineStatusByIdsQueryHandler } from './GetListOnlineStatusByIdsQueryHandler';
 import { IUserOnlineStatusRepository } from '../../../../gateways/repositories/user/IUserOnlineStatusRepository';
 
-Container.set('user.online.status.repository', {
+Container.set('user_online_status.repository', {
     async getListOnlineStatusByIds() {}
 });
 
-const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user.online.status.repository');
+const userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user_online_status.repository');
 const getListOnlineStatusByIdsQueryHandler = Container.get(GetListOnlineStatusByIdsQueryHandler);
 
 describe('User - Get list online status by ids', () => {
