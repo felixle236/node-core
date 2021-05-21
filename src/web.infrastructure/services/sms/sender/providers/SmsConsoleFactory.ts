@@ -11,7 +11,7 @@ export class SmsConsoleFactory implements ISmsProvider {
             phoneNumber,
             content
         };
-        this._logService.info('SmsService.send', data);
+        this._logService.debug('SmsService.send', data);
         return data;
     }
 }

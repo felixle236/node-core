@@ -29,7 +29,7 @@ const authJwtService = Container.get<IAuthJwtService>('auth_jwt.service');
 const loginByEmailQueryHandler = Container.get(LoginByEmailQueryHandler);
 
 const generateAuth = () => {
-    const user = new User({ id: uuid.v4(), status: UserStatus.ACTIVED, roleId: uuid.v4() } as IUser);
+    const user = new User({ id: uuid.v4(), status: UserStatus.ACTIVE, roleId: uuid.v4() } as IUser);
     return new Auth({ id: uuid.v4(), createdAt: new Date(), userId: user.id, user: user.toData(), type: AuthType.PERSONAL_EMAIL, username: 'test@localhost.com' } as IAuth);
 };
 

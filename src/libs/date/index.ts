@@ -30,9 +30,9 @@ export function getBeginOfDay(date: string | Date): Date {
 export function getEndOfDay(date: string | Date): Date {
     let d = typeof date === 'string' ? new Date(date) : date;
     d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    d = this.addDays(d, 1);
+    d = addDays(d, 1);
 
-    return this.addSeconds(d, -1);
+    return addSeconds(d, -1);
 }
 
 /**
@@ -58,54 +58,61 @@ export function formatDateString(date: string | Date): string {
  * Add miliseconds
  */
 export function addMiliseconds(date: Date, miliseconds: number): Date {
-    date.setMilliseconds(date.getMilliseconds() + miliseconds);
-    return date;
+    const d = new Date(date);
+    d.setMilliseconds(d.getMilliseconds() + miliseconds);
+    return d;
 }
 
 /**
  * Add seconds
  */
 export function addSeconds(date: Date, seconds: number): Date {
-    date.setSeconds(date.getSeconds() + seconds);
-    return date;
+    const d = new Date(date);
+    d.setSeconds(d.getSeconds() + seconds);
+    return d;
 }
 
 /**
  * Add minutes
  */
 export function addMinutes(date: Date, minutes: number): Date {
-    date.setMinutes(date.getMinutes() + minutes);
-    return date;
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() + minutes);
+    return d;
 }
 
 /**
  * Add hours
  */
 export function addHours(date: Date, hours: number): Date {
-    date.setHours(date.getHours() + hours);
-    return date;
+    const d = new Date(date);
+    d.setHours(d.getHours() + hours);
+    return d;
 }
 
 /**
  * Add days
  */
 export function addDays(date: Date, days: number): Date {
-    date.setDate(date.getDate() + days);
-    return date;
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    return d;
 }
 
 /**
  * Add months
  */
 export function addMonths(date: Date, months: number): Date {
-    date.setMonth(date.getMonth() + months);
-    return date;
+    const d = new Date(date);
+    d.setMonth(d.getMonth() + months);
+    return d;
 }
 
 /**
  * Add years
  */
 export function addYears(date: Date, years: number): Date {
-    date.setFullYear(date.getFullYear() + years);
-    return date;
+    const d = new Date(date);
+    d.setFullYear(d.getFullYear() + years);
+    return d;
 }

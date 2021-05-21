@@ -18,7 +18,7 @@ export class UserRepository extends BaseRepository<User, UserDb, string> impleme
     async findAndCount(param: FindUserFilter): Promise<[User[], number]> {
         let query = this.repository.createQueryBuilder(USER_SCHEMA.TABLE_NAME)
             .innerJoinAndSelect(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.RELATED_ONE.ROLE}`, ROLE_SCHEMA.TABLE_NAME)
-            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVED });
+            .where(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status || UserStatus.ACTIVE });
 
         if (param.roleIds)
             query = query.andWhere(`${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: param.roleIds });

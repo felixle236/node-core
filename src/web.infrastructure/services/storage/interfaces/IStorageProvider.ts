@@ -1,4 +1,4 @@
-import { Readable } from 'node:stream';
+import { Readable } from 'stream';
 import { IBucketItem } from './IBucketItem';
 import { IStorageProviderUploadOption } from './IStorageProviderUploadOption';
 

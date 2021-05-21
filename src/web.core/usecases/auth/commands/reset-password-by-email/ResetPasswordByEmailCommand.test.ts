@@ -26,7 +26,7 @@ const authRepository = Container.get<IAuthRepository>('auth.repository');
 const resetPasswordByEmailCommandHandler = Container.get(ResetPasswordByEmailCommandHandler);
 
 const generateAuth = () => {
-    const user = new User({ id: uuid.v4(), status: UserStatus.ACTIVED } as IUser);
+    const user = new User({ id: uuid.v4(), status: UserStatus.ACTIVE } as IUser);
     return new Auth({ id: uuid.v4(), createdAt: new Date(), userId: user.id, user: user.toData(), type: AuthType.PERSONAL_EMAIL, username: 'user1@localhost.com', forgotKey: 'key', forgotExpire: addDays(new Date(), 10) } as IAuth);
 };
 

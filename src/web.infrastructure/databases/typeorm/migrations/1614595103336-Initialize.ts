@@ -29,9 +29,9 @@ export class Initialize1614595103336 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('CREATE TABLE "role" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(50) NOT NULL, CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_8457b7e62d5348ea4579f1bf45" ON "role" ("name") WHERE deleted_at IS NULL');
-        await queryRunner.query('CREATE TYPE "users_status_enum" AS ENUM(\'inactive\', \'actived\', \'archived\')');
+        await queryRunner.query('CREATE TYPE "users_status_enum" AS ENUM(\'inactive\', \'active\', \'archive\')');
         await queryRunner.query('CREATE TYPE "users_gender_enum" AS ENUM(\'male\', \'female\')');
-        await queryRunner.query('CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "role_id" uuid NOT NULL, "status" "users_status_enum" NOT NULL DEFAULT \'actived\', "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "email" character varying(120) NOT NULL, "avatar" character varying(200), "gender" "users_gender_enum", "birthday" date, "phone" character varying(20), "address" character varying(200), "culture" character varying(5), "currency" character varying(3), "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
+        await queryRunner.query('CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "role_id" uuid NOT NULL, "status" "users_status_enum" NOT NULL DEFAULT \'active\', "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "email" character varying(120) NOT NULL, "avatar" character varying(200), "gender" "users_gender_enum", "birthday" date, "phone" character varying(20), "address" character varying(200), "culture" character varying(5), "currency" character varying(3), "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_b383987bfa6e6a8745085621d0" ON "users" ("email") WHERE deleted_at IS NULL');
         await queryRunner.query('CREATE TYPE "auth_type_enum" AS ENUM(\'personal_email\', \'personal_phone\')');
         await queryRunner.query('CREATE TABLE "auth" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "user_id" uuid NOT NULL, "type" "auth_type_enum" NOT NULL, "username" character varying(120) NOT NULL, "password" character varying(32) NOT NULL, "forgot_key" character varying(64), "forgot_expire" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_7e416cf6172bc5aec04244f6459" PRIMARY KEY ("id"))');
@@ -83,13 +83,13 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     role.name = 'Client';
     await roleRepository.create(role, queryRunner);
 
-    logService.info('\x1b[32m Create roles successfully. \x1b[0m');
+    logService.debug('\x1b[32m Create roles successfully. \x1b[0m');
 
     // Create user "Super Admin"
 
     const user = new User({ id: v4() } as IUser);
     user.roleId = RoleId.SUPER_ADMIN;
-    user.status = UserStatus.ACTIVED;
+    user.status = UserStatus.ACTIVE;
     user.firstName = 'Super';
     user.lastName = 'Admin';
     user.email = 'admin@localhost.com';
@@ -104,7 +104,7 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     await userRepository.create(user, queryRunner);
     await authRepository.create(auth, queryRunner);
 
-    logService.info('\x1b[32m Create user "Super Admin" successfully. \x1b[0m');
+    logService.debug('\x1b[32m Create user "Super Admin" successfully. \x1b[0m');
 }
 
 /**
@@ -147,5 +147,5 @@ async function initBucket(): Promise<void> {
 
     /* eslint-enable */
     await storageService.createBucket(JSON.stringify(policy));
-    logService.info('\x1b[32m Create bucket successfully. \x1b[0m');
+    logService.debug('\x1b[32m Create bucket successfully. \x1b[0m');
 }

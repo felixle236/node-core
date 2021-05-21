@@ -26,7 +26,7 @@ export class ForgotPasswordByEmailCommandHandler implements ICommandHandler<Forg
         if (!auth || !auth.user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
 
-        if (auth.user.status !== UserStatus.ACTIVED)
+        if (auth.user.status !== UserStatus.ACTIVE)
             throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
 
         const data = new Auth();

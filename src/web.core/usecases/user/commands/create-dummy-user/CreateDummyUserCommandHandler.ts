@@ -56,7 +56,7 @@ export class CreateDummyUserCommandHandler implements ICommandHandler<CreateDumm
                     else {
                         const user = new User({ id: v4() } as IUser);
                         user.roleId = item.roleId;
-                        user.status = UserStatus.ACTIVED;
+                        user.status = UserStatus.ACTIVE;
                         user.firstName = item.firstName;
                         user.lastName = item.lastName;
                         user.email = item.email;

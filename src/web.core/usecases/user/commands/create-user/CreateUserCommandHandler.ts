@@ -26,7 +26,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
     async handle(param: CreateUserCommand): Promise<string> {
         const data = new User({ id: v4() } as IUser);
         data.roleId = param.roleId;
-        data.status = UserStatus.ACTIVED;
+        data.status = UserStatus.ACTIVE;
         data.firstName = param.firstName;
         data.lastName = param.lastName;
         data.email = param.email;

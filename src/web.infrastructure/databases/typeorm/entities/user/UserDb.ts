@@ -19,7 +19,7 @@ export class UserDb extends BaseDbEntity<User> implements IUser {
     @Column('uuid', { name: USER_SCHEMA.COLUMNS.ROLE_ID })
     roleId: RoleId;
 
-    @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.ACTIVED })
+    @Column('enum', { name: USER_SCHEMA.COLUMNS.STATUS, enum: UserStatus, default: UserStatus.ACTIVE })
     status: UserStatus;
 
     @Column('varchar', { name: USER_SCHEMA.COLUMNS.FIRST_NAME, length: 20 })

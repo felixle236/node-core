@@ -3,9 +3,9 @@ import { Handler, NextFunction, Request, Response } from 'express';
 import * as expressWinston from 'express-winston';
 import { Service } from 'typedi';
 import { createLogger, format, Logger, transports } from 'winston';
-import { LOG_PROVIDER, PROJECT_ID } from '../../../configs/Configuration';
+import { IS_DEVELOPMENT, LOG_PROVIDER, PROJECT_ID } from '../../../configs/Configuration';
 import { LogProvider } from '../../../configs/ServiceProvider';
-import { convertJsonToString } from '../../../libs/common';
+import { convertObjectToString } from '../../../libs/common';
 import { IRequest } from '../../../web.core/domain/common/IRequest';
 import { ILogService } from '../../../web.core/gateways/services/ILogService';
 
@@ -19,6 +19,7 @@ export class LogService implements ILogService {
         switch (LOG_PROVIDER) {
         case LogProvider.WINSTON:
             this._logger = createLogger({
+                level: 'debug',
                 transports: [
                     new transports.Console({
                         format: combine(
@@ -41,6 +42,7 @@ export class LogService implements ILogService {
         case LogProvider.GOOGLE_WINSTON:
         default:
             this._logger = createLogger({
+                level: 'debug',
                 transports: [
                     new LoggingWinston({
                         prefix: PROJECT_ID
@@ -51,32 +53,28 @@ export class LogService implements ILogService {
         }
     }
 
-    info(content: string | Object, meta?: any | any[]) {
-        if (typeof content === 'string')
-            this._logger.info(content, meta);
-        else
-            this._logger.info(convertJsonToString(content), meta);
+    info(content: string | any, meta?: any) {
+        this._logger.info(this._formatContent(content), meta);
     }
 
-    debug(content: string | Object, meta?: any | any[]) {
-        if (typeof content === 'string')
-            this._logger.debug(content, meta);
-        else
-            this._logger.debug(convertJsonToString(content), meta);
+    debug(content: string | any, meta?: any) {
+        this._logger.debug(this._formatContent(content), meta);
     }
 
-    warn(content: string | Object, meta?: any | any[]) {
-        if (typeof content === 'string')
-            this._logger.warn(content, meta);
-        else
-            this._logger.warn(convertJsonToString(content), meta);
+    warn(content: string | any, meta?: any) {
+        this._logger.warn(this._formatContent(content), meta);
     }
 
-    error(content: string | Object, meta?: any | any[]) {
-        if (typeof content === 'string')
-            this._logger.error(content, meta);
-        else
-            this._logger.error(convertJsonToString(content), meta);
+    error(content: string | any, meta?: any) {
+        this._logger.error(this._formatContent(content), meta);
+    }
+
+    private _formatContent(content: string | any): string {
+        if (!content || typeof content === 'string')
+            return content;
+        if (IS_DEVELOPMENT)
+            return convertObjectToString(content, true);
+        return convertObjectToString(content);
     }
 
     createMiddleware(): Handler {

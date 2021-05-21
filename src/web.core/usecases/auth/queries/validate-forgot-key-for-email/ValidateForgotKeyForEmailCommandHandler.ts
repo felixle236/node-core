@@ -23,7 +23,7 @@ export class ValidateForgotKeyForEmailCommandHandler implements ICommandHandler<
             throw new SystemError(MessageError.PARAM_REQUIRED, 'forgot key');
 
         const auth = await this._authRepository.getByUsername(param.email);
-        if (!auth || !auth.user || auth.user.status !== UserStatus.ACTIVED || auth.forgotKey !== param.forgotKey || !auth.forgotExpire || auth.forgotExpire < new Date())
+        if (!auth || !auth.user || auth.user.status !== UserStatus.ACTIVE || auth.forgotKey !== param.forgotKey || !auth.forgotExpire || auth.forgotExpire < new Date())
             return false;
         return true;
     }

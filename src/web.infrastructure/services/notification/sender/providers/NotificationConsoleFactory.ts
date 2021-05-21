@@ -11,7 +11,7 @@ export class NotificationConsoleFactory implements INotificationProvider {
             title,
             content
         };
-        this._logService.info('NotificationService.send', data);
+        this._logService.debug('NotificationService.send', data);
         return data;
     }
 }

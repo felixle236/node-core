@@ -1,13 +1,11 @@
 import { Stripe } from 'stripe';
-import Container, { Service } from 'typedi';
-import { IS_DEVELOPMENT, STRIPE_KEY } from '../../../configs/Configuration';
-import { ILogService } from '../../../web.core/gateways/services/ILogService';
+import { Service } from 'typedi';
+import { STRIPE_KEY } from '../../../configs/Configuration';
 import { IStripePaymentParam, IStripePaymentService } from '../../../web.core/gateways/services/IStripePaymentService';
 
-@Service('stripe.payment.service')
+@Service('stripe_payment.service')
 export class StripePaymentService implements IStripePaymentService {
     private readonly _stripe: Stripe;
-    private readonly _logService = Container.get<ILogService>('log.service');
 
     constructor() {
         this._stripe = new Stripe(STRIPE_KEY, {
@@ -16,11 +14,6 @@ export class StripePaymentService implements IStripePaymentService {
     }
 
     async pay(data: IStripePaymentParam): Promise<string> {
-        if (IS_DEVELOPMENT) {
-            this._logService.info('StripePaymentService.pay', data);
-            return 'customer id';
-        }
-
         const customerParams: Stripe.CustomerCreateParams = {
             name: data.name,
             email: data.email,

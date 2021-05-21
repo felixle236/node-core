@@ -29,12 +29,12 @@ const startApplication = async () => {
 };
 
 const runMigrations = async () => {
-    logService.info('Run migrations...');
+    logService.debug('Run migrations...');
     const conn = dbContext.getConnection();
     const migrations = await conn.runMigrations();
     if (!migrations.length)
-        logService.info('Not found new migration.');
-    migrations.forEach(migration => logService.info('Migrated: \x1b[32m' + migration.name + '\x1b[0m\n'));
+        logService.debug('Not found new migration.');
+    migrations.forEach(migration => logService.debug('Migrated: \x1b[32m' + migration.name + '\x1b[0m\n'));
 };
 
 const showServiceStatus = () => {

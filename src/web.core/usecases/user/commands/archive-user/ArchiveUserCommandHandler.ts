@@ -29,7 +29,7 @@ export class ArchiveUserCommandHandler implements ICommandHandler<ArchiveUserCom
             throw new AccessDeniedError();
 
         const data = new User();
-        data.status = UserStatus.ARCHIVED;
+        data.status = UserStatus.ARCHIVE;
         data.archivedAt = new Date();
 
         const hasSucceed = await this._userRepository.update(param.id, data);

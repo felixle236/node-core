@@ -13,7 +13,7 @@ export class MailConsoleFactory implements IMailProvider {
             subject,
             content
         };
-        this._logService.info('MailService.send', data);
+        this._logService.debug('MailService.send', data);
         return data;
     }
 
@@ -25,7 +25,7 @@ export class MailConsoleFactory implements IMailProvider {
             subject,
             htmlContent
         };
-        this._logService.info('MailService.sendHtml', data);
+        this._logService.debug('MailService.sendHtml', data);
         return data;
     }
 }

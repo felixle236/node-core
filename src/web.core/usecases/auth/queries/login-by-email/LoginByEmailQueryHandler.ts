@@ -25,7 +25,7 @@ export class LoginByEmailQueryHandler implements ICommandHandler<LoginByEmailQue
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.comparePassword(param.password) || !auth.user)
             throw new SystemError(MessageError.PARAM_INCORRECT, 'email or password');
-        if (auth.user.status !== UserStatus.ACTIVED)
+        if (auth.user.status !== UserStatus.ACTIVE)
             throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
 
         const token = this._jwtAuthService.sign(auth.userId, auth.user.roleId);

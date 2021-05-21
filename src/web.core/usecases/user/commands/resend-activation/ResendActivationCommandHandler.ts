@@ -27,7 +27,7 @@ export class ResendActivationCommandHandler implements ICommandHandler<ResendAct
             throw new SystemError(MessageError.PARAM_INVALID, 'email');
 
         const user = await this._userRepository.getByEmail(param.email);
-        if (!user || user.status === UserStatus.ACTIVED)
+        if (!user || user.status === UserStatus.ACTIVE)
             throw new SystemError(MessageError.DATA_INVALID);
 
         const data = new User();

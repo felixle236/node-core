@@ -82,7 +82,7 @@ describe('User - Active user', () => {
     });
 
     it('Active user with account have activated', async () => {
-        user.status = UserStatus.ACTIVED;
+        user.status = UserStatus.ACTIVE;
         sandbox.stub(userRepository, 'getByEmail').resolves(user);
         const param = new ActiveUserCommand();
         param.email = 'test@localhost.com';

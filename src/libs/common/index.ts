@@ -51,15 +51,15 @@ export function convertStringToBoolean(val: string | undefined | null, defaultVa
 }
 
 /**
- * Convert json to string.
+ * Convert object to string.
  */
-export function convertJsonToString(val: object): string {
-    if (!val)
+export function convertObjectToString(val: object, isPrettified: boolean = false): string {
+    if (val == null)
         return '';
     if (typeof val === 'string')
         return val;
-    if (typeof val !== 'object')
-        return '';
 
-    return JSON.stringify(val, undefined, 2).replace(/\n/g, '').replace(/\s\s+/g, ' ');
+    if (isPrettified)
+        return JSON.stringify(val, undefined, 2);
+    return JSON.stringify(val, undefined, '');
 }

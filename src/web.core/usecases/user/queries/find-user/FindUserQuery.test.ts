@@ -74,7 +74,7 @@ describe('User - Find users', () => {
         param.roleAuthId = RoleId.SUPER_ADMIN;
         param.keyword = 'test';
         param.roleIds = [list[0].roleId];
-        param.status = UserStatus.ACTIVED;
+        param.status = UserStatus.ACTIVE;
 
         const result = await findUserQueryHandler.handle(param);
         expect(Array.isArray(result.data) && result.data.length === list.length && result.pagination.total === 10).to.eq(true);

@@ -15,7 +15,7 @@ import { Update{PascalName}Command } from '../../../web.core/usecases/{folder}/c
 import { Update{PascalName}CommandHandler } from '../../../web.core/usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandHandler';
 
 @Service()
-@JsonController('/v1/{folder}s')
+@JsonController('/v1/{usecaseFncFolder}s')
 export class {PascalName}Controller {
     constructor(
         private readonly _find{PascalName}QueryHandler: Find{PascalName}QueryHandler,

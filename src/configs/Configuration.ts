@@ -27,7 +27,7 @@ export const WEB_PORT: number = Number(process.env.WEB_PORT);
 export const ENABLE_SOCKET_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_SOCKET_SERVICE);
 export const SOCKET_PORT: number = Number(process.env.SOCKET_PORT);
 
-// CONFIGURATION OF DATABASE
+// DATABASE CONFIGURATION
 
 export const DB_TYPE: string = process.env.DB_TYPE ?? '';
 export const DB_HOST: string = process.env.DB_HOST ?? '';
@@ -36,12 +36,19 @@ export const DB_NAME: string = process.env.DB_NAME ?? '';
 export const DB_USER: string = process.env.DB_USER ?? '';
 export const DB_PASS: string = process.env.DB_PASS ?? '';
 
-// CONFIGURATION OF REDIS
+// DB CACHING CONFIGURATION
 
-export const REDIS_CONFIG_HOST: string = process.env.REDIS_CONFIG_HOST ?? '';
-export const REDIS_CONFIG_PORT: number = process.env.REDIS_CONFIG_PORT ? Number(process.env.REDIS_CONFIG_PORT) : 0;
-export const REDIS_CONFIG_PASSWORD: string | undefined = process.env.REDIS_CONFIG_PASSWORD || undefined;
-export const REDIS_CONFIG_PREFIX: string | undefined = process.env.REDIS_CONFIG_PREFIX || undefined;
+export const DB_CACHING_HOST: string = process.env.DB_CACHING_HOST ?? '';
+export const DB_CACHING_PORT: number = process.env.DB_CACHING_PORT ? Number(process.env.DB_CACHING_PORT) : 0;
+export const DB_CACHING_PASSWORD: string | undefined = process.env.DB_CACHING_PASSWORD || undefined;
+export const DB_CACHING_PREFIX: string | undefined = process.env.DB_CACHING_PREFIX || undefined;
+
+// DB SOCKET CONFIGURATION
+
+export const DB_SOCKET_HOST: string = process.env.DB_SOCKET_HOST ?? '';
+export const DB_SOCKET_PORT: number = process.env.DB_SOCKET_PORT ? Number(process.env.DB_SOCKET_PORT) : 0;
+export const DB_SOCKET_PASSWORD: string | undefined = process.env.DB_SOCKET_PASSWORD || undefined;
+export const DB_SOCKET_PREFIX: string | undefined = process.env.DB_SOCKET_PREFIX || undefined;
 
 // AUTHENTICATION SERVICE
 

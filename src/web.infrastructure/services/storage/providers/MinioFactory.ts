@@ -1,5 +1,5 @@
+import { Readable } from 'stream';
 import * as minio from 'minio';
-import { Readable } from 'node:stream';
 import { STORAGE_URL } from '../../../../configs/Configuration';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';

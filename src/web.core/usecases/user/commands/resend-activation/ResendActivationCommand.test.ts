@@ -67,7 +67,7 @@ describe('User - Resend activation', () => {
     });
 
     it('Resend activation with account is not activated', async () => {
-        user.status = UserStatus.ACTIVED;
+        user.status = UserStatus.ACTIVE;
         sandbox.stub(userRepository, 'getByEmail').resolves(user);
         const param = new ResendActivationCommand();
         param.email = 'test@localhost.com';

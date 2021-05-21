@@ -1,4 +1,4 @@
-import { Readable } from 'node:stream';
+import { Readable } from 'stream';
 import { Service } from 'typedi';
 import { IStorageProvider } from './interfaces/IStorageProvider';
 import { AwsS3Factory } from './providers/AwsS3Factory';

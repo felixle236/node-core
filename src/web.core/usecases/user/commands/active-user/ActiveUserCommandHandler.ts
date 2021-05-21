@@ -24,14 +24,14 @@ export class ActiveUserCommandHandler implements ICommandHandler<ActiveUserComma
             throw new SystemError(MessageError.PARAM_REQUIRED, 'activation key');
 
         const user = await this._userRepository.getByEmail(param.email);
-        if (!user || user.activeKey !== param.activeKey || user.status === UserStatus.ACTIVED)
+        if (!user || user.activeKey !== param.activeKey || user.status === UserStatus.ACTIVE)
             throw new SystemError(MessageError.DATA_INVALID);
 
         if (!user.activeExpire || user.activeExpire < new Date())
             throw new SystemError(MessageError.PARAM_EXPIRED, 'activation key');
 
         const data = new User();
-        data.status = UserStatus.ACTIVED;
+        data.status = UserStatus.ACTIVE;
         data.activeKey = '';
         data.activedAt = new Date();
 

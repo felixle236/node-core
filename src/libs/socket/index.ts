@@ -1,5 +1,4 @@
 import { Socket } from 'socket.io';
-import { SocketIOEmitter } from 'socket.io-emitter';
 
 /**
  * Send data to room
@@ -27,20 +26,6 @@ export function sendWithSender(socket: Socket, event: string, room: string, data
  */
 export function sendAllWithSender(socket: Socket, event: string, data: any): Boolean {
     return socket.emit(event, data) && socket.nsp.emit(event, data);
-}
-
-/**
- * Send data to room by emitter
- */
-export function sendByEmitter(socketEmitter: SocketIOEmitter, namespace: string, event: string, room: string, data: any): SocketIOEmitter {
-    return socketEmitter.of('/' + namespace).to(room).emit(event, data);
-}
-
-/**
- * Send data to all rooms by emitter
- */
-export function sendAllByEmitter(socketEmitter: SocketIOEmitter, namespace: string, event: string, data: any): SocketIOEmitter {
-    return socketEmitter.of('/' + namespace).emit(event, data);
 }
 
 /**

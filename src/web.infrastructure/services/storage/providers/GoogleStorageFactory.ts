@@ -1,5 +1,5 @@
+import { Readable } from 'stream';
 import { SaveOptions, Storage } from '@google-cloud/storage';
-import { Readable } from 'node:stream';
 import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION, STORAGE_URL } from '../../../../configs/Configuration';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 import { IStorageProviderUploadOption } from '../interfaces/IStorageProviderUploadOption';

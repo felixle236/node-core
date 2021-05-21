@@ -1,10 +1,9 @@
 import * as path from 'path';
 import { RedisClient } from 'redis';
 import { Server, ServerOptions } from 'socket.io';
-import * as socketIOEmitter from 'socket.io-emitter';
 import { createAdapter } from 'socket.io-redis';
 import { Container, Service } from 'typedi';
-import { REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX, SOCKET_PORT } from '../configs/Configuration';
+import { DB_SOCKET_HOST, DB_SOCKET_PASSWORD, DB_SOCKET_PORT, DB_SOCKET_PREFIX, SOCKET_PORT } from '../configs/Configuration';
 import { getFilesSync } from '../libs/file';
 import { SocketServer } from '../web.infrastructure/servers/socket/SocketServer';
 
@@ -15,10 +14,10 @@ export class SocketService {
     setup(): Server {
         // Initalize redis instance
         const pubClient = new RedisClient({
-            host: REDIS_CONFIG_HOST,
-            port: REDIS_CONFIG_PORT,
-            password: REDIS_CONFIG_PASSWORD,
-            prefix: REDIS_CONFIG_PREFIX
+            host: DB_SOCKET_HOST,
+            port: DB_SOCKET_PORT,
+            password: DB_SOCKET_PASSWORD,
+            prefix: DB_SOCKET_PREFIX
         });
 
         const subClient = pubClient.duplicate();
@@ -33,10 +32,6 @@ export class SocketService {
             cookie: false,
             adapter: createAdapter({ pubClient, subClient })
         } as ServerOptions);
-
-        // Initialize socket emitter
-        const socketEmitter = socketIOEmitter(pubClient as any);
-        Container.set('socket.io-emitter', socketEmitter);
 
         this._initControllers();
         return this.io;

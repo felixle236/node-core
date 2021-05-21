@@ -1,7 +1,7 @@
 import * as redis from 'redis';
 import * as redisCommands from 'redis-commands';
 import { Service } from 'typedi';
-import { REDIS_CONFIG_HOST, REDIS_CONFIG_PASSWORD, REDIS_CONFIG_PORT, REDIS_CONFIG_PREFIX } from '../../../configs/Configuration';
+import { DB_CACHING_HOST, DB_CACHING_PASSWORD, DB_CACHING_PORT, DB_CACHING_PREFIX } from '../../../configs/Configuration';
 import { IRedisClient } from '../../../web.core/domain/common/database/interfaces/IRedisClient';
 import { IRedisContext } from '../../../web.core/domain/common/database/interfaces/IRedisContext';
 import { MessageError } from '../../../web.core/domain/common/exceptions/message/MessageError';
@@ -26,10 +26,10 @@ export class RedisContext implements IRedisContext {
             return this._connection;
 
         this._connection = promisifyRedis(redisLib).createClient({
-            host: REDIS_CONFIG_HOST,
-            port: REDIS_CONFIG_PORT,
-            password: REDIS_CONFIG_PASSWORD,
-            prefix: REDIS_CONFIG_PREFIX
+            host: DB_CACHING_HOST,
+            port: DB_CACHING_PORT,
+            password: DB_CACHING_PASSWORD,
+            prefix: DB_CACHING_PREFIX
         } as redis.ClientOpts) as IRedisClient;
         return this._connection;
     }

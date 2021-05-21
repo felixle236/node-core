@@ -1,6 +1,6 @@
 import * as fs from 'fs';
+import { Readable } from 'stream';
 import * as S3 from 'aws-sdk/clients/s3';
-import { Readable } from 'node:stream';
 import { STORAGE_URL } from '../../../../configs/Configuration';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
