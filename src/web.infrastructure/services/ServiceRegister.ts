@@ -1,9 +1,0 @@
-import './auth/AuthJwtService';
-import './log/LogService';
-import './mail/MailService';
-import './notification/NotificationService';
-import './payment/PaypalPaymentService';
-import './payment/StripePaymentService';
-import './sms/SmsService';
-import './socket-emitter/SocketEmitterService';
-import './storage/StorageService';

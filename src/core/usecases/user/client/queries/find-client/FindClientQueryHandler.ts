@@ -1,0 +1,25 @@
+import { FindClientFilter, IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { Inject, Service } from 'typedi';
+import { FindClientQueryInput } from './FindClientQueryInput';
+import { FindClientQueryOutput } from './FindClientQueryOutput';
+
+@Service()
+export class FindClientQueryHandler extends QueryHandler<FindClientQueryInput, FindClientQueryOutput> {
+    @Inject('client.repository')
+    private readonly _clientRepository: IClientRepository;
+
+    async handle(param: FindClientQueryInput): Promise<FindClientQueryOutput> {
+        const filter = new FindClientFilter();
+        filter.setPagination(param.skip, param.limit);
+        filter.keyword = param.keyword;
+        filter.status = param.status;
+
+        const [clients, count] = await this._clientRepository.findAndCount(filter);
+
+        const result = new FindClientQueryOutput();
+        result.setData(clients);
+        result.setPagination(count, param.skip, param.limit);
+        return result;
+    }
+}

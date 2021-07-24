@@ -1,11 +1,12 @@
-import * as dotenv from 'dotenv';
-import { LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './ServiceProvider';
-import { convertStringToBoolean } from '../libs/common';
+import { convertStringToBoolean } from '@libs/common';
+import dotenv from 'dotenv';
+import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './Constants';
 dotenv.config();
 
 // SYSTEM ENVIRONMENT
 
-export const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === 'development';
+const keyEnv = Object.keys(Environment).find(key => Environment[key] === process.env.NODE_ENV);
+export const ENVIRONMENT: Environment = keyEnv ? Environment[keyEnv] : Environment.LOCAL;
 
 export const PROJECT_ID: string = process.env.PROJECT_ID ?? '';
 export const PROJECT_NAME: string = process.env.PROJECT_NAME ?? '';
@@ -15,17 +16,17 @@ export const DOMAIN: string = process.env.DOMAIN ?? '';
 // API SERVICE
 
 export const ENABLE_API_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_API_SERVICE);
-export const API_PORT: number = Number(process.env.API_PORT);
+export const API_PORT = Number(process.env.API_PORT);
 
 // WEB SERVICE
 
 export const ENABLE_WEB_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_WEB_SERVICE);
-export const WEB_PORT: number = Number(process.env.WEB_PORT);
+export const WEB_PORT = Number(process.env.WEB_PORT);
 
 // SOCKET SERVICE
 
 export const ENABLE_SOCKET_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_SOCKET_SERVICE);
-export const SOCKET_PORT: number = Number(process.env.SOCKET_PORT);
+export const SOCKET_PORT = Number(process.env.SOCKET_PORT);
 
 // DATABASE CONFIGURATION
 

@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 
 module.exports = [{
     roleId: '476c11d2-31cf-4a20-8392-514225ae54b2',

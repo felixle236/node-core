@@ -8,12 +8,18 @@
             "type": "node",
             "request": "launch",
             "name": "DEBUG",
-            "cwd": "${workspaceRoot}",
+            "protocol": "inspector",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
             "preLaunchTask": "Compile",
-            "runtimeArgs": ["-r", "ts-node/register"],
-            "args": ["${workspaceRoot}/src/app.ts"],
+            "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+            "args": ["src/app.ts"],
+            "outFiles": ["dist/**/*.js"],
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "local",
+                "TS_NODE_PROJECT": "tsconfig.json",
+                "TS_NODE_TRANSPILE_ONLY": "true"
             }
         }
     ]

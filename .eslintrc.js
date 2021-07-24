@@ -6,22 +6,22 @@ module.exports = {
         node: true,
         mocha: true
     },
+    parserOptions: {
+        ecmaVersion: 2021,
+        sourceType: 'module',
+        ecmaFeatures: {},
+        createDefaultProgram: true // Tempory solution for IDE.
+    },
     extends: [
         'standard',
         'eslint:recommended'
+        // 'plugin:security/recommended'
     ],
     plugins: [
-        '@typescript-eslint',
-        'import'
+        // 'security',
+        'import',
+        'node'
     ],
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaVersion: 2019,
-        sourceType: 'module',
-        ecmaFeatures: {},
-        project: './tsconfig.json',
-        createDefaultProgram: true // Tempory solution for IDE.
-    },
     rules: {
         indent: ['error', 4],
         semi: ['error', 'always'],
@@ -54,15 +54,41 @@ module.exports = {
                 alphabetize: { order: 'asc', caseInsensitive: true },
                 groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object']
             }
-        ]
+        ],
+        'no-console': 'error',
+        'no-throw-literal': 'warn',
+        'no-empty': 'warn',
+        'no-unused-expressions': ['error', { allowTernary: true }],
+        'no-use-before-define': 'off'
     },
     overrides: [{
         files: ['**/*.ts'],
+        parser: '@typescript-eslint/parser',
+        parserOptions: {
+            project: './tsconfig.json'
+        },
+        extends: [
+            'plugin:@typescript-eslint/eslint-recommended',
+            'plugin:@typescript-eslint/recommended'
+        ],
+        plugins: [
+            '@typescript-eslint'
+        ],
         rules: {
             'no-undef': 'off',
-            '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
+            '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-array-constructor': 'error',
-            '@typescript-eslint/type-annotation-spacing': ['error', { before: false, after: true }],
+            '@typescript-eslint/type-annotation-spacing': ['error', { before: false, after: true, overrides: { arrow: { before: true, after: true } } }],
+            '@typescript-eslint/explicit-function-return-type': [
+                'error',
+                {
+                    allowExpressions: true
+                }
+            ],
+            '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+            '@typescript-eslint/no-empty-interface': 'off',
+            '@typescript-eslint/no-use-before-define': 'error',
+            '@typescript-eslint/no-namespace': 'warn',
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
@@ -117,5 +143,8 @@ module.exports = {
                 }
             ]
         }
-    }]
+    }],
+    ignorePatterns: [
+        'src/infras/web.ui/public'
+    ]
 };

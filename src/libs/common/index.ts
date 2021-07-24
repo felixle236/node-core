@@ -1,7 +1,7 @@
 /**
  * Replace params into the template.
  */
-export function mapTemplate(template: string, ...params): string {
+export function mapTemplate(template: string, ...params: any[]): string {
     return template.replace(/{(\d+)}/g, (match, number) => {
         return params[number] || match;
     });
@@ -10,7 +10,7 @@ export function mapTemplate(template: string, ...params): string {
 /**
  * Replace data object into the template.
  */
-export function mapTemplateWithDataObject(template: string, data: Object): string {
+export function mapTemplateWithDataObject(template: string, data: { [key: string]: any }): string {
     if (data) {
         Object.keys(data).forEach(key => {
             template = template.replace(new RegExp(`{{${key}}}`, 'g'), data[key]);
@@ -22,12 +22,12 @@ export function mapTemplateWithDataObject(template: string, data: Object): strin
 /**
  * Convert number to currency.
  */
-export function convertToCurrency(value: number, option): string {
+export function convertToCurrency(value: number, option: {format: string, currency: string}): string {
     if (typeof value !== 'number')
         return '';
 
     if (!option)
-        option = {};
+        option = { format: '', currency: '' };
     if (!option.format)
         option.format = 'en-US';
     if (!option.currency)
@@ -39,7 +39,7 @@ export function convertToCurrency(value: number, option): string {
 /**
  * Convert string to boolean.
  */
-export function convertStringToBoolean(val: string | undefined | null, defaultValue: boolean = false): boolean {
+export function convertStringToBoolean(val: string | undefined | null, defaultValue = false): boolean {
     if (!val)
         return defaultValue;
 
@@ -53,7 +53,7 @@ export function convertStringToBoolean(val: string | undefined | null, defaultVa
 /**
  * Convert object to string.
  */
-export function convertObjectToString(val: object, isPrettified: boolean = false): string {
+export function convertObjectToString(val: {[key: string]: any}, isPrettified = false): string {
     if (val == null)
         return '';
     if (typeof val === 'string')
