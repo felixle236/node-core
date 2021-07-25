@@ -1,7 +1,7 @@
 import { Manager } from '@domain/entities/user/Manager';
+import { RefSchemaArray } from '@shared/decorators/RefSchema';
 import { PaginationResponse } from '@shared/usecase/PaginationResponse';
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class FindManagerQueryData {
     @IsUUID()
@@ -38,7 +38,7 @@ export class FindManagerQueryData {
 
 export class FindManagerQueryOutput extends PaginationResponse<FindManagerQueryData> {
     @IsArray()
-    @JSONSchema({ type: 'array', items: { $ref: '#/components/schemas/' + FindManagerQueryData.name } })
+    @RefSchemaArray(FindManagerQueryData)
     data: FindManagerQueryData[];
 
     setData(list: Manager[]): void {

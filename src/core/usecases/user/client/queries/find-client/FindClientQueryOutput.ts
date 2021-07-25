@@ -1,8 +1,8 @@
 import { Client } from '@domain/entities/user/Client';
 import { GenderType } from '@domain/enums/user/GenderType';
+import { RefSchemaArray } from '@shared/decorators/RefSchema';
 import { PaginationResponse } from '@shared/usecase/PaginationResponse';
 import { IsArray, IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class FindClientQueryData {
     @IsUUID()
@@ -69,7 +69,7 @@ export class FindClientQueryData {
 
 export class FindClientQueryOutput extends PaginationResponse<FindClientQueryData> {
     @IsArray()
-    @JSONSchema({ type: 'array', items: { $ref: '#/components/schemas/' + FindClientQueryData.name } })
+    @RefSchemaArray(FindClientQueryData)
     data: FindClientQueryData[];
 
     setData(list: Client[]): void {

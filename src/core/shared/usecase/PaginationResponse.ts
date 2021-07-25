@@ -1,5 +1,5 @@
+import { RefSchemaObject } from '@shared/decorators/RefSchema';
 import { IsInt, IsObject, Min } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class Pagination {
     @IsInt()
@@ -17,7 +17,7 @@ export class Pagination {
 
 export abstract class PaginationResponse<T> {
     @IsObject()
-    @JSONSchema({ type: 'object', $ref: '#/components/schemas/' + Pagination.name })
+    @RefSchemaObject(Pagination)
     pagination: Pagination;
 
     abstract data: T[];

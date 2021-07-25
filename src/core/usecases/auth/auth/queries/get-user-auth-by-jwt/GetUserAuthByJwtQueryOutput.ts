@@ -1,7 +1,7 @@
 import { AuthType } from '@domain/enums/auth/AuthType';
+import { RefSchemaObject } from '@shared/decorators/RefSchema';
 import { DataResponse } from '@shared/usecase/DataResponse';
 import { IsEnum, IsObject, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class GetUserAuthByJwtQueryData {
     @IsUUID()
@@ -16,7 +16,7 @@ export class GetUserAuthByJwtQueryData {
 
 export class GetUserAuthByJwtQueryOutput extends DataResponse<GetUserAuthByJwtQueryData> {
     @IsObject()
-    @JSONSchema({ type: 'object', $ref: '#/components/schemas/' + GetUserAuthByJwtQueryData.name })
+    @RefSchemaObject(GetUserAuthByJwtQueryData)
     data: GetUserAuthByJwtQueryData;
 
     setData(param: {userId: string, roleId: string, type: AuthType}): void {

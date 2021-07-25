@@ -1,8 +1,8 @@
 import { Client } from '@domain/entities/user/Client';
 import { GenderType } from '@domain/enums/user/GenderType';
+import { RefSchemaObject } from '@shared/decorators/RefSchema';
 import { DataResponse } from '@shared/usecase/DataResponse';
 import { IsDateString, IsEnum, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class GetMyProfileClientQueryData {
     @IsUUID()
@@ -69,7 +69,7 @@ export class GetMyProfileClientQueryData {
 
 export class GetMyProfileClientQueryOutput extends DataResponse<GetMyProfileClientQueryData> {
     @IsObject()
-    @JSONSchema({ type: 'object', $ref: '#/components/schemas/' + GetMyProfileClientQueryData.name })
+    @RefSchemaObject(GetMyProfileClientQueryData)
     data: GetMyProfileClientQueryData;
 
     setData(data: Client): void {

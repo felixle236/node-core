@@ -1,5 +1,5 @@
+import { RefSchemaArray } from '@shared/decorators/RefSchema';
 import { IsArray, IsBoolean, IsDateString, IsOptional, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class GetListOnlineStatusByIdsQueryData {
     @IsUUID()
@@ -15,6 +15,6 @@ export class GetListOnlineStatusByIdsQueryData {
 
 export class GetListOnlineStatusByIdsQueryOutput {
     @IsArray()
-    @JSONSchema({ type: 'array', items: { $ref: '#/components/schemas/' + GetListOnlineStatusByIdsQueryData.name } })
+    @RefSchemaArray(GetListOnlineStatusByIdsQueryData)
     data: GetListOnlineStatusByIdsQueryData[];
 }

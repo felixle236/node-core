@@ -1,7 +1,7 @@
 import { Manager } from '@domain/entities/user/Manager';
+import { RefSchemaObject } from '@shared/decorators/RefSchema';
 import { DataResponse } from '@shared/usecase/DataResponse';
 import { IsDateString, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 
 export class GetManagerByIdQueryData {
     @IsUUID()
@@ -44,7 +44,7 @@ export class GetManagerByIdQueryData {
 
 export class GetManagerByIdQueryOutput extends DataResponse<GetManagerByIdQueryData> {
     @IsObject()
-    @JSONSchema({ type: 'object', $ref: '#/components/schemas/' + GetManagerByIdQueryData.name })
+    @RefSchemaObject(GetManagerByIdQueryData)
     data: GetManagerByIdQueryData;
 
     setData(data: Manager): void {

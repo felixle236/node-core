@@ -1,4 +1,5 @@
 import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
+import { COMPONENT_SCHEMA_PATH } from '@shared/decorators/RefSchema';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { OpenAPIObject } from 'openapi3-ts';
 import { getMetadataArgsStorage, RoutingControllersOptions } from 'routing-controllers';
@@ -11,7 +12,7 @@ export class ApiDocument {
 
     generate(): OpenAPIObject {
         const schemas = validationMetadatasToSchemas({
-            refPointerPrefix: '#/components/schemas/'
+            refPointerPrefix: COMPONENT_SCHEMA_PATH
         });
         const storage = getMetadataArgsStorage();
 

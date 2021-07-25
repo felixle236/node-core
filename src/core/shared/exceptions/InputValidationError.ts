@@ -1,5 +1,5 @@
+import { RefSchemaArray } from '@shared/decorators/RefSchema';
 import { Allow, IsArray, IsOptional, IsString, ValidationError } from 'class-validator';
-import { JSONSchema } from 'class-validator-jsonschema';
 import { MessageError } from './message/MessageError';
 
 export class InputValidationFieldError {
@@ -14,7 +14,7 @@ export class InputValidationFieldError {
 
     @IsArray()
     @IsOptional()
-    @JSONSchema({ type: 'array', $ref: '#/components/schemas/' + InputValidationFieldError.name })
+    @RefSchemaArray(InputValidationFieldError)
     children: InputValidationFieldError[];
 
     constructor(error: ValidationError) {
@@ -41,7 +41,7 @@ export class InputValidationError extends Error {
 
     @IsArray()
     @IsOptional()
-    @JSONSchema({ type: 'array', $ref: '#/components/schemas/' + InputValidationFieldError.name })
+    @RefSchemaArray(InputValidationFieldError)
     fields: InputValidationFieldError[];
 
     constructor(errors: ValidationError[]) {
