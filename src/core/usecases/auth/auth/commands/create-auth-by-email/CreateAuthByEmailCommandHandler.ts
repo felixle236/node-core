@@ -1,5 +1,6 @@
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -17,6 +18,8 @@ export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthBy
     private readonly _authRepository: IAuthRepository;
 
     async handle(param: CreateAuthByEmailCommandInput): Promise<string> {
+        await validateDataInput(param);
+
         const data = new Auth();
         data.type = AuthType.PERSONAL_EMAIL;
         data.userId = param.userId;

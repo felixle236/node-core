@@ -4,6 +4,7 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { IManager } from '@domain/interfaces/user/IManager';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -26,6 +27,8 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
     private readonly _authRepository: IAuthRepository;
 
     async handle(param: CreateManagerCommandInput): Promise<CreateManagerCommandOutput> {
+        await validateDataInput(param);
+
         const data = new Manager({ id: v4() } as IManager);
         data.roleId = RoleId.MANAGER;
         data.status = ManagerStatus.ACTIVED;

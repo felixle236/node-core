@@ -1,4 +1,5 @@
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
+import { validateDataInput } from '@libs/common';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { Inject, Service } from 'typedi';
 import { UpdateUserOnlineStatusCommandInput } from './UpdateUserOnlineStatusCommandInput';
@@ -10,6 +11,8 @@ export class UpdateUserOnlineStatusCommandHandler extends CommandHandler<UpdateU
     private readonly _userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     async handle(id: string, param: UpdateUserOnlineStatusCommandInput): Promise<UpdateUserOnlineStatusCommandOutput> {
+        await validateDataInput(param);
+
         const onlineStatus = {
             isOnline: param.isOnline,
             onlineAt: param.onlineAt

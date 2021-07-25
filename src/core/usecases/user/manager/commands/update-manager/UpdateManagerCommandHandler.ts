@@ -1,5 +1,6 @@
 import { Manager } from '@domain/entities/user/Manager';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -13,6 +14,8 @@ export class UpdateManagerCommandHandler extends CommandHandler<UpdateManagerCom
     private readonly _managerRepository: IManagerRepository;
 
     async handle(id: string, param: UpdateManagerCommandInput): Promise<UpdateManagerCommandOutput> {
+        await validateDataInput(param);
+
         const data = new Manager();
         data.firstName = param.firstName;
         data.lastName = param.lastName;

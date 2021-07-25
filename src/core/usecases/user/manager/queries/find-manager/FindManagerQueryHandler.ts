@@ -1,4 +1,5 @@
 import { FindManagerFilter, IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
+import { validateDataInput } from '@libs/common';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
 import { Inject, Service } from 'typedi';
 import { FindManagerQueryInput } from './FindManagerQueryInput';
@@ -10,6 +11,8 @@ export class FindManagerQueryHandler extends QueryHandler<FindManagerQueryInput,
     private readonly _managerRepository: IManagerRepository;
 
     async handle(param: FindManagerQueryInput): Promise<FindManagerQueryOutput> {
+        await validateDataInput(param);
+
         const filter = new FindManagerFilter();
         filter.setPagination(param.skip, param.limit);
         filter.keyword = param.keyword;

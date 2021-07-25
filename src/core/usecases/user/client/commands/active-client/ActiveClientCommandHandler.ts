@@ -1,6 +1,7 @@
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -14,6 +15,8 @@ export class ActiveClientCommandHandler extends CommandHandler<ActiveClientComma
     private readonly _clientRepository: IClientRepository;
 
     async handle(param: ActiveClientCommandInput): Promise<ActiveClientCommandOutput> {
+        await validateDataInput(param);
+
         const client = await this._clientRepository.getByEmail(param.email);
         if (!client || client.activeKey !== param.activeKey || client.status === ClientStatus.ACTIVED)
             throw new SystemError(MessageError.DATA_INVALID);

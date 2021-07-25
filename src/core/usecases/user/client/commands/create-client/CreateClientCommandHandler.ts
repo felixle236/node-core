@@ -4,6 +4,7 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -26,6 +27,8 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
     private readonly _authRepository: IAuthRepository;
 
     async handle(param: CreateClientCommandInput): Promise<CreateClientCommandOutput> {
+        await validateDataInput(param);
+
         const data = new Client({ id: v4() } as IClient);
         data.roleId = RoleId.CLIENT;
         data.status = ClientStatus.ACTIVED;

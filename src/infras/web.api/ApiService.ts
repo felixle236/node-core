@@ -44,7 +44,7 @@ export class ApiService {
             interceptors: [
                 path.join(__dirname, './interceptors/*{.js,.ts}')
             ],
-            validation: true,
+            validation: false,
             defaultErrorHandler: false,
             development: ENVIRONMENT === Environment.LOCAL,
             authorizationChecker: authenticator.authorizationChecker,

@@ -3,6 +3,7 @@ import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IMailService } from '@gateways/services/IMailService';
+import { validateDataInput } from '@libs/common';
 import { addSeconds } from '@libs/date';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
@@ -20,6 +21,8 @@ export class ResendActivationCommandHandler extends CommandHandler<ResendActivat
     private readonly _mailService: IMailService;
 
     async handle(param: ResendActivationCommandInput): Promise<ResendActivationCommandOutput> {
+        await validateDataInput(param);
+
         const client = await this._clientRepository.getByEmail(param.email);
         if (!client || client.status === ClientStatus.ACTIVED)
             throw new SystemError(MessageError.DATA_INVALID);

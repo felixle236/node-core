@@ -4,10 +4,8 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
+import { validateDataInput } from '@libs/common';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { isEmail } from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { ValidateForgotKeyForEmailCommandInput } from './ValidateForgotKeyForEmailCommandInput';
 import { ValidateForgotKeyForEmailCommandOutput } from './ValidateForgotKeyForEmailCommandOutput';
@@ -24,14 +22,7 @@ export class ValidateForgotKeyForEmailCommandHandler extends CommandHandler<Vali
     private readonly _managerRepository: IManagerRepository;
 
     async handle(param: ValidateForgotKeyForEmailCommandInput): Promise<ValidateForgotKeyForEmailCommandOutput> {
-        if (!param.email)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
-
-        if (!isEmail(param.email))
-            throw new SystemError(MessageError.PARAM_INVALID, 'email');
-
-        if (!param.forgotKey)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'forgot key');
+        await validateDataInput(param);
 
         let isValid = true;
         const auth = await this._authRepository.getByUsername(param.email);

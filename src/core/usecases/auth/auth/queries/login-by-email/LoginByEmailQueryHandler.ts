@@ -5,6 +5,7 @@ import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -27,10 +28,7 @@ export class LoginByEmailQueryHandler extends CommandHandler<LoginByEmailQueryIn
     private readonly _jwtAuthService: IAuthJwtService;
 
     async handle(param: LoginByEmailQueryInput): Promise<LoginByEmailQueryOutput> {
-        if (!param.email)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
-        if (!param.password)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
+        await validateDataInput(param);
 
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.comparePassword(param.password) || !auth.user)

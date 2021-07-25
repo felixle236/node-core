@@ -1,4 +1,5 @@
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
+import { validateDataInput } from '@libs/common';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
 import { Inject, Service } from 'typedi';
 import { GetListOnlineStatusByIdsQueryInput } from './GetListOnlineStatusByIdsQueryInput';
@@ -10,6 +11,8 @@ export class GetListOnlineStatusByIdsQueryHandler extends QueryHandler<GetListOn
     private readonly _userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     async handle(param: GetListOnlineStatusByIdsQueryInput): Promise<GetListOnlineStatusByIdsQueryOutput> {
+        await validateDataInput(param);
+
         const ids = param.ids ?? [];
         const onlineStatuses = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
         const result = new GetListOnlineStatusByIdsQueryOutput();

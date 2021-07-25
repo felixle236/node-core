@@ -2,10 +2,6 @@ import { Allow, IsArray, IsOptional, IsString, ValidationError } from 'class-val
 import { JSONSchema } from 'class-validator-jsonschema';
 import { MessageError } from './message/MessageError';
 
-interface IErrorExtend extends Error {
-    errors?: ValidationError[];
-}
-
 export class InputValidationFieldError {
     @IsString()
     name: string;
@@ -48,13 +44,13 @@ export class InputValidationError extends Error {
     @JSONSchema({ type: 'array', $ref: '#/components/schemas/' + InputValidationFieldError.name })
     fields: InputValidationFieldError[];
 
-    constructor(errObj: IErrorExtend) {
+    constructor(errors: ValidationError[]) {
         super();
         this.httpCode = 400;
         this.name = 'InputValidationError';
         this.code = MessageError.INPUT_VALIDATION.code;
         this.message = MessageError.INPUT_VALIDATION.message;
-        if (errObj.errors)
-            this.fields = errObj.errors.map(item => new InputValidationFieldError(item));
+        if (errors)
+            this.fields = errors.map(item => new InputValidationFieldError(item));
     }
 }

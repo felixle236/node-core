@@ -1,6 +1,7 @@
 import { User } from '@domain/entities/user/User';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
 import { IStorageService } from '@gateways/services/IStorageService';
+import { validateDataInput } from '@libs/common';
 import { removeFile } from '@libs/file';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
@@ -19,6 +20,8 @@ export class UploadMyAvatarCommandHandler extends CommandHandler<UploadMyAvatarC
     private readonly _storageService: IStorageService;
 
     async handle(id: string, param: UploadMyAvatarCommandInput): Promise<UploadMyAvatarCommandOutput> {
+        await validateDataInput(param);
+
         const file = param.file;
         const ext = mime.extension(file.mimetype);
         if (!ext)

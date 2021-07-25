@@ -6,6 +6,7 @@ import { IClient } from '@domain/interfaces/user/IClient';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IMailService } from '@gateways/services/IMailService';
+import { validateDataInput } from '@libs/common';
 import { addSeconds } from '@libs/date';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
@@ -32,6 +33,8 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
     private readonly _mailService: IMailService;
 
     async handle(param: RegisterClientCommandInput): Promise<RegisterClientCommandOutput> {
+        await validateDataInput(param);
+
         const data = new Client({ id: v4() } as IClient);
         data.roleId = RoleId.CLIENT;
         data.firstName = param.firstName;

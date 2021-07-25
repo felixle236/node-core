@@ -1,4 +1,5 @@
 import { FindClientFilter, IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { validateDataInput } from '@libs/common';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
 import { Inject, Service } from 'typedi';
 import { FindClientQueryInput } from './FindClientQueryInput';
@@ -10,6 +11,8 @@ export class FindClientQueryHandler extends QueryHandler<FindClientQueryInput, F
     private readonly _clientRepository: IClientRepository;
 
     async handle(param: FindClientQueryInput): Promise<FindClientQueryOutput> {
+        await validateDataInput(param);
+
         const filter = new FindClientFilter();
         filter.setPagination(param.skip, param.limit);
         filter.keyword = param.keyword;

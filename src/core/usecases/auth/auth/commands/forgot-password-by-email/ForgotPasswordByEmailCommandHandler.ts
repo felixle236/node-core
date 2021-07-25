@@ -5,6 +5,7 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -30,6 +31,8 @@ export class ForgotPasswordByEmailCommandHandler extends CommandHandler<ForgotPa
     private readonly _mailService: IMailService;
 
     async handle(param: ForgotPasswordByEmailCommandInput): Promise<ForgotPasswordByEmailCommandOutput> {
+        await validateDataInput(param);
+
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');

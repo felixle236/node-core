@@ -1,17 +1,15 @@
 import { ENVIRONMENT } from '@configs/Configuration';
 import { Environment } from '@configs/Constants';
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
-import { InputValidationError, InputValidationFieldError } from '@shared/exceptions/InputValidationError';
+import { InputValidationFieldError } from '@shared/exceptions/InputValidationError';
 import { InternalServerError } from '@shared/exceptions/InternalServerError';
 import { IRequest } from '@shared/IRequest';
-import { ValidationError } from 'class-validator';
 import { Response } from 'express';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 
 interface IErrorExtend extends Error {
     httpCode: number;
     code: string;
-    errors?: ValidationError[];
     fields?: InputValidationFieldError[];
 }
 
@@ -32,15 +30,9 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             err = new AccessDeniedError();
         }
         else if (!err.code) {
-            if (err.errors) {
-                err = new InputValidationError(err);
-                req.log.warn(err.message, err.fields);
-            }
-            else {
-                // Handle internal server error.
-                req.log.error(errLogStack);
-                err = new InternalServerError();
-            }
+            // Handle internal server error.
+            req.log.error(errLogStack);
+            err = new InternalServerError();
         }
         else
             req.log.warn(err.message); // Logical error.

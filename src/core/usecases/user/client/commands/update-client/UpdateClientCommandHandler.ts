@@ -1,5 +1,6 @@
 import { Client } from '@domain/entities/user/Client';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -13,6 +14,8 @@ export class UpdateClientCommandHandler extends CommandHandler<UpdateClientComma
     private readonly _clientRepository: IClientRepository;
 
     async handle(id: string, param: UpdateClientCommandInput): Promise<UpdateClientCommandOutput> {
+        await validateDataInput(param);
+
         const data = new Client();
         data.firstName = param.firstName;
         data.lastName = param.lastName;
