@@ -21,18 +21,13 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             errLogStack = errLogStack.replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
 
         // Handle internal server error.
-        if (!err.httpCode || err.httpCode >= 500) {
+        if (!err.code || !err.httpCode || err.httpCode >= 500) {
             req.log.error(errLogStack);
             err = new InternalServerError();
         }
         else if (err.httpCode === 403) {
             req.log.warn(err.message);
             err = new AccessDeniedError();
-        }
-        else if (!err.code) {
-            // Handle internal server error.
-            req.log.error(errLogStack);
-            err = new InternalServerError();
         }
         else
             req.log.warn(err.message); // Logical error.

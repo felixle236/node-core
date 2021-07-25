@@ -38,22 +38,26 @@ export abstract class BaseRepository<TIdentityType, TEntity extends IEntity<TIde
         return result ? result.toEntity() : null;
     }
 
-    async create(data: TEntity, queryRunner: IDbQueryRunner | null = null): Promise<TIdentityType | null> {
+    async create(data: TEntity, queryRunner: IDbQueryRunner | null = null): Promise<TIdentityType> {
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .insert()
             .values(new this._type().fromEntity(data) as any)
             .execute();
-        return result.identifiers && result.identifiers.length && result.identifiers[0].id;
+        return result.identifiers[0].id;
     }
 
-    async createGet(data: TEntity, queryRunner: IDbQueryRunner | null = null): Promise<TEntity | null> {
+    async createGet(data: TEntity, queryRunner: IDbQueryRunner | null = null): Promise<TEntity> {
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .insert()
             .values(new this._type().fromEntity(data) as any)
             .execute();
-        const id = result.identifiers && result.identifiers.length && result.identifiers[0].id;
-        if (!id) return null;
-        return await this.getById(id, queryRunner);
+
+        const result2 = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
+            .whereInIds(result.identifiers[0].id)
+            .getOne();
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return result2!.toEntity();
     }
 
     async createMultiple(list: TEntity[], queryRunner: IDbQueryRunner | null = null): Promise<TIdentityType[]> {

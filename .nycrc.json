@@ -8,17 +8,17 @@
         "statements": [80, 90]
     },
     "include": [
-        "src/web.core/**/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
-        "src/**/*.test.ts",
-        "src/web.core/domain/common/**/*.ts"
+        "src/**/*.test.ts"
     ],
     "extension": [
         ".ts"
     ],
     "require": [
-        "ts-node/register"
+        "ts-node/register",
+        "tsconfig-paths/register"
     ],
     "reporter": [
         "text",

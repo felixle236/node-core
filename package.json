@@ -2,7 +2,7 @@
     "name": "node-core",
     "version": "2.1.0",
     "description": "The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.",
-    "license": "Felix Le",
+    "license": "Felix Lee",
     "readmeFilename": "README.md",
     "scripts": {
         "postinstall": "husky install",
@@ -15,12 +15,12 @@
         "migration:down": "npm run typeorm:cli -- migration:revert",
         "lint": "eslint --ext .ts --ext .js ./src",
         "build": "grunt clean && grunt sync && tsc",
-        "test": "npm run build && nyc mocha --exit ./src/**/*.test.ts",
+        "test": "nyc mocha --exit ./src/**/*.test.ts",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
         "start": "node ./dist/app.js"
     },
     "author": {
-        "name": "Felix Le",
+        "name": "Felix Lee",
         "email": "felix.le.236@gmail.com"
     },
     "homepage": "https://github.com/felixle236/node-core#readme",
