@@ -2,9 +2,8 @@ import { ClientDb } from '@data/typeorm/entities/user/ClientDb';
 import { CLIENT_SCHEMA } from '@data/typeorm/schemas/user/ClientSchema';
 import { Client } from '@domain/entities/user/Client';
 import { FindClientFilter, IClientRepository } from '@gateways/repositories/user/IClientRepository';
-import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
 import { Service } from 'typedi';
-import { Brackets, QueryRunner } from 'typeorm';
+import { Brackets } from 'typeorm';
 import { BaseRepository } from '../base/BaseRepository';
 
 @Service('client.repository')
@@ -41,8 +40,8 @@ export class ClientRepository extends BaseRepository<string, Client, ClientDb> i
         return result ? result.toEntity() : null;
     }
 
-    async checkEmailExist(email: string, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(CLIENT_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
+    async checkEmailExist(email: string): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(CLIENT_SCHEMA.TABLE_NAME)
             .select(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.ID}`)
             .where(`LOWER(${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();

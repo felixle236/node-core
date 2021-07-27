@@ -8,11 +8,13 @@ import { IClientRepository } from '@gateways/repositories/user/IClientRepository
 import { IMailService } from '@gateways/services/IMailService';
 import { validateDataInput } from '@libs/common';
 import { addSeconds } from '@libs/date';
+import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
+import { CheckEmailExistHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { Inject, Service } from 'typedi';
 import { v4 } from 'uuid';
 import { RegisterClientCommandInput } from './RegisterClientCommandInput';
@@ -20,6 +22,12 @@ import { RegisterClientCommandOutput } from './RegisterClientCommandOutput';
 
 @Service()
 export class RegisterClientCommandHandler extends CommandHandler<RegisterClientCommandInput, RegisterClientCommandOutput> {
+    @Inject('db.context')
+    private readonly _dbContext: IDbContext;
+
+    @Inject()
+    private readonly _checkEmailExistHandler: CheckEmailExistHandler;
+
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
 
@@ -46,28 +54,32 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
         auth.email = data.email;
         auth.password = param.password;
 
-        const isExistEmail = await this._clientRepository.checkEmailExist(data.email);
-        if (isExistEmail)
+        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+        if (checkEmailResult.data)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
         const isExistUsername = await this._authRepository.getByUsername(data.email);
         if (isExistUsername)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
+        const activeKey = crypto.randomBytes(32).toString('hex');
         data.status = ClientStatus.INACTIVED;
-        data.activeKey = crypto.randomBytes(32).toString('hex');
+        data.activeKey = activeKey;
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
-        const id = await this._clientRepository.create(data);
-        if (!id)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
+        return await this._dbContext.getConnection().runTransaction(async queryRunner => {
+            const id = await this._clientRepository.create(data, queryRunner);
+            if (!id)
+                throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        const name = `${data.firstName} ${data.lastName}`;
-        this._mailService.sendUserActivation(name, data.email, data.activeKey);
+            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
 
-        await this._createAuthByEmailCommandHandler.handle(auth);
-        const result = new RegisterClientCommandOutput();
-        result.setData(true);
-        return result;
+            const name = `${data.firstName} ${data.lastName}`;
+            await this._mailService.sendUserActivation(name, data.email, activeKey);
+
+            const result = new RegisterClientCommandOutput();
+            result.setData(true);
+            return result;
+        });
     }
 }

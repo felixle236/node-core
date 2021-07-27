@@ -1,16 +1,36 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { SinonSandbox, SinonStubbedInstance } from 'sinon';
 import * as typeorm from 'typeorm';
+import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder';
 
 export type MockConnection = SinonStubbedInstance<typeorm.Connection>;
+export type MockQueryRunner = typeorm.QueryRunner;
 export type MockRepository<T> = SinonStubbedInstance<typeorm.Repository<T>>;
 export type MockSelectQueryBuilder<T> = SinonStubbedInstance<typeorm.SelectQueryBuilder<T>>;
 export type MockInsertQueryBuilder<T> = SinonStubbedInstance<typeorm.InsertQueryBuilder<T>>;
+export type MockUpdateQueryBuilder<T> = SinonStubbedInstance<typeorm.UpdateQueryBuilder<T>>;
+export type MockDeleteQueryBuilder<T> = SinonStubbedInstance<typeorm.DeleteQueryBuilder<T>>;
+export type MockSoftDeleteQueryBuilder<T> = SinonStubbedInstance<SoftDeleteQueryBuilder<T>>;
+export type MockRestoreQueryBuilder<T> = SinonStubbedInstance<SoftDeleteQueryBuilder<T>>;
 
 export class MockInsertResult extends typeorm.InsertResult {
-    constructor(id: string) {
+    constructor(...ids: string[]) {
         super();
-        this.identifiers = [{ id }];
+        this.identifiers = ids.map(id => ({ id }));
+    }
+}
+
+export class MockUpdateResult extends typeorm.UpdateResult {
+    constructor(affected?: number) {
+        super();
+        this.affected = affected;
+    }
+}
+
+export class MockDeleteResult extends typeorm.DeleteResult {
+    constructor(affected?: number) {
+        super();
+        this.affected = affected;
     }
 }
 
@@ -26,7 +46,7 @@ export function mockConnection(sandbox: SinonSandbox): MockConnection {
 /**
  * Mock query runner
  */
-export function mockQueryRunner(sandbox: SinonSandbox): void {
+export function mockQueryRunner(sandbox: SinonSandbox): {connection: MockConnection, queryRunner: MockQueryRunner} {
     const queryRunner = {
         startTransaction: () => {},
         rollbackTransaction: () => {},
@@ -37,6 +57,10 @@ export function mockQueryRunner(sandbox: SinonSandbox): void {
     sandbox.stub(queryRunner, 'startTransaction').resolves();
     sandbox.stub(queryRunner, 'rollbackTransaction').resolves();
     sandbox.stub(queryRunner, 'release').resolves();
+    return {
+        connection,
+        queryRunner
+    };
 }
 
 /**
@@ -66,4 +90,44 @@ export function mockInsertQueryBuilder<T>(sandbox: SinonSandbox): { repository: 
     const { repository, selectQueryBuilder } = mockSelectQueryBuilder<T>(sandbox);
     selectQueryBuilder.insert.returns(insertQueryBuilder as any);
     return { repository, selectQueryBuilder, insertQueryBuilder };
+}
+
+/**
+ * Mock update query builder
+ */
+export function mockUpdateQueryBuilder<T>(sandbox: SinonSandbox): { repository: MockRepository<T>, selectQueryBuilder: MockSelectQueryBuilder<T>, updateQueryBuilder: MockUpdateQueryBuilder<T> } {
+    const updateQueryBuilder = sandbox.createStubInstance(typeorm.UpdateQueryBuilder);
+    const { repository, selectQueryBuilder } = mockSelectQueryBuilder<T>(sandbox);
+    selectQueryBuilder.update.returns(updateQueryBuilder as any);
+    return { repository, selectQueryBuilder, updateQueryBuilder };
+}
+
+/**
+ * Mock delete query builder
+ */
+export function mockDeleteQueryBuilder<T>(sandbox: SinonSandbox): { repository: MockRepository<T>, selectQueryBuilder: MockSelectQueryBuilder<T>, deleteQueryBuilder: MockDeleteQueryBuilder<T> } {
+    const deleteQueryBuilder = sandbox.createStubInstance(typeorm.DeleteQueryBuilder);
+    const { repository, selectQueryBuilder } = mockSelectQueryBuilder<T>(sandbox);
+    selectQueryBuilder.delete.returns(deleteQueryBuilder as any);
+    return { repository, selectQueryBuilder, deleteQueryBuilder };
+}
+
+/**
+ * Mock delete query builder
+ */
+export function mockSoftDeleteQueryBuilder<T>(sandbox: SinonSandbox): { repository: MockRepository<T>, selectQueryBuilder: MockSelectQueryBuilder<T>, softDeleteQueryBuilder: MockSoftDeleteQueryBuilder<T> } {
+    const softDeleteQueryBuilder = sandbox.createStubInstance(SoftDeleteQueryBuilder);
+    const { repository, selectQueryBuilder } = mockSelectQueryBuilder<T>(sandbox);
+    selectQueryBuilder.softDelete.returns(softDeleteQueryBuilder as any);
+    return { repository, selectQueryBuilder, softDeleteQueryBuilder };
+}
+
+/**
+ * Mock delete query builder
+ */
+export function mockRestoreQueryBuilder<T>(sandbox: SinonSandbox): { repository: MockRepository<T>, selectQueryBuilder: MockSelectQueryBuilder<T>, restoreQueryBuilder: MockRestoreQueryBuilder<T> } {
+    const restoreQueryBuilder = sandbox.createStubInstance(SoftDeleteQueryBuilder);
+    const { repository, selectQueryBuilder } = mockSelectQueryBuilder<T>(sandbox);
+    selectQueryBuilder.restore.returns(restoreQueryBuilder as any);
+    return { repository, selectQueryBuilder, restoreQueryBuilder };
 }

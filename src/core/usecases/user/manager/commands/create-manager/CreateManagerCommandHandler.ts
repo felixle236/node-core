@@ -5,11 +5,13 @@ import { IManager } from '@domain/interfaces/user/IManager';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { validateDataInput } from '@libs/common';
+import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
+import { CheckEmailExistHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { Inject, Service } from 'typedi';
 import { v4 } from 'uuid';
 import { CreateManagerCommandInput } from './CreateManagerCommandInput';
@@ -17,6 +19,12 @@ import { CreateManagerCommandOutput } from './CreateManagerCommandOutput';
 
 @Service()
 export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCommandInput, CreateManagerCommandOutput> {
+    @Inject('db.context')
+    private readonly _dbContext: IDbContext;
+
+    @Inject()
+    private readonly _checkEmailExistHandler: CheckEmailExistHandler;
+
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
 
@@ -41,21 +49,23 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
         auth.email = data.email;
         auth.password = param.password;
 
-        const isExistEmail = await this._managerRepository.checkEmailExist(data.email);
-        if (isExistEmail)
+        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+        if (checkEmailResult.data)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
         const isExistUsername = await this._authRepository.getByUsername(data.email);
         if (isExistUsername)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
-        const id = await this._managerRepository.create(data);
-        if (!id)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
+        return await this._dbContext.getConnection().runTransaction(async queryRunner => {
+            const id = await this._managerRepository.create(data, queryRunner);
+            if (!id)
+                throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
-        await this._createAuthByEmailCommandHandler.handle(auth);
-        const result = new CreateManagerCommandOutput();
-        result.setData(id);
-        return result;
+            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
+            const result = new CreateManagerCommandOutput();
+            result.setData(id);
+            return result;
+        });
     }
 }

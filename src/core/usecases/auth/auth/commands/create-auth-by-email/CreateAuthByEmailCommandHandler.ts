@@ -1,6 +1,7 @@
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
 import { validateDataInput } from '@libs/common';
+import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
@@ -17,7 +18,7 @@ export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthBy
     @Inject('auth.repository')
     private readonly _authRepository: IAuthRepository;
 
-    async handle(param: CreateAuthByEmailCommandInput): Promise<string> {
+    async handle(param: CreateAuthByEmailCommandInput, queryRunner?: IDbQueryRunner): Promise<string> {
         await validateDataInput(param);
 
         const data = new Auth();
@@ -26,15 +27,15 @@ export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthBy
         data.username = param.email;
         data.password = param.password;
 
-        const user = await this._userRepository.getById(param.userId);
+        const user = await this._userRepository.getById(param.userId, queryRunner);
         if (!user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');
 
-        const auths = await this._authRepository.getAllByUser(param.userId);
+        const auths = await this._authRepository.getAllByUser(param.userId, queryRunner);
         if (auths && auths.find(auth => auth.type === AuthType.PERSONAL_EMAIL))
             throw new SystemError(MessageError.PARAM_EXISTED, 'data');
 
-        const id = await this._authRepository.create(data);
+        const id = await this._authRepository.create(data, queryRunner);
         if (!id)
             throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return id;

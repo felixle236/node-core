@@ -2,9 +2,8 @@ import { ManagerDb } from '@data/typeorm/entities/user/ManagerDb';
 import { MANAGER_SCHEMA } from '@data/typeorm/schemas/user/ManagerSchema';
 import { Manager } from '@domain/entities/user/Manager';
 import { FindManagerFilter, IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
 import { Service } from 'typedi';
-import { Brackets, QueryRunner } from 'typeorm';
+import { Brackets } from 'typeorm';
 import { BaseRepository } from '../base/BaseRepository';
 
 @Service('manager.repository')
@@ -44,8 +43,8 @@ export class ManagerRepository extends BaseRepository<string, Manager, ManagerDb
         return result ? result.toEntity() : null;
     }
 
-    async checkEmailExist(email: string, queryRunner: IDbQueryRunner | null = null): Promise<boolean> {
-        const result = await this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
+    async checkEmailExist(email: string): Promise<boolean> {
+        const result = await this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME)
             .select(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.ID}`)
             .where(`LOWER(${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
