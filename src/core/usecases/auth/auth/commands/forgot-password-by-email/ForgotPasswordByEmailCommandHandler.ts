@@ -55,13 +55,11 @@ export class ForgotPasswordByEmailCommandHandler extends CommandHandler<ForgotPa
         const data = new Auth();
         data.forgotKey = crypto.randomBytes(32).toString('hex');
         data.forgotExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-
         const hasSucceed = await this._authRepository.update(auth.id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const name = `${auth.user.firstName} ${auth.user.lastName}`;
         this._mailService.sendForgotPassword(name, param.email, data.forgotKey);
+
         const result = new ForgotPasswordByEmailCommandOutput();
         result.setData(hasSucceed);
         return result;

@@ -53,8 +53,10 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     get avatar(): string | null {
+        if (!this.data.avatar)
+            return null;
         const storageService = Container.get<IStorageService>('storage.service');
-        return this.data.avatar ? storageService.mapUrl(this.data.avatar) : null;
+        return storageService.mapUrl(this.data.avatar);
     }
 
     set avatar(val: string | null) {

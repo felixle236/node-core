@@ -1,81 +1,73 @@
-// import 'reflect-metadata';
-// import 'mocha';
-// import * as uuid from 'uuid';
-// import { AccessDeniedError } from '../../../../domain/common/exceptions/AccessDeniedError';
-// import { Container } from 'typedi';
-// import { FindUserQuery } from './FindUserQuery';
-// import { FindUserQueryHandler } from './FindUserQueryHandler';
-// import { IRole } from '../../../../domain/types/role/IRole';
-// import { IUser } from '../../../../domain/types/user/IUser';
-// import { IUserRepository } from '../../../../gateways/repositories/user/IUserRepository';
-// import { MessageError } from '../../../../domain/common/exceptions/message/MessageError';
-// import { RoleId } from '../../../../domain/enums/role/RoleId';
-// import { SystemError } from '../../../../domain/common/exceptions/SystemError';
-// import { User } from '../../../../domain/entities/user/User';
-// import { UserStatus } from '../../../../domain/enums/user/UserStatus';
-// import { createSandbox } from 'sinon';
-// import { expect } from 'chai';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import 'reflect-metadata';
+import 'mocha';
+import { Client } from '@domain/entities/user/Client';
+import { ClientStatus } from '@domain/enums/user/ClientStatus';
+import { GenderType } from '@domain/enums/user/GenderType';
+import { IClient } from '@domain/interfaces/user/IClient';
+import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
+import { mockStorageService } from '@shared/test/MockStorageService';
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
+import Container from 'typedi';
+import { v4 } from 'uuid';
+import { FindClientQueryHandler } from './FindClientQueryHandler';
+import { FindClientQueryInput } from './FindClientQueryInput';
 
-// Container.set('user.repository', {
-//     async findAndCount() {}
-// });
-// const userRepository = Container.get<IUserRepository>('user.repository');
-// const findUserQueryHandler = Container.get(FindUserQueryHandler);
+Container.set('client.repository', {
+    findAndCount() {}
+});
+Container.set('storage.service', mockStorageService);
+const clientRepository = Container.get<IClientRepository>('client.repository');
+const findClientQueryHandler = Container.get(FindClientQueryHandler);
 
-// const roleData = { id: RoleId.MANAGER, name: 'Role 2' } as IRole;
-// const generateUsers = () => {
-//     return [
-//         new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '1', email: 'user1@localhost.com' } as IUser),
-//         new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '2', email: 'user2@localhost.com' } as IUser),
-//         new User({ id: uuid.v4(), createdAt: new Date(), roleId: roleData.id, role: roleData, firstName: 'User', lastName: '3', email: 'user3@localhost.com' } as IUser)
-//     ];
-// };
+describe('Client - Find client', () => {
+    const sandbox = createSandbox();
+    let list: Client[];
 
-// describe('User - Find users', () => {
-//     const sandbox = createSandbox();
-//     let list: User[];
+    beforeEach(() => {
+        const client = new Client({
+            id: v4(),
+            firstName: 'Client',
+            lastName: 'Test',
+            email: 'client.test@localhost.com',
+            avatar: 'avatar.png',
+            gender: GenderType.FEMALE,
+            birthday: '2000-06-08',
+            phone: '0123456789',
+            address: '123 Abc',
+            locale: 'vi-VN'
+        } as IClient);
 
-//     beforeEach(() => {
-//         list = generateUsers();
-//     });
+        list = [
+            client,
+            client
+        ];
+    });
 
-//     afterEach(() => {
-//         sandbox.restore();
-//     });
+    afterEach(() => {
+        sandbox.restore();
+    });
 
-//     it('Find users without permission', async () => {
-//         const param = new FindUserQuery();
+    it('Find client', async () => {
+        sandbox.stub(clientRepository, 'findAndCount').resolves([list, 10]);
+        const param = new FindClientQueryInput();
 
-//         const result = await findUserQueryHandler.handle(param).catch(error => error);
-//         expect(result).to.include(new SystemError(MessageError.PARAM_REQUIRED, 'permission'));
-//     });
+        const result = await findClientQueryHandler.handle(param);
+        expect(result.data.length).to.eq(2);
+        expect(result.pagination.total).to.eq(10);
+    });
 
-//     it('Find users with access denied', async () => {
-//         const param = new FindUserQuery();
-//         param.roleAuthId = RoleId.CLIENT;
+    it('Find client with params', async () => {
+        sandbox.stub(clientRepository, 'findAndCount').resolves([list, 10]);
+        const param = new FindClientQueryInput();
+        param.keyword = 'test';
+        param.status = ClientStatus.ACTIVED;
+        param.skip = 10;
+        param.limit = 2;
 
-//         const result = await findUserQueryHandler.handle(param).catch(error => error);
-//         expect(result).to.include(new AccessDeniedError());
-//     });
-
-//     it('Find users successfully', async () => {
-//         sandbox.stub(userRepository, 'findAndCount').resolves([list, 10]);
-//         const param = new FindUserQuery();
-//         param.roleAuthId = RoleId.SUPER_ADMIN;
-
-//         const result = await findUserQueryHandler.handle(param);
-//         expect(Array.isArray(result.data) && result.data.length === list.length && result.pagination.total === 10).to.eq(true);
-//     });
-
-//     it('Find users successfully with params', async () => {
-//         sandbox.stub(userRepository, 'findAndCount').resolves([list, 10]);
-//         const param = new FindUserQuery();
-//         param.roleAuthId = RoleId.SUPER_ADMIN;
-//         param.keyword = 'test';
-//         param.roleIds = [list[0].roleId];
-//         param.status = UserStatus.ACTIVED;
-
-//         const result = await findUserQueryHandler.handle(param);
-//         expect(Array.isArray(result.data) && result.data.length === list.length && result.pagination.total === 10).to.eq(true);
-//     });
-// });
+        const result = await findClientQueryHandler.handle(param);
+        expect(result.data.length).to.eq(2);
+        expect(result.pagination.total).to.eq(10);
+    });
+});

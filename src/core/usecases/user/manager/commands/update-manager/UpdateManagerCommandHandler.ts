@@ -27,9 +27,6 @@ export class UpdateManagerCommandHandler extends CommandHandler<UpdateManagerCom
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const hasSucceed = await this._managerRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new UpdateManagerCommandOutput();
         result.setData(hasSucceed);
         return result;

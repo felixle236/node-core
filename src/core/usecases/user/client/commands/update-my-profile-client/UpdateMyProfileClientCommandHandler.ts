@@ -25,10 +25,11 @@ export class UpdateMyProfileClientCommandHandler extends CommandHandler<UpdateMy
         data.address = param.address;
         data.locale = param.locale;
 
-        const hasSucceed = await this._clientRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
+        const client = await this._clientRepository.getById(id);
+        if (!client)
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
 
+        const hasSucceed = await this._clientRepository.update(id, data);
         const result = new UpdateMyProfileClientCommandOutput();
         result.setData(hasSucceed);
         return result;

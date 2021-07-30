@@ -1,8 +1,6 @@
 import { Manager } from '@domain/entities/user/Manager';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { validateDataInput } from '@libs/common';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { Inject, Service } from 'typedi';
 import { UpdateMyProfileManagerCommandInput } from './UpdateMyProfileManagerCommandInput';
@@ -21,9 +19,6 @@ export class UpdateMyProfileManagerCommandHandler extends CommandHandler<UpdateM
         data.lastName = param.lastName;
 
         const hasSucceed = await this._managerRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new UpdateMyProfileManagerCommandOutput();
         result.setData(hasSucceed);
         return result;

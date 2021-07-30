@@ -16,9 +16,6 @@ export class DeleteClientCommandHandler extends CommandHandler<string, DeleteCli
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const hasSucceed = await this._clientRepository.softDelete(id);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new DeleteClientCommandOutput();
         result.setData(hasSucceed);
         return result;

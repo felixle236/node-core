@@ -16,9 +16,6 @@ export class DeleteManagerCommandHandler extends CommandHandler<string, DeleteMa
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const hasSucceed = await this._managerRepository.softDelete(id);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new DeleteManagerCommandOutput();
         result.setData(hasSucceed);
         return result;

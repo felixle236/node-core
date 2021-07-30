@@ -2,20 +2,15 @@ import 'mocha';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { FindManagerFilter } from '@gateways/repositories/user/IManagerRepository';
-import { mockSelectQueryBuilder } from '@shared/test/MockTypeORM';
+import { mockSelectQueryBuilder, mockWhereExpression } from '@shared/test/MockTypeORM';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
+import { Brackets } from 'typeorm';
 import { ManagerRepository } from './ManagerRepository';
 import { ManagerDb } from '../../entities/user/ManagerDb';
 
 describe('Manager repository', () => {
     const sandbox = createSandbox();
-
-    it('Load entity defination', async () => {
-        const data = new ManagerDb();
-        const result = data.toEntity();
-        expect(data.fromEntity(result)).to.not.eq(null);
-    });
 
     describe('Find and count', () => {
         afterEach(() => {
@@ -79,6 +74,10 @@ describe('Manager repository', () => {
 
             const managerRepository = new ManagerRepository();
             const [list, count] = await managerRepository.findAndCount(filter);
+
+            const whereExpression = mockWhereExpression();
+            const brackets = selectQueryBuilder.andWhere.secondCall.args[0] as Brackets;
+            brackets.whereFactory(whereExpression);
 
             expect(list.length).to.eq(managerDbs.length);
             expect(count).to.eq(managerDbs.length);

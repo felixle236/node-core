@@ -22,9 +22,6 @@ export class ArchiveClientCommandHandler extends CommandHandler<string, ArchiveC
         data.archivedAt = new Date();
 
         const hasSucceed = await this._clientRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new ArchiveClientCommandOutput();
         result.setData(hasSucceed);
         return result;

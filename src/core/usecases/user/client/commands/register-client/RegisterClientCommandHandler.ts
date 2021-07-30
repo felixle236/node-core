@@ -68,10 +68,7 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
         return await this._dbContext.getConnection().runTransaction(async queryRunner => {
-            const id = await this._clientRepository.create(data, queryRunner);
-            if (!id)
-                throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
+            await this._clientRepository.create(data, queryRunner);
             await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
 
             const name = `${data.firstName} ${data.lastName}`;

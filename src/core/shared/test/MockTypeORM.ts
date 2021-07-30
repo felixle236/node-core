@@ -131,3 +131,17 @@ export function mockRestoreQueryBuilder<T>(sandbox: SinonSandbox): { repository:
     selectQueryBuilder.restore.returns(restoreQueryBuilder as any);
     return { repository, selectQueryBuilder, restoreQueryBuilder };
 }
+
+/**
+ * Mock where expression
+ */
+export function mockWhereExpression(): typeorm.WhereExpression {
+    const whereExpression = {} as typeorm.WhereExpression;
+    whereExpression.where = () => whereExpression;
+    whereExpression.andWhere = () => whereExpression;
+    whereExpression.orWhere = () => whereExpression;
+    whereExpression.whereInIds = () => whereExpression;
+    whereExpression.andWhereInIds = () => whereExpression;
+    whereExpression.orWhereInIds = () => whereExpression;
+    return whereExpression;
+}

@@ -19,8 +19,6 @@ export class Delete{PascalName}CommandHandler implements ICommandHandler<Delete{
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
         const hasSucceed = await this._{camelName}Repository.softDelete(param.id);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return hasSucceed;
     }
 }

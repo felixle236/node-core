@@ -30,9 +30,6 @@ export class ActiveClientCommandHandler extends CommandHandler<ActiveClientComma
         data.activedAt = new Date();
 
         const hasSucceed = await this._clientRepository.update(client.id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new ActiveClientCommandOutput();
         result.setData(hasSucceed);
         return result;

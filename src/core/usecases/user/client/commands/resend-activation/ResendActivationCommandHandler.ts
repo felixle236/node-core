@@ -30,10 +30,7 @@ export class ResendActivationCommandHandler extends CommandHandler<ResendActivat
         const data = new Client();
         data.activeKey = crypto.randomBytes(32).toString('hex');
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-
         const hasSucceed = await this._clientRepository.update(client.id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
 
         const name = `${client.firstName} ${client.lastName}`;
         this._mailService.resendUserActivation(name, client.email, data.activeKey);

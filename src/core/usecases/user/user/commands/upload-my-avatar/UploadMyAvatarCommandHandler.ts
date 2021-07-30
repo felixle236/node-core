@@ -38,9 +38,6 @@ export class UploadMyAvatarCommandHandler extends CommandHandler<UploadMyAvatarC
             throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar');
 
         hasSucceed = await this._userRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new UploadMyAvatarCommandOutput();
         result.setData(data.avatar);
         return result;

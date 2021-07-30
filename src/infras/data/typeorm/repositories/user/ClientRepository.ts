@@ -3,7 +3,7 @@ import { CLIENT_SCHEMA } from '@data/typeorm/schemas/user/ClientSchema';
 import { Client } from '@domain/entities/user/Client';
 import { FindClientFilter, IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { Service } from 'typedi';
-import { Brackets } from 'typeorm';
+import { Brackets, WhereExpression } from 'typeorm';
 import { BaseRepository } from '../base/BaseRepository';
 
 @Service('client.repository')
@@ -19,7 +19,7 @@ export class ClientRepository extends BaseRepository<string, Client, ClientDb> i
 
         if (param.keyword) {
             const keyword = `%${param.keyword}%`;
-            query = query.andWhere(new Brackets(qb => {
+            query = query.andWhere(new Brackets((qb: WhereExpression): any => {
                 qb.where(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
                     .orWhere(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));

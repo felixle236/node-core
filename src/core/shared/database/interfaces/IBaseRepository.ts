@@ -9,9 +9,9 @@ export interface IBaseRepository<TIdentityType, TEntity> {
 
     getById(id: TIdentityType, queryRunner?: IDbQueryRunner): Promise<TEntity | null>;
 
-    create(data: TEntity, queryRunner?: IDbQueryRunner): Promise<TIdentityType | null>;
+    create(data: TEntity, queryRunner?: IDbQueryRunner): Promise<TIdentityType>;
 
-    createGet(data: TEntity, queryRunner?: IDbQueryRunner): Promise<TEntity | null>;
+    createGet(data: TEntity, queryRunner?: IDbQueryRunner): Promise<TEntity>;
 
     createMultiple(list: TEntity[], queryRunner?: IDbQueryRunner): Promise<TIdentityType[]>;
 

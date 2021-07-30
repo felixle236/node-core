@@ -64,12 +64,10 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
 
         return await this._dbContext.getConnection().runTransaction(async queryRunner => {
             const id = await this._clientRepository.create(data, queryRunner);
-            if (!id)
-                throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
-            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
             const result = new CreateClientCommandOutput();
             result.setData(id);
+
+            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
             return result;
         });
     }

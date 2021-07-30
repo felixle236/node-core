@@ -1,20 +1,15 @@
 import 'mocha';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { FindClientFilter } from '@gateways/repositories/user/IClientRepository';
-import { mockSelectQueryBuilder } from '@shared/test/MockTypeORM';
+import { mockSelectQueryBuilder, mockWhereExpression } from '@shared/test/MockTypeORM';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
+import { Brackets } from 'typeorm';
 import { ClientRepository } from './ClientRepository';
 import { ClientDb } from '../../entities/user/ClientDb';
 
 describe('Client repository', () => {
     const sandbox = createSandbox();
-
-    it('Load entity defination', async () => {
-        const data = new ClientDb();
-        const result = data.toEntity();
-        expect(data.fromEntity(result)).to.not.eq(null);
-    });
 
     describe('Find and count', () => {
         afterEach(() => {
@@ -77,6 +72,10 @@ describe('Client repository', () => {
 
             const clientRepository = new ClientRepository();
             const [list, count] = await clientRepository.findAndCount(filter);
+
+            const whereExpression = mockWhereExpression();
+            const brackets = selectQueryBuilder.andWhere.firstCall.args[0] as Brackets;
+            brackets.whereFactory(whereExpression);
 
             expect(list.length).to.eq(clientDbs.length);
             expect(count).to.eq(clientDbs.length);

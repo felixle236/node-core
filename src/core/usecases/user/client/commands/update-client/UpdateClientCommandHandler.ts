@@ -30,9 +30,6 @@ export class UpdateClientCommandHandler extends CommandHandler<UpdateClientComma
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const hasSucceed = await this._clientRepository.update(id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new UpdateClientCommandOutput();
         result.setData(hasSucceed);
         return result;

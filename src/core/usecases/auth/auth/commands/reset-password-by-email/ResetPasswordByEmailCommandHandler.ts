@@ -58,9 +58,6 @@ export class ResetPasswordByEmailCommandHandler extends CommandHandler<ResetPass
         data.forgotExpire = null;
 
         const hasSucceed = await this._authRepository.update(auth.id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new ResetPasswordByEmailCommandOutput();
         result.setData(hasSucceed);
         return result;

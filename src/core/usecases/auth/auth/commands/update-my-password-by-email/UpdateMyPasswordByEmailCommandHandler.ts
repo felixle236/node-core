@@ -26,9 +26,6 @@ export class UpdateMyPasswordByEmailCommandHandler extends CommandHandler<Update
             throw new SystemError(MessageError.PARAM_INCORRECT, 'old password');
 
         const hasSucceed = await this._authRepository.update(auth.id, data);
-        if (!hasSucceed)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
         const result = new UpdateMyPasswordByEmailCommandOutput();
         result.setData(hasSucceed);
         return result;
