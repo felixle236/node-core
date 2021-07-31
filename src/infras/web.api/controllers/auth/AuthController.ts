@@ -9,6 +9,7 @@ import { UpdateMyPasswordByEmailCommandHandler } from '@usecases/auth/auth/comma
 import { UpdateMyPasswordByEmailCommandInput } from '@usecases/auth/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandInput';
 import { UpdateMyPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandOutput';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
+import { GetUserAuthByJwtQueryInput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryInput';
 import { GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
 import { LoginByEmailQueryHandler } from '@usecases/auth/auth/queries/login-by-email/LoginByEmailQueryHandler';
 import { LoginByEmailQueryInput } from '@usecases/auth/auth/queries/login-by-email/LoginByEmailQueryInput';
@@ -44,7 +45,9 @@ export class AuthController {
             const parts = (authorization || '').split(' ');
             accessToken = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
         }
-        return await this._getUserAuthByJwtQueryHandler.handle(accessToken);
+        const param = new GetUserAuthByJwtQueryInput();
+        param.token = accessToken;
+        return await this._getUserAuthByJwtQueryHandler.handle(param);
     }
 
     @Post('/login')

@@ -3,6 +3,7 @@ import { ISocket } from '@shared/socket/interfaces/ISocket';
 import { ChatNS } from '@shared/socket/namespaces/ChatNS';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
+import { GetUserAuthByJwtQueryInput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryInput';
 import { UpdateUserOnlineStatusCommandHandler } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 import { UpdateUserOnlineStatusCommandInput } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandInput';
 import { Server } from 'socket.io';
@@ -22,7 +23,9 @@ export default class ChatController {
         nsp.use(async (socket: ISocket, next: (err?: Error) => void) => {
             try {
                 const token = (socket.handshake.auth as {token: string}).token;
-                const { data } = await this._getUserAuthByJwtQueryHandler.handle(token);
+                const param = new GetUserAuthByJwtQueryInput();
+                param.token = token;
+                const { data } = await this._getUserAuthByJwtQueryHandler.handle(param);
                 socket.userAuth = new UserAuthenticated(data.userId, data.roleId, data.type);
                 next();
             }
