@@ -76,7 +76,7 @@ describe('Auth - Validate forgot key for email', () => {
 
         param = new ValidateForgotKeyForEmailCommandInput();
         param.email = authTest.username;
-        param.forgotKey = authTest.forgotKey!;
+        param.forgotKey = 'forgot key';
     });
 
     afterEach(() => {

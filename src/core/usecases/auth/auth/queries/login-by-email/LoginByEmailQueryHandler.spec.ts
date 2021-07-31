@@ -170,7 +170,7 @@ describe('Auth - Login by email', () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
 
-        const token = authJwtService.sign(authTest.userId, authTest.user!.roleId, authTest.type);
+        const token = authJwtService.sign(authTest.userId, clientTest.roleId, authTest.type);
         const result = await loginByEmailQueryHandler.handle(param);
         expect(result.data).to.eq(token);
     });
