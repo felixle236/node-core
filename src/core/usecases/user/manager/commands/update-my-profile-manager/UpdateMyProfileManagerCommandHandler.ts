@@ -1,6 +1,8 @@
 import { Manager } from '@domain/entities/user/Manager';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { validateDataInput } from '@libs/common';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { Inject, Service } from 'typedi';
 import { UpdateMyProfileManagerCommandInput } from './UpdateMyProfileManagerCommandInput';
@@ -17,6 +19,12 @@ export class UpdateMyProfileManagerCommandHandler extends CommandHandler<UpdateM
         const data = new Manager();
         data.firstName = param.firstName;
         data.lastName = param.lastName;
+        data.gender = param.gender;
+        data.birthday = param.birthday;
+
+        const manager = await this._managerRepository.getById(id);
+        if (!manager)
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const hasSucceed = await this._managerRepository.update(id, data);
         const result = new UpdateMyProfileManagerCommandOutput();

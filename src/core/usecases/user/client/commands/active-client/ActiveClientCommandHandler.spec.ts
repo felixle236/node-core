@@ -15,23 +15,32 @@ import { v4 } from 'uuid';
 import { ActiveClientCommandHandler } from './ActiveClientCommandHandler';
 import { ActiveClientCommandInput } from './ActiveClientCommandInput';
 
-Container.set('client.repository', {
-    getByEmail() {},
-    update() {}
-});
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const activeClientCommandHandler = Container.get(ActiveClientCommandHandler);
-
 describe('Client - Active client', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
+    let clientRepository: IClientRepository;
+    let activeClientCommandHandler: ActiveClientCommandHandler;
+    let clientTest: Client;
+
+    before(() => {
+        Container.set('client.repository', {
+            getByEmail() {},
+            update() {}
+        });
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        activeClientCommandHandler = Container.get(ActiveClientCommandHandler);
+    });
 
     beforeEach(() => {
-        dataTest = new Client({ id: v4() } as IClient);
+        clientTest = new Client({ id: v4() } as IClient);
     });
 
     afterEach(() => {
         sandbox.restore();
+    });
+
+    after(() => {
+        Container.reset();
     });
 
     it('Active client with params missing error', async () => {
@@ -56,7 +65,7 @@ describe('Client - Active client', () => {
     });
 
     it('Active client with params invalid error - Active key not matched', async () => {
-        sandbox.stub(clientRepository, 'getByEmail').resolves(dataTest);
+        sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
@@ -70,9 +79,9 @@ describe('Client - Active client', () => {
     });
 
     it('Active client with params invalid error - Account is actived already', async () => {
-        dataTest.activeKey = 'test';
-        dataTest.status = ClientStatus.ACTIVED;
-        sandbox.stub(clientRepository, 'getByEmail').resolves(dataTest);
+        clientTest.activeKey = 'test';
+        clientTest.status = ClientStatus.ACTIVED;
+        sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
@@ -86,9 +95,9 @@ describe('Client - Active client', () => {
     });
 
     it('Active client with active key expired error', async () => {
-        dataTest.activeKey = 'test';
-        dataTest.activeExpire = addSeconds(new Date(), -1);
-        sandbox.stub(clientRepository, 'getByEmail').resolves(dataTest);
+        clientTest.activeKey = 'test';
+        clientTest.activeExpire = addSeconds(new Date(), -1);
+        sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
@@ -102,9 +111,9 @@ describe('Client - Active client', () => {
     });
 
     it('Active client', async () => {
-        dataTest.activeKey = 'test';
-        dataTest.activeExpire = addSeconds(new Date(), 1);
-        sandbox.stub(clientRepository, 'getByEmail').resolves(dataTest);
+        clientTest.activeKey = 'test';
+        clientTest.activeExpire = addSeconds(new Date(), 1);
+        sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
         const param = new ActiveClientCommandInput();

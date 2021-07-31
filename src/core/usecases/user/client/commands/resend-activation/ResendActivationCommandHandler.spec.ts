@@ -11,23 +11,28 @@ import Container from 'typedi';
 import { ResendActivationCommandHandler } from './ResendActivationCommandHandler';
 import { ResendActivationCommandInput } from './ResendActivationCommandInput';
 
-Container.set('client.repository', {
-    getByEmail() {},
-    update() {}
-});
-Container.set('mail.service', {
-    resendUserActivation() {}
-});
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const resendActivationCommandHandler = Container.get(ResendActivationCommandHandler);
-
 describe('Client - Resend activation', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
+    let clientRepository: IClientRepository;
+    let resendActivationCommandHandler: ResendActivationCommandHandler;
+    let clientTest: Client;
     let param: ResendActivationCommandInput;
 
+    before(() => {
+        Container.set('client.repository', {
+            getByEmail() {},
+            update() {}
+        });
+        Container.set('mail.service', {
+            resendUserActivation() {}
+        });
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        resendActivationCommandHandler = Container.get(ResendActivationCommandHandler);
+    });
+
     beforeEach(() => {
-        dataTest = new Client();
+        clientTest = new Client();
 
         param = new ResendActivationCommandInput();
         param.email = 'client.test@localhost.com';
@@ -35,6 +40,10 @@ describe('Client - Resend activation', () => {
 
     afterEach(() => {
         sandbox.restore();
+    });
+
+    after(() => {
+        Container.reset();
     });
 
     it('Resend activation with data not found error', async () => {
@@ -47,7 +56,7 @@ describe('Client - Resend activation', () => {
     });
 
     it('Resend activation', async () => {
-        sandbox.stub(clientRepository, 'getByEmail').resolves(dataTest);
+        sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
         const result = await resendActivationCommandHandler.handle(param);

@@ -12,28 +12,37 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { ArchiveClientCommandHandler } from './ArchiveClientCommandHandler';
 
-Container.set('client.repository', {
-    getById() {},
-    update() {}
-});
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const archiveClientCommandHandler = Container.get(ArchiveClientCommandHandler);
-
 describe('Client - Archive client', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
+    let clientRepository: IClientRepository;
+    let archiveClientCommandHandler: ArchiveClientCommandHandler;
+    let clientTest: Client;
+
+    before(() => {
+        Container.set('client.repository', {
+            getById() {},
+            update() {}
+        });
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        archiveClientCommandHandler = Container.get(ArchiveClientCommandHandler);
+    });
 
     beforeEach(() => {
-        dataTest = new Client({ id: v4() } as IClient);
+        clientTest = new Client({ id: v4() } as IClient);
     });
 
     afterEach(() => {
         sandbox.restore();
     });
 
+    after(() => {
+        Container.reset();
+    });
+
     it('Archive client with data not found error', async () => {
         sandbox.stub(clientRepository, 'getById').resolves(null);
-        const error = await archiveClientCommandHandler.handle(dataTest.id).catch(error => error);
+        const error = await archiveClientCommandHandler.handle(clientTest.id).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
@@ -41,10 +50,10 @@ describe('Client - Archive client', () => {
     });
 
     it('Archive client', async () => {
-        sandbox.stub(clientRepository, 'getById').resolves(dataTest);
+        sandbox.stub(clientRepository, 'getById').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
-        const result = await archiveClientCommandHandler.handle(dataTest.id);
+        const result = await archiveClientCommandHandler.handle(clientTest.id);
         expect(result.data).to.eq(true);
     });
 });

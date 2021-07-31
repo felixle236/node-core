@@ -36,8 +36,6 @@ export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthBy
             throw new SystemError(MessageError.PARAM_EXISTED, 'data');
 
         const id = await this._authRepository.create(data, queryRunner);
-        if (!id)
-            throw new SystemError(MessageError.DATA_CANNOT_SAVE);
         return id;
     }
 }

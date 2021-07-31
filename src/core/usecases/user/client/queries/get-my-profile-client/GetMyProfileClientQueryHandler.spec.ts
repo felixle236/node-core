@@ -14,19 +14,24 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { GetMyProfileClientQueryHandler } from './GetMyProfileClientQueryHandler';
 
-Container.set('client.repository', {
-    getById() {}
-});
-Container.set('storage.service', mockStorageService);
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const getMyProfileClientQueryHandler = Container.get(GetMyProfileClientQueryHandler);
-
-describe('Client - Get client by id', () => {
+describe('Client - Get my profile client', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
+    let clientRepository: IClientRepository;
+    let getMyProfileClientQueryHandler: GetMyProfileClientQueryHandler;
+    let clientTest: Client;
+
+    before(() => {
+        Container.set('client.repository', {
+            getById() {}
+        });
+        Container.set('storage.service', mockStorageService);
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        getMyProfileClientQueryHandler = Container.get(GetMyProfileClientQueryHandler);
+    });
 
     beforeEach(() => {
-        dataTest = new Client({
+        clientTest = new Client({
             id: v4(),
             firstName: 'Client',
             lastName: 'Test',
@@ -46,20 +51,24 @@ describe('Client - Get client by id', () => {
         sandbox.restore();
     });
 
-    it('Get client by id with not found error', async () => {
+    after(() => {
+        Container.reset();
+    });
+
+    it('Get my profile client with not found error', async () => {
         sandbox.stub(clientRepository, 'getById').resolves(null);
 
-        const error = await getMyProfileClientQueryHandler.handle(dataTest.id).catch(error => error);
+        const error = await getMyProfileClientQueryHandler.handle(clientTest.id).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Get client by id', async () => {
-        sandbox.stub(clientRepository, 'getById').resolves(dataTest);
+    it('Get my profile client', async () => {
+        sandbox.stub(clientRepository, 'getById').resolves(clientTest);
 
-        const result = await getMyProfileClientQueryHandler.handle(dataTest.id);
-        expect(result.data.id).to.eq(dataTest.id);
+        const result = await getMyProfileClientQueryHandler.handle(clientTest.id);
+        expect(result.data.id).to.eq(clientTest.id);
     });
 });

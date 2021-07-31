@@ -25,7 +25,7 @@ export class LoginByEmailQueryHandler extends CommandHandler<LoginByEmailQueryIn
     private readonly _managerRepository: IManagerRepository;
 
     @Inject('auth_jwt.service')
-    private readonly _jwtAuthService: IAuthJwtService;
+    private readonly _authJwtService: IAuthJwtService;
 
     async handle(param: LoginByEmailQueryInput): Promise<LoginByEmailQueryOutput> {
         await validateDataInput(param);
@@ -49,7 +49,7 @@ export class LoginByEmailQueryHandler extends CommandHandler<LoginByEmailQueryIn
                 throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
         }
 
-        const token = this._jwtAuthService.sign(auth.userId, auth.user.roleId, auth.type);
+        const token = this._authJwtService.sign(auth.userId, auth.user.roleId, auth.type);
         const result = new LoginByEmailQueryOutput();
         result.setData(token);
         return result;

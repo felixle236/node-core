@@ -14,16 +14,21 @@ import { v4 } from 'uuid';
 import { FindClientQueryHandler } from './FindClientQueryHandler';
 import { FindClientQueryInput } from './FindClientQueryInput';
 
-Container.set('client.repository', {
-    findAndCount() {}
-});
-Container.set('storage.service', mockStorageService);
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const findClientQueryHandler = Container.get(FindClientQueryHandler);
-
 describe('Client - Find client', () => {
     const sandbox = createSandbox();
+    let clientRepository: IClientRepository;
+    let findClientQueryHandler: FindClientQueryHandler;
     let list: Client[];
+
+    before(() => {
+        Container.set('client.repository', {
+            findAndCount() {}
+        });
+        Container.set('storage.service', mockStorageService);
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        findClientQueryHandler = Container.get(FindClientQueryHandler);
+    });
 
     beforeEach(() => {
         const client = new Client({
@@ -47,6 +52,10 @@ describe('Client - Find client', () => {
 
     afterEach(() => {
         sandbox.restore();
+    });
+
+    after(() => {
+        Container.reset();
     });
 
     it('Find client', async () => {

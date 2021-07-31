@@ -5,7 +5,7 @@ import { Inject, Service } from 'typedi';
 import { CheckEmailExistQueryOutput } from './CheckEmailExistQueryOutput';
 
 @Service()
-export class CheckEmailExistHandler extends QueryHandler<string, CheckEmailExistQueryOutput> {
+export class CheckEmailExistQueryHandler extends QueryHandler<string, CheckEmailExistQueryOutput> {
     @Inject('manager.repository')
     private readonly _managerRepository: IManagerRepository;
 

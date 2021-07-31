@@ -12,28 +12,37 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { DeleteClientCommandHandler } from './DeleteClientCommandHandler';
 
-Container.set('client.repository', {
-    getById() {},
-    softDelete() {}
-});
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const deleteClientCommandHandler = Container.get(DeleteClientCommandHandler);
-
 describe('Client - Delete client', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
+    let clientRepository: IClientRepository;
+    let deleteClientCommandHandler: DeleteClientCommandHandler;
+    let clientTest: Client;
+
+    before(() => {
+        Container.set('client.repository', {
+            getById() {},
+            softDelete() {}
+        });
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        deleteClientCommandHandler = Container.get(DeleteClientCommandHandler);
+    });
 
     beforeEach(() => {
-        dataTest = new Client({ id: v4() } as IClient);
+        clientTest = new Client({ id: v4() } as IClient);
     });
 
     afterEach(() => {
         sandbox.restore();
     });
 
+    after(() => {
+        Container.reset();
+    });
+
     it('Delete client with data not found error', async () => {
         sandbox.stub(clientRepository, 'getById').resolves(null);
-        const error = await deleteClientCommandHandler.handle(dataTest.id).catch(error => error);
+        const error = await deleteClientCommandHandler.handle(clientTest.id).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
@@ -41,10 +50,10 @@ describe('Client - Delete client', () => {
     });
 
     it('Delete client', async () => {
-        sandbox.stub(clientRepository, 'getById').resolves(dataTest);
+        sandbox.stub(clientRepository, 'getById').resolves(clientTest);
         sandbox.stub(clientRepository, 'softDelete').resolves(true);
 
-        const result = await deleteClientCommandHandler.handle(dataTest.id);
+        const result = await deleteClientCommandHandler.handle(clientTest.id);
         expect(result.data).to.eq(true);
     });
 });

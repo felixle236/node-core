@@ -32,6 +32,10 @@ export class UploadMyAvatarCommandHandler extends CommandHandler<UploadMyAvatarC
         const data = new User();
         data.avatar = avatarPath;
 
+        const user = await this._userRepository.getById(id);
+        if (!user)
+            throw new SystemError(MessageError.DATA_NOT_FOUND);
+
         let hasSucceed = await this._storageService.upload(avatarPath, file.path, { mimetype: file.mimetype, size: file.size })
             .finally(() => removeFile(file.path));
         if (!hasSucceed)

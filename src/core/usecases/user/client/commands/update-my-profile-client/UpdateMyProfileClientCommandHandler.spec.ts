@@ -10,25 +10,30 @@ import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { v4 } from 'uuid';
-import { UpdateClientCommandHandler } from './UpdateClientCommandHandler';
-import { UpdateClientCommandInput } from './UpdateClientCommandInput';
+import { UpdateMyProfileClientCommandHandler } from './UpdateMyProfileClientCommandHandler';
+import { UpdateMyProfileClientCommandInput } from './UpdateMyProfileClientCommandInput';
 
-Container.set('client.repository', {
-    getById() {},
-    update() {}
-});
-const clientRepository = Container.get<IClientRepository>('client.repository');
-const updateClientCommandHandler = Container.get(UpdateClientCommandHandler);
-
-describe('Client - Update client', () => {
+describe('Client - Update my profile client', () => {
     const sandbox = createSandbox();
-    let dataTest: Client;
-    let param: UpdateClientCommandInput;
+    let clientRepository: IClientRepository;
+    let updateMyProfileClientCommandHandler: UpdateMyProfileClientCommandHandler;
+    let clientTest: Client;
+    let param: UpdateMyProfileClientCommandInput;
+
+    before(() => {
+        Container.set('client.repository', {
+            getById() {},
+            update() {}
+        });
+
+        clientRepository = Container.get<IClientRepository>('client.repository');
+        updateMyProfileClientCommandHandler = Container.get(UpdateMyProfileClientCommandHandler);
+    });
 
     beforeEach(() => {
-        dataTest = new Client();
+        clientTest = new Client();
 
-        param = new UpdateClientCommandInput();
+        param = new UpdateMyProfileClientCommandInput();
         param.firstName = 'Client';
         param.lastName = 'Test';
         param.gender = GenderType.FEMALE;
@@ -42,20 +47,24 @@ describe('Client - Update client', () => {
         sandbox.restore();
     });
 
-    it('Update client with data not found error', async () => {
+    after(() => {
+        Container.reset();
+    });
+
+    it('Update my profile client with data not found error', async () => {
         sandbox.stub(clientRepository, 'getById').resolves(null);
-        const error = await updateClientCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await updateMyProfileClientCommandHandler.handle(v4(), param).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Update client', async () => {
-        sandbox.stub(clientRepository, 'getById').resolves(dataTest);
+    it('Update my profile client', async () => {
+        sandbox.stub(clientRepository, 'getById').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
-        const result = await updateClientCommandHandler.handle(v4(), param);
+        const result = await updateMyProfileClientCommandHandler.handle(v4(), param);
         expect(result.data).to.eq(true);
     });
 });

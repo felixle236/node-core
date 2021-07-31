@@ -11,7 +11,7 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
-import { CheckEmailExistHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
+import { CheckEmailExistQueryHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { Inject, Service } from 'typedi';
 import { v4 } from 'uuid';
 import { CreateManagerCommandInput } from './CreateManagerCommandInput';
@@ -23,7 +23,7 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
     private readonly _dbContext: IDbContext;
 
     @Inject()
-    private readonly _checkEmailExistHandler: CheckEmailExistHandler;
+    private readonly _checkEmailExistQueryHandler: CheckEmailExistQueryHandler;
 
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
@@ -49,7 +49,7 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
         auth.email = data.email;
         auth.password = param.password;
 
-        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+        const checkEmailResult = await this._checkEmailExistQueryHandler.handle(data.email);
         if (checkEmailResult.data)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
@@ -59,12 +59,10 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
 
         return await this._dbContext.getConnection().runTransaction(async queryRunner => {
             const id = await this._managerRepository.create(data, queryRunner);
-            if (!id)
-                throw new SystemError(MessageError.DATA_CANNOT_SAVE);
-
-            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
             const result = new CreateManagerCommandOutput();
             result.setData(id);
+
+            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
             return result;
         });
     }

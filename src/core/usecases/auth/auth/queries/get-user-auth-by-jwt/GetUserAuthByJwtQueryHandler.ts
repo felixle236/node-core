@@ -1,30 +1,27 @@
 import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
 import { ILogService } from '@gateways/services/ILogService';
+import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
-import { isEmpty, isJWT } from 'class-validator';
 import { Inject, Service } from 'typedi';
+import { GetUserAuthByJwtQueryInput } from './GetUserAuthByJwtQueryInput';
 import { GetUserAuthByJwtQueryOutput } from './GetUserAuthByJwtQueryOutput';
 
 @Service()
-export class GetUserAuthByJwtQueryHandler extends QueryHandler<string, GetUserAuthByJwtQueryOutput> {
+export class GetUserAuthByJwtQueryHandler extends QueryHandler<GetUserAuthByJwtQueryInput, GetUserAuthByJwtQueryOutput> {
     @Inject('auth_jwt.service')
     private readonly _authJwtService: IAuthJwtService;
 
     @Inject('log.service')
     private readonly _logService: ILogService;
 
-    async handle(token: string): Promise<GetUserAuthByJwtQueryOutput> {
-        if (isEmpty(token))
-            throw new UnauthorizedError(MessageError.PARAM_REQUIRED, 'token');
-
-        if (!isJWT(token))
-            throw new UnauthorizedError(MessageError.PARAM_INVALID, 'token');
+    async handle(param: GetUserAuthByJwtQueryInput): Promise<GetUserAuthByJwtQueryOutput> {
+        await validateDataInput(param);
 
         let payload;
         try {
-            payload = this._authJwtService.verify(token);
+            payload = this._authJwtService.verify(param.token);
         }
         catch (error) {
             this._logService.error(error);

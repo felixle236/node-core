@@ -11,7 +11,7 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
-import { CheckEmailExistHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
+import { CheckEmailExistQueryHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { Inject, Service } from 'typedi';
 import { v4 } from 'uuid';
 import { CreateClientCommandInput } from './CreateClientCommandInput';
@@ -23,7 +23,7 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
     private readonly _dbContext: IDbContext;
 
     @Inject()
-    private readonly _checkEmailExistHandler: CheckEmailExistHandler;
+    private readonly _checkEmailExistQueryHandler: CheckEmailExistQueryHandler;
 
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
@@ -54,7 +54,7 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
         auth.email = data.email;
         auth.password = param.password;
 
-        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+        const checkEmailResult = await this._checkEmailExistQueryHandler.handle(data.email);
         if (checkEmailResult.data)
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 

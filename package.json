@@ -15,7 +15,7 @@
         "migration:down": "npm run typeorm:cli -- migration:revert",
         "lint": "eslint --ext .ts --ext .js ./src",
         "build": "grunt clean && grunt sync && tsc",
-        "test": "nyc mocha --exit ./src/**/*.test.ts",
+        "test": "nyc mocha --exit ./src/**/*.spec.ts",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
         "start": "node ./dist/app.js"
     },

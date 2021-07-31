@@ -35,7 +35,7 @@ export class ForgotPasswordByEmailCommandHandler extends CommandHandler<ForgotPa
 
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.user)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account authorization');
 
         if (auth.user.roleId === RoleId.CLIENT) {
             const client = await this._clientRepository.getById(auth.userId);
