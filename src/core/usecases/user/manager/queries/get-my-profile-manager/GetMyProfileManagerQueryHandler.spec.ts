@@ -14,7 +14,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { GetMyProfileManagerQueryHandler } from './GetMyProfileManagerQueryHandler';
 
-describe('Manager - Get my profile manager', () => {
+describe('Manager usecases - Get my profile manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let getMyProfileManagerQueryHandler: GetMyProfileManagerQueryHandler;
@@ -24,7 +24,7 @@ describe('Manager - Get my profile manager', () => {
         Container.set('manager.repository', {
             getById() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         managerRepository = Container.get<IManagerRepository>('manager.repository');
         getMyProfileManagerQueryHandler = Container.get(GetMyProfileManagerQueryHandler);

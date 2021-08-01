@@ -24,7 +24,7 @@ import { v4 } from 'uuid';
 import { ForgotPasswordByEmailCommandHandler } from './ForgotPasswordByEmailCommandHandler';
 import { ForgotPasswordByEmailCommandInput } from './ForgotPasswordByEmailCommandInput';
 
-describe('Auth - Forgot password by email', () => {
+describe('Authorization usecases - Forgot password by email', () => {
     const sandbox = createSandbox();
     let authRepository: IAuthRepository;
     let clientRepository: IClientRepository;

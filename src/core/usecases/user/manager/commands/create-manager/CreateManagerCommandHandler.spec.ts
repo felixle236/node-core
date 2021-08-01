@@ -18,7 +18,7 @@ import { v4 } from 'uuid';
 import { CreateManagerCommandHandler } from './CreateManagerCommandHandler';
 import { CreateManagerCommandInput } from './CreateManagerCommandInput';
 
-describe('Manager - Create manager', () => {
+describe('Manager usecases - Create manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let authRepository: IAuthRepository;
@@ -33,14 +33,14 @@ describe('Manager - Create manager', () => {
         Container.set(CreateAuthByEmailCommandHandler, {
             handle() {}
         });
-        Container.set('db.context', mockDbContext);
+        Container.set('db.context', mockDbContext());
         Container.set('manager.repository', {
             create() {}
         });
         Container.set('auth.repository', {
             getByUsername() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         managerRepository = Container.get<IManagerRepository>('manager.repository');
         authRepository = Container.get<IAuthRepository>('auth.repository');

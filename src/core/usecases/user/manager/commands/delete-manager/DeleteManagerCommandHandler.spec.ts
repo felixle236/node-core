@@ -12,7 +12,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { DeleteManagerCommandHandler } from './DeleteManagerCommandHandler';
 
-describe('Manager - Delete manager', () => {
+describe('Manager usecases - Delete manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let deleteManagerCommandHandler: DeleteManagerCommandHandler;

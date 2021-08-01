@@ -13,7 +13,7 @@ import { v4 } from 'uuid';
 import { UpdateManagerCommandHandler } from './UpdateManagerCommandHandler';
 import { UpdateManagerCommandInput } from './UpdateManagerCommandInput';
 
-describe('Manager - Update manager', () => {
+describe('Manager usecases - Update manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let updateManagerCommandHandler: UpdateManagerCommandHandler;

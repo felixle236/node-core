@@ -1,16 +1,13 @@
 import { UserAuthenticated } from '@shared/UserAuthenticated';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
 import { Action } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
+import Container from 'typedi';
 
-@Service()
 export class WebAuthenticator {
-    @Inject()
-    private readonly _getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
-
-    authorizationChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
+    static authorizationChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
         const token = action.request.cookies && action.request.cookies.token;
-        const { data } = await this._getUserAuthByJwtQueryHandler.handle(token).catch(error => {
+        const getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
+        const { data } = await getUserAuthByJwtQueryHandler.handle(token).catch(error => {
             action.request.log.error(error);
             return { data: null };
         });
@@ -20,7 +17,7 @@ export class WebAuthenticator {
         return true;
     }
 
-    userAuthChecker = (action: Action): UserAuthenticated => {
+    static currentUserChecker = (action: Action): UserAuthenticated => {
         return action.request.userAuth;
     }
 }

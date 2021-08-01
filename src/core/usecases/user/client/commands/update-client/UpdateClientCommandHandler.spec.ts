@@ -13,7 +13,7 @@ import { v4 } from 'uuid';
 import { UpdateClientCommandHandler } from './UpdateClientCommandHandler';
 import { UpdateClientCommandInput } from './UpdateClientCommandInput';
 
-describe('Client - Update client', () => {
+describe('Client usecases - Update client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let updateClientCommandHandler: UpdateClientCommandHandler;

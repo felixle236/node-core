@@ -10,12 +10,14 @@ const connection = {
     async runMigrations(): Promise<any> {}
 } as IDbConnection;
 
-export const mockDbContext = {
-    getConnection() {
-        return connection;
-    },
-    async createConnection() {
-        return connection;
-    },
-    async destroyConnection() {}
-} as IDbContext;
+export const mockDbContext = (): IDbContext => {
+    return {
+        getConnection() {
+            return connection;
+        },
+        async createConnection() {
+            return connection;
+        },
+        async destroyConnection() {}
+    };
+};

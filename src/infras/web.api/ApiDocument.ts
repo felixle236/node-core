@@ -6,17 +6,13 @@ import { getMetadataArgsStorage, RoutingControllersOptions } from 'routing-contr
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 
 export class ApiDocument {
-    constructor(
-        private readonly _options: RoutingControllersOptions
-    ) {}
-
-    generate(): OpenAPIObject {
+    static generate(options: RoutingControllersOptions): OpenAPIObject {
         const schemas = validationMetadatasToSchemas({
             refPointerPrefix: COMPONENT_SCHEMA_PATH
         });
         const storage = getMetadataArgsStorage();
 
-        return routingControllersToSpec(storage, this._options, {
+        return routingControllersToSpec(storage, options, {
             info: {
                 title: `${PROJECT_NAME} API`,
                 description: 'Developed by felix.le.236@gmail.com',

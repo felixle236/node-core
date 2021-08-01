@@ -12,7 +12,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { DeleteClientCommandHandler } from './DeleteClientCommandHandler';
 
-describe('Client - Delete client', () => {
+describe('Client usecases - Delete client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let deleteClientCommandHandler: DeleteClientCommandHandler;

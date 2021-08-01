@@ -13,7 +13,7 @@ import { v4 } from 'uuid';
 import { UpdateMyPasswordByEmailCommandHandler } from './UpdateMyPasswordByEmailCommandHandler';
 import { UpdateMyPasswordByEmailCommandInput } from './UpdateMyPasswordByEmailCommandInput';
 
-describe('Auth - Update my password by email', () => {
+describe('Authorization usecases - Update my password by email', () => {
     const sandbox = createSandbox();
     let authRepository: IAuthRepository;
     let updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler;

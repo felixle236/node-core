@@ -14,7 +14,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { GetMyProfileClientQueryHandler } from './GetMyProfileClientQueryHandler';
 
-describe('Client - Get my profile client', () => {
+describe('Client usecases - Get my profile client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let getMyProfileClientQueryHandler: GetMyProfileClientQueryHandler;
@@ -24,7 +24,7 @@ describe('Client - Get my profile client', () => {
         Container.set('client.repository', {
             getById() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         clientRepository = Container.get<IClientRepository>('client.repository');
         getMyProfileClientQueryHandler = Container.get(GetMyProfileClientQueryHandler);

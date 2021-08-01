@@ -14,7 +14,7 @@ import { v4 } from 'uuid';
 import { FindManagerQueryHandler } from './FindManagerQueryHandler';
 import { FindManagerQueryInput } from './FindManagerQueryInput';
 
-describe('Manager - Find manager', () => {
+describe('Manager usecases - Find manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let findManagerQueryHandler: FindManagerQueryHandler;
@@ -24,7 +24,7 @@ describe('Manager - Find manager', () => {
         Container.set('manager.repository', {
             findAndCount() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         managerRepository = Container.get<IManagerRepository>('manager.repository');
         findManagerQueryHandler = Container.get(FindManagerQueryHandler);

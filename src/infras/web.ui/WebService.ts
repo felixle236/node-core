@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Server } from 'http';
 import path from 'path';
 import { ENVIRONMENT, WEB_PORT } from '@configs/Configuration';
@@ -14,7 +15,6 @@ import { HttpServer } from '../servers/http/HttpServer';
 export class WebService {
     static init(callback?: () => void): Server {
         const logger = Container.get<ILogService>('log.service');
-        const authenticator = Container.get(WebAuthenticator);
         const app = express();
 
         const loggingMiddleware = logger.createMiddleware();
@@ -27,7 +27,7 @@ export class WebService {
         app.use(express.static(path.join(__dirname, 'public')));
         app.use(cookieParser());
 
-        const options: RoutingControllersOptions = {
+        const options = this.getOptions({
             controllers: [
                 path.join(__dirname, './controllers/*{.js,.ts}')
             ],
@@ -38,11 +38,8 @@ export class WebService {
                 path.join(__dirname, './interceptors/*{.js,.ts}')
             ],
             validation: false,
-            defaultErrorHandler: false,
-            development: ENVIRONMENT === Environment.LOCAL,
-            authorizationChecker: authenticator.authorizationChecker,
-            currentUserChecker: authenticator.userAuthChecker
-        };
+            development: ENVIRONMENT === Environment.LOCAL
+        });
 
         const httpServer = new HttpServer();
         httpServer.createApp(options, app);
@@ -57,5 +54,24 @@ export class WebService {
         });
 
         return httpServer.start(WEB_PORT, callback);
+    }
+
+    static getOptions(param: {
+        controllers?: string[] | Function[],
+        middlewares?: string[] | Function[],
+        interceptors?: string[] | Function[],
+        validation: boolean,
+        development: boolean
+    }): RoutingControllersOptions {
+        return {
+            controllers: param.controllers,
+            middlewares: param.middlewares,
+            interceptors: param.interceptors,
+            validation: param.validation,
+            defaultErrorHandler: false,
+            development: param.development,
+            authorizationChecker: WebAuthenticator.authorizationChecker,
+            currentUserChecker: WebAuthenticator.currentUserChecker
+        };
     }
 }

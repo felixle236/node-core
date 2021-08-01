@@ -14,7 +14,7 @@ import { v4 } from 'uuid';
 import { FindClientQueryHandler } from './FindClientQueryHandler';
 import { FindClientQueryInput } from './FindClientQueryInput';
 
-describe('Client - Find client', () => {
+describe('Client usecases - Find client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let findClientQueryHandler: FindClientQueryHandler;
@@ -24,7 +24,7 @@ describe('Client - Find client', () => {
         Container.set('client.repository', {
             findAndCount() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         clientRepository = Container.get<IClientRepository>('client.repository');
         findClientQueryHandler = Container.get(FindClientQueryHandler);

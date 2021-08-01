@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 import { GetListOnlineStatusByIdsQueryHandler } from './GetListOnlineStatusByIdsQueryHandler';
 import { GetListOnlineStatusByIdsQueryInput } from './GetListOnlineStatusByIdsQueryInput';
 
-describe('User - Get list online status by ids', () => {
+describe('User usecases - Get list online status by ids', () => {
     const sandbox = createSandbox();
     let userOnlineStatusRepository: IUserOnlineStatusRepository;
     let getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler;

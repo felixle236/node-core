@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Server } from 'http';
 import path from 'path';
 import { API_PORT, ENVIRONMENT } from '@configs/Configuration';
@@ -15,7 +16,6 @@ import { ApiDocument } from './ApiDocument';
 export class ApiService {
     static init(callback?: () => void): Server {
         const logger = Container.get<ILogService>('log.service');
-        const authenticator = Container.get(ApiAuthenticator);
         const app = express();
 
         app.get('/health', (_req, res) => {
@@ -25,16 +25,7 @@ export class ApiService {
         const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
 
-        const options: RoutingControllersOptions = {
-            cors: {
-                origin: '*',
-                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-                allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'],
-                maxAge: 3600,
-                preflightContinue: true,
-                optionsSuccessStatus: 204
-            },
-            routePrefix: '/api',
+        const options = this.getOptions({
             controllers: [
                 path.join(__dirname, './controllers/**/*{.js,.ts}')
             ],
@@ -45,18 +36,44 @@ export class ApiService {
                 path.join(__dirname, './interceptors/*{.js,.ts}')
             ],
             validation: false,
-            defaultErrorHandler: false,
-            development: ENVIRONMENT === Environment.LOCAL,
-            authorizationChecker: authenticator.authorizationChecker,
-            currentUserChecker: authenticator.userAuthChecker
-        };
+            development: ENVIRONMENT === Environment.LOCAL
+        });
+
         const httpServer = new HttpServer();
         httpServer.createApp(options, app);
 
-        const spec = new ApiDocument(options).generate();
+        const spec = ApiDocument.generate(options);
         app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
         app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
 
         return httpServer.start(API_PORT, callback);
+    }
+
+    static getOptions(param: {
+        controllers?: string[] | Function[],
+        middlewares?: string[] | Function[],
+        interceptors?: string[] | Function[],
+        validation: boolean,
+        development: boolean
+    }): RoutingControllersOptions {
+        return {
+            cors: {
+                origin: '*',
+                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+                allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'],
+                maxAge: 3600,
+                preflightContinue: true,
+                optionsSuccessStatus: 204
+            },
+            routePrefix: '/api',
+            controllers: param.controllers,
+            middlewares: param.middlewares,
+            interceptors: param.interceptors,
+            validation: param.validation,
+            defaultErrorHandler: false,
+            development: param.development,
+            authorizationChecker: ApiAuthenticator.authorizationChecker,
+            currentUserChecker: ApiAuthenticator.currentUserChecker
+        };
     }
 }

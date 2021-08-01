@@ -23,7 +23,7 @@ import { v4 } from 'uuid';
 import { ValidateForgotKeyForEmailCommandHandler } from './ValidateForgotKeyForEmailCommandHandler';
 import { ValidateForgotKeyForEmailCommandInput } from './ValidateForgotKeyForEmailCommandInput';
 
-describe('Auth - Validate forgot key for email', () => {
+describe('Authorization usecases - Validate forgot key for email', () => {
     const sandbox = createSandbox();
     let authRepository: IAuthRepository;
     let clientRepository: IClientRepository;

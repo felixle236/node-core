@@ -17,7 +17,7 @@ import { v4 } from 'uuid';
 import { UploadMyAvatarCommandHandler } from './UploadMyAvatarCommandHandler';
 import { UploadMyAvatarCommandInput } from './UploadMyAvatarCommandInput';
 
-describe('User - Upload my avatar', () => {
+describe('User usecases - Upload my avatar', () => {
     const sandbox = createSandbox();
     let userRepository: IUserRepository;
     let storageService: IStorageService;
@@ -29,7 +29,7 @@ describe('User - Upload my avatar', () => {
             getById() {},
             update() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         userRepository = Container.get<IUserRepository>('user.repository');
         storageService = Container.get<IStorageService>('storage.service');

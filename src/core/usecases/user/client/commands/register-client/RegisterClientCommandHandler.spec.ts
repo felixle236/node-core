@@ -18,7 +18,7 @@ import { v4 } from 'uuid';
 import { RegisterClientCommandHandler } from './RegisterClientCommandHandler';
 import { RegisterClientCommandInput } from './RegisterClientCommandInput';
 
-describe('Client - Register client', () => {
+describe('Client usecases - Register client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let authRepository: IAuthRepository;
@@ -33,7 +33,7 @@ describe('Client - Register client', () => {
         Container.set(CreateAuthByEmailCommandHandler, {
             handle() {}
         });
-        Container.set('db.context', mockDbContext);
+        Container.set('db.context', mockDbContext());
         Container.set('client.repository', {
             create() {}
         });
@@ -43,7 +43,7 @@ describe('Client - Register client', () => {
         Container.set('mail.service', {
             sendUserActivation() {}
         });
-        Container.set('storage.service', mockStorageService);
+        Container.set('storage.service', mockStorageService());
 
         clientRepository = Container.get<IClientRepository>('client.repository');
         authRepository = Container.get<IAuthRepository>('auth.repository');

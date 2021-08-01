@@ -15,7 +15,7 @@ import { v4 } from 'uuid';
 import { ActiveClientCommandHandler } from './ActiveClientCommandHandler';
 import { ActiveClientCommandInput } from './ActiveClientCommandInput';
 
-describe('Client - Active client', () => {
+describe('Client usecases - Active client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let activeClientCommandHandler: ActiveClientCommandHandler;

@@ -3,27 +3,28 @@ import 'reflect-metadata';
 import 'mocha';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { IAuthJwtService, IJwtPayloadExtend } from '@gateways/services/IAuthJwtService';
-import { AuthJwtService } from '@infras/services/authorization/AuthJwtService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
 import { mockLogService } from '@shared/test/MockLogService';
 import { expect } from 'chai';
+import jwt from 'jsonwebtoken';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { v4 } from 'uuid';
 import { GetUserAuthByJwtQueryHandler } from './GetUserAuthByJwtQueryHandler';
 import { GetUserAuthByJwtQueryInput } from './GetUserAuthByJwtQueryInput';
 
-describe('Auth - Get user authorization by JWT', () => {
+describe('Authorization usecases - Get user authorization by JWT', () => {
     const sandbox = createSandbox();
     let authJwtService: IAuthJwtService;
     let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
     let param: GetUserAuthByJwtQueryInput;
 
     before(() => {
-        Container.set('auth_jwt.service', new AuthJwtService());
-        Container.set('log.service', mockLogService);
+        Container.set('auth_jwt.service', mockAuthJwtService());
+        Container.set('log.service', mockLogService());
 
         authJwtService = Container.get<IAuthJwtService>('auth_jwt.service');
         getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
@@ -31,7 +32,11 @@ describe('Auth - Get user authorization by JWT', () => {
 
     beforeEach(() => {
         param = new GetUserAuthByJwtQueryInput();
-        param.token = authJwtService.sign(v4(), v4(), AuthType.PERSONAL_EMAIL);
+        param.token = jwt.sign({}, '123456', {
+            subject: v4(),
+            expiresIn: 24 * 60 * 60,
+            algorithm: 'HS256'
+        } as jwt.SignOptions);
     });
 
     afterEach(() => {
@@ -78,7 +83,11 @@ describe('Auth - Get user authorization by JWT', () => {
         const userId = v4();
         const roleId = v4();
         const type = AuthType.PERSONAL_EMAIL;
-        param.token = authJwtService.sign(userId, roleId, type);
+        sandbox.stub(authJwtService, 'verify').returns({
+            sub: userId,
+            roleId,
+            type
+        } as any);
 
         const result = await getUserAuthByJwtQueryHandler.handle(param);
         expect(result.data).to.not.eq(null);

@@ -11,7 +11,7 @@ import Container from 'typedi';
 import { ResendActivationCommandHandler } from './ResendActivationCommandHandler';
 import { ResendActivationCommandInput } from './ResendActivationCommandInput';
 
-describe('Client - Resend activation', () => {
+describe('Client usecases - Resend activation', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let resendActivationCommandHandler: ResendActivationCommandHandler;

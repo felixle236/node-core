@@ -12,7 +12,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { ArchiveClientCommandHandler } from './ArchiveClientCommandHandler';
 
-describe('Client - Archive client', () => {
+describe('Client usecases - Archive client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
     let archiveClientCommandHandler: ArchiveClientCommandHandler;

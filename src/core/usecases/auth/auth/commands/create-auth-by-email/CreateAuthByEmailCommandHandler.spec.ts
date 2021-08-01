@@ -15,7 +15,7 @@ import { v4 } from 'uuid';
 import { CreateAuthByEmailCommandHandler } from './CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from './CreateAuthByEmailCommandInput';
 
-describe('Auth - Create authorization by email', () => {
+describe('Authorization usecases - Create authorization by email', () => {
     const sandbox = createSandbox();
     let userRepository: IUserRepository;
     let authRepository: IAuthRepository;

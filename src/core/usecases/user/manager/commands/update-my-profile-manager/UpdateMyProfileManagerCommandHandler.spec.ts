@@ -13,7 +13,7 @@ import { v4 } from 'uuid';
 import { UpdateMyProfileManagerCommandHandler } from './UpdateMyProfileManagerCommandHandler';
 import { UpdateMyProfileManagerCommandInput } from './UpdateMyProfileManagerCommandInput';
 
-describe('Manager - Update my profile manager', () => {
+describe('Manager usecases - Update my profile manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let updateMyProfileManagerCommandHandler: UpdateMyProfileManagerCommandHandler;

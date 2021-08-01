@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 import { UpdateUserOnlineStatusCommandHandler } from './UpdateUserOnlineStatusCommandHandler';
 import { UpdateUserOnlineStatusCommandInput } from './UpdateUserOnlineStatusCommandInput';
 
-describe('User - Update user online status', () => {
+describe('User usecases - Update user online status', () => {
     const sandbox = createSandbox();
     let userOnlineStatusRepository: IUserOnlineStatusRepository;
     let updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler;

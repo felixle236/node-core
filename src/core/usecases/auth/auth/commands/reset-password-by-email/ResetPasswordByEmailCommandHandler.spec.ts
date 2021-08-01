@@ -24,7 +24,7 @@ import { v4 } from 'uuid';
 import { ResetPasswordByEmailCommandHandler } from './ResetPasswordByEmailCommandHandler';
 import { ResetPasswordByEmailCommandInput } from './ResetPasswordByEmailCommandInput';
 
-describe('Auth - Reset password by email', () => {
+describe('Authorization usecases - Reset password by email', () => {
     const sandbox = createSandbox();
     let authRepository: IAuthRepository;
     let clientRepository: IClientRepository;

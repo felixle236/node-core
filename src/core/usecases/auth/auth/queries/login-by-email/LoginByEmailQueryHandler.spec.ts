@@ -16,9 +16,9 @@ import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
-import { AuthJwtService } from '@infras/services/authorization/AuthJwtService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
@@ -26,7 +26,7 @@ import { v4 } from 'uuid';
 import { LoginByEmailQueryHandler } from './LoginByEmailQueryHandler';
 import { LoginByEmailQueryInput } from './LoginByEmailQueryInput';
 
-describe('Auth - Login by email', () => {
+describe('Authorization usecases - Login by email', () => {
     const sandbox = createSandbox();
     let authRepository: IAuthRepository;
     let clientRepository: IClientRepository;
@@ -48,7 +48,7 @@ describe('Auth - Login by email', () => {
         Container.set('manager.repository', {
             getById() {}
         });
-        Container.set('auth_jwt.service', new AuthJwtService());
+        Container.set('auth_jwt.service', mockAuthJwtService());
 
         authRepository = Container.get<IAuthRepository>('auth.repository');
         clientRepository = Container.get<IClientRepository>('client.repository');

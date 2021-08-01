@@ -12,7 +12,7 @@ import Container from 'typedi';
 import { v4 } from 'uuid';
 import { ArchiveManagerCommandHandler } from './ArchiveManagerCommandHandler';
 
-describe('Manager - Archive manager', () => {
+describe('Manager usecases - Archive manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let archiveManagerCommandHandler: ArchiveManagerCommandHandler;

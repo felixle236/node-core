@@ -8,7 +8,7 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CheckEmailExistQueryHandler } from './CheckEmailExistQueryHandler';
 
-describe('User - Check email exist', () => {
+describe('User usecases - Check email exist', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
     let clientRepository: IClientRepository;
