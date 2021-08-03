@@ -58,7 +58,7 @@ export class ClientController {
         return await this._findClientQueryHandler.handle(param);
     }
 
-    @Get('/:id([0-9a-f]{24})')
+    @Get('/:id([0-9a-f-]{36})')
     @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
     @OpenAPI({ summary: 'Get client by id' })
     @ResponseSchema(GetClientByIdQueryOutput)
@@ -103,7 +103,7 @@ export class ClientController {
         return await this._createClientCommandHandler.handle(param);
     }
 
-    @Put('/:id([0-9a-f]{24})')
+    @Put('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     @OpenAPI({ summary: 'Update client account' })
     @ResponseSchema(UpdateClientCommandOutput)
@@ -119,7 +119,7 @@ export class ClientController {
         return await this._updateMyProfileClientCommandHandler.handle(userAuth.userId, param);
     }
 
-    @Delete('/:id([0-9a-f]{24})')
+    @Delete('/:id([0-9a-f-]{36})')
     @Authorized(RoleId.SUPER_ADMIN)
     @OpenAPI({ summary: 'Delete client account' })
     @ResponseSchema(DeleteClientCommandOutput)
@@ -127,7 +127,7 @@ export class ClientController {
         return await this._deleteClientCommandHandler.handle(id);
     }
 
-    @Post('/:id([0-9a-f]{24})/archive')
+    @Post('/:id([0-9a-f-]{36})/archive')
     @Authorized(RoleId.SUPER_ADMIN)
     @OpenAPI({ summary: 'Archive client account' })
     @ResponseSchema(ArchiveClientCommandOutput)

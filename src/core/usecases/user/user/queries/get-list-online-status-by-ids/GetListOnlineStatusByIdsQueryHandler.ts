@@ -1,6 +1,9 @@
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
 import { validateDataInput } from '@libs/common';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { isUUID } from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { GetListOnlineStatusByIdsQueryInput } from './GetListOnlineStatusByIdsQueryInput';
 import { GetListOnlineStatusByIdsQueryData, GetListOnlineStatusByIdsQueryOutput } from './GetListOnlineStatusByIdsQueryOutput';
@@ -13,10 +16,13 @@ export class GetListOnlineStatusByIdsQueryHandler extends QueryHandler<GetListOn
     async handle(param: GetListOnlineStatusByIdsQueryInput): Promise<GetListOnlineStatusByIdsQueryOutput> {
         await validateDataInput(param);
 
+        if (param.ids.some(id => !isUUID(id)))
+            throw new SystemError(MessageError.PARAM_INVALID, 'ids');
+
         const ids = param.ids ?? [];
         const onlineStatuses = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);
         const result = new GetListOnlineStatusByIdsQueryOutput();
-        result.data = [];
+        const list: GetListOnlineStatusByIdsQueryData[] = [];
 
         ids.forEach((id, index) => {
             const onlineStatus: {isOnline: boolean, onlineAt: Date | null} = onlineStatuses[index] ? JSON.parse(onlineStatuses[index]) : { isOnline: false, onlineAt: null };
@@ -25,8 +31,9 @@ export class GetListOnlineStatusByIdsQueryHandler extends QueryHandler<GetListOn
             data.isOnline = onlineStatus.isOnline;
             if (onlineStatus.onlineAt)
                 data.onlineAt = onlineStatus.onlineAt;
-            result.data.push(data);
+            list.push(data);
         });
+        result.setData(list);
         return result;
     }
 }

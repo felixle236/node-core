@@ -17,4 +17,8 @@ export class GetListOnlineStatusByIdsQueryOutput {
     @IsArray()
     @RefSchemaArray(GetListOnlineStatusByIdsQueryData)
     data: GetListOnlineStatusByIdsQueryData[];
+
+    setData(data: GetListOnlineStatusByIdsQueryData[]): void {
+        this.data = data;
+    }
 }

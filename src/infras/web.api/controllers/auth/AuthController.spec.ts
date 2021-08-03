@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { Server } from 'http';
 import { AuthType } from '@domain/enums/auth/AuthType';
+import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
 import { mockApiService } from '@shared/test/MockWebApi';
 import { ForgotPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
@@ -22,13 +24,13 @@ import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { v4 } from 'uuid';
-import { AuthController } from './AuthController';
 
 describe('Authorization controller', () => {
     const sandbox = createSandbox();
     let server: Server;
     const port = 3000;
     const endpoint = `http://localhost:${port}/api/v1/auths`;
+    const options = { headers: { Authorization: 'Bearer token' } };
     let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
     let loginByEmailQueryHandler: LoginByEmailQueryHandler;
     let forgotPasswordByEmailCommandHandler: ForgotPasswordByEmailCommandHandler;
@@ -37,6 +39,8 @@ describe('Authorization controller', () => {
     let updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler;
 
     before(done => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const AuthController = require('./AuthController').AuthController;
         server = mockApiService(AuthController, port, () => {
             Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
             Container.set(LoginByEmailQueryHandler, { handle() {} });
@@ -73,7 +77,7 @@ describe('Authorization controller', () => {
             type: AuthType.PERSONAL_EMAIL
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint);
+        const { status, data } = await axios.post(endpoint, undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
@@ -135,6 +139,13 @@ describe('Authorization controller', () => {
         expect(data.data).to.eq(true);
     });
 
+    it('Update my password with unauthorized error', async () => {
+        const { status, data } = await axios.patch(endpoint + '/password', undefined).catch(error => error.response);
+
+        expect(status).to.eq(401);
+        expect(data.code).to.eq(new UnauthorizedError().code);
+    });
+
     it('Update my password', async () => {
         mockAuthentication({ userId: v4(), roleId: v4() } as any);
         const result = new UpdateMyPasswordByEmailCommandOutput();
@@ -144,7 +155,7 @@ describe('Authorization controller', () => {
         const { status, data } = await axios.patch(endpoint + '/password', {
             oldPassword: 'Nodecore@2',
             password: 'Nodecore@222'
-        });
+        }, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

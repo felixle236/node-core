@@ -2,6 +2,8 @@
 import 'reflect-metadata';
 import 'mocha';
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
@@ -31,11 +33,24 @@ describe('User usecases - Get list online status by ids', () => {
         Container.reset();
     });
 
+    it('Get list online status with id is not uuid', async () => {
+        const param = new GetListOnlineStatusByIdsQueryInput();
+        param.ids = ['a'];
+
+        const error: SystemError = await getListOnlineStatusByIdsQueryHandler.handle(param).catch(error => error);
+        const err = new SystemError(MessageError.PARAM_INVALID, 'ids');
+
+        expect(error.code).to.eq(err.code);
+        expect(error.message).to.eq(err.message);
+    });
+
     it('Get list online status by ids', async () => {
-        const list: {isOnline: boolean, onlineAt: Date | null}[] = [{
+        const list: {id: string, isOnline: boolean, onlineAt: Date | null}[] = [{
+            id: v4(),
             isOnline: true,
             onlineAt: new Date()
         }, {
+            id: v4(),
             isOnline: false,
             onlineAt: new Date()
         }];

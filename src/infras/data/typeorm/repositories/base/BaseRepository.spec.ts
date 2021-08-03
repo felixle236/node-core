@@ -342,7 +342,7 @@ describe('Base repository', () => {
             expect(result?.id).to.eq(data.id);
         });
 
-        it('Update fail and return no data', async () => {
+        it('Update failed and return no data', async () => {
             const data = new DataTest({ id: v4() } as IDataTest);
             const { updateQueryBuilder } = mockUpdateQueryBuilder<DataTestDb>(sandbox);
             updateQueryBuilder.whereInIds.returnsThis();
@@ -448,7 +448,7 @@ describe('Base repository', () => {
             expect(hasSucceed).to.eq(true);
         });
 
-        it('Soft delete fail', async () => {
+        it('Soft delete failed', async () => {
             const { softDeleteQueryBuilder } = mockSoftDeleteQueryBuilder<DataTestDb>(sandbox);
             softDeleteQueryBuilder.whereInIds.returnsThis();
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult());
@@ -517,7 +517,7 @@ describe('Base repository', () => {
             expect(hasSucceed).to.eq(true);
         });
 
-        it('Restore data fail', async () => {
+        it('Restore data failed', async () => {
             const { restoreQueryBuilder } = mockRestoreQueryBuilder<DataTestDb>(sandbox);
             restoreQueryBuilder.whereInIds.returnsThis();
             restoreQueryBuilder.execute.resolves(new MockUpdateResult());

@@ -3,6 +3,7 @@ export class ErrorCode {
     static VALIDATION = 'VALIDATION_ERR';
     static OTHER = 'OTHER_ERR';
     static NOT_SUPPORTED = 'NOT_SUPPORTED_ERR';
+    static UNAUTHORIZED = 'UNAUTHORIZED_ERR';
     static ACCESS_DENIED = 'ACCESS_DENIED_ERR';
     static DATA_NOT_FOUND = 'DATA_NOT_FOUND_ERR';
     static DATA_CANNOT_SAVE = 'DATA_CANNOT_SAVE_ERR';

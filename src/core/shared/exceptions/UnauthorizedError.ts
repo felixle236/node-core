@@ -1,6 +1,7 @@
 import { mapTemplate } from '@libs/common';
 import { IsString } from 'class-validator';
 import { ErrorObject } from './message/ErrorObject';
+import { MessageError } from './message/MessageError';
 
 export class UnauthorizedError extends Error {
     httpCode: number;
@@ -14,7 +15,7 @@ export class UnauthorizedError extends Error {
     @IsString()
     override message: string;
 
-    constructor(errObj: ErrorObject, ...params: any[]) {
+    constructor(errObj: ErrorObject = MessageError.UNAUTHORIZED, ...params: any[]) {
         super();
         this.httpCode = 401;
         this.code = errObj.code;

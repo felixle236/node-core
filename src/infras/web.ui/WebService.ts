@@ -29,13 +29,13 @@ export class WebService {
 
         const options = this.getOptions({
             controllers: [
-                path.join(__dirname, './controllers/*{.js,.ts}')
+                path.join(__dirname, './controllers/*Controller{.js,.ts}')
             ],
             middlewares: [
-                path.join(__dirname, './middlewares/*{.js,.ts}')
+                path.join(__dirname, './middlewares/*Middleware{.js,.ts}')
             ],
             interceptors: [
-                path.join(__dirname, './interceptors/*{.js,.ts}')
+                path.join(__dirname, './interceptors/Interceptor*{.js,.ts}')
             ],
             validation: false,
             development: ENVIRONMENT === Environment.LOCAL

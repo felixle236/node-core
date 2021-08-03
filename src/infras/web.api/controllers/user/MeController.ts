@@ -4,7 +4,7 @@ import { UploadMyAvatarCommandHandler } from '@usecases/user/user/commands/uploa
 import { UploadMyAvatarCommandInput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandInput';
 import { UploadMyAvatarCommandOutput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandOutput';
 import multer from 'multer';
-import { Authorized, CurrentUser, JsonController, Post, UploadedFiles } from 'routing-controllers';
+import { Authorized, CurrentUser, JsonController, Post, UploadedFile } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
@@ -28,7 +28,9 @@ export class MeController {
     @Authorized()
     @OpenAPI({ summary: 'Upload my avatar' })
     @ResponseSchema(UploadMyAvatarCommandOutput)
-    async uploadMyAvatar(@UploadedFiles('avatar', { required: true, options: { storage } }) param: UploadMyAvatarCommandInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadMyAvatarCommandOutput> {
+    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadMyAvatarCommandOutput> {
+        const param = new UploadMyAvatarCommandInput();
+        param.file = file;
         return await this._uploadMyAvatarCommandHandler.handle(userAuth.userId, param);
     }
 }

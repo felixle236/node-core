@@ -10,6 +10,7 @@ export class MessageError {
 
     static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
 
+    static UNAUTHORIZED = new ErrorObject(ErrorCode.UNAUTHORIZED, 'Unauthorized!');
     static ACCESS_DENIED = new ErrorObject(ErrorCode.ACCESS_DENIED, 'Access is denied!');
 
     static DATA_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, 'Data not found!');

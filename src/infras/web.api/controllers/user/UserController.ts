@@ -1,7 +1,7 @@
 import { GetListOnlineStatusByIdsQueryHandler } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
 import { GetListOnlineStatusByIdsQueryInput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryInput';
 import { GetListOnlineStatusByIdsQueryOutput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryOutput';
-import { Authorized, JsonController, Post, QueryParams } from 'routing-controllers';
+import { Authorized, Get, JsonController, QueryParams } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
@@ -12,7 +12,7 @@ export class UserController {
         private readonly _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler
     ) {}
 
-    @Post('/list-online-status')
+    @Get('/list-online-status')
     @Authorized()
     @ResponseSchema(GetListOnlineStatusByIdsQueryOutput)
     async getListOnlineStatusByIds(@QueryParams() param: GetListOnlineStatusByIdsQueryInput): Promise<GetListOnlineStatusByIdsQueryOutput> {

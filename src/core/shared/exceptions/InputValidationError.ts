@@ -44,7 +44,7 @@ export class InputValidationError extends Error {
     @RefSchemaArray(InputValidationFieldError)
     fields: InputValidationFieldError[];
 
-    constructor(errors: ValidationError[]) {
+    constructor(errors?: ValidationError[]) {
         super();
         this.httpCode = 400;
         this.name = 'InputValidationError';
