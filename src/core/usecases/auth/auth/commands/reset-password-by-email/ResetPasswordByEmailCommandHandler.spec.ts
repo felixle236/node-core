@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import crypto from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Client } from '@domain/entities/user/Client';
 import { Manager } from '@domain/entities/user/Manager';
@@ -54,6 +55,7 @@ describe('Authorization usecases - Reset password by email', () => {
     });
 
     beforeEach(() => {
+        const forgotKey = crypto.randomBytes(32).toString('hex');
         clientTest = new Client({
             id: v4(),
             roleId: RoleId.CLIENT,
@@ -69,13 +71,13 @@ describe('Authorization usecases - Reset password by email', () => {
         authTest = new Auth({
             id: v4(),
             userId: clientTest.id,
-            forgotKey: 'forgot key',
+            forgotKey,
             forgotExpire: addMinutes(new Date(), 10),
             user: clientTest.toData() as IUser
         } as IAuth);
 
         param = new ResetPasswordByEmailCommandInput();
-        param.forgotKey = 'forgot key';
+        param.forgotKey = forgotKey;
         param.email = 'user.test@localhost.com';
         param.password = 'Nodecore@2';
     });
@@ -157,7 +159,7 @@ describe('Authorization usecases - Reset password by email', () => {
     it('Reset password by email with forgot key is incorrect error', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
-        authTest.forgotKey = 'abc';
+        authTest.forgotKey = crypto.randomBytes(32).toString('hex');
 
         const error: SystemError = await resetPasswordByEmailCommandHandler.handle(param).catch(error => error);
         const err = new SystemError(MessageError.PARAM_INCORRECT, 'forgot key');
@@ -178,7 +180,7 @@ describe('Authorization usecases - Reset password by email', () => {
         expect(error.message).to.eq(err.message);
     });
 
-    it('Reset password by email', async () => {
+    it('Reset password by email successful', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
         sandbox.stub(authRepository, 'update').resolves(true);

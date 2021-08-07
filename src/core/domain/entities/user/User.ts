@@ -2,7 +2,7 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { IUser } from '@domain/interfaces/user/IUser';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { isDateString, isEnum, isUUID } from 'class-validator';
+import { isEnum, isUUID } from 'class-validator';
 import { Container } from 'typedi';
 import { IStorageService } from '../../../gateways/services/IStorageService';
 import { GenderType } from '../../enums/user/GenderType';
@@ -15,9 +15,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set roleId(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'role');
-
         if (!isUUID(val) || !isEnum(val, RoleId))
             throw new SystemError(MessageError.PARAM_INVALID, 'role');
 
@@ -29,9 +26,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set firstName(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'first name');
-
         val = val.trim();
         if (val.length > 20)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20);
@@ -53,17 +47,15 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     get avatar(): string | null {
-        if (!this.data.avatar)
-            return null;
         const storageService = Container.get<IStorageService>('storage.service');
-        return storageService.mapUrl(this.data.avatar);
+        return this.data.avatar ? storageService.mapUrl(this.data.avatar) : null;
     }
 
     set avatar(val: string | null) {
         if (val) {
             val = val.trim();
-            if (val.length > 100)
-                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 100);
+            if (val.length > 200)
+                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200);
         }
         this.data.avatar = val;
     }
@@ -73,10 +65,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set gender(val: GenderType | null) {
-        if (val) {
-            if (!isEnum(val, GenderType))
-                throw new SystemError(MessageError.PARAM_INVALID, 'gender');
-        }
         this.data.gender = val;
     }
 
@@ -86,7 +74,7 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
 
     set birthday(val: string | null) {
         if (val) {
-            if (!isDateString(val))
+            if (!/(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})/u.test(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
 
             if (new Date(val) > new Date())

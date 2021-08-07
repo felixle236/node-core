@@ -6,7 +6,7 @@ import moduleAlias from 'module-alias';
  * Map path for alias.
  */
 function mapPathAlias(aliasPath: string): string {
-    const dir = !process.env.NODE_ENV ? 'src' : 'dist';
+    const dir = process.env.NODE_ENV === 'local' ? 'src' : 'dist';
     return path.join(process.cwd(), `${dir}/${aliasPath}`);
 }
 

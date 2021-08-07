@@ -1,7 +1,7 @@
 import { IAuth } from '@domain/interfaces/auth/IAuth';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { isEnum, isUUID } from 'class-validator';
+import { isUUID } from 'class-validator';
 import { hashMD5 } from '../../../../libs/crypt';
 import { AuthType } from '../../enums/auth/AuthType';
 import { BaseEntity } from '../base/BaseEntity';
@@ -13,9 +13,6 @@ export class Auth extends BaseEntity<string, IAuth> implements IAuth {
     }
 
     set userId(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'user');
-
         if (!isUUID(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'user');
 
@@ -27,12 +24,6 @@ export class Auth extends BaseEntity<string, IAuth> implements IAuth {
     }
 
     set type(val: AuthType) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'type');
-
-        if (!isEnum(val, AuthType))
-            throw new SystemError(MessageError.PARAM_INVALID, 'type');
-
         this.data.type = val;
     }
 
@@ -41,9 +32,6 @@ export class Auth extends BaseEntity<string, IAuth> implements IAuth {
     }
 
     set username(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'username');
-
         val = val.trim();
         if (val.length < 6)
             throw new SystemError(MessageError.PARAM_LEN_GREATER_OR_EQUAL, 'username', 6);
@@ -58,12 +46,7 @@ export class Auth extends BaseEntity<string, IAuth> implements IAuth {
     }
 
     set password(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'password');
-        if (val.length > 20)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'password', 20);
-
-        const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{6,20}/;
+        const regExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{8,20}$/;
         if (!regExp.test(val))
             throw new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20);
 
@@ -75,8 +58,8 @@ export class Auth extends BaseEntity<string, IAuth> implements IAuth {
     }
 
     set forgotKey(val: string | null) {
-        if (val && val.length > 128)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'forgot key', 128);
+        if (val && val.length !== 64)
+            throw new SystemError(MessageError.PARAM_LEN_EQUAL, 'forgot key', 64);
         this.data.forgotKey = val;
     }
 

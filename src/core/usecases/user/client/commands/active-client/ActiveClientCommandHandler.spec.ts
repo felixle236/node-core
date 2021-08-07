@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import crypto from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
@@ -55,7 +56,7 @@ describe('Client usecases - Active client', () => {
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
-        param.activeKey = 'test';
+        param.activeKey = crypto.randomBytes(32).toString('hex');
 
         const error = await activeClientCommandHandler.handle(param).catch(error => error);
         const err = new SystemError(MessageError.DATA_INVALID);
@@ -69,7 +70,7 @@ describe('Client usecases - Active client', () => {
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
-        param.activeKey = 'test';
+        param.activeKey = crypto.randomBytes(32).toString('hex');
 
         const error = await activeClientCommandHandler.handle(param).catch(error => error);
         const err = new SystemError(MessageError.DATA_INVALID);
@@ -79,13 +80,13 @@ describe('Client usecases - Active client', () => {
     });
 
     it('Active client with params invalid error - Account is actived already', async () => {
-        clientTest.activeKey = 'test';
+        clientTest.activeKey = crypto.randomBytes(32).toString('hex');
         clientTest.status = ClientStatus.ACTIVED;
         sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
-        param.activeKey = 'test';
+        param.activeKey = clientTest.activeKey;
 
         const error = await activeClientCommandHandler.handle(param).catch(error => error);
         const err = new SystemError(MessageError.DATA_INVALID);
@@ -95,13 +96,13 @@ describe('Client usecases - Active client', () => {
     });
 
     it('Active client with active key expired error', async () => {
-        clientTest.activeKey = 'test';
+        clientTest.activeKey = crypto.randomBytes(32).toString('hex');
         clientTest.activeExpire = addSeconds(new Date(), -1);
         sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
-        param.activeKey = 'test';
+        param.activeKey = clientTest.activeKey;
 
         const error = await activeClientCommandHandler.handle(param).catch(error => error);
         const err = new SystemError(MessageError.PARAM_EXPIRED, 'activation key');
@@ -111,14 +112,14 @@ describe('Client usecases - Active client', () => {
     });
 
     it('Active client', async () => {
-        clientTest.activeKey = 'test';
+        clientTest.activeKey = crypto.randomBytes(32).toString('hex');
         clientTest.activeExpire = addSeconds(new Date(), 1);
         sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
         const param = new ActiveClientCommandInput();
         param.email = 'test@localhost.com';
-        param.activeKey = 'test';
+        param.activeKey = clientTest.activeKey;
 
         const result = await activeClientCommandHandler.handle(param);
         expect(result.data).to.eq(true);

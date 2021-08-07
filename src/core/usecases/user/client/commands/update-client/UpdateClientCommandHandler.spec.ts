@@ -37,10 +37,10 @@ describe('Client usecases - Update client', () => {
         param.firstName = 'Client';
         param.lastName = 'Test';
         param.gender = GenderType.FEMALE;
-        param.birthday = '2000-06-08';
+        param.birthday = '1970-01-01';
         param.phone = '0123456789';
         param.address = '123 Abc';
-        param.locale = 'vi-VN';
+        param.locale = 'en-US';
     });
 
     afterEach(() => {

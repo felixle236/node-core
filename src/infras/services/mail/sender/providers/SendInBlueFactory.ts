@@ -1,7 +1,6 @@
 import { SENDINBLUE_API_KEY } from '@configs/Configuration';
+import sibApiV3Sdk from 'sib-api-v3-sdk';
 import { IMailProvider } from '../interfaces/IMailProvider';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const sibApiV3Sdk = require('sib-api-v3-sdk');
 
 /**
  * Transactional emails - SMTP

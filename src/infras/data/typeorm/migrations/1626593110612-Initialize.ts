@@ -104,12 +104,12 @@ export class Initialize1626593110612 implements MigrationInterface {
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_4f6bf4f0ab35e68dfe3bc087e3" ON "auth" ("user_id", "type") WHERE deleted_at IS NULL');
         await queryRunner.query('CREATE TYPE "client_gender_enum" AS ENUM(\'male\', \'female\')');
         await queryRunner.query('CREATE TYPE "client_status_enum" AS ENUM(\'inactived\', \'actived\', \'archived\')');
-        await queryRunner.query('CREATE TABLE "client" ("email" character varying(200) NOT NULL, "phone" character varying(20), "address" character varying(200), "locale" character varying(5), "status" "client_status_enum" NOT NULL DEFAULT \'actived\', "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_96da49381769303a6515a8785c7" PRIMARY KEY ("id")) INHERITS ("users")');
+        await queryRunner.query('CREATE TABLE "client" ("email" character varying(120) NOT NULL, "phone" character varying(20), "address" character varying(200), "locale" character varying(5), "status" "client_status_enum" NOT NULL DEFAULT \'actived\', "active_key" character varying(64), "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_96da49381769303a6515a8785c7" PRIMARY KEY ("id")) INHERITS ("users")');
         await queryRunner.query('CREATE INDEX "IDX_ea545365f74ddd2a7ed1fd4263" ON "client" ("role_id") ');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_6376cac90cf2c7378f369a271c" ON "client" ("email") WHERE deleted_at IS NULL');
         await queryRunner.query('CREATE TYPE "manager_gender_enum" AS ENUM(\'male\', \'female\')');
         await queryRunner.query('CREATE TYPE "manager_status_enum" AS ENUM(\'actived\', \'archived\')');
-        await queryRunner.query('CREATE TABLE "manager" ("email" character varying(200) NOT NULL, "status" "manager_status_enum" NOT NULL DEFAULT \'actived\', "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_b3ac840005ee4ed76a7f1c51d01" PRIMARY KEY ("id")) INHERITS ("users")');
+        await queryRunner.query('CREATE TABLE "manager" ("email" character varying(120) NOT NULL, "status" "manager_status_enum" NOT NULL DEFAULT \'actived\', "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_b3ac840005ee4ed76a7f1c51d01" PRIMARY KEY ("id")) INHERITS ("users")');
         await queryRunner.query('CREATE INDEX "IDX_67b47d76acd361b2f702095190" ON "manager" ("role_id") ');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_c94753b4da020c90870ab40b7a" ON "manager" ("email") WHERE deleted_at IS NULL');
 

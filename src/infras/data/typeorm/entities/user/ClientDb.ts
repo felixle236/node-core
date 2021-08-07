@@ -7,7 +7,7 @@ import { UserDb } from './UserDb';
 
 @Entity(CLIENT_SCHEMA.TABLE_NAME)
 export class ClientDb extends UserDb implements IClient {
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.EMAIL, length: 200 })
+    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.EMAIL, length: 120 })
     @Index({ unique: true, where: ClientDb.getIndexFilterDeletedColumn() })
     email: string;
 

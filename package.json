@@ -16,8 +16,8 @@
         "lint": "eslint --ext .ts --ext .js ./src",
         "build": "grunt clean && grunt sync && tsc",
         "test": "nyc mocha --exit ./src/**/*.spec.ts",
-        "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
-        "start": "node ./dist/app.js"
+        "dev": "NODE_ENV=local nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
+        "start": "NODE_ENV=production node ./dist/app.js"
     },
     "author": {
         "name": "Felix Lee",
@@ -56,6 +56,7 @@
         "express": "^4.17.1",
         "express-winston": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
+        "locale-code": "^2.0.2",
         "mailgen": "^2.0.15",
         "mailgun-js": "^0.6.7",
         "mime-types": "^2.1.31",

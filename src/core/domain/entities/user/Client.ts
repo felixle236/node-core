@@ -2,7 +2,8 @@ import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { isEmail, isEnum, isLocale } from 'class-validator';
+import { isEmail } from 'class-validator';
+import localeCode from 'locale-code';
 import { UserBase } from './User';
 
 export class Client extends UserBase<IClient> implements IClient {
@@ -11,15 +12,9 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set email(val: string) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'email');
-
         val = val.trim().toLowerCase();
         if (!isEmail(val))
             throw new SystemError(MessageError.PARAM_INVALID, 'email');
-
-        if (val.length > 200)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'email', 200);
 
         this.data.email = val;
     }
@@ -58,7 +53,7 @@ export class Client extends UserBase<IClient> implements IClient {
 
     set locale(val: string | null) {
         if (val) {
-            if (!isLocale(val))
+            if (!localeCode.validate(val))
                 throw new SystemError(MessageError.PARAM_INVALID, 'locale');
         }
 
@@ -70,12 +65,6 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set status(val: ClientStatus) {
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'status');
-
-        if (!isEnum(val, ClientStatus))
-            throw new SystemError(MessageError.PARAM_INVALID, 'status');
-
         this.data.status = val;
     }
 
@@ -84,6 +73,8 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set activeKey(val: string | null) {
+        if (val && val.length !== 64)
+            throw new SystemError(MessageError.PARAM_LEN_EQUAL, 'active key', 64);
         this.data.activeKey = val;
     }
 

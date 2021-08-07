@@ -26,7 +26,7 @@ export class ActiveClientCommandHandler extends CommandHandler<ActiveClientComma
 
         const data = new Client();
         data.status = ClientStatus.ACTIVED;
-        data.activeKey = '';
+        data.activeKey = null;
         data.activedAt = new Date();
 
         const hasSucceed = await this._clientRepository.update(client.id, data);

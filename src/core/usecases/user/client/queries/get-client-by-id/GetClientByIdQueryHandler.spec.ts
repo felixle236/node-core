@@ -38,10 +38,10 @@ describe('Client usecases - Get client by id', () => {
             email: 'client.test@localhost.com',
             avatar: 'avatar.png',
             gender: GenderType.FEMALE,
-            birthday: '2000-06-08',
+            birthday: '1970-01-01',
             phone: '0123456789',
             address: '123 Abc',
-            locale: 'vi-VN',
+            locale: 'en-US',
             activedAt: new Date(),
             archivedAt: new Date()
         } as IClient);

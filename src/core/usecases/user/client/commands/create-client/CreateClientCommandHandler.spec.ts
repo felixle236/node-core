@@ -56,10 +56,10 @@ describe('Client usecases - Create client', () => {
         param.email = 'client.test@localhost.com';
         param.password = 'Nodecore@2';
         param.gender = GenderType.FEMALE;
-        param.birthday = '2000-06-08';
+        param.birthday = '1970-01-01';
         param.phone = '0123456789';
         param.address = '123 Abc';
-        param.locale = 'vi-VN';
+        param.locale = 'en-US';
     });
 
     afterEach(() => {

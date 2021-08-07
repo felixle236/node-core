@@ -1,6 +1,5 @@
+import sibApiV3Sdk from 'sib-api-v3-sdk';
 import { ISmsProvider } from '../interfaces/ISmsProvider';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const sibApiV3Sdk = require('sib-api-v3-sdk');
 
 /**
  * Transactional SMS

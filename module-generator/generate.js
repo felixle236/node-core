@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 let moduleName = process.argv.length > 2 && process.argv[2].trim();
 if (!moduleName)

@@ -7,7 +7,7 @@ import { UserDb } from './UserDb';
 
 @Entity(MANAGER_SCHEMA.TABLE_NAME)
 export class ManagerDb extends UserDb implements IManager {
-    @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL, length: 200 })
+    @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL, length: 120 })
     @Index({ unique: true, where: ManagerDb.getIndexFilterDeletedColumn() })
     email: string;
 

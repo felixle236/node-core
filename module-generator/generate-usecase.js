@@ -1,11 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+/* eslint-disable no-console */
+import fs from 'fs';
+import path from 'path';
 
 const param = process.argv.length > 2 && process.argv[2].trim();
-if (!param.includes(':') || param.split(':').length !== 3) {
-    console.error('\x1b[35mParam is invalid!\n\x1b[0m');
-    return;
-}
+if (!param.includes(':') || param.split(':').length !== 3)
+    throw new Error('\x1b[35mParam is invalid!\n\x1b[0m');
 
 let moduleName = param.split(':')[0];
 let folder = moduleName;
@@ -14,14 +13,12 @@ if (moduleName.includes('#')) {
     folder = moduleName.split('#')[0];
     moduleName = moduleName.split('#')[1];
 
-    if (!folder || !moduleName) {
-        console.error('\x1b[35mMissing name of the module or sub module!\n\x1b[0m');
-        return;
-    }
-    if (folder === moduleName) {
-        console.error('\x1b[35mThe name of module cannot match sub module!\n\x1b[0m');
-        return;
-    }
+    if (!folder || !moduleName)
+        throw new Error('\x1b[35mMissing name of the module or sub module!\n\x1b[0m');
+
+    if (folder === moduleName)
+        throw new Error('\x1b[35mThe name of module cannot match sub module!\n\x1b[0m');
+
     console.log('Module:\x1b[32m', folder, '\x1b[0m');
     console.log('Sub-Module:\x1b[32m', moduleName, '\x1b[0m');
 }
@@ -35,10 +32,8 @@ const usecaseFncName = param.split(':')[2];
 console.log('Method:\x1b[32m', methodName, '\x1b[0m');
 console.log('Usecase:\x1b[32m', usecaseFncName, '\x1b[0m');
 
-if (!moduleName || !methodName || !usecaseFncName) {
-    console.error('\x1b[35mMissing param!\n\x1b[0m');
-    return;
-}
+if (!moduleName || !methodName || !usecaseFncName)
+    throw new Error('\x1b[35mMissing param!\n\x1b[0m');
 
 const usecaseFncFolder = convertToDirectoryName(usecaseFncName);
 const camelName = moduleName.substr(0, 1).toLowerCase() + moduleName.substr(1);
