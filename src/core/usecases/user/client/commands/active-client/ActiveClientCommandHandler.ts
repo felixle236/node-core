@@ -1,10 +1,10 @@
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { ActiveClientCommandInput } from './ActiveClientCommandInput';
 import { ActiveClientCommandOutput } from './ActiveClientCommandOutput';

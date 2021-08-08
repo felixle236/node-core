@@ -21,13 +21,13 @@ const startApplication = async (): Promise<void> => {
     await dbContext.createConnection();
 
     if (ENABLE_API_SERVICE)
-        ApiService.init();
+        ApiService.init(API_PORT);
 
     if (ENABLE_WEB_SERVICE)
-        WebService.init();
+        WebService.init(WEB_PORT);
 
     if (ENABLE_SOCKET_SERVICE)
-        SocketService.init();
+        SocketService.init(SOCKET_PORT);
 };
 
 const runMigrations = async (): Promise<void> => {

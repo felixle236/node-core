@@ -1,9 +1,9 @@
+import { AuthType } from '@domain/enums/auth/AuthType';
 import { IAuth } from '@domain/interfaces/auth/IAuth';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
+import { hashMD5 } from '@utils/Crypt';
 import { isUUID } from 'class-validator';
-import { hashMD5 } from '../../../../libs/crypt';
-import { AuthType } from '../../enums/auth/AuthType';
 import { BaseEntity } from '../base/BaseEntity';
 import { User } from '../user/User';
 

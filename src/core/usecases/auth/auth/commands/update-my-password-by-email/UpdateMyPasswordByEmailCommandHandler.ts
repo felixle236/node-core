@@ -1,13 +1,13 @@
+import { Auth } from '@domain/entities/auth/Auth';
+import { AuthType } from '@domain/enums/auth/AuthType';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { UpdateMyPasswordByEmailCommandInput } from './UpdateMyPasswordByEmailCommandInput';
 import { UpdateMyPasswordByEmailCommandOutput } from './UpdateMyPasswordByEmailCommandOutput';
-import { Auth } from '../../../../../domain/entities/auth/Auth';
-import { AuthType } from '../../../../../domain/enums/auth/AuthType';
 
 @Service()
 export class UpdateMyPasswordByEmailCommandHandler extends CommandHandler<UpdateMyPasswordByEmailCommandInput, UpdateMyPasswordByEmailCommandOutput> {

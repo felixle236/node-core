@@ -1,9 +1,9 @@
 import { Client } from '@domain/entities/user/Client';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { UpdateMyProfileClientCommandInput } from './UpdateMyProfileClientCommandInput';
 import { UpdateMyProfileClientCommandOutput } from './UpdateMyProfileClientCommandOutput';

@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Server } from 'http';
 import path from 'path';
-import { ENVIRONMENT, WEB_PORT } from '@configs/Configuration';
+import { ENVIRONMENT } from '@configs/Configuration';
 import { Environment } from '@configs/Constants';
 import { ILogService } from '@gateways/services/ILogService';
-import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { RoutingControllersOptions } from 'routing-controllers';
@@ -13,7 +12,7 @@ import { WebAuthenticator } from './WebAuthenticator';
 import { HttpServer } from '../servers/http/HttpServer';
 
 export class WebService {
-    static init(callback?: () => void): Server {
+    static init(port: number, callback?: () => void): Server {
         const logger = Container.get<ILogService>('log.service');
         const app = express();
 
@@ -42,9 +41,8 @@ export class WebService {
         });
 
         const httpServer = new HttpServer();
-        httpServer.createApp(options, app);
+        httpServer.createApp(app, options);
 
-        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
         // catch 404 and forward to error handler
         app.use(function(_req, res) {
             if (!res.writableEnded) {
@@ -53,7 +51,7 @@ export class WebService {
             }
         });
 
-        return httpServer.start(WEB_PORT, callback);
+        return httpServer.start(port, callback);
     }
 
     static getOptions(param: {

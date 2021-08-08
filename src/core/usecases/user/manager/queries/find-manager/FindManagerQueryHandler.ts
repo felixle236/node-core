@@ -1,6 +1,6 @@
 import { FindManagerFilter, IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { validateDataInput } from '@libs/common';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { FindManagerQueryInput } from './FindManagerQueryInput';
 import { FindManagerQueryOutput } from './FindManagerQueryOutput';

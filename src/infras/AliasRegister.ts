@@ -19,5 +19,5 @@ moduleAlias.addAliases({
     '@infras': mapPathAlias('infras'),
     '@data': mapPathAlias('infras/data'),
     '@services': mapPathAlias('infras/services'),
-    '@libs': mapPathAlias('libs')
+    '@utils': mapPathAlias('utils')
 });

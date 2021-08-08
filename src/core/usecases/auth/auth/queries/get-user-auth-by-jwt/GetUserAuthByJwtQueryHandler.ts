@@ -1,9 +1,9 @@
 import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
 import { ILogService } from '@gateways/services/ILogService';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { GetUserAuthByJwtQueryInput } from './GetUserAuthByJwtQueryInput';
 import { GetUserAuthByJwtQueryOutput } from './GetUserAuthByJwtQueryOutput';

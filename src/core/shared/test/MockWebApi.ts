@@ -36,6 +36,6 @@ export const mockApiService = (controller: string | Function, port = 3000, callb
     });
 
     const httpServer = new HttpServer();
-    httpServer.createApp(options, app);
+    httpServer.createApp(app, options);
     return httpServer.start(port, callback);
 };

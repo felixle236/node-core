@@ -1,6 +1,6 @@
 import './DbContext';
 import path from 'path';
-import { getDirectoriesSync, getFilesSync } from '@libs/file';
+import { getDirectoriesSync, getFilesSync } from '@utils/File';
 
 const folder = path.join(__dirname, './repositories');
 getFilesSync(folder).forEach(file => {

@@ -1,16 +1,13 @@
 import { Server } from 'http';
 import { Express } from 'express';
-import { createExpressServer, RoutingControllersOptions, useExpressServer } from 'routing-controllers';
+import { RoutingControllersOptions, useExpressServer } from 'routing-controllers';
 
 export class HttpServer {
     private _server: Server;
     private _app: Express;
 
-    createApp(options: RoutingControllersOptions, app?: Express): Express {
-        if (app)
-            this._app = useExpressServer(app, options);
-        else
-            this._app = createExpressServer(options);
+    createApp(app: Express, options: RoutingControllersOptions): Express {
+        this._app = useExpressServer(app, options);
         return this._app;
     }
 

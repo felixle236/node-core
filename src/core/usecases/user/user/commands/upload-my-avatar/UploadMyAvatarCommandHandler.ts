@@ -1,11 +1,11 @@
 import { User } from '@domain/entities/user/User';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
 import { IStorageService } from '@gateways/services/IStorageService';
-import { validateDataInput } from '@libs/common';
-import { removeFile } from '@libs/file';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { removeFile } from '@utils/File';
+import { validateDataInput } from '@utils/Validator';
 import mime from 'mime-types';
 import { Inject, Service } from 'typedi';
 import { UploadMyAvatarCommandInput } from './UploadMyAvatarCommandInput';

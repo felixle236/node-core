@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { convertStringToBoolean } from '@libs/common';
+import { convertStringToBoolean } from '@utils/Converter';
 import dotenv from 'dotenv';
 import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './Constants';
 dotenv.config();

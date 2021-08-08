@@ -1,6 +1,6 @@
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
-import { validateDataInput } from '@libs/common';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { UpdateUserOnlineStatusCommandInput } from './UpdateUserOnlineStatusCommandInput';
 import { UpdateUserOnlineStatusCommandOutput } from './UpdateUserOnlineStatusCommandOutput';

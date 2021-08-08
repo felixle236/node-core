@@ -1,17 +1,17 @@
+import { Auth } from '@domain/entities/auth/Auth';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { ResetPasswordByEmailCommandInput } from './ResetPasswordByEmailCommandInput';
 import { ResetPasswordByEmailCommandOutput } from './ResetPasswordByEmailCommandOutput';
-import { Auth } from '../../../../../domain/entities/auth/Auth';
 
 @Service()
 export class ResetPasswordByEmailCommandHandler extends CommandHandler<ResetPasswordByEmailCommandInput, ResetPasswordByEmailCommandOutput> {

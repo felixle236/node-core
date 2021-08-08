@@ -1,6 +1,6 @@
 import { FindClientFilter, IClientRepository } from '@gateways/repositories/user/IClientRepository';
-import { validateDataInput } from '@libs/common';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { FindClientQueryInput } from './FindClientQueryInput';
 import { FindClientQueryOutput } from './FindClientQueryOutput';

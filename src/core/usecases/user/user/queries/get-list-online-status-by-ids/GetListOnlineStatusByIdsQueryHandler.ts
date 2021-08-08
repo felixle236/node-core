@@ -1,8 +1,8 @@
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { validateDataInput } from '@utils/Validator';
 import { isUUID } from 'class-validator';
 import { Inject, Service } from 'typedi';
 import { GetListOnlineStatusByIdsQueryInput } from './GetListOnlineStatusByIdsQueryInput';

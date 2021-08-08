@@ -11,7 +11,8 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "src/core/shared/test/**/*.ts"
+        "src/core/shared/test/**/*.ts",
+        "**/test/**"
     ],
     "extension": [
         ".ts"

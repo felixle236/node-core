@@ -68,7 +68,9 @@ export function mockQueryRunner(sandbox: SinonSandbox): {connection: MockConnect
  */
 export function mockRepository<T>(sandbox: SinonSandbox): { repository: MockRepository<T> } {
     const repository = sandbox.createStubInstance(typeorm.Repository);
-    sandbox.stub(typeorm, 'getRepository').returns(repository as any);
+    sandbox.stub(typeorm.ConnectionManager.prototype, 'get').returns({
+        getRepository: () => repository
+    } as unknown as typeorm.Connection);
     return { repository };
 }
 

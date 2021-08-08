@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Server } from 'http';
 import path from 'path';
-import { API_PORT, ENVIRONMENT } from '@configs/Configuration';
+import { ENVIRONMENT } from '@configs/Configuration';
 import { Environment } from '@configs/Constants';
 import { ILogService } from '@gateways/services/ILogService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
-import compression from 'compression';
 import express from 'express';
 import { RoutingControllersOptions } from 'routing-controllers';
 import swaggerUiExpress from 'swagger-ui-express';
@@ -14,7 +13,7 @@ import { ApiAuthenticator } from './ApiAuthenticator';
 import { ApiDocument } from './ApiDocument';
 
 export class ApiService {
-    static init(callback?: () => void): Server {
+    static init(port: number, callback?: () => void): Server {
         const logger = Container.get<ILogService>('log.service');
         const app = express();
 
@@ -40,13 +39,12 @@ export class ApiService {
         });
 
         const httpServer = new HttpServer();
-        httpServer.createApp(options, app);
+        httpServer.createApp(app, options);
 
         const spec = ApiDocument.generate(options);
         app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
-        app.use(compression({ filter: (req, res) => req.headers['x-no-compression'] ? false : compression.filter(req, res) }));
 
-        return httpServer.start(API_PORT, callback);
+        return httpServer.start(port, callback);
     }
 
     static getOptions(param: {

@@ -1,20 +1,20 @@
 import crypto from 'crypto';
+import { Auth } from '@domain/entities/auth/Auth';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { validateDataInput } from '@libs/common';
+import { IMailService } from '@gateways/services/IMailService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { addSeconds } from '@utils/Datetime';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { ForgotPasswordByEmailCommandInput } from './ForgotPasswordByEmailCommandInput';
 import { ForgotPasswordByEmailCommandOutput } from './ForgotPasswordByEmailCommandOutput';
-import { addSeconds } from '../../../../../../libs/date';
-import { Auth } from '../../../../../domain/entities/auth/Auth';
-import { IMailService } from '../../../../../gateways/services/IMailService';
 
 @Service()
 export class ForgotPasswordByEmailCommandHandler extends CommandHandler<ForgotPasswordByEmailCommandInput, ForgotPasswordByEmailCommandOutput> {

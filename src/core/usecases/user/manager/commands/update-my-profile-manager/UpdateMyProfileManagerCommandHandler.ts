@@ -1,9 +1,9 @@
 import { Manager } from '@domain/entities/user/Manager';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { validateDataInput } from '@libs/common';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/Validator';
 import { Inject, Service } from 'typedi';
 import { UpdateMyProfileManagerCommandInput } from './UpdateMyProfileManagerCommandInput';
 import { UpdateMyProfileManagerCommandOutput } from './UpdateMyProfileManagerCommandOutput';

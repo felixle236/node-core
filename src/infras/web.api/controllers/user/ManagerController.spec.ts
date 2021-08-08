@@ -32,7 +32,7 @@ import { v4 } from 'uuid';
 describe('Manager controller', () => {
     const sandbox = createSandbox();
     let server: Server;
-    const port = 3000;
+    const port = 3456;
     const endpoint = `http://localhost:${port}/api/v1/managers`;
     const options = { headers: { Authorization: 'Bearer token' } };
     let findManagerQueryHandler: FindManagerQueryHandler;

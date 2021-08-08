@@ -1,11 +1,11 @@
+import { GenderType } from '@domain/enums/user/GenderType';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { IUser } from '@domain/interfaces/user/IUser';
+import { IStorageService } from '@gateways/services/IStorageService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { isEnum, isUUID } from 'class-validator';
 import { Container } from 'typedi';
-import { IStorageService } from '../../../gateways/services/IStorageService';
-import { GenderType } from '../../enums/user/GenderType';
 import { Auth } from '../auth/Auth';
 import { BaseEntity } from '../base/BaseEntity';
 
