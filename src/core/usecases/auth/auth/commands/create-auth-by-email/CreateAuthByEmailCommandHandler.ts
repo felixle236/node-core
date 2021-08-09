@@ -6,7 +6,7 @@ import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { validateDataInput } from '@utils/Validator';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { CreateAuthByEmailCommandInput } from './CreateAuthByEmailCommandInput';
 

@@ -8,7 +8,7 @@ import { IStorageService } from '@gateways/services/IStorageService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { mockStorageService } from '@shared/test/MockStorageService';
-import * as fileLib from '@utils/File';
+import * as fileLib from '@utils/file';
 import { expect } from 'chai';
 import mime from 'mime-types';
 import { createSandbox } from 'sinon';

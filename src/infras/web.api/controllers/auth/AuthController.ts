@@ -42,7 +42,7 @@ export class AuthController {
     async authenticate(@HeaderParam('authorization') authorization: string, @QueryParam('token') token: string): Promise<GetUserAuthByJwtQueryOutput> {
         let accessToken = token;
         if (authorization) {
-            const parts = (authorization || '').split(' ');
+            const parts = authorization.split(' ');
             accessToken = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
         }
         const param = new GetUserAuthByJwtQueryInput();

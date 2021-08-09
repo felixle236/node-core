@@ -4,7 +4,7 @@ import { Environment, LogProvider } from '@configs/Constants';
 import { ILogService } from '@gateways/services/ILogService';
 import { LoggingWinston } from '@google-cloud/logging-winston';
 import { IRequest } from '@shared/IRequest';
-import { convertObjectToString } from '@utils/Converter';
+import { convertObjectToString } from '@utils/converter';
 import { Handler, NextFunction, Request, Response } from 'express';
 import expressWinston from 'express-winston';
 import { Service } from 'typedi';

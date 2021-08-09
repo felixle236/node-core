@@ -15,7 +15,7 @@ import { IUser } from '@domain/interfaces/user/IUser';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
-import { addMinutes } from '@utils/Datetime';
+import { addMinutes } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';

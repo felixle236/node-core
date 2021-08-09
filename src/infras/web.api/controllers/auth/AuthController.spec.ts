@@ -4,6 +4,7 @@ import 'reflect-metadata';
 import 'mocha';
 import { Server } from 'http';
 import { AuthType } from '@domain/enums/auth/AuthType';
+import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
 import { mockApiService } from '@shared/test/MockWebApi';
@@ -81,6 +82,16 @@ describe('Authorization controller', () => {
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
+    });
+
+    it('Authenticate user by token invalid', async () => {
+        const op = JSON.parse(JSON.stringify(options));
+        op.headers.Authorization = 'Bearer';
+        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').throwsException(new InputValidationError());
+        const { status, data } = await axios.post(endpoint, undefined, op).catch(error => error.response);
+
+        expect(status).to.eq(400);
+        expect(data.code).to.eq(new InputValidationError().code);
     });
 
     it('Login by email', async () => {

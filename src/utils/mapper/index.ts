@@ -11,10 +11,8 @@ export function mapTemplate(template: string, ...params: any[]): string {
  * Replace data object into the template.
  */
 export function mapTemplateWithDataObject(template: string, data: { [key: string]: any }): string {
-    if (data) {
-        Object.keys(data).forEach(key => {
-            template = template.replace(new RegExp(`{{${key}}}`, 'g'), data[key]);
-        });
-    }
+    Object.keys(data).forEach(key => {
+        template = template.replace(new RegExp(`{{${key}}}`, 'g'), data[key]);
+    });
     return template;
 }

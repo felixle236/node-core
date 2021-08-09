@@ -17,7 +17,7 @@ import { IClientRepository } from '@gateways/repositories/user/IClientRepository
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { addMinutes } from '@utils/Datetime';
+import { addMinutes } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';

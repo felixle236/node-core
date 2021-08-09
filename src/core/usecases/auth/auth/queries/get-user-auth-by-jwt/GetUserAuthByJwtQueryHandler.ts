@@ -3,7 +3,7 @@ import { ILogService } from '@gateways/services/ILogService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
-import { validateDataInput } from '@utils/Validator';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { GetUserAuthByJwtQueryInput } from './GetUserAuthByJwtQueryInput';
 import { GetUserAuthByJwtQueryOutput } from './GetUserAuthByJwtQueryOutput';

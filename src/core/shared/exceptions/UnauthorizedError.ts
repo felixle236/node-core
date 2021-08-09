@@ -1,4 +1,4 @@
-import { mapTemplate } from '@utils/Mapper';
+import { mapTemplate } from '@utils/mapper';
 import { IsString } from 'class-validator';
 import { ErrorObject } from './message/ErrorObject';
 import { MessageError } from './message/MessageError';

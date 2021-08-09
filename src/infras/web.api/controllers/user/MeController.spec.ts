@@ -9,7 +9,7 @@ import { mockAuthentication } from '@shared/test/MockAuthentication';
 import { mockApiService } from '@shared/test/MockWebApi';
 import { UploadMyAvatarCommandHandler } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
 import { UploadMyAvatarCommandOutput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandOutput';
-import { readFile } from '@utils/File';
+import { readFile } from '@utils/file';
 import axios from 'axios';
 import { expect } from 'chai';
 import FormData from 'form-data';

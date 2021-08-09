@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'mocha';
 import { expect } from 'chai';
-import { convertObjectToString, convertStringToBoolean, convertToCurrency } from './Converter';
+import { convertObjectToString, convertStringToBoolean, convertToCurrency } from '.';
 
 describe('Utils - Converter', () => {
     it('Convert number to currency without value', () => {

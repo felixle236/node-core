@@ -27,23 +27,3 @@ export function sendWithSender<T>(socket: Socket, event: string, room: string, d
 export function sendAllWithSender<T>(socket: Socket, event: string, data: T): boolean {
     return socket.emit(event, data) && socket.nsp.emit(event, data);
 }
-
-/**
- * Return the ack function when we use emit with ack.
- */
-export function ackTimeout(onSuccess: () => void, onTimeout: () => void, timeout: number): () => void {
-    let isCalled = false;
-
-    const timer = setTimeout(() => {
-        if (isCalled) return;
-        isCalled = true;
-        onTimeout();
-    }, timeout);
-
-    return (...args) => {
-        if (isCalled) return;
-        isCalled = true;
-        clearTimeout(timer);
-        onSuccess.apply(this, args);
-    };
-}

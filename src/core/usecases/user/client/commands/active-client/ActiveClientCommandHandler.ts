@@ -4,7 +4,7 @@ import { IClientRepository } from '@gateways/repositories/user/IClientRepository
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { validateDataInput } from '@utils/Validator';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { ActiveClientCommandInput } from './ActiveClientCommandInput';
 import { ActiveClientCommandOutput } from './ActiveClientCommandOutput';

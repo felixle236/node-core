@@ -4,7 +4,7 @@ import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { validateDataInput } from '@utils/Validator';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { UpdateMyPasswordByEmailCommandInput } from './UpdateMyPasswordByEmailCommandInput';
 import { UpdateMyPasswordByEmailCommandOutput } from './UpdateMyPasswordByEmailCommandOutput';

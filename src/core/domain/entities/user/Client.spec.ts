@@ -3,7 +3,7 @@ import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { addSeconds } from '@utils/Datetime';
+import { addSeconds } from '@utils/datetime';
 import { expect } from 'chai';
 import { v4 } from 'uuid';
 import { Client } from './Client';

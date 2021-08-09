@@ -8,7 +8,7 @@ import { IClient } from '@domain/interfaces/user/IClient';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { addSeconds } from '@utils/Datetime';
+import { addSeconds } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';

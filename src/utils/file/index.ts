@@ -7,11 +7,10 @@ import path from 'path';
  */
 export function getDirectories(dir: string): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
-        fs.readdir(dir, (err, list) => {
+        fs.readdir(dir, undefined, (err, list) => {
             if (err)
-                reject(err);
-            else
-                resolve(list.filter(item => fs.statSync(path.join(dir, item)).isDirectory()));
+                return reject(err);
+            resolve(list.filter(item => fs.statSync(path.join(dir, item)).isDirectory()));
         });
     });
 }
@@ -31,11 +30,10 @@ export function getDirectoriesSync(dir: string): string[] {
  */
 export function getFiles(dir: string): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
-        fs.readdir(dir, (err, list) => {
+        fs.readdir(dir, undefined, (err, list) => {
             if (err)
-                reject(err);
-            else
-                resolve(list.filter(item => !fs.statSync(path.join(dir, item)).isDirectory()));
+                return reject(err);
+            resolve(list.filter(item => !fs.statSync(path.join(dir, item)).isDirectory()));
         });
     });
 }
@@ -55,7 +53,7 @@ export function getFilesSync(dir: string): string[] {
  */
 export function createDirectory(dir: string): void {
     const splitPath = dir.split('/');
-    if (splitPath.length > 20)
+    if (splitPath.length > 10)
         throw new Error('The path is invalid!');
 
     splitPath.reduce((path, subPath) => {
@@ -123,9 +121,6 @@ export function writeFile(filePath: string, content: string | Buffer, encoding?:
         if (!fs.existsSync(dir))
             createDirectory(dir);
 
-        if (dir === filePath.trim())
-            return reject(new Error('The path is invalid!'));
-
         fs.writeFile(filePath, content, { encoding } as fs.ObjectEncodingOptions, error => {
             if (error)
                 return reject(error);
@@ -150,9 +145,6 @@ export function appendFile(filePath: string, content: string | Buffer, encoding?
         const dir = path.dirname(filePath);
         if (!fs.existsSync(dir))
             createDirectory(dir);
-
-        if (dir === filePath.trim())
-            return reject(new Error('The path is invalid!'));
 
         fs.appendFile(filePath, content, { encoding } as fs.ObjectEncodingOptions, error => {
             if (error)

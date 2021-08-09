@@ -81,24 +81,6 @@ export function addYears(date: Date, years: number): Date {
 }
 
 /**
- * Get begin of month
- */
-export function getBeginOfMonth(date: string | Date): Date {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-
-/**
- * Get begin of month
- */
-export function getEndOfMonth(date: string | Date): Date {
-    let d = typeof date === 'string' ? new Date(date) : date;
-    d = new Date(d.getFullYear(), d.getMonth(), 1);
-    d = addMonths(d, 1);
-    return addDays(d, -1);
-}
-
-/**
  * Get begin of day
  */
 export function getBeginOfDay(date: string | Date): Date {
@@ -114,5 +96,23 @@ export function getEndOfDay(date: string | Date): Date {
     d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     d = addDays(d, 1);
 
-    return addSeconds(d, -1);
+    return addMiliseconds(d, -1);
+}
+
+/**
+ * Get begin of month
+ */
+export function getBeginOfMonth(date: string | Date): Date {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+/**
+ * Get begin of month
+ */
+export function getEndOfMonth(date: string | Date): Date {
+    let d = typeof date === 'string' ? new Date(date) : date;
+    d = new Date(d.getFullYear(), d.getMonth(), 1);
+    d = addMonths(d, 1);
+    return addDays(d, -1);
 }
