@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
 import { GetUserAuthByJwtQueryData, GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
 import { Container } from 'typedi';

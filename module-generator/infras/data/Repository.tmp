@@ -1,0 +1,40 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { Find{PascalName}Filter, I{PascalName}Repository } from '@gateways/repositories/{folder}/I{PascalName}Repository';
+import { Service } from 'typedi';
+import { {PascalName}Db } from '../../entities/{folder}/{PascalName}Db';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Schema';
+import { BaseRepository } from '../base/BaseRepository';
+
+@Service('{lower_case_name}.repository')
+export class {PascalName}Repository extends BaseRepository<string, {PascalName}, {PascalName}Db> implements I{PascalName}Repository {
+    constructor() {
+        super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);
+    }
+
+    override async findAndCount(param: Find{PascalName}Filter): Promise<[{PascalName}[], number]> {
+        let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
+
+        if (param.keyword) {
+            const keyword = `%${param.keyword}%`;
+            query = query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
+        }
+
+        query = query
+            .skip(param.skip)
+            .take(param.limit);
+
+        const [list, count] = await query.getManyAndCount();
+        return [list.map(item => item.toEntity()), count];
+    }
+
+    async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
+        let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+            .where(`lower(${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
+
+        if (excludeId)
+            query = query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
+
+        const result = await query.getOne();
+        return !!result;
+    }
+}

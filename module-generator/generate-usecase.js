@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 const param = process.argv.length > 2 && process.argv[2].trim();
 if (!param.includes(':') || param.split(':').length !== 3)
@@ -42,39 +42,44 @@ const upperCaseName = convertToDirectoryName(moduleName).replace(/-/g, '_').toUp
 const lowerCaseName = upperCaseName.toLowerCase();
 
 if (methodName.toLowerCase() === 'query') {
-    const queryUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}Query.ts`);
-    const queryUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/usecase-query-func/UsecaseQuery.tmp'));
+    const queryHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.spec.ts`);
+    const queryHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryHandler.spec.tmp'));
 
-    const queryHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.ts`);
-    const queryHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/usecase-query-func/UsecaseQueryHandler.tmp'));
+    const queryHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.ts`);
+    const queryHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryHandler.tmp'));
 
-    const queryResultUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryResult.ts`);
-    const queryResultUsecase = getFileContent(path.join(__dirname, './web.core/usecases/queries/usecase-query-func/UsecaseQueryResult.tmp'));
+    const queryUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryOutput.ts`);
+    const queryUsecaseOutput = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryOutput.tmp'));
 
     createDirectories(
-        queryUsecasePath,
-        queryHandlerUsecasePath,
-        queryResultUsecasePath
+        queryHandlerUsecasePath
     );
 
-    fs.writeFileSync(queryUsecasePath, queryUsecase);
+    fs.writeFileSync(queryHandlerUsecaseSpecPath, queryHandlerUsecaseSpec);
     fs.writeFileSync(queryHandlerUsecasePath, queryHandlerUsecase);
-    fs.writeFileSync(queryResultUsecasePath, queryResultUsecase);
+    fs.writeFileSync(queryUsecaseOutputPath, queryUsecaseOutput);
 }
 else if (methodName.toLowerCase() === 'command') {
-    const commandUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}Command.ts`);
-    const commandUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/usecase-command-func/UsecaseCommand.tmp'));
+    const commandHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.spec.ts`);
+    const commandHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandHandler.spec.tmp'));
 
-    const commandHandlerUsecasePath = path.join(__dirname, `../src/web.core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.ts`);
-    const commandHandlerUsecase = getFileContent(path.join(__dirname, './web.core/usecases/commands/usecase-command-func/UsecaseCommandHandler.tmp'));
+    const commandHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.ts`);
+    const commandHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandHandler.tmp'));
+
+    const commandUsecaseInputPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandInput.ts`);
+    const commandUsecaseInput = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandInput.tmp'));
+
+    const commandUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandOutput.ts`);
+    const commandUsecaseOutput = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandOutput.tmp'));
 
     createDirectories(
-        commandUsecasePath,
         commandHandlerUsecasePath
     );
 
-    fs.writeFileSync(commandUsecasePath, commandUsecase);
+    fs.writeFileSync(commandHandlerUsecaseSpecPath, commandHandlerUsecaseSpec);
     fs.writeFileSync(commandHandlerUsecasePath, commandHandlerUsecase);
+    fs.writeFileSync(commandUsecaseInputPath, commandUsecaseInput);
+    fs.writeFileSync(commandUsecaseOutputPath, commandUsecaseOutput);
 }
 
 console.log('\n\x1b[32mGenerate usecase "' + usecaseFncName + '" successfully.\x1b[0m\n');

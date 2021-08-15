@@ -1,0 +1,31 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { RefSchemaArray } from '@shared/decorators/RefSchema';
+import { PaginationResponse } from '@shared/usecase/PaginationResponse';
+import { IsArray, IsDateString, IsString, IsUUID } from 'class-validator';
+
+export class Find{PascalName}QueryData {
+    @IsUUID()
+    id: string;
+
+    @IsDateString()
+    createdAt: Date;
+
+    @IsString()
+    name: string;
+
+    constructor(data: {PascalName}) {
+        this.id = data.id;
+        this.createdAt = data.createdAt;
+        this.name = data.name;
+    }
+}
+
+export class Find{PascalName}QueryOutput extends PaginationResponse<Find{PascalName}QueryData> {
+    @IsArray()
+    @RefSchemaArray(Find{PascalName}QueryData)
+    data: Find{PascalName}QueryData[];
+
+    setData(list: {PascalName}[]): void {
+        this.data = list.map(item => new Find{PascalName}QueryData(item));
+    }
+}

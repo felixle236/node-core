@@ -1,0 +1,24 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { I{PascalName} } from '@domain/interfaces/{folder}/I{PascalName}';
+import { Column, Entity, Index } from 'typeorm';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Schema';
+import { BaseDbEntity } from '../base/BaseDBEntity';
+
+@Entity({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+export class {PascalName}Db extends BaseDbEntity<string, {PascalName}> implements I{PascalName} {
+    @Column('varchar', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME, length: 50 })
+    @Index({ unique: true, where: BaseDbEntity.getIndexFilterDeletedColumn() })
+    name: string;
+
+    /* Relationship */
+
+    /* Handlers */
+
+    toEntity(): {PascalName} {
+        return new {PascalName}(this);
+    }
+
+    fromEntity(entity: {PascalName}): I{PascalName} {
+        return entity.toData();
+    }
+}

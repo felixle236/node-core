@@ -29,7 +29,7 @@ import { v4 } from 'uuid';
 describe('Authorization controller', () => {
     const sandbox = createSandbox();
     let server: Server;
-    const port = 3456;
+    const port = 3301;
     const endpoint = `http://localhost:${port}/api/v1/auths`;
     const options = { headers: { Authorization: 'Bearer token' } };
     let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;

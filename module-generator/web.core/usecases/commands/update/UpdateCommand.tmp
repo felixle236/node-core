@@ -1,4 +1,0 @@
-export class Update{PascalName}Command {
-    id: string;
-    name: string;
-}

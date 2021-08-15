@@ -1,0 +1,14 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { DbPaginationFilter } from '@shared/database/DbPaginationFilter';
+import { IBaseRepository } from '@shared/database/interfaces/IBaseRepository';
+
+export class Find{PascalName}Filter extends DbPaginationFilter {
+    keyword: string | null;
+}
+
+export interface I{PascalName}Repository extends IBaseRepository<string, {PascalName}> {
+    findAndCount(param: Find{PascalName}Filter): Promise<[{PascalName}[], number]>;
+
+    checkNameExist(name: string): Promise<boolean>;
+    checkNameExist(name: string, excludeId: string): Promise<boolean>;
+}

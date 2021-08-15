@@ -1,0 +1,23 @@
+import { Find{PascalName}Filter, I{PascalName}Repository } from '@gateways/repositories/{folder}/I{PascalName}Repository';
+import { QueryHandler } from '@shared/usecase/QueryHandler';
+import { Inject, Service } from 'typedi';
+import { Find{PascalName}QueryInput } from './Find{PascalName}QueryInput';
+import { Find{PascalName}QueryOutput } from './Find{PascalName}QueryOutput';
+
+@Service()
+export class Find{PascalName}QueryHandler implements QueryHandler<Find{PascalName}QueryInput, Find{PascalName}QueryOutput> {
+    @Inject('{lower_case_name}.repository')
+    private readonly _{camelName}Repository: I{PascalName}Repository;
+
+    async handle(param: Find{PascalName}QueryInput): Promise<Find{PascalName}QueryOutput> {
+        const filter = new Find{PascalName}Filter();
+        filter.setPagination(param.skip, param.limit);
+        filter.keyword = param.keyword;
+
+        const [{camelName}s, count] = await this._{camelName}Repository.findAndCount(filter);
+        const result = new Find{PascalName}QueryOutput();
+        result.setData({camelName}s);
+        result.setPagination(count, param.skip, param.limit);
+        return result;
+    }
+}

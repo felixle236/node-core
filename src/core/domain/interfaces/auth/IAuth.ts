@@ -1,4 +1,3 @@
-
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { IEntity } from '../base/IEntity';
 import { IUser } from '../user/IUser';

@@ -1,3 +1,0 @@
-export class Delete{PascalName}Command {
-    id: string;
-}

@@ -1,0 +1,32 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{PascalName}Repository';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
+import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { Inject, Service } from 'typedi';
+import { Update{PascalName}CommandInput } from './Update{PascalName}CommandInput';
+import { Update{PascalName}CommandOutput } from './Update{PascalName}CommandOutput';
+
+@Service()
+export class Update{PascalName}CommandHandler implements CommandHandler<Update{PascalName}CommandInput, Update{PascalName}CommandOutput> {
+    @Inject('{lower_case_name}.repository')
+    private readonly _{camelName}Repository: I{PascalName}Repository;
+
+    async handle(id: string, param: Update{PascalName}CommandInput): Promise<Update{PascalName}CommandOutput> {
+        const data = new {PascalName}();
+        data.name = param.name;
+
+        const {camelName} = await this._{camelName}Repository.getById(id);
+        if (!{camelName})
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+
+        const isExist = await this._{camelName}Repository.checkNameExist(data.name, id);
+        if (isExist)
+            throw new SystemError(MessageError.PARAM_EXISTED, 'name');
+
+        const hasSucceed = await this._{camelName}Repository.update(id, data);
+        const result = new Update{PascalName}CommandOutput();
+        result.setData(hasSucceed);
+        return result;
+    }
+}

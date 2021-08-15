@@ -1,0 +1,22 @@
+import { I{PascalName} } from '@domain/interfaces/{folder}/I{PascalName}';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
+import { BaseEntity } from '../base/BaseEntity';
+
+export class {PascalName} extends BaseEntity<string, I{PascalName}> implements I{PascalName} {
+    get name(): string {
+        return this.data.name;
+    }
+
+    set name(val: string) {
+        val = val.trim();
+        if (val.length > 50)
+            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
+
+        this.data.name = val;
+    }
+
+    /* Relationship */
+
+    /* Handlers */
+}

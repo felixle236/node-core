@@ -1,0 +1,11 @@
+import { DataResponse } from '@shared/usecase/DataResponse';
+import { IsBoolean } from 'class-validator';
+
+export class Delete{PascalName}CommandOutput extends DataResponse<boolean> {
+    @IsBoolean()
+    data: boolean;
+
+    setData(data: boolean): void {
+        this.data = data;
+    }
+}

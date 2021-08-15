@@ -1,0 +1,63 @@
+import { Create{PascalName}CommandHandler } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandHandler';
+import { Create{PascalName}CommandInput } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandInput';
+import { Create{PascalName}CommandOutput } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandOutput';
+import { Delete{PascalName}CommandHandler } from '@usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}CommandHandler';
+import { Delete{PascalName}CommandOutput } from '@usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}CommandOutput';
+import { Update{PascalName}CommandHandler } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandHandler';
+import { Update{PascalName}CommandInput } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandInput';
+import { Update{PascalName}CommandOutput } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandOutput';
+import { Find{PascalName}QueryHandler } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryHandler';
+import { Find{PascalName}QueryInput } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryInput';
+import { Find{PascalName}QueryOutput } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryOutput';
+import { Get{PascalName}ByIdQueryHandler } from '@usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryHandler';
+import { Get{PascalName}ByIdQueryOutput } from '@usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryOutput';
+import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
+import { Service } from 'typedi';
+
+@Service()
+@JsonController('/v1/{usecaseFncFolder}s')
+export class {PascalName}Controller {
+    constructor(
+        private readonly _find{PascalName}QueryHandler: Find{PascalName}QueryHandler,
+        private readonly _get{PascalName}ByIdQueryHandler: Get{PascalName}ByIdQueryHandler,
+        private readonly _create{PascalName}CommandHandler: Create{PascalName}CommandHandler,
+        private readonly _update{PascalName}CommandHandler: Update{PascalName}CommandHandler,
+        private readonly _delete{PascalName}CommandHandler: Delete{PascalName}CommandHandler
+    ) {}
+
+    @Get('/')
+    @OpenAPI({ summary: 'Find {camelName}s' })
+    @ResponseSchema(Find{PascalName}QueryOutput)
+    async find(@QueryParams() param: Find{PascalName}QueryInput): Promise<Find{PascalName}QueryOutput> {
+        return await this._find{PascalName}QueryHandler.handle(param);
+    }
+
+    @Get('/:id([0-9a-f-]{36})')
+    @OpenAPI({ summary: 'Get {camelName} by id' })
+    @ResponseSchema(Get{PascalName}ByIdQueryOutput)
+    async getById(@Param('id') id: string): Promise<Get{PascalName}ByIdQueryOutput> {
+        return await this._get{PascalName}ByIdQueryHandler.handle(id);
+    }
+
+    @Post('/')
+    @OpenAPI({ summary: 'Create {camelName}' })
+    @ResponseSchema(Create{PascalName}CommandOutput)
+    async create(@Body() param: Create{PascalName}CommandInput): Promise<Create{PascalName}CommandOutput> {
+        return await this._create{PascalName}CommandHandler.handle(param);
+    }
+
+    @Put('/:id([0-9a-f-]{36})')
+    @OpenAPI({ summary: 'Update {camelName}' })
+    @ResponseSchema(Update{PascalName}CommandOutput)
+    async update(@Param('id') id: string, @Body() param: Update{PascalName}CommandInput): Promise<Update{PascalName}CommandOutput> {
+        return await this._update{PascalName}CommandHandler.handle(id, param);
+    }
+
+    @Delete('/:id([0-9a-f-]{36})')
+    @OpenAPI({ summary: 'Delete {camelName}' })
+    @ResponseSchema(Delete{PascalName}CommandOutput)
+    async delete(@Param('id') id: string): Promise<Delete{PascalName}CommandOutput> {
+        return await this._delete{PascalName}CommandHandler.handle(id);
+    }
+}

@@ -57,7 +57,7 @@ describe('Api service', () => {
     useContainer(Container);
     const sandbox = createSandbox();
     let server: Server;
-    const port = 3456;
+    const port = 3301;
     const endpoint = `http://localhost:${port}`;
 
     before(done => {

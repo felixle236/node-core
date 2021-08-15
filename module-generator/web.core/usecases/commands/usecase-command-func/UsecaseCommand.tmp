@@ -1,3 +1,0 @@
-export class {UsecaseName}Command {
-    name: string;
-}

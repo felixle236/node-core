@@ -1,0 +1,8 @@
+import { QueryPaginationRequest } from '@shared/usecase/QueryPaginationRequest';
+import { IsOptional, IsString } from 'class-validator';
+
+export class Find{PascalName}QueryInput extends QueryPaginationRequest {
+    @IsString()
+    @IsOptional()
+    keyword: string;
+}

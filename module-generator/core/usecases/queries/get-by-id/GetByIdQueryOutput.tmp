@@ -1,0 +1,31 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { RefSchemaObject } from '@shared/decorators/RefSchema';
+import { DataResponse } from '@shared/usecase/DataResponse';
+import { IsDateString, IsObject, IsString, IsUUID } from 'class-validator';
+
+export class Get{PascalName}ByIdQueryData {
+    @IsUUID()
+    id: string;
+
+    @IsDateString()
+    createdAt: Date;
+
+    @IsString()
+    name: string;
+
+    constructor(data: {PascalName}) {
+        this.id = data.id;
+        this.createdAt = data.createdAt;
+        this.name = data.name;
+    }
+}
+
+export class Get{PascalName}ByIdQueryOutput extends DataResponse<Get{PascalName}ByIdQueryData> {
+    @IsObject()
+    @RefSchemaObject(Get{PascalName}ByIdQueryData)
+    data: Get{PascalName}ByIdQueryData;
+
+    setData(data: {PascalName}): void {
+        this.data = new Get{PascalName}ByIdQueryData(data);
+    }
+}

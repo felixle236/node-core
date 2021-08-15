@@ -11,7 +11,8 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "**/test/**"
+        "**/test/**",
+        "**/infras/services/**"
     ],
     "extension": [
         ".ts"
@@ -20,10 +21,8 @@
         "ts-node/register",
         "tsconfig-paths/register"
     ],
-    "reporter": [
-        "text",
-        "html"
-    ],
+    "reporter": [],
+    "exit-on-error": true,
     "instrument": true,
     "all": false,
     "cache": false

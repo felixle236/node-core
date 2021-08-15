@@ -1,0 +1,24 @@
+import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{PascalName}Repository';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
+import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { DeleteClientCommandOutput } from '@usecases/user/client/commands/delete-client/DeleteClientCommandOutput';
+import { Inject, Service } from 'typedi';
+import { Delete{PascalName}CommandOutput } from './Delete{PascalName}CommandOutput';
+
+@Service()
+export class Delete{PascalName}CommandHandler implements CommandHandler<string, Delete{PascalName}CommandOutput> {
+    @Inject('{lower_case_name}.repository')
+    private readonly _{camelName}Repository: I{PascalName}Repository;
+
+    async handle(id: string): Promise<Delete{PascalName}CommandOutput> {
+        const {camelName} = await this._{camelName}Repository.getById(id);
+        if (!{camelName})
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+
+        const hasSucceed = await this._{camelName}Repository.softDelete(id);
+        const result = new DeleteClientCommandOutput();
+        result.setData(hasSucceed);
+        return result;
+    }
+}
