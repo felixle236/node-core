@@ -8,13 +8,6 @@ export function send<T>(socket: Socket, event: string, room: string, data: T): b
 }
 
 /**
- * Send data to all rooms
- */
-export function sendAll<T>(socket: Socket, event: string, data: T): boolean {
-    return socket.nsp.emit(event, data);
-}
-
-/**
  * Send data to room and sender
  */
 export function sendWithSender<T>(socket: Socket, event: string, room: string, data: T): boolean {
@@ -22,8 +15,8 @@ export function sendWithSender<T>(socket: Socket, event: string, room: string, d
 }
 
 /**
- * Send data to all rooms and sender
+ * Send data to all rooms
  */
-export function sendAllWithSender<T>(socket: Socket, event: string, data: T): boolean {
-    return socket.emit(event, data) && socket.nsp.emit(event, data);
+export function sendAll<T>(socket: Socket, event: string, data: T): boolean {
+    return socket.nsp.emit(event, data);
 }

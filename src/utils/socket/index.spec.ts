@@ -1,13 +1,23 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'mocha';
-import { mockSocket } from '@shared/test/MockSocket';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { send, sendAll, sendAllWithSender, sendWithSender } from '.';
+import { send, sendAll, sendWithSender } from '.';
 
-describe('Utils - Crypt', () => {
+describe('Utils - Socket', () => {
     const sandbox = createSandbox();
-    const socket = mockSocket();
+    const emit = (_event: string, _data: any): boolean => true;
+    const socket = {
+        nsp: {
+            to: (_room: string): any => {
+                return {
+                    emit
+                };
+            },
+            emit
+        },
+        emit
+    } as any;
 
     afterEach(() => {
         sandbox.restore();
@@ -18,18 +28,13 @@ describe('Utils - Crypt', () => {
         expect(true).to.eq(true);
     });
 
-    it('Send message all', () => {
-        sendAll(socket, 'test', 'abc');
-        expect(true).to.eq(true);
-    });
-
     it('Send message with sender', () => {
         sendWithSender(socket, 'test', '123', 'abc');
         expect(true).to.eq(true);
     });
 
-    it('Send message all with sender', () => {
-        sendAllWithSender(socket, 'test', 'abc');
+    it('Send message all', () => {
+        sendAll(socket, 'test', 'abc');
         expect(true).to.eq(true);
     });
 });

@@ -7,7 +7,7 @@ import { AuthType } from '@domain/enums/auth/AuthType';
 import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
-import { mockApiService } from '@shared/test/MockWebApi';
+import { mockWebApi } from '@shared/test/MockWebApi';
 import { ForgotPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
 import { ForgotPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandOutput';
 import { ResetPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/reset-password-by-email/ResetPasswordByEmailCommandHandler';
@@ -42,7 +42,7 @@ describe('Authorization controller', () => {
     before(done => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const AuthController = require('./AuthController').AuthController;
-        server = mockApiService(AuthController, port, () => {
+        server = mockWebApi(AuthController, port, () => {
             Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
             Container.set(LoginByEmailQueryHandler, { handle() {} });
             Container.set(ForgotPasswordByEmailCommandHandler, { handle() {} });

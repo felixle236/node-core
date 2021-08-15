@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
-import { mockApiService } from '@shared/test/MockWebApi';
+import { mockWebApi } from '@shared/test/MockWebApi';
 import { ActiveClientCommandHandler } from '@usecases/user/client/commands/active-client/ActiveClientCommandHandler';
 import { ActiveClientCommandOutput } from '@usecases/user/client/commands/active-client/ActiveClientCommandOutput';
 import { ArchiveClientCommandHandler } from '@usecases/user/client/commands/archive-client/ArchiveClientCommandHandler';
@@ -56,7 +56,7 @@ describe('Client controller', () => {
     before(done => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const ClientController = require('./ClientController').ClientController;
-        server = mockApiService(ClientController, port, () => {
+        server = mockWebApi(ClientController, port, () => {
             Container.set(FindClientQueryHandler, { handle() {} });
             Container.set(GetClientByIdQueryHandler, { handle() {} });
             Container.set(GetMyProfileClientQueryHandler, { handle() {} });

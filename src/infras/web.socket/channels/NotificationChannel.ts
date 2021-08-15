@@ -1,12 +1,12 @@
 import { ISocket } from '@shared/socket/interfaces/ISocket';
-import { TrackingNS } from '@shared/socket/namespaces/TrackingNS';
+import { NotificationNS } from '@shared/socket/namespaces/NotificationNS';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
 
 @Service()
-export default class TrackingController {
+export default class NotificationChannel {
     init(io: Server): void {
-        const nsp = io.of('/' + TrackingNS.NAME);
+        const nsp = io.of('/' + NotificationNS.NAME);
 
         nsp.use((_socket: ISocket, next: () => void) => {
             // To do something.

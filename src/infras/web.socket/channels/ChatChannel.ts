@@ -6,11 +6,12 @@ import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-us
 import { GetUserAuthByJwtQueryInput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryInput';
 import { UpdateUserOnlineStatusCommandHandler } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
 import { UpdateUserOnlineStatusCommandInput } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandInput';
+import { sendAll } from '@utils/socket';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
 
 @Service()
-export default class ChatController {
+export default class ChatChannel {
     constructor(
         private readonly _getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler,
         private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
@@ -35,38 +36,40 @@ export default class ChatController {
         });
 
         nsp.on('connection', async (socket: ISocket) => {
-            const userAuth = socket.userAuth;
-            if (!userAuth)
-                socket.disconnect();
-            else {
-                const param = new UpdateUserOnlineStatusCommandInput();
-                param.isOnline = true;
-                param.onlineAt = new Date();
+            const userAuth = socket.userAuth as UserAuthenticated;
+            const param = new UpdateUserOnlineStatusCommandInput();
+            param.isOnline = true;
+            param.onlineAt = new Date();
 
-                const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
-                if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)
-                    socket.nsp.emit(ChatNS.EVENTS.ONLINE_STATUS_CHANGED, param);
-
-                socket.join(userAuth.roleId);
-                socket.join(userAuth.userId);
-
-                socket.on('disconnecting', () => {
-                    // To do something else.
-                });
-
-                socket.on('disconnect', async () => {
-                    const param = new UpdateUserOnlineStatusCommandInput();
-                    param.isOnline = false;
-                    param.onlineAt = new Date();
-
-                    const hasSucceed = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
-                    if (hasSucceed && userAuth.roleId !== RoleId.SUPER_ADMIN)
-                        socket.nsp.emit(ChatNS.EVENTS.ONLINE_STATUS_CHANGED, param);
-
-                    socket.leave(userAuth.roleId);
-                    socket.leave(userAuth.userId);
+            const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
+            if (result.data && userAuth.roleId !== RoleId.SUPER_ADMIN) {
+                sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
+                    userId: userAuth.userId,
+                    ...param
                 });
             }
+
+            socket.join(userAuth.roleId);
+            socket.join(userAuth.userId);
+
+            socket.on('disconnecting', async () => {
+                const param = new UpdateUserOnlineStatusCommandInput();
+                param.isOnline = false;
+                param.onlineAt = new Date();
+
+                const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
+                if (result.data && userAuth.roleId !== RoleId.SUPER_ADMIN) {
+                    sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
+                        userId: userAuth.userId,
+                        ...param
+                    });
+                }
+            });
+
+            socket.on('disconnect', () => {
+                socket.leave(userAuth.roleId);
+                socket.leave(userAuth.userId);
+            });
         });
     }
 }

@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
-import { mockApiService } from '@shared/test/MockWebApi';
+import { mockWebApi } from '@shared/test/MockWebApi';
 import { GetListOnlineStatusByIdsQueryHandler } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
 import { GetListOnlineStatusByIdsQueryOutput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryOutput';
 import axios from 'axios';
@@ -26,7 +26,7 @@ describe('User controller', () => {
     before(done => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const UserController = require('./UserController').UserController;
-        server = mockApiService(UserController, port, () => {
+        server = mockWebApi(UserController, port, () => {
             Container.set(GetListOnlineStatusByIdsQueryHandler, { handle() {} });
             getListOnlineStatusByIdsQueryHandler = Container.get(GetListOnlineStatusByIdsQueryHandler);
 

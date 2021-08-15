@@ -1,5 +1,5 @@
 export class NotificationNS {
-    static NAME = 'nofitication';
+    static NAME = 'notification';
     static EVENTS = {
         REALTIME_NOTIFY: 'realtime_notify'
     };

@@ -6,7 +6,7 @@ import { Server } from 'http';
 import path from 'path';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
-import { mockApiService } from '@shared/test/MockWebApi';
+import { mockWebApi } from '@shared/test/MockWebApi';
 import { UploadMyAvatarCommandHandler } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
 import { UploadMyAvatarCommandOutput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandOutput';
 import { readFile } from '@utils/file';
@@ -31,7 +31,7 @@ describe('Me controller', () => {
         sandbox2.stub(multer, 'diskStorage').returns(multer.memoryStorage());
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const MeController = require('./MeController').MeController;
-        server = mockApiService(MeController, port, () => {
+        server = mockWebApi(MeController, port, () => {
             Container.set(UploadMyAvatarCommandHandler, { handle() {} });
             uploadMyAvatarCommandHandler = Container.get(UploadMyAvatarCommandHandler);
 

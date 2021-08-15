@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
-import { mockApiService } from '@shared/test/MockWebApi';
+import { mockWebApi } from '@shared/test/MockWebApi';
 import { ArchiveManagerCommandHandler } from '@usecases/user/manager/commands/archive-manager/ArchiveManagerCommandHandler';
 import { ArchiveManagerCommandOutput } from '@usecases/user/manager/commands/archive-manager/ArchiveManagerCommandOutput';
 import { CreateManagerCommandHandler } from '@usecases/user/manager/commands/create-manager/CreateManagerCommandHandler';
@@ -47,7 +47,7 @@ describe('Manager controller', () => {
     before(done => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const ManagerController = require('./ManagerController').ManagerController;
-        server = mockApiService(ManagerController, port, () => {
+        server = mockWebApi(ManagerController, port, () => {
             Container.set(FindManagerQueryHandler, { handle() {} });
             Container.set(GetManagerByIdQueryHandler, { handle() {} });
             Container.set(GetMyProfileManagerQueryHandler, { handle() {} });

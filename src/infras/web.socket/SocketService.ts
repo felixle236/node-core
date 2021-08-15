@@ -33,12 +33,12 @@ export class SocketService {
             adapter: createAdapter({ pubClient, subClient })
         } as ServerOptions);
 
-        this._initControllers();
+        this._initChannels();
         return this.io;
     }
 
-    private static _initControllers(): void {
-        const folder = path.join(__dirname, './controllers');
+    private static _initChannels(): void {
+        const folder = path.join(__dirname, './channels');
         getFilesSync(folder).forEach(file => {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const controller = require(`${folder}/${file}`).default;

@@ -8,17 +8,14 @@ import express from 'express';
 import { useContainer } from 'routing-controllers';
 import { Container } from 'typedi';
 
-export const mockApiService = (controller: string | Function, port = 3000, callback?: () => void): Server => {
+export const mockWebApi = (controller: string | Function, port = 3000, callback?: () => void): Server => {
     useContainer(Container);
 
     const app = express();
     app.use((req: any, _res, next) => {
         req.log = {};
-        // eslint-disable-next-line no-console
         req.log.log = () => {};
-        // eslint-disable-next-line no-console
         req.log.warn = () => {};
-        // eslint-disable-next-line no-console
         req.log.error = () => {};
         next();
     });
