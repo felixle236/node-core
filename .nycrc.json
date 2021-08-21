@@ -11,8 +11,7 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "**/test/**",
-        "**/infras/services/**"
+        "**/test/**"
     ],
     "extension": [
         ".ts"
