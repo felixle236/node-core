@@ -1,8 +1,8 @@
 {
     "name": "node-core",
-    "version": "2.2.0",
-    "description": "The NodeJS framework is built with Clean Architecture, using NodeJS, Typescript, ExpressJS, TypeORM, PostgreSQL, Redis, etc... Easy to expand and maintain.",
-    "license": "Felix Lee",
+    "version": "2.2.1",
+    "description": "Node Core is a NodeJS framework built by cutting edge design and techniques like clean architecture, domain driven design (DDD), singleton pattern, table inheritance, and more..., it's easy to maintain and expand the system, including the transition from monolithic to microservices.",
+    "license": "SEE LICENSE IN LICENSE",
     "readmeFilename": "README.md",
     "scripts": {
         "postinstall": "husky install",
@@ -39,7 +39,8 @@
         "node service",
         "node api",
         "typescript",
-        "clean architecture"
+        "clean architecture",
+        "domain driven design"
     ],
     "dependencies": {
         "@google-cloud/logging-winston": "^4.1.0",

@@ -3,7 +3,7 @@
 Node Core is a NodeJS framework built by cutting edge design and techniques like clean architecture, domain driven design (DDD), singleton pattern, table inheritance, and more..., it's easy to maintain and expand the system, including the transition from monolithic to microservices. Besides, to increase the performance and stability of the project, the framework is also supported by powerful tools such as Redis, Typescript, Eslint, Grunt, TypeORM,...
 Implementing advanced architectures like clean architecture and domain driven design will affect project development time, generator module is a great tool to overcome this problem, it even helps the team reduce development time more than conventional frameworks.
 
-### Features
+## Features
 
 * Support both RESTful API and WebSocket.
 * Support caching from Redis.
@@ -15,13 +15,13 @@ Implementing advanced architectures like clean architecture and domain driven de
 * Support debugger on .ts files by Visual Code.
 * Build quickly with the generator module.
 
-### Modules Integrated
+## Modules Integrated
 
 * User: Register, active account, get profile, update profile,...
 * User role: Super Admin, Manager, Client.
-* Authorization: login, forgot password, reset password, change password,...
+* Authorization: Login, forgot password, reset password, change password,...
 
-### Service Integrated
+## Service Integrated
 
 * JSON Web Token (JWT).
 * Log Service: LoggingWinston (console log), Google Logging.
@@ -32,7 +32,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 * Socket Emitter.
 * Storage Service: StorageConsole (console log), MinIO, AwsS3, GoogleStorage.
 
-### Architecture & Design Patterns
+## Architecture & Design Patterns
 
 - Clean architecture
 - Domain driven design (DDD)
@@ -43,7 +43,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 - Singleton pattern
 - Factory pattern
 
-### Technologies and Tools
+## Technologies and Tools
 
 - NodeJS
 - Typescript
@@ -61,12 +61,12 @@ Implementing advanced architectures like clean architecture and domain driven de
 - Docker
 - Visual Code
 
-### Required
+## Required
 
-- NodeJS (version >= 12.9.0)
+- NodeJS version >= `14.x.x`, current version: NodeJS `v14.17.5` and NPM `v6.14.14` (We can install global `n` package to switch NodeJS versions easier).
 - Knowledge of Typescript, ES6, TypeORM, PostgreSQL.
 
-### Document Related
+## Document Related
 
 - [Typescript](https://github.com/Microsoft/TypeScript#documentation)
 - [ES6 - ECMAScript 2015](http://es6-features.org)
@@ -75,7 +75,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 - [Routing controllers](https://github.com/typestack/routing-controllers#routing-controllers)
 - [Socket IO](https://web.socket/docs/) & [Emit cheatsheet](https://web.socket/docs/emit-cheatsheet/)
 
-### Source Structure
+## Source Structure
 
 ```sh
 - |-- .husky -----------------------------------------// Husky configuration.
@@ -149,53 +149,53 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------------ WebAuthenticator.ts
 - |------------------ WebService.ts -------------------// Initialize web service.
 - |------ resources
-- |------------ data ----------------------------// Initialize data.
-- |------------ documents -----------------------// Document files (doc, docx, xls, xlsx, pdf,...).
-- |------------ images --------------------------// Image files (jpg, jpeg, png, gif,...).
+- |------------ data ----------------------------------// Initialize data.
+- |------------ documents -----------------------------// Document files (doc, docx, xls, xlsx, pdf,...).
+- |------------ images --------------------------------// Image files (jpg, jpeg, png, gif,...).
 - |------ utils
-- |------ app.ts --------------------------------// Main application.
-- |-- .dockerignore -----------------------------// Docker ignore configuration.
-- |-- .env --------------------------------------// Configuration cloned from `.env.sample` and we need to add to `.gitignore`.
-- |-- .env.sample -------------------------------// Configuration sample.
-- |-- .eslintignore -----------------------------// Eslint ignore.
-- |-- .eslintrc.js ------------------------------// Eslint configuration.
-- |-- .gitignore --------------------------------// Git ignore configuration.
-- |-- .nycrc.json -------------------------------// Nyc configuration for testing coverage.
-- |-- docker-compose.yml ------------------------// Docker configuration.
-- |-- Dockerfile --------------------------------// Used by `docker-compose.yml`.
+- |------ app.ts --------------------------------------// Main application.
+- |-- .dockerignore -----------------------------------// Docker ignore configuration.
+- |-- .env --------------------------------------------// Configuration cloned from `.env.sample` and we need to add to `.gitignore`.
+- |-- .env.sample -------------------------------------// Configuration sample.
+- |-- .eslintignore -----------------------------------// Eslint ignore.
+- |-- .eslintrc.js ------------------------------------// Eslint configuration.
+- |-- .gitignore --------------------------------------// Git ignore configuration.
+- |-- .nycrc.json -------------------------------------// Nyc configuration for testing coverage.
+- |-- docker-compose.yml ------------------------------// Docker configuration.
+- |-- Dockerfile --------------------------------------// Used by `docker-compose.yml`.
 - |-- gruntfile.js
 - |-- LICENSE
 - |-- nodemon.json
-- |-- package-lock.json -------------------------// Lock package version and should not add to `.gitignore`.
+- |-- package-lock.json -------------------------------// Lock package version and should not add to `.gitignore`.
 - |-- package.json
-- |-- README.md ---------------------------------// `IMPORTANT` to start the project.
-- |-- tsconfig.json -----------------------------// Typescript configuration.
+- |-- README.md ---------------------------------------// `IMPORTANT` to start the project.
+- |-- tsconfig.json -----------------------------------// Typescript configuration.
 ```
 
-### NPM Commands
+## NPM Commands
 
 ```s
-npm run generate:module {param} -------------------// Generate module or sub-module: entity, schema, repository, usecase, controller,.... Please refer to "Generate Module" section below.
-npm run generate:usecase {param} ------------------// Generate usecase for module or sub-module. Please refer to "Generate Module" section below.
-npm run cache:clear -------------------------------// Clear cache of TypeORM.
-npm run migration:generate {Migration_Name} -------// Generate migration for updating database structure.
-npm run migration:up ------------------------------// Run the next migrations for updating database structure.
-npm run migration:down ----------------------------// Revert migration for updating database structure.
+npm run generate:module {param} ---------------// Generate module or sub-module: entity, schema, repository, usecase, controller,.... Please refer to "Generate Module" section below.
+npm run generate:usecase {param} --------------// Generate usecase for module or sub-module. Please refer to "Generate Module" section below.
+npm run cache:clear ---------------------------// Clear cache of TypeORM.
+npm run migration:generate {Migration_Name} ---// Generate migration for updating database structure.
+npm run migration:up --------------------------// Run the next migrations for updating database structure.
+npm run migration:down ------------------------// Revert migration for updating database structure.
 npm run lint
-npm run build -------------------------------------// Build source before start with production environment.
-npm test ------------------------------------------// Start unit test and coverage report.
-npm run dev ---------------------------------------// Start with local environment.
-npm start -----------------------------------------// Start with production environment, we can change variable for each environment as development, test, staging,....
+npm run build ---------------------------------// Build source before start with production environment.
+npm test --------------------------------------// Start unit test and coverage report.
+npm run dev -----------------------------------// Start with local environment.
+npm start -------------------------------------// Start with production environment, we can change variable for each environment as development, test, staging,....
 ```
 
-### Grunt Commands
+## Grunt Commands
 
 ```s
-./node_modules/.bin/grunt clean ---------------------------// Remove "dist" folder.
-./node_modules/.bin/grunt sync ----------------------------// Copy all resource files to dist without extension ".ts".
+./node_modules/.bin/grunt clean ---------------// Remove "dist" folder.
+./node_modules/.bin/grunt sync ----------------// Copy all resource files to dist without extension ".ts".
 ```
 
-### Debug on Visual Code
+## Debug on Visual Code
 
 * Press F5: build & start with debug mode.
 * Debugging in .ts files.
@@ -229,7 +229,7 @@ Also you can run test command and enjoy:
 npm test
 ```
 
-### Deploy to server
+## Deploy to server
 
 - We must modify environment variables into `.env` on server and run the commands below:
 ```
@@ -242,7 +242,7 @@ npm test
 
 > We can custom the start command above for each environment as dev, test, staging and production.
 
-### Deploy to server into docker container
+## Deploy to server into docker container
 
 - We must modify environment variables into `.env` on server and run the commands below:
 - And run `docker system prune -f && docker-compose build && docker-compose up -d`.
@@ -250,7 +250,7 @@ npm test
 
 > Please make sure you have installed Docker and Docker Compose. You can refer to docker compose document in [here](https://docs.docker.com/compose/overview/#compose-documentation).
 
-### Generate Module
+## Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
 - Create `Client` module, you can try: `npm run generate:module Client`. It will generate entity, schema, repository, usecase, controller,....
@@ -260,7 +260,7 @@ npm test
 
 > After generate the module or usecase, we need to modify the content of them suited for.
 
-### Configuration
+## Configuration
 
 - `.env` file is main configuration created by `.env.sample`.
 - `.dockerignore` is Docker ignore configuration.
@@ -275,18 +275,18 @@ npm test
 
 > If server PostgreSQL is running on the same server Web API and start without docker, you must set `DB_HOST` environment is `localhost` and the same with Redis, MinIO.
 
-### Data Storage
+## Data Storage
 
 - PostgreSQL is default database that used in this project. If you want to use the other database, please refer to [TypeORM](https://github.com/typeorm/typeorm).
 - Redis is memory database that we use to increase performance.
 
-### Data Caching
+## Data Caching
 
 - Default this project is using Redis for data caching. It helps greatly increase the number of large requests to less changing data.
 > But don't forget to set expire time and clear cache if have any update on the data related. Refer to [TypeORM Caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
 - To clear cache, execute command `await this.dbContext.clearCaching('key')`, we also use typeorm `typeorm cache:clear` or use npm `npm run cache:clear` for clearing all data caching.
 
-### Authentication & Authorization
+## Authentication & Authorization
 
 - We are using `JWT` to authenticate user access for http request and socket io. Default we use the authencation signature with `HS256`.
 - For each environment, you should change the secret key to another by `AUTH_SECRET_KEY` in `.env`.
@@ -298,20 +298,20 @@ npm test
    - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` or `@Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])` on controller functions.
 - `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object.
 
-### File Storage
+## File Storage
 
 - Default we don't want to store the file in the same server that we use to serve this project.
 - We can use [Minio](https://github.com/felixle236/docker-minio) like AWS S3 to store the file go to cloud.
 - We also switch to AWS S3 by change the configuration of environment `STORAGE_PROVIDER` in `.env`.
 - Refer with values `CONSOLE (1) - MINIO (2) - AWS_S3 (3) - GOOGLE_STORAGE (4)`.
 
-### Send Mail Template
+## Send Mail Template
 
 - We are using `mailgen` package to generate the mail template. There are a lot of the mail template to use, refer to [mailgen](https://github.com/eladnava/mailgen).
 - We can use Google SMTP, Mailgun, SendInBlue to send mail by change the configuration of environment `MAIL_PROVIDER` in `.env`. Also you can integrate another service that you want to use.
 - Refer with values `CONSOLE (1) - GOOGLE_SMTP (2) - MAILGUN (3) - SEND_IN_BLUE (4)`.
 
-### Common Type
+## Common Type
 
 - Define enum type into `src/configs/Constants.ts`. It can be a number or a string.
 - Why do we use the enum type?
@@ -320,7 +320,7 @@ npm test
 
 - The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, 'order status');`
 
-### Exception
+## Exception
 
 We should define message error into `src\core\shared\exceptions\message\MessageError.ts`. Ex:
 ```
@@ -349,11 +349,11 @@ throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 
 > If you got error with status code 500, it's system error or logical error. Almost, this error is your source code, you need to find and fix it soon.
 
-### Data Transformer
+## Data Transformer
 
 - If you use column numeric type in PostgreSQL, it will return a string (not number) into select query, you should use transformer option to convert to number. Ex: `@Column('numeric', { transformer: new NumericTransformer() })`
 
-### Database Execution
+## Database Execution
 
 - Default TypeORM is using connection pool, it will auto connect and release connection when we execute database query except manual connect with QueryRunner, we must execute connect and release commands manually.
 - We should use QueryBuilder for database execution, it will select and map to entity object.
@@ -388,7 +388,7 @@ await this._dbContext.getConnection().runTransaction(async queryRunner => {
 });
 ```
 
-### Database Migration
+## Database Migration
 
 - Database Migrations, a technique to help us keep our database changes under control. Database migration is the process of transforming data between various states without any human interaction. This process will allow us to track changes between schema updates.
 
@@ -410,41 +410,97 @@ npm run migration:up
 npm run migration:down
 ```
 
-### API Response Format
+## API Response Format
 
-- Return error object [UnauthorizedError] with status code 401, this is handler of routing-controllers package.
+- Return error object [UnauthorizedError] with status code 401 and error code is "UNAUTHORIZED_ERR", this is handler of routing-controllers package.
 ```
 Request:
-curl -i -H Accept:application/json -X GET http://localhost:3000/api/v1/me
+curl -X 'POST' \
+   'http://localhost:3000/api/v1/me/avatar' \
+   -H 'accept: application/json' \
+   -d ''
 
 Response:
-HTTP/1.1 401 Unauthorized
+Status code: 401 Unauthorized
+{
+   "code": "UNAUTHORIZED_ERR",
+   "message": "Unauthorized!"
+}
+```
+
+- Return error object [AccessDeniedError] with status code 403 and error code is "ACCESS_DENIED_ERR", this is handler of routing-controllers package.
+```
+Request:
+curl -X 'GET' \
+   'http://localhost:3000/api/v1/managers/' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...'
+
+Response:
+Status code: 403 Forbidden
 {
    "code": "ACCESS_DENIED_ERR",
-   "message": "The token is required!"
+   "message": "Access is denied!"
 }
 ```
 
 - Return error object [SystemError] with status code 400, this is logic handler.
 ```
 Request:
-curl -i -H Accept:application/json -X POST http://localhost:3000/api/v1/auth/login -H Content-Type:application/json -d '{"email": "admin@localhost.com","password": "Nodecore@2"}'
+curl -X 'POST' \
+   'http://localhost:3000/api/v1/auths/login' \
+   -H 'accept: application/json' \
+   -H 'Content-Type: application/json' \
+   -d '{
+   "email": "user@example.com",
+   "password": "string"
+}'
 
 Response:
-HTTP/1.1 400 Bad Request
+Status code: 400 Bad Request
 {
    "code": "DATA_INCORRECT_ERR",
-   "message": "The email or password is incorrect!",
+   "message": "The email or password is incorrect!"
+}
+```
+
+- Return error object [InputValidationError] with status code 400 and error code is "VALIDATION_ERR", this is logic handler.
+```
+Request:
+curl -X 'POST' \
+   'http://localhost:3000/api/v1/auths/login' \
+   -H 'accept: application/json' \
+   -H 'Content-Type: application/json' \
+   -d ''
+
+Response:
+Status code: 400 Bad Request
+{
+   "code": "VALIDATION_ERR",
+   "message": "Invalid data, check 'fields' property for more info.",
+   "fields": [
+      {
+         "name": "email",
+         "message": "email must be an email"
+      },
+      {
+         "name": "password",
+         "message": "password must be a string"
+      }
+   ]
 }
 ```
 
 - Return data pagination with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X GET http://localhost:3000/api/v1/roles
+curl -X 'GET' \
+   'http://localhost:3000/api/v1/clients/' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...'
 
 Response:
-HTTP/1.1 200 OK
+Status code: 200 OK
 {
    "pagination": {
       "skip": 0,
@@ -467,79 +523,131 @@ HTTP/1.1 200 OK
 - Return data object with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X POST http://localhost:3000/api/v1/users/dummy-clients -H Content-Type:application/json
+curl -X 'GET' \
+   'http://localhost:3000/api/v1/clients/3fa85f64-5717-4562-b3fc-2c963f66afa6' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...'
 
 Response:
-HTTP/1.1 200 OK
+Status code: 200 OK
 {
-	"data": {
-      "total": 9,
-      "successes": 0,
-      "ignores": 9,
-      "failures": 0,
+   "data": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "firstName": "Client",
+      "lastName": "Test"
+   }
+}
+```
+
+- Return data object for bulk action with status code 200.
+```
+Request:
+curl -X 'POST' \
+   'http://localhost:3000/api/v1/test' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...'
+
+Response:
+Status code: 200 OK
+{
+   "data": {
+      "total": 10,
+      "successes": 2,
+      "ignores": 4,
+      "failures": 4,
       "successItems": [],
       "ignoreItems": [],
       "failureItems": []
-	}
+   }
+}
+```
+
+- Return string data with status code 200.
+```
+Request:
+curl -X 'POST' \
+   'http://localhost:3000/api/v1/managers/' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...' \
+   -H 'Content-Type: application/json' \
+   -d '{
+   "firstName": "Manager",
+   "lastName": "Test",
+   "email": "manager@localhost.com",
+   "password": "Nodecore@2"
+}'
+
+Response:
+Status code: 200 OK
+{
+   "data": "e240cbbe-5065-413c-8f1e-3f11f9711c59"
 }
 ```
 
 - Return boolean data with status code 200.
 ```
 Request:
-curl -i -H Accept:application/json -H 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEs...' -X DELETE http://localhost:3000/api/v1/roles/{:id} -H Content-Type:application/json
+curl -X 'PATCH' \
+   'http://localhost:3000/api/v1/auths/password' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...' \
+   -H 'Content-Type: application/json' \
+   -d '{
+   "oldPassword": "string",
+   "password": "string"
+}'
 
 Response:
-HTTP/1.1 200 OK
+Status code: 200 OK
 {
    "data": true
 }
 ```
 
-### Naming Rules For API
+## Naming Rules For API
 
 - `GET`: Used to get the data, it can be the data list, object, number,....
 
 ```
-GET http://localhost/api/v1/users                         --> Find user and return the user list.
-GET http://localhost/api/v1/users?keyword=felix           --> Find user with name and return the user list.
-GET http://localhost/api/v1/users/{:id}                   --> Get user with id is 1 and return the user object.
-GET http://localhost/api/v1/users/{:id}/role              --> Get role of user with id is 1 and return the role object.
+GET http://localhost:3000/api/v1/clients                        --> Find client and return the client list.
+GET http://localhost:3000/api/v1/clients?keyword=felix          --> Find client with name and return the client list.
+GET http://localhost:3000/api/v1/clients/{:id}                  --> Get client with client id and return the client object.
+GET http://localhost:3000/api/v1/clients/{:id}/profile          --> Get profile of client with client id and return the profile object.
+GET http://localhost:3000/api/v1/clients/profile                --> Get my profile of client that client have authenticated and return the profile object.
 ```
 
 - `POST`: Used to create new resource, add a child resource, upload file, requests the creation of an activation.
 
 ```
-POST http://localhost/api/v1/auth/login                    --> Login request.
-POST http://localhost/api/v1/me/avatar                     --> Upload binary file.
-POST http://localhost/api/v1/users                         --> Create user.
-POST http://localhost/api/v1/register                      --> Register new user.
-POST http://localhost/api/v1/active                        --> Request active user.
-POST http://localhost/api/v1/resend-activation
-POST http://localhost/api/v1/forgot-password
-POST http://localhost/api/v1/resend-activation
+POST http://localhost:3000/api/v1/auths/login                   --> Login request.
+POST http://localhost:3000/api/v1/me/avatar                     --> Upload my avatar.
+POST http://localhost:3000/api/v1/clients                       --> Create client.
+POST http://localhost:3000/api/v1/clients/register              --> Register new client.
+POST http://localhost:3000/api/v1/clients/active                --> Request active client.
+POST http://localhost:3000/api/v1/clients/resend-activation
+POST http://localhost:3000/api/v1/auths/forgot-password
 ```
 
 - `PUT`: Used to create new resource or update (replace object) if it already exists, replace the entire using the data specified in request.
 
 ```
-PUT http://localhost/api/v1/users/{:id}                   --> Update user object with id 1.
-PUT http://localhost/api/v1/reset-password                --> Reset password.
+PUT http://localhost:3000/api/v1/clients/{:id}                  --> Update client object with client id.
+PUT http://localhost:3000/api/v1/auths/reset-password           --> Reset my password.
 ```
 
 - `PATCH`: Used only to update some fields with record id. Besides, it's just about the meaning, sometime it's very difficult to recognize the boundary, we can use `PUT` instead of `PATCH`.
 
 ```
-PATCH http://localhost/api/v1/me/password
+PATCH http://localhost:3000/api/v1/auths/password               --> Update my password.
 ```
 
 - `DELETE`: Used to delete, remove item, disable, inactive,....
 
 ```
-DELETE http://localhost/api/v1/users/{:id}
+DELETE http://localhost:3000/api/v1/clients/{:id}               --> Delete client.
 ```
 
-### Other Experiences
+## Other Experiences
 
 - Order of development:
    - Core
