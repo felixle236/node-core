@@ -87,7 +87,7 @@ describe('Manager controller', () => {
     });
 
     it('Find managers by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new FindManagerQueryOutput();
         result.setData([{
             id: v4()
@@ -108,7 +108,7 @@ describe('Manager controller', () => {
     });
 
     it('Get manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const id = v4();
         const result = new GetManagerByIdQueryOutput();
         result.setData({
@@ -129,7 +129,7 @@ describe('Manager controller', () => {
     });
 
     it('Get my profile by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const id = v4();
         const result = new GetMyProfileManagerQueryOutput();
         result.setData({
@@ -143,7 +143,7 @@ describe('Manager controller', () => {
     });
 
     it('Get my profile by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.MANAGER } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
         const id = v4();
         const result = new GetMyProfileManagerQueryOutput();
         result.setData({
@@ -169,7 +169,7 @@ describe('Manager controller', () => {
     });
 
     it('Create manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const id = v4();
         const result = new CreateManagerCommandOutput();
         result.setData(id);
@@ -197,7 +197,7 @@ describe('Manager controller', () => {
     });
 
     it('Update manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateManagerCommandHandler, 'handle').resolves(result);
@@ -222,7 +222,7 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateMyProfileManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
@@ -237,7 +237,7 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.MANAGER } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
         const result = new UpdateMyProfileManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
@@ -259,7 +259,7 @@ describe('Manager controller', () => {
     });
 
     it('Delete manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new DeleteManagerCommandOutput();
         result.setData(true);
         sandbox.stub(deleteManagerCommandHandler, 'handle').resolves(result);
@@ -277,7 +277,7 @@ describe('Manager controller', () => {
     });
 
     it('Archive manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new ArchiveManagerCommandOutput();
         result.setData(true);
         sandbox.stub(archiveManagerCommandHandler, 'handle').resolves(result);

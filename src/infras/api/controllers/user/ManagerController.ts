@@ -39,7 +39,7 @@ export class ManagerController {
     ) {}
 
     @Get('/')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Find managers' })
     @ResponseSchema(FindManagerQueryOutput)
     async find(@QueryParams() param: FindManagerQueryInput): Promise<FindManagerQueryOutput> {
@@ -47,7 +47,7 @@ export class ManagerController {
     }
 
     @Get('/:id([0-9a-f-]{36})')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Get manager by id' })
     @ResponseSchema(GetManagerByIdQueryOutput)
     async getById(@Param('id') id: string): Promise<GetManagerByIdQueryOutput> {
@@ -55,7 +55,7 @@ export class ManagerController {
     }
 
     @Get('/my-profile')
-    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
     @OpenAPI({ summary: 'Get my profile information' })
     @ResponseSchema(GetMyProfileManagerQueryOutput)
     async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileManagerQueryOutput> {
@@ -63,7 +63,7 @@ export class ManagerController {
     }
 
     @Post('/')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Create manager account' })
     @ResponseSchema(CreateManagerCommandOutput)
     async create(@Body() param: CreateManagerCommandInput): Promise<CreateManagerCommandOutput> {
@@ -71,7 +71,7 @@ export class ManagerController {
     }
 
     @Put('/:id([0-9a-f-]{36})')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Update manager account' })
     @ResponseSchema(UpdateManagerCommandOutput)
     async update(@Param('id') id: string, @Body() param: UpdateManagerCommandInput): Promise<UpdateManagerCommandOutput> {
@@ -79,7 +79,7 @@ export class ManagerController {
     }
 
     @Put('/my-profile')
-    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
     @OpenAPI({ summary: 'Update my profile information' })
     @ResponseSchema(UpdateMyProfileManagerCommandOutput)
     async updateMyProfile(@Body() param: UpdateMyProfileManagerCommandInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateMyProfileManagerCommandOutput> {
@@ -87,7 +87,7 @@ export class ManagerController {
     }
 
     @Delete('/:id([0-9a-f-]{36})')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Delete manager account' })
     @ResponseSchema(DeleteManagerCommandOutput)
     async delete(@Param('id') id: string): Promise<DeleteManagerCommandOutput> {
@@ -95,7 +95,7 @@ export class ManagerController {
     }
 
     @Post('/:id([0-9a-f-]{36})/archive')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Archive manager account' })
     @ResponseSchema(ArchiveManagerCommandOutput)
     async archive(@Param('id') id: string): Promise<ArchiveManagerCommandOutput> {

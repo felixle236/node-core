@@ -105,11 +105,11 @@ describe('User entity', () => {
     it('Get data from entity', () => {
         const dataTest = {
             id: v4(),
-            roleId: RoleId.CLIENT,
+            roleId: RoleId.Client,
             firstName: 'user',
             lastName: 'test',
             avatar: 'avatar',
-            gender: GenderType.MALE,
+            gender: GenderType.Male,
             birthday: '1970-01-01',
             auths: [{ id: v4() } as IAuth]
         } as IUser;

@@ -3,7 +3,7 @@ import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
 import { Inject, Service } from 'typedi';
-import { Find{PascalName}ByManagerQueryOutput } from './Find{PascalName}ByManagerQueryOutput';
+import { {UsecaseName}QueryOutput } from './{UsecaseName}QueryOutput';
 
 @Service()
 export class {UsecaseName}QueryHandler implements QueryHandler<string, {UsecaseName}QueryOutput> {

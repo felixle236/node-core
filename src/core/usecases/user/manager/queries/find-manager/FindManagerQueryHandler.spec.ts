@@ -38,7 +38,7 @@ describe('Manager usecases - Find manager', () => {
             lastName: 'Test',
             email: 'manager.test@localhost.com',
             avatar: 'avatar.png',
-            gender: GenderType.FEMALE,
+            gender: GenderType.Female,
             birthday: '2000-06-08'
         } as IManager);
 
@@ -69,7 +69,7 @@ describe('Manager usecases - Find manager', () => {
         sandbox.stub(managerRepository, 'findAndCount').resolves([list, 10]);
         const param = new FindManagerQueryInput();
         param.keyword = 'test';
-        param.status = ManagerStatus.ACTIVED;
+        param.status = ManagerStatus.Actived;
         param.skip = 10;
         param.limit = 2;
 

@@ -82,7 +82,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
     it('Get user authorization by JWT', async () => {
         const userId = v4();
         const roleId = v4();
-        const type = AuthType.PERSONAL_EMAIL;
+        const type = AuthType.PersonalEmail;
         sandbox.stub(authJwtService, 'verify').returns({
             sub: userId,
             roleId,

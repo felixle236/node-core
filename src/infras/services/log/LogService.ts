@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ENVIRONMENT, LOG_PROVIDER, PROJECT_ID } from '@configs/Configuration';
-import { Environment, LogProvider } from '@configs/Constants';
+import { Environment, LogProvider } from '@configs/Enums';
 import { ILogService } from '@gateways/services/ILogService';
 import { LoggingWinston } from '@google-cloud/logging-winston';
 import { IRequest } from '@shared/IRequest';
@@ -18,7 +18,7 @@ export class LogService implements ILogService {
         const { combine, colorize, simple } = format;
 
         switch (LOG_PROVIDER) {
-        case LogProvider.WINSTON:
+        case LogProvider.Winston:
             this._logger = createLogger({
                 level: 'debug',
                 transports: [
@@ -40,7 +40,7 @@ export class LogService implements ILogService {
                 ]
             });
             break;
-        case LogProvider.GOOGLE_WINSTON:
+        case LogProvider.GoogleWinston:
         default:
             this._logger = createLogger({
                 level: 'debug',
@@ -73,14 +73,14 @@ export class LogService implements ILogService {
     private _formatContent(content: string | any): string {
         if (!content || typeof content === 'string')
             return content;
-        if (ENVIRONMENT === Environment.LOCAL)
+        if (ENVIRONMENT === Environment.Local)
             return convertObjectToString(content, true);
         return convertObjectToString(content);
     }
 
     createMiddleware(): Handler {
         let handler: Handler;
-        if (LOG_PROVIDER === LogProvider.GOOGLE_WINSTON) {
+        if (LOG_PROVIDER === LogProvider.GoogleWinston) {
             handler = expressWinston.logger({
                 transports: [
                     new LoggingWinston({

@@ -21,7 +21,7 @@ export class UpdateMyPasswordByEmailCommandHandler extends CommandHandler<Update
         data.password = param.password;
 
         const auths = await this._authRepository.getAllByUser(userId);
-        const auth = auths.find(auth => auth.type === AuthType.PERSONAL_EMAIL && auth.comparePassword(param.oldPassword));
+        const auth = auths.find(auth => auth.type === AuthType.PersonalEmail && auth.comparePassword(param.oldPassword));
         if (!auth)
             throw new SystemError(MessageError.PARAM_INCORRECT, 'old password');
 

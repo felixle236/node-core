@@ -1,22 +1,22 @@
-import { Create{PascalName}CommandHandler } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandHandler';
-import { Create{PascalName}CommandInput } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandInput';
-import { Create{PascalName}CommandOutput } from '@usecases/{folder}/commands/create-{usecaseFncFolder}/Create{PascalName}CommandOutput';
-import { Delete{PascalName}CommandHandler } from '@usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}CommandHandler';
-import { Delete{PascalName}CommandOutput } from '@usecases/{folder}/commands/delete-{usecaseFncFolder}/Delete{PascalName}CommandOutput';
-import { Update{PascalName}CommandHandler } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandHandler';
-import { Update{PascalName}CommandInput } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandInput';
-import { Update{PascalName}CommandOutput } from '@usecases/{folder}/commands/update-{usecaseFncFolder}/Update{PascalName}CommandOutput';
-import { Find{PascalName}QueryHandler } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryHandler';
-import { Find{PascalName}QueryInput } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryInput';
-import { Find{PascalName}QueryOutput } from '@usecases/{folder}/queries/find-{usecaseFncFolder}/Find{PascalName}QueryOutput';
-import { Get{PascalName}ByIdQueryHandler } from '@usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryHandler';
-import { Get{PascalName}ByIdQueryOutput } from '@usecases/{folder}/queries/get-{usecaseFncFolder}-by-id/Get{PascalName}ByIdQueryOutput';
+import { Create{PascalName}CommandHandler } from '@usecases/{folder}/{subFolder}/commands/create-{subFolder}/Create{PascalName}CommandHandler';
+import { Create{PascalName}CommandInput } from '@usecases/{folder}/{subFolder}/commands/create-{subFolder}/Create{PascalName}CommandInput';
+import { Create{PascalName}CommandOutput } from '@usecases/{folder}/{subFolder}/commands/create-{subFolder}/Create{PascalName}CommandOutput';
+import { Delete{PascalName}CommandHandler } from '@usecases/{folder}/{subFolder}/commands/delete-{subFolder}/Delete{PascalName}CommandHandler';
+import { Delete{PascalName}CommandOutput } from '@usecases/{folder}/{subFolder}/commands/delete-{subFolder}/Delete{PascalName}CommandOutput';
+import { Update{PascalName}CommandHandler } from '@usecases/{folder}/{subFolder}/commands/update-{subFolder}/Update{PascalName}CommandHandler';
+import { Update{PascalName}CommandInput } from '@usecases/{folder}/{subFolder}/commands/update-{subFolder}/Update{PascalName}CommandInput';
+import { Update{PascalName}CommandOutput } from '@usecases/{folder}/{subFolder}/commands/update-{subFolder}/Update{PascalName}CommandOutput';
+import { Find{PascalName}QueryHandler } from '@usecases/{folder}/{subFolder}/queries/find-{subFolder}/Find{PascalName}QueryHandler';
+import { Find{PascalName}QueryInput } from '@usecases/{folder}/{subFolder}/queries/find-{subFolder}/Find{PascalName}QueryInput';
+import { Find{PascalName}QueryOutput } from '@usecases/{folder}/{subFolder}/queries/find-{subFolder}/Find{PascalName}QueryOutput';
+import { Get{PascalName}ByIdQueryHandler } from '@usecases/{folder}/{subFolder}/queries/get-{subFolder}-by-id/Get{PascalName}ByIdQueryHandler';
+import { Get{PascalName}ByIdQueryOutput } from '@usecases/{folder}/{subFolder}/queries/get-{subFolder}-by-id/Get{PascalName}ByIdQueryOutput';
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
 @Service()
-@JsonController('/v1/{usecaseFncFolder}s')
+@JsonController('/v1/{subFolder}s')
 export class {PascalName}Controller {
     constructor(
         private readonly _find{PascalName}QueryHandler: Find{PascalName}QueryHandler,

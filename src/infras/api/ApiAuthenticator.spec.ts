@@ -60,11 +60,11 @@ describe('Api authenticator', () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: v4(),
-            roleId: RoleId.CLIENT,
-            type: AuthType.PERSONAL_EMAIL
+            roleId: RoleId.Client,
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const error: AccessDeniedError = await ApiAuthenticator.authorizationChecker(action, [RoleId.MANAGER]).catch(error => error);
+        const error: AccessDeniedError = await ApiAuthenticator.authorizationChecker(action, [RoleId.Manager]).catch(error => error);
         const err = new AccessDeniedError();
 
         expect(error.httpCode).to.eq(err.httpCode);
@@ -75,8 +75,8 @@ describe('Api authenticator', () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: v4(),
-            roleId: RoleId.CLIENT,
-            type: AuthType.PERSONAL_EMAIL
+            roleId: RoleId.Client,
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
         const isSucceed = await ApiAuthenticator.authorizationChecker(action, []);
@@ -88,11 +88,11 @@ describe('Api authenticator', () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: v4(),
-            roleId: RoleId.CLIENT,
-            type: AuthType.PERSONAL_EMAIL
+            roleId: RoleId.Client,
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const isSucceed = await ApiAuthenticator.authorizationChecker(action, [RoleId.CLIENT]);
+        const isSucceed = await ApiAuthenticator.authorizationChecker(action, [RoleId.Client]);
 
         expect(isSucceed).to.eq(true);
     });
@@ -101,8 +101,8 @@ describe('Api authenticator', () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: v4(),
-            roleId: RoleId.CLIENT,
-            type: AuthType.PERSONAL_EMAIL
+            roleId: RoleId.Client,
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
         await ApiAuthenticator.authorizationChecker(action, []);

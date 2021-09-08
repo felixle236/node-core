@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Server } from 'http';
 import path from 'path';
+import { ApiService } from '@infras/api/ApiService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
-import { ApiService } from '@infras/web.api/ApiService';
 import express from 'express';
 import { useContainer } from 'routing-controllers';
 import { Container } from 'typedi';
@@ -23,10 +23,10 @@ export const mockWebApi = (controller: string | Function, port = 3000, callback?
     const options = ApiService.getOptions({
         controllers: [controller as any],
         middlewares: [
-            path.join(__dirname, '../../../infras/web.api/middlewares/*{.js,.ts}')
+            path.join(__dirname, '../../../infras/api/middlewares/*{.js,.ts}')
         ],
         interceptors: [
-            path.join(__dirname, '../../../infras/web.api/interceptors/*{.js,.ts}')
+            path.join(__dirname, '../../../infras/api/interceptors/*{.js,.ts}')
         ],
         validation: true,
         development: true

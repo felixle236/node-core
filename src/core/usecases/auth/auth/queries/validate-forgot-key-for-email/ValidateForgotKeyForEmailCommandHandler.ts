@@ -29,14 +29,14 @@ export class ValidateForgotKeyForEmailCommandHandler extends CommandHandler<Vali
 
         if (!auth || !auth.user || auth.forgotKey !== param.forgotKey || !auth.forgotExpire || auth.forgotExpire < new Date())
             isValid = false;
-        else if (auth.user.roleId === RoleId.CLIENT) {
+        else if (auth.user.roleId === RoleId.Client) {
             const client = await this._clientRepository.getById(auth.userId);
-            if (!client || client.status !== ClientStatus.ACTIVED)
+            if (!client || client.status !== ClientStatus.Actived)
                 isValid = false;
         }
         else {
             const manager = await this._managerRepository.getById(auth.userId);
-            if (!manager || manager.status !== ManagerStatus.ACTIVED)
+            if (!manager || manager.status !== ManagerStatus.Actived)
                 isValid = false;
         }
 

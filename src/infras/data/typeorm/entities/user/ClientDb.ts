@@ -20,7 +20,7 @@ export class ClientDb extends UserDb implements IClient {
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, length: 5, nullable: true })
     locale: string | null;
 
-    @Column('enum', { name: CLIENT_SCHEMA.COLUMNS.STATUS, enum: ClientStatus, default: ClientStatus.ACTIVED })
+    @Column('enum', { name: CLIENT_SCHEMA.COLUMNS.STATUS, enum: ClientStatus, default: ClientStatus.Actived })
     status: ClientStatus;
 
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.ACTIVE_KEY, length: 64, nullable: true })

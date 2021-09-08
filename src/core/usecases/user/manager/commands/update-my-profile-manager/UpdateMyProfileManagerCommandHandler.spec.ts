@@ -36,7 +36,7 @@ describe('Manager usecases - Update my profile manager', () => {
         param = new UpdateMyProfileManagerCommandInput();
         param.firstName = 'Manager';
         param.lastName = 'Test';
-        param.gender = GenderType.FEMALE;
+        param.gender = GenderType.Female;
         param.birthday = '2000-06-08';
     });
 

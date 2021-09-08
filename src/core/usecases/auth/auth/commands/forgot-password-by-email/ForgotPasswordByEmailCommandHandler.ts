@@ -37,18 +37,18 @@ export class ForgotPasswordByEmailCommandHandler extends CommandHandler<ForgotPa
         if (!auth || !auth.user)
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account authorization');
 
-        if (auth.user.roleId === RoleId.CLIENT) {
+        if (auth.user.roleId === RoleId.Client) {
             const client = await this._clientRepository.getById(auth.userId);
             if (!client)
                 throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
-            if (client.status !== ClientStatus.ACTIVED)
+            if (client.status !== ClientStatus.Actived)
                 throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
         }
         else {
             const manager = await this._managerRepository.getById(auth.userId);
             if (!manager)
                 throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'account');
-            if (manager.status !== ManagerStatus.ACTIVED)
+            if (manager.status !== ManagerStatus.Actived)
                 throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, 'account');
         }
 

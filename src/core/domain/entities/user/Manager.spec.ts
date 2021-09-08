@@ -21,7 +21,7 @@ describe('Manager entity', () => {
         const dataTest = {
             id: v4(),
             email: 'manager.test@localhost.com',
-            status: ManagerStatus.ACTIVED,
+            status: ManagerStatus.Actived,
             archivedAt: new Date()
         } as IManager;
         const testEntity = new Manager(dataTest);

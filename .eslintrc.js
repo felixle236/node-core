@@ -125,6 +125,10 @@ module.exports = {
                     prefix: ['is', 'should', 'has', 'can', 'did', 'will', 'enable', 'IS_', 'SHOULD_', 'HAS_', 'CAN_', 'DID_', 'WILL_', 'ENABLE_']
                 },
                 {
+                    selector: 'enumMember',
+                    format: ['PascalCase']
+                },
+                {
                     selector: 'typeParameter',
                     format: ['PascalCase'],
                     prefix: ['T']
@@ -143,8 +147,5 @@ module.exports = {
                 }
             ]
         }
-    }],
-    ignorePatterns: [
-        'src/infras/web.ui/public'
-    ]
+    }]
 };

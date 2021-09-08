@@ -60,22 +60,22 @@ describe('Authorization usecases - Login by email', () => {
     beforeEach(() => {
         clientTest = new Client({
             id: v4(),
-            roleId: RoleId.CLIENT,
+            roleId: RoleId.Client,
             firstName: 'client',
             lastName: 'test',
-            status: ClientStatus.ACTIVED
+            status: ClientStatus.Actived
         } as IClient);
         managerTest = new Manager({
             id: v4(),
-            roleId: RoleId.MANAGER,
-            status: ManagerStatus.ACTIVED
+            roleId: RoleId.Manager,
+            status: ManagerStatus.Actived
         } as IManager);
         authTest = new Auth({
             id: v4(),
             userId: clientTest.id,
             username: 'user.test@localhost.com',
             user: clientTest.toData() as IUser,
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         } as IAuth);
         const password = 'Nodecore@2';
         authTest.password = password;
@@ -116,7 +116,7 @@ describe('Authorization usecases - Login by email', () => {
 
     it('Login by email with client account has not been activated error', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-        clientTest.status = ClientStatus.INACTIVED;
+        clientTest.status = ClientStatus.Inactived;
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
 
         const error: SystemError = await loginByEmailQueryHandler.handle(param).catch(error => error);
@@ -151,12 +151,12 @@ describe('Authorization usecases - Login by email', () => {
             userId: managerTest.id,
             username: 'user.test@localhost.com',
             user: managerTest.toData() as IUser,
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         } as IAuth);
         authTest.password = 'Nodecore@2';
 
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-        managerTest.status = ManagerStatus.ARCHIVED;
+        managerTest.status = ManagerStatus.Archived;
         sandbox.stub(managerRepository, 'getById').resolves(managerTest);
 
         const error: SystemError = await loginByEmailQueryHandler.handle(param).catch(error => error);

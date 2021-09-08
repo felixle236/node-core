@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from '@configs/Configuration';
-import { Environment } from '@configs/Constants';
+import { Environment } from '@configs/Enums';
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
 import { InputValidationError, InputValidationFieldError } from '@shared/exceptions/InputValidationError';
 import { InternalServerError } from '@shared/exceptions/InternalServerError';
@@ -21,7 +21,7 @@ interface IErrorExtend extends Error {
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
     error(err: IErrorExtend, req: IRequest, res: Response): void {
         let errLogStack = err.stack;
-        if (errLogStack && ENVIRONMENT !== Environment.LOCAL)
+        if (errLogStack && ENVIRONMENT !== Environment.Local)
             errLogStack = errLogStack.replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
 
         if (err.httpCode === 400) {
@@ -56,6 +56,6 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             errRes.fields = err.fields;
 
         res.status(err.httpCode);
-        res.send(errRes);
+        res.render('error', errRes);
     }
 }

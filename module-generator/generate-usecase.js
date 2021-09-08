@@ -26,6 +26,7 @@ else
     console.log('Module:\x1b[32m', moduleName, '\x1b[0m');
 
 folder = convertToDirectoryName(folder);
+const subFolder = convertToDirectoryName(moduleName);
 const methodName = param.split(':')[1];
 const usecaseFncName = param.split(':')[2];
 
@@ -42,13 +43,13 @@ const upperCaseName = convertToDirectoryName(moduleName).replace(/-/g, '_').toUp
 const lowerCaseName = upperCaseName.toLowerCase();
 
 if (methodName.toLowerCase() === 'query') {
-    const queryHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.spec.ts`);
+    const queryHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.spec.ts`);
     const queryHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryHandler.spec.tmp'));
 
-    const queryHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.ts`);
+    const queryHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryHandler.ts`);
     const queryHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryHandler.tmp'));
 
-    const queryUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryOutput.ts`);
+    const queryUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/queries/${usecaseFncFolder}/${usecaseFncName}QueryOutput.ts`);
     const queryUsecaseOutput = getFileContent(path.join(__dirname, './core/usecases/queries/usecase-query-func/UsecaseQueryOutput.tmp'));
 
     createDirectories(
@@ -60,16 +61,16 @@ if (methodName.toLowerCase() === 'query') {
     fs.writeFileSync(queryUsecaseOutputPath, queryUsecaseOutput);
 }
 else if (methodName.toLowerCase() === 'command') {
-    const commandHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.spec.ts`);
+    const commandHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.spec.ts`);
     const commandHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandHandler.spec.tmp'));
 
-    const commandHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.ts`);
+    const commandHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandHandler.ts`);
     const commandHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandHandler.tmp'));
 
-    const commandUsecaseInputPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandInput.ts`);
+    const commandUsecaseInputPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandInput.ts`);
     const commandUsecaseInput = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandInput.tmp'));
 
-    const commandUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandOutput.ts`);
+    const commandUsecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/commands/${usecaseFncFolder}/${usecaseFncName}CommandOutput.ts`);
     const commandUsecaseOutput = getFileContent(path.join(__dirname, './core/usecases/commands/usecase-command-func/UsecaseCommandOutput.tmp'));
 
     createDirectories(
@@ -91,6 +92,7 @@ console.log('\n\x1b[32mGenerate usecase "' + usecaseFncName + '" successfully.\x
 function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
         .replace(/{folder}/g, folder)
+        .replace(/{subFolder}/g, subFolder)
         .replace(/{UsecaseName}/g, usecaseFncName)
         .replace(/{camelName}/g, camelName)
         .replace(/{PascalName}/g, pascalName)

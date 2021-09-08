@@ -14,7 +14,7 @@ export class UserController {
 
     @Get('/')
     @Render('users/index')
-    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
     async find(@Res() response: Response, @QueryParams() param: FindClientQueryInput, @CurrentUser() userAuth: UserAuthenticated): Promise<any> {
         if (!userAuth)
             return response.redirect('/');

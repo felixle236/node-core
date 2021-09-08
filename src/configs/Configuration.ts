@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { convertStringToBoolean } from '@utils/converter';
 import dotenv from 'dotenv';
-import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './Constants';
+import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from './Enums';
 dotenv.config();
 
 // SYSTEM ENVIRONMENT
 
 const keyEnv = Object.keys(Environment).find(key => Environment[key] === process.env.NODE_ENV);
-export const ENVIRONMENT: Environment = keyEnv ? Environment[keyEnv] : Environment.LOCAL;
+export const ENVIRONMENT: Environment = keyEnv ? Environment[keyEnv] : Environment.Local;
 
 export const PROJECT_ID: string = process.env.PROJECT_ID ?? '';
 export const PROJECT_NAME: string = process.env.PROJECT_NAME ?? '';
@@ -60,11 +60,11 @@ export const AUTH_SECRET_OR_PUBLIC_KEY: string = process.env.AUTH_SECRET_KEY ?? 
 
 // LOG SERVICE
 
-export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.env.LOG_PROVIDER) : LogProvider.WINSTON;
+export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.env.LOG_PROVIDER) : LogProvider.Winston;
 
 // STORAGE SERVICE
 
-export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.CONSOLE;
+export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.Console;
 export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
 export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? 'uploads';
 export const STORAGE_BUCKET_NAME: string = process.env.STORAGE_BUCKET_NAME ?? '';
@@ -86,7 +86,7 @@ export const GOOGLE_STORAGE_CLASS: string = process.env.GOOGLE_STORAGE_CLASS ?? 
 
 // MAIL SERVICE
 
-export const MAIL_PROVIDER: number = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.CONSOLE;
+export const MAIL_PROVIDER: number = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.Console;
 export const MAIL_SENDER_NAME: string = process.env.MAIL_SENDER_NAME ?? '';
 export const MAIL_SENDER_EMAIL: string = process.env.MAIL_SENDER_EMAIL ?? '';
 
@@ -100,7 +100,7 @@ export const SENDINBLUE_API_KEY: string = process.env.SENDINBLUE_API_KEY ?? '';
 
 // SMS SERVICE
 
-export const SMS_PROVIDER: number = process.env.SMS_PROVIDER ? Number(process.env.SMS_PROVIDER) : SmsProvider.CONSOLE;
+export const SMS_PROVIDER: number = process.env.SMS_PROVIDER ? Number(process.env.SMS_PROVIDER) : SmsProvider.Console;
 export const SMS_SENDER_OR_PHONE: string = process.env.SMS_SENDER_OR_PHONE ?? '';
 
 export const TWILIO_ACCOUNT_SID: string = process.env.TWILIO_ACCOUNT_SID ?? '';
@@ -113,6 +113,6 @@ export const PAYPAL_KEY: string = process.env.PAYPAL_KEY ?? '';
 
 // NOTIFICATION SERVICE
 
-export const NOTIFICATION_PROVIDER: number = process.env.NOTIFICATION_PROVIDER ? Number(process.env.NOTIFICATION_PROVIDER) : NotificationProvider.CONSOLE;
+export const NOTIFICATION_PROVIDER: number = process.env.NOTIFICATION_PROVIDER ? Number(process.env.NOTIFICATION_PROVIDER) : NotificationProvider.Console;
 export const FCM_KEY: string = process.env.FCM_KEY ?? '';
 export const APN_KEY: string = process.env.APN_KEY ?? '';

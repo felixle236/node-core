@@ -3,7 +3,6 @@ import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{Pasca
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { CreateClientCommandOutput } from '@usecases/user/client/commands/create-client/CreateClientCommandOutput';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { Create{PascalName}CommandInput } from './Create{PascalName}CommandInput';
@@ -25,7 +24,7 @@ export class Create{PascalName}CommandHandler implements CommandHandler<Create{P
             throw new SystemError(MessageError.PARAM_EXISTED, 'name');
 
         const id = await this._{camelName}Repository.create(data);
-        const result = new CreateClientCommandOutput();
+        const result = new Create{PascalName}CommandOutput();
         result.setData(id);
         return result;
     }

@@ -32,7 +32,7 @@ describe('Authorization usecases - Update my password by email', () => {
 
     beforeEach(() => {
         const auth = new Auth();
-        auth.type = AuthType.PERSONAL_EMAIL;
+        auth.type = AuthType.PersonalEmail;
         auth.password = 'Nodecore@2';
         authTests = [auth];
 

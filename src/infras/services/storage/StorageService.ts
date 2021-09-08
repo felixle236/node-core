@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import { MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from '@configs/Configuration';
-import { StorageProvider } from '@configs/Constants';
+import { StorageProvider } from '@configs/Enums';
 import { IStorageService, IStorageUploadOption } from '@gateways/services/IStorageService';
 import { Service } from 'typedi';
 import { IStorageProvider } from './interfaces/IStorageProvider';
@@ -15,19 +15,19 @@ export class StorageService implements IStorageService {
 
     constructor() {
         switch (STORAGE_PROVIDER) {
-        case StorageProvider.MINIO:
+        case StorageProvider.MinIO:
             this._provider = new MinioFactory(MINIO_HOST, MINIO_PORT, MINIO_USE_SSL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
             break;
 
-        case StorageProvider.AWS_S3:
+        case StorageProvider.AwsS3:
             this._provider = new AwsS3Factory(S3_REGION, S3_ACCESS_KEY, S3_SECRET_KEY);
             break;
 
-        case StorageProvider.GOOGLE_STORAGE:
+        case StorageProvider.GoogleStorage:
             this._provider = new GoogleStorageFactory();
             break;
 
-        case StorageProvider.CONSOLE:
+        case StorageProvider.Console:
         default:
             this._provider = new StorageConsoleFactory();
             break;

@@ -18,7 +18,7 @@ export class ArchiveClientCommandHandler extends CommandHandler<string, ArchiveC
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const data = new Client();
-        data.status = ClientStatus.ARCHIVED;
+        data.status = ClientStatus.Archived;
         data.archivedAt = new Date();
 
         const hasSucceed = await this._clientRepository.update(id, data);

@@ -2,7 +2,6 @@ import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{Pasca
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
-import { DeleteClientCommandOutput } from '@usecases/user/client/commands/delete-client/DeleteClientCommandOutput';
 import { Inject, Service } from 'typedi';
 import { Delete{PascalName}CommandOutput } from './Delete{PascalName}CommandOutput';
 
@@ -17,7 +16,7 @@ export class Delete{PascalName}CommandHandler implements CommandHandler<string, 
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
 
         const hasSucceed = await this._{camelName}Repository.softDelete(id);
-        const result = new DeleteClientCommandOutput();
+        const result = new Delete{PascalName}CommandOutput();
         result.setData(hasSucceed);
         return result;
     }

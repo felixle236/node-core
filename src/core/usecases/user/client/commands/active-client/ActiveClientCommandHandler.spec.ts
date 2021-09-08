@@ -81,7 +81,7 @@ describe('Client usecases - Active client', () => {
 
     it('Active client with params invalid error - Account is actived already', async () => {
         clientTest.activeKey = crypto.randomBytes(32).toString('hex');
-        clientTest.status = ClientStatus.ACTIVED;
+        clientTest.status = ClientStatus.Actived;
         sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
 
         const param = new ActiveClientCommandInput();

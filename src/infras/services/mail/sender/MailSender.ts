@@ -1,5 +1,5 @@
 import { MAIL_PROVIDER } from '@configs/Configuration';
-import { MailProvider } from '@configs/Constants';
+import { MailProvider } from '@configs/Enums';
 import { IMailProvider } from './interfaces/IMailProvider';
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { MailConsoleFactory } from './providers/MailConsoleFactory';
@@ -11,19 +11,19 @@ export class MailSender implements IMailProvider {
 
     constructor() {
         switch (MAIL_PROVIDER) {
-        case MailProvider.GOOGLE_SMTP:
+        case MailProvider.GoogleSmtp:
             this._provider = new GoogleSmtpFactory();
             break;
 
-        case MailProvider.MAIL_GUN:
+        case MailProvider.MailGun:
             this._provider = new MailGunFactory();
             break;
 
-        case MailProvider.SEND_IN_BLUE:
+        case MailProvider.SendInBlue:
             this._provider = new SendInBlueFactory();
             break;
 
-        case MailProvider.CONSOLE:
+        case MailProvider.Console:
         default:
             this._provider = new MailConsoleFactory();
             break;

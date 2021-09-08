@@ -68,9 +68,9 @@ describe('Manager repository', () => {
 
             const filter = new FindManagerFilter();
             filter.setPagination(0, 10);
-            filter.roleIds = [RoleId.MANAGER, RoleId.CLIENT];
+            filter.roleIds = [RoleId.Manager, RoleId.Client];
             filter.keyword = 'test';
-            filter.status = ManagerStatus.ACTIVED;
+            filter.status = ManagerStatus.Actived;
 
             const managerRepository = new ManagerRepository();
             const [list, count] = await managerRepository.findAndCount(filter);

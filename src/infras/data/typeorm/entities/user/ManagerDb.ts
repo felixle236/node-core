@@ -11,7 +11,7 @@ export class ManagerDb extends UserDb implements IManager {
     @Index({ unique: true, where: ManagerDb.getIndexFilterDeletedColumn() })
     email: string;
 
-    @Column('enum', { name: MANAGER_SCHEMA.COLUMNS.STATUS, enum: ManagerStatus, default: ManagerStatus.ACTIVED })
+    @Column('enum', { name: MANAGER_SCHEMA.COLUMNS.STATUS, enum: ManagerStatus, default: ManagerStatus.Actived })
     status: ManagerStatus;
 
     @Column('timestamptz', { name: MANAGER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })

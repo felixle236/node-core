@@ -75,7 +75,7 @@ describe('Authorization controller', () => {
         result.setData({
             userId: v4(),
             roleId: v4(),
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
         const { status, data } = await axios.post(endpoint, undefined, options);

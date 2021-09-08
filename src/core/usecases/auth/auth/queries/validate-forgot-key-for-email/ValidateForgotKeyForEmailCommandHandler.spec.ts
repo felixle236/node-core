@@ -54,22 +54,22 @@ describe('Authorization usecases - Validate forgot key for email', () => {
     beforeEach(() => {
         clientTest = new Client({
             id: v4(),
-            roleId: RoleId.CLIENT,
+            roleId: RoleId.Client,
             email: 'client.test@localhost.com',
-            status: ClientStatus.ACTIVED
+            status: ClientStatus.Actived
         } as IClient);
         managerTest = new Manager({
             id: v4(),
-            roleId: RoleId.MANAGER,
+            roleId: RoleId.Manager,
             email: 'manager.test@localhost.com',
-            status: ManagerStatus.ACTIVED
+            status: ManagerStatus.Actived
         } as IManager);
         authTest = new Auth({
             id: v4(),
             userId: clientTest.id,
             username: clientTest.email,
             user: clientTest.toData() as IUser,
-            type: AuthType.PERSONAL_EMAIL,
+            type: AuthType.PersonalEmail,
             forgotKey: 'forgot key',
             forgotExpire: addMinutes(new Date(), 10)
         } as IAuth);
@@ -95,7 +95,7 @@ describe('Authorization usecases - Validate forgot key for email', () => {
     });
 
     it('Validate forgot key for email with client account is not exist or activated error', async () => {
-        clientTest.status = ClientStatus.INACTIVED;
+        clientTest.status = ClientStatus.Inactived;
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(clientRepository, 'getById').resolves(null);
 
@@ -104,13 +104,13 @@ describe('Authorization usecases - Validate forgot key for email', () => {
     });
 
     it('Validate forgot key for email with manager account is not exist or activated error', async () => {
-        managerTest.status = ManagerStatus.ARCHIVED;
+        managerTest.status = ManagerStatus.Archived;
         const authTest = new Auth({
             id: v4(),
             userId: managerTest.id,
             username: managerTest.email,
             user: managerTest.toData() as IUser,
-            type: AuthType.PERSONAL_EMAIL,
+            type: AuthType.PersonalEmail,
             forgotKey: 'forgot key',
             forgotExpire: addMinutes(new Date(), 10)
         } as IAuth);

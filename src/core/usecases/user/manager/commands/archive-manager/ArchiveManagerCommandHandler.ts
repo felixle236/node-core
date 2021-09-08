@@ -18,7 +18,7 @@ export class ArchiveManagerCommandHandler extends CommandHandler<string, Archive
             throw new SystemError(MessageError.DATA_NOT_FOUND);
 
         const data = new Manager();
-        data.status = ManagerStatus.ARCHIVED;
+        data.status = ManagerStatus.Archived;
         data.archivedAt = new Date();
 
         const hasSucceed = await this._managerRepository.update(id, data);

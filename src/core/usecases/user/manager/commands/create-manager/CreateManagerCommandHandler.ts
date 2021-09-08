@@ -38,8 +38,8 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
         await validateDataInput(param);
 
         const data = new Manager({ id: v4() } as IManager);
-        data.roleId = RoleId.MANAGER;
-        data.status = ManagerStatus.ACTIVED;
+        data.roleId = RoleId.Manager;
+        data.status = ManagerStatus.Actived;
         data.firstName = param.firstName;
         data.lastName = param.lastName;
         data.email = param.email;

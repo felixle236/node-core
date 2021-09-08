@@ -51,7 +51,7 @@ export class ClientController {
     ) {}
 
     @Get('/')
-    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
     @OpenAPI({ summary: 'Find clients' })
     @ResponseSchema(FindClientQueryOutput)
     async find(@QueryParams() param: FindClientQueryInput): Promise<FindClientQueryOutput> {
@@ -59,7 +59,7 @@ export class ClientController {
     }
 
     @Get('/:id([0-9a-f-]{36})')
-    @Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])
+    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
     @OpenAPI({ summary: 'Get client by id' })
     @ResponseSchema(GetClientByIdQueryOutput)
     async getById(@Param('id') id: string): Promise<GetClientByIdQueryOutput> {
@@ -67,7 +67,7 @@ export class ClientController {
     }
 
     @Get('/my-profile')
-    @Authorized(RoleId.CLIENT)
+    @Authorized(RoleId.Client)
     @OpenAPI({ summary: 'Get my profile information' })
     @ResponseSchema(GetMyProfileClientQueryOutput)
     async getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileClientQueryOutput> {
@@ -96,7 +96,7 @@ export class ClientController {
     }
 
     @Post('/')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Create client account' })
     @ResponseSchema(CreateClientCommandOutput)
     async create(@Body() param: CreateClientCommandInput): Promise<CreateClientCommandOutput> {
@@ -104,7 +104,7 @@ export class ClientController {
     }
 
     @Put('/:id([0-9a-f-]{36})')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Update client account' })
     @ResponseSchema(UpdateClientCommandOutput)
     async update(@Param('id') id: string, @Body() param: UpdateClientCommandInput): Promise<UpdateClientCommandOutput> {
@@ -112,7 +112,7 @@ export class ClientController {
     }
 
     @Put('/my-profile')
-    @Authorized(RoleId.CLIENT)
+    @Authorized(RoleId.Client)
     @OpenAPI({ summary: 'Update my profile information' })
     @ResponseSchema(UpdateMyProfileClientCommandOutput)
     async updateMyProfile(@Body() param: UpdateMyProfileClientCommandInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateMyProfileClientCommandOutput> {
@@ -120,7 +120,7 @@ export class ClientController {
     }
 
     @Delete('/:id([0-9a-f-]{36})')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Delete client account' })
     @ResponseSchema(DeleteClientCommandOutput)
     async delete(@Param('id') id: string): Promise<DeleteClientCommandOutput> {
@@ -128,7 +128,7 @@ export class ClientController {
     }
 
     @Post('/:id([0-9a-f-]{36})/archive')
-    @Authorized(RoleId.SUPER_ADMIN)
+    @Authorized(RoleId.SuperAdmin)
     @OpenAPI({ summary: 'Archive client account' })
     @ResponseSchema(ArchiveClientCommandOutput)
     async archive(@Param('id') id: string): Promise<ArchiveClientCommandOutput> {

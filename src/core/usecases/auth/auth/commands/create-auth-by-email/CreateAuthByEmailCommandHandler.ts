@@ -9,20 +9,21 @@ import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { CreateAuthByEmailCommandInput } from './CreateAuthByEmailCommandInput';
+import { CreateAuthByEmailCommandOutput } from './CreateAuthByEmailCommandOutput';
 
 @Service()
-export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthByEmailCommandInput, string> {
+export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthByEmailCommandInput, CreateAuthByEmailCommandOutput> {
     @Inject('user.repository')
     private readonly _userRepository: IUserRepository;
 
     @Inject('auth.repository')
     private readonly _authRepository: IAuthRepository;
 
-    async handle(param: CreateAuthByEmailCommandInput, queryRunner?: IDbQueryRunner): Promise<string> {
+    async handle(param: CreateAuthByEmailCommandInput, queryRunner?: IDbQueryRunner): Promise<CreateAuthByEmailCommandOutput> {
         await validateDataInput(param);
 
         const data = new Auth();
-        data.type = AuthType.PERSONAL_EMAIL;
+        data.type = AuthType.PersonalEmail;
         data.userId = param.userId;
         data.username = param.email;
         data.password = param.password;
@@ -32,10 +33,12 @@ export class CreateAuthByEmailCommandHandler extends CommandHandler<CreateAuthBy
             throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');
 
         const auths = await this._authRepository.getAllByUser(param.userId, queryRunner);
-        if (auths && auths.find(auth => auth.type === AuthType.PERSONAL_EMAIL))
+        if (auths && auths.find(auth => auth.type === AuthType.PersonalEmail))
             throw new SystemError(MessageError.PARAM_EXISTED, 'data');
 
         const id = await this._authRepository.create(data, queryRunner);
-        return id;
+        const result = new CreateAuthByEmailCommandOutput();
+        result.setData(id);
+        return result;
     }
 }

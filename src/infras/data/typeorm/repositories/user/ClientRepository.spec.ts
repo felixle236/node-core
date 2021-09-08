@@ -68,7 +68,7 @@ describe('Client repository', () => {
             const filter = new FindClientFilter();
             filter.setPagination(0, 10);
             filter.keyword = 'test';
-            filter.status = ClientStatus.ACTIVED;
+            filter.status = ClientStatus.Actived;
 
             const clientRepository = new ClientRepository();
             const [list, count] = await clientRepository.findAndCount(filter);

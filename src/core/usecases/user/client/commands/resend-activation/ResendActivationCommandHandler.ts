@@ -24,7 +24,7 @@ export class ResendActivationCommandHandler extends CommandHandler<ResendActivat
         await validateDataInput(param);
 
         const client = await this._clientRepository.getByEmail(param.email);
-        if (!client || client.status === ClientStatus.ACTIVED)
+        if (!client || client.status === ClientStatus.Actived)
             throw new SystemError(MessageError.DATA_INVALID);
 
         const data = new Client();

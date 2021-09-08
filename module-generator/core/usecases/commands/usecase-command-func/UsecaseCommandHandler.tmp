@@ -4,8 +4,8 @@ import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
 import { Inject, Service } from 'typedi';
-import { Create{PascalName}ByManagerCommandInput } from './Create{PascalName}ByManagerCommandInput';
-import { Create{PascalName}ByManagerCommandOutput } from './Create{PascalName}ByManagerCommandOutput';
+import { {UsecaseName}CommandInput } from './{UsecaseName}CommandInput';
+import { {UsecaseName}CommandOutput } from './{UsecaseName}CommandOutput';
 
 @Service()
 export class {UsecaseName}CommandHandler implements CommandHandler<{UsecaseName}CommandInput, {UsecaseName}CommandOutput> {

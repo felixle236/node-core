@@ -3,11 +3,11 @@ import './infras/SingletonRegister';
 import cluster from 'cluster';
 import os from 'os';
 import { API_PORT, ENABLE_API_SERVICE, ENABLE_SOCKET_SERVICE, ENABLE_WEB_SERVICE, ENVIRONMENT, PROJECT_NAME, SOCKET_PORT, WEB_PORT } from '@configs/Configuration';
-import { Environment } from '@configs/Constants';
+import { Environment } from '@configs/Enums';
 import { ILogService } from '@gateways/services/ILogService';
-import { ApiService } from '@infras/web.api/ApiService';
-import { SocketService } from '@infras/web.socket/SocketService';
-import { WebService } from '@infras/web.ui/WebService';
+import { ApiService } from '@infras/api/ApiService';
+import { SocketService } from '@infras/socket/SocketService';
+import { WebService } from '@infras/ui/WebService';
 import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { IRedisContext } from '@shared/database/interfaces/IRedisContext';
 import { Container } from 'typedi';
@@ -50,7 +50,7 @@ const showServiceStatus = (): void => {
         logService.info(`Socket service is ready \x1b[32m http://localhost:${SOCKET_PORT} \x1b[0m`);
 };
 
-if (ENVIRONMENT === Environment.LOCAL) {
+if (ENVIRONMENT === Environment.Local) {
     logService.info('Starting project \x1b[1m\x1b[96m' + PROJECT_NAME + '\x1b[0m\x1b[21m with \x1b[32mdevelopment\x1b[0m mode...');
 
     startApplication().then(async () => {

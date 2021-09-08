@@ -41,7 +41,7 @@ describe('Authorization usecases - Create authorization by email', () => {
     beforeEach(() => {
         clientTest = new Client();
         const auth = new Auth();
-        auth.type = AuthType.PERSONAL_EMAIL;
+        auth.type = AuthType.PersonalEmail;
         authTests = [auth];
 
         param = new CreateAuthByEmailCommandInput();
@@ -86,6 +86,6 @@ describe('Authorization usecases - Create authorization by email', () => {
         sandbox.stub(authRepository, 'create').resolves(id);
 
         const result = await createAuthByEmailCommandHandler.handle(param);
-        expect(result).to.eq(id);
+        expect(result.data).to.eq(id);
     });
 });

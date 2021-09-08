@@ -1,4 +1,4 @@
 export enum ManagerStatus {
-    ACTIVED = 'actived',
-    ARCHIVED = 'archived'
+    Actived = 'actived',
+    Archived = 'archived'
 }

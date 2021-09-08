@@ -42,7 +42,7 @@ export default class ChatChannel {
             param.onlineAt = new Date();
 
             const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
-            if (result.data && userAuth.roleId !== RoleId.SUPER_ADMIN) {
+            if (result.data && userAuth.roleId !== RoleId.SuperAdmin) {
                 sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
                     userId: userAuth.userId,
                     ...param
@@ -58,7 +58,7 @@ export default class ChatChannel {
                 param.onlineAt = new Date();
 
                 const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
-                if (result.data && userAuth.roleId !== RoleId.SUPER_ADMIN) {
+                if (result.data && userAuth.roleId !== RoleId.SuperAdmin) {
                     sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
                         userId: userAuth.userId,
                         ...param

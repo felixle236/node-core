@@ -44,7 +44,7 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
         await validateDataInput(param);
 
         const data = new Client({ id: v4() } as IClient);
-        data.roleId = RoleId.CLIENT;
+        data.roleId = RoleId.Client;
         data.firstName = param.firstName;
         data.lastName = param.lastName;
         data.email = param.email;
@@ -63,7 +63,7 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
             throw new SystemError(MessageError.PARAM_EXISTED, 'email');
 
         const activeKey = crypto.randomBytes(32).toString('hex');
-        data.status = ClientStatus.INACTIVED;
+        data.status = ClientStatus.Inactived;
         data.activeKey = activeKey;
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 

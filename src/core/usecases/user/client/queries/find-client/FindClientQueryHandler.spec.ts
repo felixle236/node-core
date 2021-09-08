@@ -37,7 +37,7 @@ describe('Client usecases - Find client', () => {
             lastName: 'Test',
             email: 'client.test@localhost.com',
             avatar: 'avatar.png',
-            gender: GenderType.FEMALE,
+            gender: GenderType.Female,
             birthday: '1970-01-01',
             phone: '0123456789',
             address: '123 Abc',
@@ -71,7 +71,7 @@ describe('Client usecases - Find client', () => {
         sandbox.stub(clientRepository, 'findAndCount').resolves([list, 10]);
         const param = new FindClientQueryInput();
         param.keyword = 'test';
-        param.status = ClientStatus.ACTIVED;
+        param.status = ClientStatus.Actived;
         param.skip = 10;
         param.limit = 2;
 

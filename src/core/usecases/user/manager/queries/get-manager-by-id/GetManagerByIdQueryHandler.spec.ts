@@ -38,7 +38,7 @@ describe('Manager usecases - Get manager by id', () => {
             lastName: 'Test',
             email: 'manager.test@localhost.com',
             avatar: 'avatar.png',
-            gender: GenderType.FEMALE,
+            gender: GenderType.Female,
             birthday: '2000-06-08',
             archivedAt: new Date()
         } as IManager);

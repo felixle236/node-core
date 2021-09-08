@@ -30,15 +30,15 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
     // Create user "Super Admin"
 
     const manager = new Manager({ id: v4() } as IManager);
-    manager.roleId = RoleId.SUPER_ADMIN;
-    manager.status = ManagerStatus.ACTIVED;
+    manager.roleId = RoleId.SuperAdmin;
+    manager.status = ManagerStatus.Actived;
     manager.firstName = 'Super';
     manager.lastName = 'Admin';
     manager.email = 'admin@localhost.com';
-    manager.gender = GenderType.MALE;
+    manager.gender = GenderType.Male;
 
     const auth = new Auth();
-    auth.type = AuthType.PERSONAL_EMAIL;
+    auth.type = AuthType.PersonalEmail;
     auth.userId = manager.id;
     auth.username = manager.email;
     auth.password = 'Nodecore@2';

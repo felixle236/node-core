@@ -18,14 +18,14 @@ export class ActiveClientCommandHandler extends CommandHandler<ActiveClientComma
         await validateDataInput(param);
 
         const client = await this._clientRepository.getByEmail(param.email);
-        if (!client || client.activeKey !== param.activeKey || client.status === ClientStatus.ACTIVED)
+        if (!client || client.activeKey !== param.activeKey || client.status === ClientStatus.Actived)
             throw new SystemError(MessageError.DATA_INVALID);
 
         if (!client.activeExpire || client.activeExpire < new Date())
             throw new SystemError(MessageError.PARAM_EXPIRED, 'activation key');
 
         const data = new Client();
-        data.status = ClientStatus.ACTIVED;
+        data.status = ClientStatus.Actived;
         data.activeKey = null;
         data.activedAt = new Date();
 

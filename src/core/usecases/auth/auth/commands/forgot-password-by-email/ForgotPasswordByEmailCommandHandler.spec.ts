@@ -61,15 +61,15 @@ describe('Authorization usecases - Forgot password by email', () => {
     beforeEach(() => {
         clientTest = new Client({
             id: v4(),
-            roleId: RoleId.CLIENT,
+            roleId: RoleId.Client,
             firstName: 'client',
             lastName: 'test',
-            status: ClientStatus.ACTIVED
+            status: ClientStatus.Actived
         } as IClient);
         managerTest = new Manager({
             id: v4(),
-            roleId: RoleId.MANAGER,
-            status: ManagerStatus.ACTIVED
+            roleId: RoleId.Manager,
+            status: ManagerStatus.Actived
         } as IManager);
         authTest = new Auth({
             id: v4(),
@@ -112,7 +112,7 @@ describe('Authorization usecases - Forgot password by email', () => {
 
     it('Forgot password by email with client account has not been activated error', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-        clientTest.status = ClientStatus.INACTIVED;
+        clientTest.status = ClientStatus.Inactived;
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
 
         const error: SystemError = await forgotPasswordByEmailCommandHandler.handle(param).catch(error => error);
@@ -145,7 +145,7 @@ describe('Authorization usecases - Forgot password by email', () => {
             user: managerTest.toData() as IUser
         } as IAuth);
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-        managerTest.status = ManagerStatus.ARCHIVED;
+        managerTest.status = ManagerStatus.Archived;
         sandbox.stub(managerRepository, 'getById').resolves(managerTest);
 
         const error: SystemError = await forgotPasswordByEmailCommandHandler.handle(param).catch(error => error);

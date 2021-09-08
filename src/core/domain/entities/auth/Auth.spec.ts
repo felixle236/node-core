@@ -94,7 +94,7 @@ describe('Authorization entity', () => {
         const dataTest = {
             id: v4(),
             userId: v4(),
-            type: AuthType.PERSONAL_EMAIL,
+            type: AuthType.PersonalEmail,
             username: 'user.test@gmail.com',
             password: hashMD5('Nodecore@2', '$$'),
             forgotKey: crypto.randomBytes(32).toString('hex'),

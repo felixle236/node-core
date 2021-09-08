@@ -1,5 +1,5 @@
 import { APN_KEY, ENVIRONMENT, FCM_KEY, PROJECT_NAME } from '@configs/Configuration';
-import { Environment } from '@configs/Constants';
+import { Environment } from '@configs/Enums';
 import NodePushNotification from 'node-pushnotifications';
 import { INotificationProvider } from '../interfaces/INotificationProvider';
 
@@ -17,7 +17,7 @@ export class NodePushNotificationFactory implements INotificationProvider {
                     keyId: APN_KEY,
                     teamId: 'EFGH'
                 },
-                production: ENVIRONMENT !== Environment.LOCAL // true for APN production environment, false for APN sandbox environment,
+                production: ENVIRONMENT !== Environment.Local // true for APN production environment, false for APN sandbox environment,
             }
         });
     }

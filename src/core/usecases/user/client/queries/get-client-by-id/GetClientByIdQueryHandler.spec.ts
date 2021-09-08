@@ -37,7 +37,7 @@ describe('Client usecases - Get client by id', () => {
             lastName: 'Test',
             email: 'client.test@localhost.com',
             avatar: 'avatar.png',
-            gender: GenderType.FEMALE,
+            gender: GenderType.Female,
             birthday: '1970-01-01',
             phone: '0123456789',
             address: '123 Abc',

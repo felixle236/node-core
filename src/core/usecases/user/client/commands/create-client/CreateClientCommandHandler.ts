@@ -38,8 +38,8 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
         await validateDataInput(param);
 
         const data = new Client({ id: v4() } as IClient);
-        data.roleId = RoleId.CLIENT;
-        data.status = ClientStatus.ACTIVED;
+        data.roleId = RoleId.Client;
+        data.status = ClientStatus.Actived;
         data.firstName = param.firstName;
         data.lastName = param.lastName;
         data.email = param.email;

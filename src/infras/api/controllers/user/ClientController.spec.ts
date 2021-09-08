@@ -102,7 +102,7 @@ describe('Client controller', () => {
     });
 
     it('Find clients by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new FindClientQueryOutput();
         result.setData([{
             id: v4()
@@ -115,7 +115,7 @@ describe('Client controller', () => {
     });
 
     it('Find clients by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.MANAGER } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
         const result = new FindClientQueryOutput();
         result.setData([{
             id: v4()
@@ -136,7 +136,7 @@ describe('Client controller', () => {
     });
 
     it('Get client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const id = v4();
         const result = new GetClientByIdQueryOutput();
         result.setData({
@@ -150,7 +150,7 @@ describe('Client controller', () => {
     });
 
     it('Get client by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.MANAGER } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
         const id = v4();
         const result = new GetClientByIdQueryOutput();
         result.setData({
@@ -171,7 +171,7 @@ describe('Client controller', () => {
     });
 
     it('Get my profile by client', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.CLIENT } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Client } as any);
         const id = v4();
         const result = new GetMyProfileClientQueryOutput();
         result.setData({
@@ -240,7 +240,7 @@ describe('Client controller', () => {
     });
 
     it('Create client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const id = v4();
         const result = new CreateClientCommandOutput();
         result.setData(id);
@@ -268,7 +268,7 @@ describe('Client controller', () => {
     });
 
     it('Update client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateClientCommandOutput();
         result.setData(true);
         sandbox.stub(updateClientCommandHandler, 'handle').resolves(result);
@@ -293,7 +293,7 @@ describe('Client controller', () => {
     });
 
     it('Update my client profile by client', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.CLIENT } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.Client } as any);
         const result = new UpdateMyProfileClientCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileClientCommandHandler, 'handle').resolves(result);
@@ -315,7 +315,7 @@ describe('Client controller', () => {
     });
 
     it('Delete client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new DeleteClientCommandOutput();
         result.setData(true);
         sandbox.stub(deleteClientCommandHandler, 'handle').resolves(result);
@@ -333,7 +333,7 @@ describe('Client controller', () => {
     });
 
     it('Archive client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SUPER_ADMIN } as any);
+        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
         const result = new ArchiveClientCommandOutput();
         result.setData(true);
         sandbox.stub(archiveClientCommandHandler, 'handle').resolves(result);

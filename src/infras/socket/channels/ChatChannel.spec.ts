@@ -69,7 +69,7 @@ describe('Chat channel', () => {
         result.setData({
             userId: v4(),
             roleId: v4(),
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
 
@@ -92,7 +92,7 @@ describe('Chat channel', () => {
         result.setData({
             userId: userId,
             roleId: v4(),
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
 
@@ -118,7 +118,7 @@ describe('Chat channel', () => {
         result.setData({
             userId: v4(),
             roleId: v4(),
-            type: AuthType.PERSONAL_EMAIL
+            type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
 

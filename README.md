@@ -101,6 +101,14 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------ shared --------------------------------// Common defination.
 - |------------ usecases ------------------------------// Business logic.
 - |------ infras
+- |------------ api
+- |------------------ controllers ---------------------// Navigate for requests.
+- |------------------ middlewares
+- |------------------------ BodyParserMiddleware.ts ---// Body parser.
+- |------------------------ ErrorMiddleware.ts --------// Handling of errors.
+- |------------------ ApiAuthenticator.ts
+- |------------------ ApiDocument.ts ------------------// Initialize Api document.
+- |------------------ ApiService.ts -------------------// Initialize Api service.
 - |------------ data
 - |------------------ redis ---------------------------// In-memory database.
 - |------------------------ repositories --------------// Execution operations.
@@ -130,18 +138,10 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------------ storage -------------------------// Storage service.
 - |------------------ ServiceRegister.ts
 - |------------ SingletonRegister.ts ------------------// Define singleton and need to load first.
-- |------------ web.api
-- |------------------ controllers ---------------------// Navigate for requests.
-- |------------------ middlewares
-- |------------------------ BodyParserMiddleware.ts ---// Body parser.
-- |------------------------ ErrorMiddleware.ts --------// Handling of errors.
-- |------------------ ApiAuthenticator.ts
-- |------------------ ApiDocument.ts ------------------// Initialize Api document.
-- |------------------ ApiService.ts -------------------// Initialize Api service.
-- |------------ web.socket
+- |------------ socket
 - |------------------ channels ------------------------// Initialize socket connection & event handling.
 - |------------------ SocketService.ts ----------------// Initialize socket service
-- |------------ web.ui
+- |------------ ui
 - |------------------ controllers ---------------------// Navigate for requests.
 - |------------------ middlewares
 - |------------------ public

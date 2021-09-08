@@ -1,5 +1,5 @@
 import { SENDINBLUE_API_KEY, SMS_PROVIDER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from '@configs/Configuration';
-import { SmsProvider } from '@configs/Constants';
+import { SmsProvider } from '@configs/Enums';
 import { ISmsProvider } from './interfaces/ISmsProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 import { SmsConsoleFactory } from './providers/SmsConsoleFactory';
@@ -10,15 +10,15 @@ export class SmsSender implements ISmsProvider {
 
     constructor() {
         switch (SMS_PROVIDER) {
-        case SmsProvider.TWILIO:
+        case SmsProvider.Twilio:
             this._provider = new TwilioFactory(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
             break;
 
-        case SmsProvider.SEND_IN_BLUE:
+        case SmsProvider.SendInBlue:
             this._provider = new SendInBlueFactory(SENDINBLUE_API_KEY);
             break;
 
-        case SmsProvider.CONSOLE:
+        case SmsProvider.Console:
         default:
             this._provider = new SmsConsoleFactory();
             break;
