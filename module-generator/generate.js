@@ -24,6 +24,9 @@ else
 
 folder = convertToDirectoryName(folder);
 const subFolder = convertToDirectoryName(moduleName);
+let moduleNameText = convertToDirectoryName(moduleName).replace(/-/g, ' ').toLowerCase();
+moduleNameText = moduleNameText.substr(0, 1).toUpperCase() + moduleNameText.substr(1);
+const moduleNameTextLowerCase = moduleNameText.toLowerCase();
 const camelName = moduleName.substr(0, 1).toLowerCase() + moduleName.substr(1);
 const pascalName = moduleName.substr(0, 1).toUpperCase() + moduleName.substr(1);
 const upperCaseName = convertToDirectoryName(moduleName).replace(/-/g, '_').toUpperCase();
@@ -175,6 +178,8 @@ function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
         .replace(/{folder}/g, folder)
         .replace(/{subFolder}/g, subFolder)
+        .replace(/{moduleNameText}/g, moduleNameText)
+        .replace(/{moduleNameTextLowerCase}/g, moduleNameTextLowerCase)
         .replace(/{camelName}/g, camelName)
         .replace(/{PascalName}/g, pascalName)
         .replace(/{UPPER_CASE_NAME}/g, upperCaseName)

@@ -27,8 +27,13 @@ else
 
 folder = convertToDirectoryName(folder);
 const subFolder = convertToDirectoryName(moduleName);
+let moduleNameText = convertToDirectoryName(moduleName).replace(/-/g, ' ').toLowerCase();
+moduleNameText = moduleNameText.substr(0, 1).toUpperCase() + moduleNameText.substr(1);
+const moduleNameTextLowerCase = moduleNameText.toLowerCase();
 const methodName = param.split(':')[1];
 const usecaseFncName = param.split(':')[2];
+let usecaseFncNameText = convertToDirectoryName(usecaseFncName).replace(/-/g, ' ').toLowerCase();
+usecaseFncNameText = usecaseFncNameText.substr(0, 1).toUpperCase() + usecaseFncNameText.substr(1);
 
 console.log('Method:\x1b[32m', methodName, '\x1b[0m');
 console.log('Usecase:\x1b[32m', usecaseFncName, '\x1b[0m');
@@ -93,7 +98,10 @@ function getFileContent(path) {
     return fs.readFileSync(path, 'utf8')
         .replace(/{folder}/g, folder)
         .replace(/{subFolder}/g, subFolder)
+        .replace(/{moduleNameText}/g, moduleNameText)
+        .replace(/{moduleNameTextLowerCase}/g, moduleNameTextLowerCase)
         .replace(/{UsecaseName}/g, usecaseFncName)
+        .replace(/{usecaseFncNameText}/g, usecaseFncNameText)
         .replace(/{camelName}/g, camelName)
         .replace(/{PascalName}/g, pascalName)
         .replace(/{UPPER_CASE_NAME}/g, upperCaseName)

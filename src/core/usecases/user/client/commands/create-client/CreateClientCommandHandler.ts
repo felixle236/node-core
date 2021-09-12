@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
@@ -8,25 +9,25 @@ import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
 import { CheckEmailExistQueryHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
-import { v4 } from 'uuid';
 import { CreateClientCommandInput } from './CreateClientCommandInput';
 import { CreateClientCommandOutput } from './CreateClientCommandOutput';
 
 @Service()
 export class CreateClientCommandHandler extends CommandHandler<CreateClientCommandInput, CreateClientCommandOutput> {
-    @Inject('db.context')
-    private readonly _dbContext: IDbContext;
-
     @Inject()
     private readonly _checkEmailExistQueryHandler: CheckEmailExistQueryHandler;
 
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
+
+    @Inject('db.context')
+    private readonly _dbContext: IDbContext;
 
     @Inject('client.repository')
     private readonly _clientRepository: IClientRepository;
@@ -37,7 +38,7 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
     async handle(param: CreateClientCommandInput): Promise<CreateClientCommandOutput> {
         await validateDataInput(param);
 
-        const data = new Client({ id: v4() } as IClient);
+        const data = new Client({ id: randomUUID() } as IClient);
         data.roleId = RoleId.Client;
         data.status = ClientStatus.Actived;
         data.firstName = param.firstName;
@@ -67,7 +68,9 @@ export class CreateClientCommandHandler extends CommandHandler<CreateClientComma
             const result = new CreateClientCommandOutput();
             result.setData(id);
 
-            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
+            const handleOption = new HandleOption();
+            handleOption.queryRunner = queryRunner;
+            await this._createAuthByEmailCommandHandler.handle(auth, handleOption);
             return result;
         });
     }

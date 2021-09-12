@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Manager } from '@domain/entities/user/Manager';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
@@ -9,7 +10,6 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UpdateManagerCommandHandler } from './UpdateManagerCommandHandler';
 import { UpdateManagerCommandInput } from './UpdateManagerCommandInput';
 
@@ -50,7 +50,7 @@ describe('Manager usecases - Update manager', () => {
 
     it('Update manager with data not found error', async () => {
         sandbox.stub(managerRepository, 'getById').resolves(null);
-        const error = await updateManagerCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await updateManagerCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
@@ -61,7 +61,7 @@ describe('Manager usecases - Update manager', () => {
         sandbox.stub(managerRepository, 'getById').resolves(managerTest);
         sandbox.stub(managerRepository, 'update').resolves(true);
 
-        const result = await updateManagerCommandHandler.handle(v4(), param);
+        const result = await updateManagerCommandHandler.handle(randomUUID(), param);
         expect(result.data).to.eq(true);
     });
 });

@@ -13,7 +13,7 @@ export class Delete{PascalName}CommandHandler implements CommandHandler<string, 
     async handle(id: string): Promise<Delete{PascalName}CommandOutput> {
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{moduleNameTextLowerCase}');
 
         const hasSucceed = await this._{camelName}Repository.softDelete(id);
         const result = new Delete{PascalName}CommandOutput();

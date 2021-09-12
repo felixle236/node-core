@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
-import crypto from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
@@ -16,7 +16,6 @@ import { addMinutes } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { ResetPasswordByEmailCommandHandler } from './ResetPasswordByEmailCommandHandler';
 import { ResetPasswordByEmailCommandInput } from './ResetPasswordByEmailCommandInput';
 
@@ -41,14 +40,14 @@ describe('Authorization usecases - Reset password by email', () => {
     beforeEach(() => {
         const forgotKey = crypto.randomBytes(32).toString('hex');
         clientTest = new Client({
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Client,
             firstName: 'client',
             lastName: 'test',
             status: ClientStatus.Actived
         } as IClient);
         authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: clientTest.id,
             forgotKey,
             forgotExpire: addMinutes(new Date(), 10),

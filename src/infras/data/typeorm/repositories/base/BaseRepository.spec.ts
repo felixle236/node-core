@@ -1,4 +1,5 @@
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { BaseEntity } from '@domain/entities/base/BaseEntity';
 import { IEntity } from '@domain/interfaces/base/IEntity';
 import { DbFilter } from '@shared/database/DbFilter';
@@ -8,7 +9,6 @@ import { mockDeleteQueryBuilder, MockDeleteResult, mockInsertQueryBuilder, MockI
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import * as typeorm from 'typeorm';
-import { v4 } from 'uuid';
 import { BaseRepository } from './BaseRepository';
 import { BaseDbEntity } from '../../entities/base/BaseDBEntity';
 import { BASE_SCHEMA } from '../../schemas/base/BaseSchema';
@@ -149,7 +149,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves(data);
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(v4());
+            const result = await dataTestRepository.getById(randomUUID());
 
             expect(result).to.not.eq(null);
         });
@@ -160,7 +160,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves();
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(v4());
+            const result = await dataTestRepository.getById(randomUUID());
 
             expect(result).to.eq(null);
         });
@@ -173,7 +173,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves(data);
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(v4(), queryRunner);
+            const result = await dataTestRepository.getById(randomUUID(), queryRunner);
 
             expect(result).to.not.eq(null);
         });
@@ -185,7 +185,7 @@ describe('Base repository', () => {
         });
 
         it('Create data and return new id', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
             insertQueryBuilder.execute.resolves(new MockInsertResult(data.id));
@@ -197,7 +197,7 @@ describe('Base repository', () => {
         });
 
         it('Create data with transaction and return new id', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { queryRunner } = mockQueryRunner(sandbox);
             const { insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
@@ -216,7 +216,7 @@ describe('Base repository', () => {
         });
 
         it('Create and get data', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { selectQueryBuilder, insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
             insertQueryBuilder.execute.resolves(new MockInsertResult(data.id));
@@ -234,7 +234,7 @@ describe('Base repository', () => {
         });
 
         it('Create and get data with transaction', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { queryRunner } = mockQueryRunner(sandbox);
             const { selectQueryBuilder, insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
@@ -259,8 +259,8 @@ describe('Base repository', () => {
         });
 
         it('Create data multiple and return the list of new ids', async () => {
-            const item1 = new DataTest({ id: v4() } as IDataTest);
-            const item2 = new DataTest({ id: v4() } as IDataTest);
+            const item1 = new DataTest({ id: randomUUID() } as IDataTest);
+            const item2 = new DataTest({ id: randomUUID() } as IDataTest);
             const { insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
             insertQueryBuilder.execute.resolves(new MockInsertResult(item1.id, item2.id));
@@ -273,8 +273,8 @@ describe('Base repository', () => {
         });
 
         it('Create data multiple with transaction and return the list of new ids', async () => {
-            const item1 = new DataTest({ id: v4() } as IDataTest);
-            const item2 = new DataTest({ id: v4() } as IDataTest);
+            const item1 = new DataTest({ id: randomUUID() } as IDataTest);
+            const item2 = new DataTest({ id: randomUUID() } as IDataTest);
             const { queryRunner } = mockQueryRunner(sandbox);
             const { insertQueryBuilder } = mockInsertQueryBuilder<DataTestDb>(sandbox);
             insertQueryBuilder.values.returnsThis();
@@ -300,7 +300,7 @@ describe('Base repository', () => {
             updateQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.update(v4(), data);
+            const hasSucceed = await dataTestRepository.update(randomUUID(), data);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -313,7 +313,7 @@ describe('Base repository', () => {
             updateQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.update(v4(), data, queryRunner);
+            const hasSucceed = await dataTestRepository.update(randomUUID(), data, queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -325,7 +325,7 @@ describe('Base repository', () => {
         });
 
         it('Update and return data successful', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { selectQueryBuilder, updateQueryBuilder } = mockUpdateQueryBuilder<DataTestDb>(sandbox);
             updateQueryBuilder.whereInIds.returnsThis();
             updateQueryBuilder.execute.resolves(new MockUpdateResult(1));
@@ -343,7 +343,7 @@ describe('Base repository', () => {
         });
 
         it('Update failed and return no data', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { updateQueryBuilder } = mockUpdateQueryBuilder<DataTestDb>(sandbox);
             updateQueryBuilder.whereInIds.returnsThis();
             updateQueryBuilder.execute.resolves(new MockUpdateResult());
@@ -355,7 +355,7 @@ describe('Base repository', () => {
         });
 
         it('Update with transaction and return data', async () => {
-            const data = new DataTest({ id: v4() } as IDataTest);
+            const data = new DataTest({ id: randomUUID() } as IDataTest);
             const { queryRunner } = mockQueryRunner(sandbox);
             const { selectQueryBuilder, updateQueryBuilder } = mockUpdateQueryBuilder<DataTestDb>(sandbox);
             updateQueryBuilder.whereInIds.returnsThis();
@@ -385,7 +385,7 @@ describe('Base repository', () => {
             deleteQueryBuilder.execute.resolves(new MockDeleteResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.delete(v4());
+            const hasSucceed = await dataTestRepository.delete(randomUUID());
 
             expect(hasSucceed).to.eq(true);
         });
@@ -397,7 +397,7 @@ describe('Base repository', () => {
             deleteQueryBuilder.execute.resolves(new MockDeleteResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.delete(v4(), queryRunner);
+            const hasSucceed = await dataTestRepository.delete(randomUUID(), queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -414,7 +414,7 @@ describe('Base repository', () => {
             deleteQueryBuilder.execute.resolves(new MockDeleteResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.deleteMultiple([v4(), v4()]);
+            const hasSucceed = await dataTestRepository.deleteMultiple([randomUUID(), randomUUID()]);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -426,7 +426,7 @@ describe('Base repository', () => {
             deleteQueryBuilder.execute.resolves(new MockDeleteResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.deleteMultiple([v4(), v4()], queryRunner);
+            const hasSucceed = await dataTestRepository.deleteMultiple([randomUUID(), randomUUID()], queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -443,7 +443,7 @@ describe('Base repository', () => {
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.softDelete(v4());
+            const hasSucceed = await dataTestRepository.softDelete(randomUUID());
 
             expect(hasSucceed).to.eq(true);
         });
@@ -454,7 +454,7 @@ describe('Base repository', () => {
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult());
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.softDelete(v4());
+            const hasSucceed = await dataTestRepository.softDelete(randomUUID());
 
             expect(hasSucceed).to.eq(false);
         });
@@ -466,7 +466,7 @@ describe('Base repository', () => {
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.softDelete(v4(), queryRunner);
+            const hasSucceed = await dataTestRepository.softDelete(randomUUID(), queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -483,7 +483,7 @@ describe('Base repository', () => {
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.softDeleteMultiple([v4(), v4()]);
+            const hasSucceed = await dataTestRepository.softDeleteMultiple([randomUUID(), randomUUID()]);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -495,7 +495,7 @@ describe('Base repository', () => {
             softDeleteQueryBuilder.execute.resolves(new MockUpdateResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.softDeleteMultiple([v4(), v4()], queryRunner);
+            const hasSucceed = await dataTestRepository.softDeleteMultiple([randomUUID(), randomUUID()], queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -512,7 +512,7 @@ describe('Base repository', () => {
             restoreQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.restore(v4());
+            const hasSucceed = await dataTestRepository.restore(randomUUID());
 
             expect(hasSucceed).to.eq(true);
         });
@@ -523,7 +523,7 @@ describe('Base repository', () => {
             restoreQueryBuilder.execute.resolves(new MockUpdateResult());
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.restore(v4());
+            const hasSucceed = await dataTestRepository.restore(randomUUID());
 
             expect(hasSucceed).to.eq(false);
         });
@@ -535,7 +535,7 @@ describe('Base repository', () => {
             restoreQueryBuilder.execute.resolves(new MockUpdateResult(1));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.restore(v4(), queryRunner);
+            const hasSucceed = await dataTestRepository.restore(randomUUID(), queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -552,7 +552,7 @@ describe('Base repository', () => {
             restoreQueryBuilder.execute.resolves(new MockUpdateResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.restoreMultiple([v4(), v4()]);
+            const hasSucceed = await dataTestRepository.restoreMultiple([randomUUID(), randomUUID()]);
 
             expect(hasSucceed).to.eq(true);
         });
@@ -564,7 +564,7 @@ describe('Base repository', () => {
             restoreQueryBuilder.execute.resolves(new MockUpdateResult(2));
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const hasSucceed = await dataTestRepository.restoreMultiple([v4(), v4()], queryRunner);
+            const hasSucceed = await dataTestRepository.restoreMultiple([randomUUID(), randomUUID()], queryRunner);
 
             expect(hasSucceed).to.eq(true);
         });

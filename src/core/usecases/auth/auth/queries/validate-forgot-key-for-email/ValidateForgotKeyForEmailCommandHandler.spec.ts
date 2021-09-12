@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Client } from '@domain/entities/user/Client';
 import { Manager } from '@domain/entities/user/Manager';
@@ -19,7 +20,6 @@ import { addMinutes } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { ValidateForgotKeyForEmailCommandHandler } from './ValidateForgotKeyForEmailCommandHandler';
 import { ValidateForgotKeyForEmailCommandInput } from './ValidateForgotKeyForEmailCommandInput';
 
@@ -53,19 +53,19 @@ describe('Authorization usecases - Validate forgot key for email', () => {
 
     beforeEach(() => {
         clientTest = new Client({
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Client,
             email: 'client.test@localhost.com',
             status: ClientStatus.Actived
         } as IClient);
         managerTest = new Manager({
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Manager,
             email: 'manager.test@localhost.com',
             status: ManagerStatus.Actived
         } as IManager);
         authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: clientTest.id,
             username: clientTest.email,
             user: clientTest.toData() as IUser,
@@ -106,7 +106,7 @@ describe('Authorization usecases - Validate forgot key for email', () => {
     it('Validate forgot key for email with manager account is not exist or activated error', async () => {
         managerTest.status = ManagerStatus.Archived;
         const authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: managerTest.id,
             username: managerTest.email,
             user: managerTest.toData() as IUser,

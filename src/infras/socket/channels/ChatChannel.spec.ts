@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
@@ -14,7 +15,6 @@ import { createSandbox } from 'sinon';
 import { Server } from 'socket.io';
 import io, { Socket } from 'socket.io-client';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import ChatChannel from './ChatChannel';
 
 describe('Chat channel', () => {
@@ -67,8 +67,8 @@ describe('Chat channel', () => {
     it('Connect socket', done => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
-            roleId: v4(),
+            userId: randomUUID(),
+            roleId: randomUUID(),
             type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
@@ -87,11 +87,11 @@ describe('Chat channel', () => {
     });
 
     it('Connect socket and update user online status', done => {
-        const userId = v4();
+        const userId = randomUUID();
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: userId,
-            roleId: v4(),
+            roleId: randomUUID(),
             type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
@@ -116,8 +116,8 @@ describe('Chat channel', () => {
     it('Disconnect socket', done => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
-            roleId: v4(),
+            userId: randomUUID(),
+            roleId: randomUUID(),
             type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);

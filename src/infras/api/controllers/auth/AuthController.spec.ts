@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { mockAuthentication } from '@shared/test/MockAuthentication';
+import { mockAuthentication, mockJwtToken } from '@shared/test/MockAuthentication';
 import { mockWebApi } from '@shared/test/MockWebApi';
 import { ForgotPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
 import { ForgotPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandOutput';
@@ -24,7 +25,6 @@ import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 
 describe('Authorization controller', () => {
     const sandbox = createSandbox();
@@ -73,22 +73,22 @@ describe('Authorization controller', () => {
     it('Authenticate user by token', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
-            roleId: v4(),
+            userId: randomUUID(),
+            roleId: randomUUID(),
             type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint, undefined, options);
+        const { status, data } = await axios.post(endpoint + `?token=${mockJwtToken()}`, undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
     });
 
     it('Authenticate user by token invalid', async () => {
-        const op = JSON.parse(JSON.stringify(options));
-        op.headers.Authorization = 'Bearer';
+        const opt = JSON.parse(JSON.stringify(options));
+        opt.headers.Authorization = 'Bearer';
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').throwsException(new InputValidationError());
-        const { status, data } = await axios.post(endpoint, undefined, op).catch(error => error.response);
+        const { status, data } = await axios.post(endpoint, undefined, opt).catch(error => error.response);
 
         expect(status).to.eq(400);
         expect(data.code).to.eq(new InputValidationError().code);
@@ -158,7 +158,7 @@ describe('Authorization controller', () => {
     });
 
     it('Update my password', async () => {
-        mockAuthentication({ userId: v4(), roleId: v4() } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: randomUUID() } as any);
         const result = new UpdateMyPasswordByEmailCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyPasswordByEmailCommandHandler, 'handle').resolves(result);

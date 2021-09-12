@@ -1,8 +1,8 @@
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { mockQueryRunner, mockSelectQueryBuilder } from '@shared/test/MockTypeORM';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { v4 } from 'uuid';
 import { AuthRepository } from './AuthRepository';
 import { AuthDb } from '../../entities/auth/AuthDb';
 
@@ -21,7 +21,7 @@ describe('Authorization repository', () => {
             selectQueryBuilder.getMany.resolves(authDbs);
 
             const authRepository = new AuthRepository();
-            const list = await authRepository.getAllByUser(v4());
+            const list = await authRepository.getAllByUser(randomUUID());
 
             expect(list.length).to.eq(authDbs.length);
         });
@@ -32,7 +32,7 @@ describe('Authorization repository', () => {
             selectQueryBuilder.getMany.resolves([]);
 
             const authRepository = new AuthRepository();
-            const list = await authRepository.getAllByUser(v4());
+            const list = await authRepository.getAllByUser(randomUUID());
 
             expect(list.length).to.eq(0);
         });
@@ -45,7 +45,7 @@ describe('Authorization repository', () => {
             selectQueryBuilder.getMany.resolves(authDbs);
 
             const authRepository = new AuthRepository();
-            const list = await authRepository.getAllByUser(v4(), queryRunner);
+            const list = await authRepository.getAllByUser(randomUUID(), queryRunner);
 
             expect(list.length).to.eq(authDbs.length);
         });
@@ -64,7 +64,7 @@ describe('Authorization repository', () => {
             selectQueryBuilder.getOne.resolves(data);
 
             const authRepository = new AuthRepository();
-            const result = await authRepository.getByUsername(v4());
+            const result = await authRepository.getByUsername(randomUUID());
 
             expect(result).to.not.eq(null);
         });
@@ -76,7 +76,7 @@ describe('Authorization repository', () => {
             selectQueryBuilder.getOne.resolves();
 
             const authRepository = new AuthRepository();
-            const result = await authRepository.getByUsername(v4());
+            const result = await authRepository.getByUsername(randomUUID());
 
             expect(result).to.eq(null);
         });

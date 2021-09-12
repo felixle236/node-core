@@ -9,7 +9,7 @@ import { DbConnection } from './DbConnection';
 
 @Service('db.context')
 export class DbContext implements IDbContext {
-    getConnection(connectionName?: string): IDbConnection {
+    getConnection(connectionName = 'default'): IDbConnection {
         let connection: Connection | null = null;
         try {
             connection = getConnection(connectionName);
@@ -20,7 +20,7 @@ export class DbContext implements IDbContext {
         return new DbConnection(connection);
     }
 
-    async createConnection(connectionName?: string): Promise<IDbConnection> {
+    async createConnection(connectionName = 'default'): Promise<IDbConnection> {
         let connection: Connection | null = null;
         try {
             connection = getConnection(connectionName);
@@ -33,7 +33,7 @@ export class DbContext implements IDbContext {
         return new DbConnection(connection);
     }
 
-    async destroyConnection(connectionName?: string): Promise<void> {
+    async destroyConnection(connectionName = 'default'): Promise<void> {
         let connection: Connection | null = null;
         try {
             connection = getConnection(connectionName);

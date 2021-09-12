@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
@@ -9,7 +10,6 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { ArchiveClientCommandHandler } from './ArchiveClientCommandHandler';
 
 describe('Client usecases - Archive client', () => {
@@ -29,7 +29,7 @@ describe('Client usecases - Archive client', () => {
     });
 
     beforeEach(() => {
-        clientTest = new Client({ id: v4() } as IClient);
+        clientTest = new Client({ id: randomUUID() } as IClient);
     });
 
     afterEach(() => {

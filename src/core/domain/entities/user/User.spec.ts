@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import path from 'path';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { RoleId } from '@domain/enums/user/RoleId';
@@ -11,7 +12,6 @@ import * as fileLib from '@utils/file';
 import { expect } from 'chai';
 import mime from 'mime-types';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { User } from './User';
 
 describe('User entity', () => {
@@ -19,27 +19,29 @@ describe('User entity', () => {
         Container.set('storage.service', mockStorageService());
     });
 
-    it('Set role id with invalid value', () => {
+    it('Set role id with invalid value', done => {
         try {
             const user = new User();
             user.roleId = 'role id';
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role').message);
+            done();
         }
     });
 
-    it('Set role id with invalid value by id not in role id list', () => {
+    it('Set role id with invalid value by id not in role id list', done => {
         try {
             const user = new User();
-            user.roleId = v4();
+            user.roleId = randomUUID();
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role').message);
+            done();
         }
     });
 
-    it('Set first name with the length greater than 20', () => {
+    it('Set first name with the length greater than 20', done => {
         try {
             let str = '';
             [...Array(3)].forEach(() => {
@@ -48,12 +50,13 @@ describe('User entity', () => {
             const user = new User();
             user.firstName = str;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20).message);
+            done();
         }
     });
 
-    it('Set last name with the length greater than 20', () => {
+    it('Set last name with the length greater than 20', done => {
         try {
             let str = '';
             [...Array(3)].forEach(() => {
@@ -62,12 +65,13 @@ describe('User entity', () => {
             const user = new User();
             user.lastName = str;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20).message);
+            done();
         }
     });
 
-    it('Set avatar with the length greater than 200', () => {
+    it('Set avatar with the length greater than 200', done => {
         try {
             let str = '';
             [...Array(40)].forEach(() => {
@@ -76,42 +80,45 @@ describe('User entity', () => {
             const user = new User();
             user.avatar = str;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200).message);
+            done();
         }
     });
 
-    it('Set birthday with invalid value', () => {
+    it('Set birthday with invalid value', done => {
         try {
             const user = new User();
             user.birthday = 'birthday';
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
+            done();
         }
     });
 
-    it('Set birthday with invalid value by date greater than now', () => {
+    it('Set birthday with invalid value by date greater than now', done => {
         try {
             const date = addDays(new Date(), 1);
             const user = new User();
             user.birthday = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
+            done();
         }
     });
 
     it('Get data from entity', () => {
         const dataTest = {
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Client,
             firstName: 'user',
             lastName: 'test',
             avatar: 'avatar',
             gender: GenderType.Male,
             birthday: '1970-01-01',
-            auths: [{ id: v4() } as IAuth]
+            auths: [{ id: randomUUID() } as IAuth]
         } as IUser;
         const testEntity = new User(dataTest);
         const data = testEntity.toData();
@@ -126,10 +133,9 @@ describe('User entity', () => {
         expect(data.auths && data.auths[0].id).to.eq(testEntity.auths && testEntity.auths[0].id);
     });
 
-    it('Validate avatar file is failed by not support file format', async () => {
-        try {
-            const filePath = path.join(__dirname, '../../../../resources/images/test/workplace.tiff');
-            const buffer = await fileLib.readFile(filePath);
+    it('Validate avatar file is failed by not support file format', done => {
+        const filePath = path.join(__dirname, '../../../../resources/images/test/workplace.tiff');
+        fileLib.readFile(filePath).then(buffer => {
             const file = {
                 mimetype: mime.lookup('tiff'),
                 size: buffer.length,
@@ -137,17 +143,16 @@ describe('User entity', () => {
             } as Express.Multer.File;
 
             User.validateAvatarFile(file);
-        }
-        catch (error) {
+        }).catch(error => {
             const formats = ['jpeg', 'jpg', 'png', 'gif'];
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', ')).message);
-        }
+            done();
+        });
     });
 
-    it('Validate avatar file is failed by file size greater than 100KB', async () => {
-        try {
-            const filePath = path.join(__dirname, '../../../../resources/images/test/test-large-size.png');
-            const buffer = await fileLib.readFile(filePath);
+    it('Validate avatar file is failed by file size greater than 100KB', done => {
+        const filePath = path.join(__dirname, '../../../../resources/images/test/test-large-size.png');
+        fileLib.readFile(filePath).then(buffer => {
             const file = {
                 mimetype: mime.lookup('png'),
                 size: buffer.length,
@@ -155,10 +160,10 @@ describe('User entity', () => {
             } as Express.Multer.File;
 
             User.validateAvatarFile(file);
-        }
-        catch (error) {
+        }).catch(error => {
             const maxSize = 100 * 1024; // 100KB
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB').message);
-        }
+            done();
+        });
     });
 });

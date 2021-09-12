@@ -3,7 +3,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 
-describe('{PascalName} repository', () => {
+describe('{moduleNameText} repository', () => {
     const sandbox = createSandbox();
 
     afterEach(() => {

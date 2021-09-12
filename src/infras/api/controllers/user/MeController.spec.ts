@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import path from 'path';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
@@ -16,7 +17,6 @@ import FormData from 'form-data';
 import multer from 'multer';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 
 describe('Me controller', () => {
     const sandbox = createSandbox();
@@ -57,7 +57,7 @@ describe('Me controller', () => {
     });
 
     it('Upload my avatar', async () => {
-        mockAuthentication({ userId: v4(), roleId: v4() } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: randomUUID() } as any);
         const filePath = path.join(__dirname, '../../../../resources/images/test/workplace.jpg');
         const file = await readFile(filePath);
         const formData = new FormData();

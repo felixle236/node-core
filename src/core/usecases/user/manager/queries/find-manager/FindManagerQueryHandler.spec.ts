@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Manager } from '@domain/entities/user/Manager';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
@@ -10,7 +11,6 @@ import { mockStorageService } from '@shared/test/MockStorageService';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { FindManagerQueryHandler } from './FindManagerQueryHandler';
 import { FindManagerQueryInput } from './FindManagerQueryInput';
 
@@ -32,7 +32,7 @@ describe('Manager usecases - Find manager', () => {
 
     beforeEach(() => {
         const manager = new Manager({
-            id: v4(),
+            id: randomUUID(),
             createdAt: new Date(),
             firstName: 'Manager',
             lastName: 'Test',

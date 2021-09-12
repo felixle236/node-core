@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Client } from '@domain/entities/user/Client';
 import { Manager } from '@domain/entities/user/Manager';
@@ -22,7 +23,6 @@ import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { LoginByEmailQueryHandler } from './LoginByEmailQueryHandler';
 import { LoginByEmailQueryInput } from './LoginByEmailQueryInput';
 
@@ -59,19 +59,19 @@ describe('Authorization usecases - Login by email', () => {
 
     beforeEach(() => {
         clientTest = new Client({
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Client,
             firstName: 'client',
             lastName: 'test',
             status: ClientStatus.Actived
         } as IClient);
         managerTest = new Manager({
-            id: v4(),
+            id: randomUUID(),
             roleId: RoleId.Manager,
             status: ManagerStatus.Actived
         } as IManager);
         authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: clientTest.id,
             username: 'user.test@localhost.com',
             user: clientTest.toData() as IUser,
@@ -128,7 +128,7 @@ describe('Authorization usecases - Login by email', () => {
 
     it('Login by email with manager account is not exist error', async () => {
         authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: managerTest.id,
             username: 'user.test@localhost.com',
             user: managerTest.toData() as IUser
@@ -147,7 +147,7 @@ describe('Authorization usecases - Login by email', () => {
 
     it('Login by email with manager account has not been activated error', async () => {
         authTest = new Auth({
-            id: v4(),
+            id: randomUUID(),
             userId: managerTest.id,
             username: 'user.test@localhost.com',
             user: managerTest.toData() as IUser,

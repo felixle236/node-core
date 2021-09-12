@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Client } from '@domain/entities/user/Client';
 import { AuthType } from '@domain/enums/auth/AuthType';
@@ -8,10 +9,11 @@ import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
+import { mockQueryRunner } from '@shared/test/MockTypeORM';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { CreateAuthByEmailCommandHandler } from './CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from './CreateAuthByEmailCommandInput';
 
@@ -45,7 +47,7 @@ describe('Authorization usecases - Create authorization by email', () => {
         authTests = [auth];
 
         param = new CreateAuthByEmailCommandInput();
-        param.userId = v4();
+        param.userId = randomUUID();
         param.email = 'user.test@localhost.com';
         param.password = 'Nodecore@2';
     });
@@ -59,9 +61,12 @@ describe('Authorization usecases - Create authorization by email', () => {
     });
 
     it('Create authorization by email with user is not exist error', async () => {
+        const { queryRunner } = mockQueryRunner(sandbox);
         sandbox.stub(userRepository, 'getById').resolves(null);
 
-        const error: SystemError = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
+        const handleOption = new HandleOption();
+        handleOption.queryRunner = queryRunner;
+        const error: SystemError = await createAuthByEmailCommandHandler.handle(param, handleOption).catch(error => error);
         const err = new SystemError(MessageError.PARAM_NOT_EXISTS, 'user');
 
         expect(error.code).to.eq(err.code);
@@ -69,10 +74,13 @@ describe('Authorization usecases - Create authorization by email', () => {
     });
 
     it('Create authorization by email with data is already existed error', async () => {
+        const { queryRunner } = mockQueryRunner(sandbox);
         sandbox.stub(userRepository, 'getById').resolves(clientTest);
         sandbox.stub(authRepository, 'getAllByUser').resolves(authTests);
 
-        const error: SystemError = await createAuthByEmailCommandHandler.handle(param).catch(error => error);
+        const handleOption = new HandleOption();
+        handleOption.queryRunner = queryRunner;
+        const error: SystemError = await createAuthByEmailCommandHandler.handle(param, handleOption).catch(error => error);
         const err = new SystemError(MessageError.PARAM_EXISTED, 'data');
 
         expect(error.code).to.eq(err.code);
@@ -80,12 +88,15 @@ describe('Authorization usecases - Create authorization by email', () => {
     });
 
     it('Create authorization by email', async () => {
+        const { queryRunner } = mockQueryRunner(sandbox);
         sandbox.stub(userRepository, 'getById').resolves(clientTest);
         sandbox.stub(authRepository, 'getAllByUser').resolves([]);
-        const id = v4();
+        const id = randomUUID();
         sandbox.stub(authRepository, 'create').resolves(id);
 
-        const result = await createAuthByEmailCommandHandler.handle(param);
+        const handleOption = new HandleOption();
+        handleOption.queryRunner = queryRunner;
+        const result = await createAuthByEmailCommandHandler.handle(param, handleOption);
         expect(result.data).to.eq(id);
     });
 });

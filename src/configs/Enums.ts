@@ -7,7 +7,8 @@ export enum Environment {
 
 export enum LogProvider {
     Winston = 1,
-    GoogleWinston = 2
+    AwsWinston = 2,
+    GoogleWinston = 3
 }
 
 export enum StorageProvider {

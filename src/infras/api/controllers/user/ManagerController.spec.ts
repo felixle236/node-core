@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
@@ -27,7 +28,6 @@ import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 
 describe('Manager controller', () => {
     const sandbox = createSandbox();
@@ -87,10 +87,10 @@ describe('Manager controller', () => {
     });
 
     it('Find managers by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new FindManagerQueryOutput();
         result.setData([{
-            id: v4()
+            id: randomUUID()
         }] as any);
         sandbox.stub(findManagerQueryHandler, 'handle').resolves(result);
         const { status, data } = await axios.get(endpoint, options);
@@ -100,7 +100,7 @@ describe('Manager controller', () => {
     });
 
     it('Get manager with unauthorized error', async () => {
-        const id = v4();
+        const id = randomUUID();
         const { status, data } = await axios.get(endpoint + '/' + id).catch(error => error.response);
 
         expect(status).to.eq(401);
@@ -108,8 +108,8 @@ describe('Manager controller', () => {
     });
 
     it('Get manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
+        const id = randomUUID();
         const result = new GetManagerByIdQueryOutput();
         result.setData({
             id
@@ -129,8 +129,8 @@ describe('Manager controller', () => {
     });
 
     it('Get my profile by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
+        const id = randomUUID();
         const result = new GetMyProfileManagerQueryOutput();
         result.setData({
             id
@@ -143,8 +143,8 @@ describe('Manager controller', () => {
     });
 
     it('Get my profile by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
+        const id = randomUUID();
         const result = new GetMyProfileManagerQueryOutput();
         result.setData({
             id
@@ -169,8 +169,8 @@ describe('Manager controller', () => {
     });
 
     it('Create manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
+        const id = randomUUID();
         const result = new CreateManagerCommandOutput();
         result.setData(id);
         sandbox.stub(createManagerCommandHandler, 'handle').resolves(result);
@@ -187,7 +187,7 @@ describe('Manager controller', () => {
     });
 
     it('Update manager with unauthorized error', async () => {
-        const { status, data } = await axios.put(endpoint + '/' + v4(), {
+        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'manager',
             lastName: 'test'
         }).catch(error => error.response);
@@ -197,12 +197,12 @@ describe('Manager controller', () => {
     });
 
     it('Update manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateManagerCommandHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/' + v4(), {
+        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'manager',
             lastName: 'test'
         }, options);
@@ -222,7 +222,7 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateMyProfileManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
@@ -237,7 +237,7 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
         const result = new UpdateMyProfileManagerCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
@@ -252,36 +252,36 @@ describe('Manager controller', () => {
     });
 
     it('Delete manager with unauthorized error', async () => {
-        const { status, data } = await axios.delete(endpoint + '/' + v4()).catch(error => error.response);
+        const { status, data } = await axios.delete(endpoint + '/' + randomUUID()).catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
     it('Delete manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new DeleteManagerCommandOutput();
         result.setData(true);
         sandbox.stub(deleteManagerCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.delete(endpoint + '/' + v4(), options);
+        const { status, data } = await axios.delete(endpoint + '/' + randomUUID(), options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);
     });
 
     it('Archive manager with unauthorized error', async () => {
-        const { status, data } = await axios.post(endpoint + '/' + v4() + '/archive').catch(error => error.response);
+        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive').catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
     it('Archive manager by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new ArchiveManagerCommandOutput();
         result.setData(true);
         sandbox.stub(archiveManagerCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint + '/' + v4() + '/archive', undefined, options);
+        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

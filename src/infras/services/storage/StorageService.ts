@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, S3_ACCESS_KEY, S3_REGION, S3_SECRET_KEY, STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from '@configs/Configuration';
+import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from '@configs/Configuration';
 import { StorageProvider } from '@configs/Enums';
 import { IStorageService, IStorageUploadOption } from '@gateways/services/IStorageService';
 import { Service } from 'typedi';
@@ -20,7 +20,7 @@ export class StorageService implements IStorageService {
             break;
 
         case StorageProvider.AwsS3:
-            this._provider = new AwsS3Factory(S3_REGION, S3_ACCESS_KEY, S3_SECRET_KEY);
+            this._provider = new AwsS3Factory(AWS_REGION, AWS_ACCESS_KEY, AWS_SECRET_KEY);
             break;
 
         case StorageProvider.GoogleStorage:
@@ -46,7 +46,7 @@ export class StorageService implements IStorageService {
         return this._provider.mapUrl(STORAGE_BUCKET_NAME, urlPath);
     }
 
-    async upload(urlPath: string, stream: string | Readable | Buffer, options?: IStorageUploadOption): Promise<boolean> {
+    async upload(urlPath: string, stream: string | Readable | Buffer, options: IStorageUploadOption | null = null): Promise<boolean> {
         return await this._provider.upload(STORAGE_BUCKET_NAME, urlPath, stream as any, options as any);
     }
 

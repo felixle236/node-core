@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { IClient } from '@domain/interfaces/user/IClient';
@@ -11,7 +12,6 @@ import { mockStorageService } from '@shared/test/MockStorageService';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { GetMyProfileClientQueryHandler } from './GetMyProfileClientQueryHandler';
 
 describe('Client usecases - Get my profile client', () => {
@@ -32,7 +32,7 @@ describe('Client usecases - Get my profile client', () => {
 
     beforeEach(() => {
         clientTest = new Client({
-            id: v4(),
+            id: randomUUID(),
             firstName: 'Client',
             lastName: 'Test',
             email: 'client.test@localhost.com',

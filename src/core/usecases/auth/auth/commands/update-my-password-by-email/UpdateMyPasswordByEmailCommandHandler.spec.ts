@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
@@ -9,7 +10,6 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UpdateMyPasswordByEmailCommandHandler } from './UpdateMyPasswordByEmailCommandHandler';
 import { UpdateMyPasswordByEmailCommandInput } from './UpdateMyPasswordByEmailCommandInput';
 
@@ -52,7 +52,7 @@ describe('Authorization usecases - Update my password by email', () => {
     it('Update my password by email with user is not exist error', async () => {
         sandbox.stub(authRepository, 'getAllByUser').resolves([]);
 
-        const error: SystemError = await updateMyPasswordByEmailCommandHandler.handle(v4(), param).catch(error => error);
+        const error: SystemError = await updateMyPasswordByEmailCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.PARAM_INCORRECT, 'old password');
 
         expect(error.code).to.eq(err.code);
@@ -63,7 +63,7 @@ describe('Authorization usecases - Update my password by email', () => {
         sandbox.stub(authRepository, 'getAllByUser').resolves(authTests);
         sandbox.stub(authRepository, 'update').resolves(true);
 
-        const result = await updateMyPasswordByEmailCommandHandler.handle(v4(), param);
+        const result = await updateMyPasswordByEmailCommandHandler.handle(randomUUID(), param);
         expect(result.data).to.eq(true);
     });
 });

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 
-describe('{PascalName} usecases - Create {camelName}', () => {
+describe('{moduleNameText} usecases - Create {moduleNameTextLowerCase}', () => {
     const sandbox = createSandbox();
 
     afterEach(() => {

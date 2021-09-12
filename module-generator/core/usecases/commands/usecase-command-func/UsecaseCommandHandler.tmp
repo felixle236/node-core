@@ -3,6 +3,7 @@ import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{Pasca
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { {UsecaseName}CommandInput } from './{UsecaseName}CommandInput';
 import { {UsecaseName}CommandOutput } from './{UsecaseName}CommandOutput';
@@ -13,6 +14,8 @@ export class {UsecaseName}CommandHandler implements CommandHandler<{UsecaseName}
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async handle(param: {UsecaseName}CommandInput): Promise<{UsecaseName}CommandOutput> {
+        await validateDataInput(param);
+
         const data = new {PascalName}();
         data.name = param.name;
 

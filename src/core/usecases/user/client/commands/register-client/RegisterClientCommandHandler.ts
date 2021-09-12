@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
@@ -10,26 +10,26 @@ import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
 import { CheckEmailExistQueryHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { addSeconds } from '@utils/datetime';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
-import { v4 } from 'uuid';
 import { RegisterClientCommandInput } from './RegisterClientCommandInput';
 import { RegisterClientCommandOutput } from './RegisterClientCommandOutput';
 
 @Service()
 export class RegisterClientCommandHandler extends CommandHandler<RegisterClientCommandInput, RegisterClientCommandOutput> {
-    @Inject('db.context')
-    private readonly _dbContext: IDbContext;
-
     @Inject()
     private readonly _checkEmailExistQueryHandler: CheckEmailExistQueryHandler;
 
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
+
+    @Inject('db.context')
+    private readonly _dbContext: IDbContext;
 
     @Inject('client.repository')
     private readonly _clientRepository: IClientRepository;
@@ -43,7 +43,7 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
     async handle(param: RegisterClientCommandInput): Promise<RegisterClientCommandOutput> {
         await validateDataInput(param);
 
-        const data = new Client({ id: v4() } as IClient);
+        const data = new Client({ id: randomUUID() } as IClient);
         data.roleId = RoleId.Client;
         data.firstName = param.firstName;
         data.lastName = param.lastName;
@@ -69,7 +69,9 @@ export class RegisterClientCommandHandler extends CommandHandler<RegisterClientC
 
         return await this._dbContext.getConnection().runTransaction(async queryRunner => {
             await this._clientRepository.create(data, queryRunner);
-            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
+            const handleOption = new HandleOption();
+            handleOption.queryRunner = queryRunner;
+            await this._createAuthByEmailCommandHandler.handle(auth, handleOption);
 
             const name = `${data.firstName} ${data.lastName}`;
             await this._mailService.sendUserActivation(name, data.email, activeKey);

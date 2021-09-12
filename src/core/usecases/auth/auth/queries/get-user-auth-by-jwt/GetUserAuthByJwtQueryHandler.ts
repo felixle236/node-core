@@ -2,6 +2,7 @@ import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
 import { ILogService } from '@gateways/services/ILogService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { QueryHandler } from '@shared/usecase/QueryHandler';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
@@ -16,15 +17,15 @@ export class GetUserAuthByJwtQueryHandler extends QueryHandler<GetUserAuthByJwtQ
     @Inject('log.service')
     private readonly _logService: ILogService;
 
-    async handle(param: GetUserAuthByJwtQueryInput): Promise<GetUserAuthByJwtQueryOutput> {
+    async handle(param: GetUserAuthByJwtQueryInput, handleOption: HandleOption): Promise<GetUserAuthByJwtQueryOutput> {
         await validateDataInput(param);
 
         let payload;
         try {
             payload = this._authJwtService.verify(param.token);
         }
-        catch (error) {
-            this._logService.error(error);
+        catch (error: any) {
+            this._logService.error('Verify token', error, handleOption.trace);
             if (error.name === 'TokenExpiredError')
                 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
             else

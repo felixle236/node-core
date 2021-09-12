@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
@@ -33,7 +34,6 @@ import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 
 describe('Client controller', () => {
     const sandbox = createSandbox();
@@ -102,10 +102,10 @@ describe('Client controller', () => {
     });
 
     it('Find clients by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new FindClientQueryOutput();
         result.setData([{
-            id: v4()
+            id: randomUUID()
         }] as any);
         sandbox.stub(findClientQueryHandler, 'handle').resolves(result);
         const { status, data } = await axios.get(endpoint, options);
@@ -115,10 +115,10 @@ describe('Client controller', () => {
     });
 
     it('Find clients by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
         const result = new FindClientQueryOutput();
         result.setData([{
-            id: v4()
+            id: randomUUID()
         }] as any);
         sandbox.stub(findClientQueryHandler, 'handle').resolves(result);
         const { status, data } = await axios.get(endpoint, options);
@@ -128,7 +128,7 @@ describe('Client controller', () => {
     });
 
     it('Get client with unauthorized error', async () => {
-        const id = v4();
+        const id = randomUUID();
         const { status, data } = await axios.get(endpoint + '/' + id).catch(error => error.response);
 
         expect(status).to.eq(401);
@@ -136,8 +136,8 @@ describe('Client controller', () => {
     });
 
     it('Get client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
+        const id = randomUUID();
         const result = new GetClientByIdQueryOutput();
         result.setData({
             id
@@ -150,8 +150,8 @@ describe('Client controller', () => {
     });
 
     it('Get client by manager', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Manager } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
+        const id = randomUUID();
         const result = new GetClientByIdQueryOutput();
         result.setData({
             id
@@ -171,8 +171,8 @@ describe('Client controller', () => {
     });
 
     it('Get my profile by client', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Client } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Client } as any);
+        const id = randomUUID();
         const result = new GetMyProfileClientQueryOutput();
         result.setData({
             id
@@ -240,8 +240,8 @@ describe('Client controller', () => {
     });
 
     it('Create client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
-        const id = v4();
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
+        const id = randomUUID();
         const result = new CreateClientCommandOutput();
         result.setData(id);
         sandbox.stub(createClientCommandHandler, 'handle').resolves(result);
@@ -258,7 +258,7 @@ describe('Client controller', () => {
     });
 
     it('Update client with unauthorized error', async () => {
-        const { status, data } = await axios.put(endpoint + '/' + v4(), {
+        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'client',
             lastName: 'test'
         }).catch(error => error.response);
@@ -268,12 +268,12 @@ describe('Client controller', () => {
     });
 
     it('Update client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new UpdateClientCommandOutput();
         result.setData(true);
         sandbox.stub(updateClientCommandHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/' + v4(), {
+        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'client',
             lastName: 'test'
         }, options);
@@ -293,7 +293,7 @@ describe('Client controller', () => {
     });
 
     it('Update my client profile by client', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.Client } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Client } as any);
         const result = new UpdateMyProfileClientCommandOutput();
         result.setData(true);
         sandbox.stub(updateMyProfileClientCommandHandler, 'handle').resolves(result);
@@ -308,36 +308,36 @@ describe('Client controller', () => {
     });
 
     it('Delete client with unauthorized error', async () => {
-        const { status, data } = await axios.delete(endpoint + '/' + v4()).catch(error => error.response);
+        const { status, data } = await axios.delete(endpoint + '/' + randomUUID()).catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
     it('Delete client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new DeleteClientCommandOutput();
         result.setData(true);
         sandbox.stub(deleteClientCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.delete(endpoint + '/' + v4(), options);
+        const { status, data } = await axios.delete(endpoint + '/' + randomUUID(), options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);
     });
 
     it('Archive client with unauthorized error', async () => {
-        const { status, data } = await axios.post(endpoint + '/' + v4() + '/archive').catch(error => error.response);
+        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive').catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
     it('Archive client by super admin', async () => {
-        mockAuthentication({ userId: v4(), roleId: RoleId.SuperAdmin } as any);
+        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
         const result = new ArchiveClientCommandOutput();
         result.setData(true);
         sandbox.stub(archiveClientCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint + '/' + v4() + '/archive', undefined, options);
+        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

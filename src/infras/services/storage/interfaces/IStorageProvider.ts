@@ -18,7 +18,7 @@ export interface IStorageProvider {
     deleteBucketPolicy(bucketName: string): Promise<void>;
 
     getObjects(bucketName: string): Promise<IBucketItem[]>;
-    getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]>;
+    getObjects(bucketName: string, prefix: string): Promise<IBucketItem[]>;
 
     mapUrl(bucketName: string, urlPath: string): string;
 

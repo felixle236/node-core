@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
@@ -15,7 +16,6 @@ import { CheckEmailExistQueryOutput } from '@usecases/user/user/queries/check-em
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { CreateClientCommandHandler } from './CreateClientCommandHandler';
 import { CreateClientCommandInput } from './CreateClientCommandInput';
 
@@ -101,7 +101,7 @@ describe('Client usecases - Create client', () => {
         checkEmailResult.setData(false);
         sandbox.stub(checkEmailExistQueryHandler, 'handle').resolves(checkEmailResult);
         sandbox.stub(authRepository, 'getByUsername').resolves(null);
-        const id = v4();
+        const id = randomUUID();
         sandbox.stub(clientRepository, 'create').resolves(id);
 
         const result = await createClientCommandHandler.handle(param);

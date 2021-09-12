@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { GenderType } from '@domain/enums/user/GenderType';
 import { IClientRepository } from '@gateways/repositories/user/IClientRepository';
@@ -9,7 +10,6 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UpdateMyProfileClientCommandHandler } from './UpdateMyProfileClientCommandHandler';
 import { UpdateMyProfileClientCommandInput } from './UpdateMyProfileClientCommandInput';
 
@@ -53,7 +53,7 @@ describe('Client usecases - Update my profile client', () => {
 
     it('Update my profile client with data not found error', async () => {
         sandbox.stub(clientRepository, 'getById').resolves(null);
-        const error = await updateMyProfileClientCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await updateMyProfileClientCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
@@ -64,7 +64,7 @@ describe('Client usecases - Update my profile client', () => {
         sandbox.stub(clientRepository, 'getById').resolves(clientTest);
         sandbox.stub(clientRepository, 'update').resolves(true);
 
-        const result = await updateMyProfileClientCommandHandler.handle(v4(), param);
+        const result = await updateMyProfileClientCommandHandler.handle(randomUUID(), param);
         expect(result.data).to.eq(true);
     });
 });

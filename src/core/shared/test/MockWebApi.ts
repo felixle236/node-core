@@ -1,22 +1,33 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
+import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import path from 'path';
 import { ApiService } from '@infras/api/ApiService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
-import express from 'express';
+import { IRequest } from '@shared/IRequest';
+import express, { Request } from 'express';
 import { useContainer } from 'routing-controllers';
 import { Container } from 'typedi';
+import { mockLogService } from './MockLogService';
+
+export const mockHttpRequest = (req: Request): IRequest => {
+    const reqExt = req as IRequest;
+    reqExt.logService = mockLogService();
+    reqExt.getTraceHeader = () => req.headers['x-trace'] as string;
+
+    if (!req.headers['x-trace'])
+        req.headers['x-trace'] = randomUUID();
+
+    return reqExt;
+};
 
 export const mockWebApi = (controller: string | Function, port = 3000, callback?: () => void): Server => {
     useContainer(Container);
 
     const app = express();
     app.use((req: any, _res, next) => {
-        req.log = {};
-        req.log.log = () => {};
-        req.log.warn = () => {};
-        req.log.error = () => {};
+        mockHttpRequest(req);
         next();
     });
 

@@ -15,7 +15,7 @@ export class AuthRepository extends BaseRepository<string, Auth, AuthDb> impleme
         super(AuthDb, AUTH_SCHEMA);
     }
 
-    async getAllByUser(userId: string, queryRunner?: IDbQueryRunner): Promise<Auth[]> {
+    async getAllByUser(userId: string, queryRunner: IDbQueryRunner | null = null): Promise<Auth[]> {
         const results = await this.repository.createQueryBuilder(AUTH_SCHEMA.TABLE_NAME, queryRunner as QueryRunner)
             .where(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USER_ID} = :userId`, { userId })
             .getMany();

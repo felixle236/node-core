@@ -88,7 +88,7 @@ export class AwsS3Factory implements IStorageProvider {
         });
     }
 
-    getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
+    getObjects(bucketName: string, prefix = ''): Promise<IBucketItem[]> {
         return new Promise<IBucketItem[]>((resolve, reject) => {
             const items: IBucketItem[] = [];
             this._client.listObjectsV2({
@@ -115,7 +115,7 @@ export class AwsS3Factory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (typeof stream === 'string')
                 stream = fs.createReadStream(stream);

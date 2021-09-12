@@ -1,6 +1,6 @@
 # Node Core
 
-Node Core is a NodeJS framework built by cutting edge design and techniques like clean architecture, domain driven design (DDD), singleton pattern, table inheritance, and more..., it's easy to maintain and expand the system, including the transition from monolithic to microservices. Besides, to increase the performance and stability of the project, the framework is also supported by powerful tools such as Redis, Typescript, Eslint, Grunt, TypeORM,...
+Node Core is a NodeJS framework built by cutting edge designs and techniques like clean architecture, domain driven design (DDD), singleton pattern, table inheritance, and more..., it's easy to maintain and expand the system, including the transition from monolithic to microservices. Besides, to increase the performance and stability of the project, the framework is also supported by powerful tools such as Redis, Typescript, Eslint, Grunt, TypeORM,...
 Implementing advanced architectures like clean architecture and domain driven design will affect project development time, generator module is a great tool to overcome this problem, it even helps the team reduce development time more than conventional frameworks.
 
 ## Features
@@ -24,7 +24,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 ## Service Integrated
 
 * JSON Web Token (JWT).
-* Log Service: LoggingWinston (console log), Google Logging.
+* Log Service: LoggingWinston (console log), Aws Cloudwatch, Google Logging (support trace log feature).
 * Mail Service: MailConsole (console log), Google SMTP, MailGun, SendInBlue.
 * Notification Service: NotificationConsole (console log), NodePushNotification.
 * Payment Service: Paypal, Stripe.
@@ -89,7 +89,8 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |-- src --------------------------------------------// Source of development.
 - |------ configs
 - |------------ Configuration.ts ---------------------// Define environment variables from .env file.
-- |------------ Constants.ts -------------------------// Constants defination.
+- |------------ DbConfig.ts --------------------------// Database configuration.
+- |------------ Enums.ts -----------------------------// Enums defination.
 - |------ core
 - |------------ domain
 - |------------------ entities
@@ -296,11 +297,21 @@ npm test
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
    - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` or `@Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])` on controller functions.
-- `@Authorized()` is a decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object.
+- `@Authorized()` is a method decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object via parameter decorator `@CurrentUser()`. We can use paramter decorator `@HandleOptionRequest()` to get `UserAuthenticated` object also.
+> `@HandleOptionRequest()` decorator is built to assist in retrieving the user authenticated and trace id (trace log) from the API request.
+
+## Logging
+
+- `winston` is designed to be a simple and universal logging library with support for multiple transports.
+- `console` is logging default in log service and it will write to log file with `error` level.
+- Support API logging middleware to log the request detail as remote ip, http method, endpoint, response size, response status code, latency, headers,...
+- Support trace log feature also with `@HandleOptionRequest()` decorator, refer to endpoint `POST /v1/auths`.
+- We also switch to AWS CloudWatch or Google Logging by change the configuration of environment `LOG_PROVIDER` in `.env`.
+- Refer with values `WINSTON (1) - AWS_WINSTON (2) - GOOGLE_WINSTON (3)`.
 
 ## File Storage
 
-- Default we don't want to store the file in the same server that we use to serve this project.
+- `console` is configuration default in storage service, we don't refer to store the file in the same server that we use to serve this project.
 - We can use [Minio](https://github.com/felixle236/docker-minio) like AWS S3 to store the file go to cloud.
 - We also switch to AWS S3 by change the configuration of environment `STORAGE_PROVIDER` in `.env`.
 - Refer with values `CONSOLE (1) - MINIO (2) - AWS_S3 (3) - GOOGLE_STORAGE (4)`.
@@ -313,10 +324,10 @@ npm test
 
 ## Common Type
 
-- Define enum type into `src/configs/Constants.ts`. It can be a number or a string.
+- Define enum type into `src/configs/Enums.ts`. It can be a number or a string.
 - Why do we use the enum type?
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
-   > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.processing` vs `order.status = 2`.
+   > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.Processing` vs `order.status = 2`.
 
 - The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, 'order status');`
 
@@ -369,7 +380,7 @@ await this._dbContext.getConnection().runTransaction(async queryRunner => {
 
    const id = await this.userRepository.create(user, queryRunner);
    // Handle something here.
-   
+
 });
 
 await this._dbContext.getConnection().runTransaction(async queryRunner => {

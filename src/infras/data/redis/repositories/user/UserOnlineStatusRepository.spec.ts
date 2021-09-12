@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
+import { randomUUID } from 'crypto';
 import { IRedisContext } from '@shared/database/interfaces/IRedisContext';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UserOnlineStatusRepository } from './UserOnlineStatusRepository';
 
 describe('Authorization JWT service', () => {
@@ -35,7 +35,7 @@ describe('Authorization JWT service', () => {
 
     it('Get list online status by ids', async () => {
         const data = {
-            userId: v4(),
+            userId: randomUUID(),
             isOnline: true
         };
         const str = JSON.stringify(data, undefined, 2);
@@ -50,7 +50,7 @@ describe('Authorization JWT service', () => {
 
     it('Update user online status', async () => {
         const data = {
-            userId: v4(),
+            userId: randomUUID(),
             isOnline: true
         };
         sandbox.stub(redisContext.redisClient, 'hmsetAsync').resolves('OK');

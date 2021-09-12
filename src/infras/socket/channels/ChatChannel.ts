@@ -1,6 +1,7 @@
 import { RoleId } from '@domain/enums/user/RoleId';
 import { ISocket } from '@shared/socket/interfaces/ISocket';
 import { ChatNS } from '@shared/socket/namespaces/ChatNS';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
 import { GetUserAuthByJwtQueryInput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryInput';
@@ -26,11 +27,15 @@ export default class ChatChannel {
                 const token = (socket.handshake.auth as {token: string}).token;
                 const param = new GetUserAuthByJwtQueryInput();
                 param.token = token;
-                const { data } = await this._getUserAuthByJwtQueryHandler.handle(param);
+
+                const handleOption = new HandleOption();
+                handleOption.trace = socket.id;
+
+                const { data } = await this._getUserAuthByJwtQueryHandler.handle(param, handleOption);
                 socket.userAuth = new UserAuthenticated(data.userId, data.roleId, data.type);
                 next();
             }
-            catch (error) {
+            catch (error: any) {
                 next(error);
             }
         });

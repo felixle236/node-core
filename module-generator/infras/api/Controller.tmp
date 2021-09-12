@@ -27,35 +27,35 @@ export class {PascalName}Controller {
     ) {}
 
     @Get('/')
-    @OpenAPI({ summary: 'Find {camelName}s' })
+    @OpenAPI({ summary: 'Find {moduleNameTextLowerCase}' })
     @ResponseSchema(Find{PascalName}QueryOutput)
     async find(@QueryParams() param: Find{PascalName}QueryInput): Promise<Find{PascalName}QueryOutput> {
         return await this._find{PascalName}QueryHandler.handle(param);
     }
 
     @Get('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Get {camelName} by id' })
+    @OpenAPI({ summary: 'Get {moduleNameTextLowerCase} by id' })
     @ResponseSchema(Get{PascalName}ByIdQueryOutput)
     async getById(@Param('id') id: string): Promise<Get{PascalName}ByIdQueryOutput> {
         return await this._get{PascalName}ByIdQueryHandler.handle(id);
     }
 
     @Post('/')
-    @OpenAPI({ summary: 'Create {camelName}' })
+    @OpenAPI({ summary: 'Create {moduleNameTextLowerCase}' })
     @ResponseSchema(Create{PascalName}CommandOutput)
     async create(@Body() param: Create{PascalName}CommandInput): Promise<Create{PascalName}CommandOutput> {
         return await this._create{PascalName}CommandHandler.handle(param);
     }
 
     @Put('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Update {camelName}' })
+    @OpenAPI({ summary: 'Update {moduleNameTextLowerCase}' })
     @ResponseSchema(Update{PascalName}CommandOutput)
     async update(@Param('id') id: string, @Body() param: Update{PascalName}CommandInput): Promise<Update{PascalName}CommandOutput> {
         return await this._update{PascalName}CommandHandler.handle(id, param);
     }
 
     @Delete('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Delete {camelName}' })
+    @OpenAPI({ summary: 'Delete {moduleNameTextLowerCase}' })
     @ResponseSchema(Delete{PascalName}CommandOutput)
     async delete(@Param('id') id: string): Promise<Delete{PascalName}CommandOutput> {
         return await this._delete{PascalName}CommandHandler.handle(id);

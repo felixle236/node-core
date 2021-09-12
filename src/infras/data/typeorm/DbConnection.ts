@@ -21,12 +21,15 @@ export class DbConnection implements IDbConnection {
 
     async runTransaction<T>(
         runInTransaction: (queryRunner: IDbQueryRunner) => Promise<T>,
-        rollback?: (error: Error) => Promise<void>,
-        done?: () => Promise<void>,
-        isolationLevel?: TransactionIsolationLevel
+        rollback: ((error: Error) => Promise<void>) | null = null,
+        done: (() => Promise<void>) | null = null,
+        isolationLevel: TransactionIsolationLevel | null = null
     ): Promise<T> {
         const queryRunner = this._connection.createQueryRunner();
-        await queryRunner.startTransaction(isolationLevel);
+        if (isolationLevel)
+            await queryRunner.startTransaction(isolationLevel);
+        else
+            await queryRunner.startTransaction();
 
         return await runInTransaction(queryRunner).then(async result => {
             await queryRunner.commitTransaction();

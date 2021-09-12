@@ -1,6 +1,9 @@
+import { ILogService } from '@gateways/services/ILogService';
 import { Request } from 'express';
-import { Logger } from 'winston';
+import { UserAuthenticated } from './UserAuthenticated';
 
 export interface IRequest extends Request {
-    log: Logger;
+    userAuth: UserAuthenticated | null;
+    logService: ILogService;
+    getTraceHeader(): string;
 }

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UpdateUserOnlineStatusCommandHandler } from './UpdateUserOnlineStatusCommandHandler';
 import { UpdateUserOnlineStatusCommandInput } from './UpdateUserOnlineStatusCommandInput';
 
@@ -38,7 +38,7 @@ describe('User usecases - Update user online status', () => {
         param.isOnline = true;
         param.onlineAt = new Date();
 
-        const result = await updateUserOnlineStatusCommandHandler.handle(v4(), param);
+        const result = await updateUserOnlineStatusCommandHandler.handle(randomUUID(), param);
         expect(result.data).to.eq(true);
     });
 
@@ -49,7 +49,7 @@ describe('User usecases - Update user online status', () => {
         param.isOnline = false;
         param.onlineAt = new Date();
 
-        const result = await updateUserOnlineStatusCommandHandler.handle(v4(), param);
+        const result = await updateUserOnlineStatusCommandHandler.handle(randomUUID(), param);
         expect(result.data).to.eq(true);
     });
 });

@@ -4,7 +4,7 @@ import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
 
 export interface IAuthRepository extends IBaseRepository<string, Auth> {
     getAllByUser(userId: string): Promise<Auth[]>;
-    getAllByUser(userId: string, queryRunner?: IDbQueryRunner): Promise<Auth[]>;
+    getAllByUser(userId: string, queryRunner: IDbQueryRunner | null): Promise<Auth[]>;
 
     getByUsername(username: string): Promise<Auth | null>;
 }

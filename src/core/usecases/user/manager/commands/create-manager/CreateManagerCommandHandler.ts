@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Manager } from '@domain/entities/user/Manager';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { RoleId } from '@domain/enums/user/RoleId';
@@ -8,25 +9,25 @@ import { IDbContext } from '@shared/database/interfaces/IDbContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { CreateAuthByEmailCommandHandler } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandHandler';
 import { CreateAuthByEmailCommandInput } from '@usecases/auth/auth/commands/create-auth-by-email/CreateAuthByEmailCommandInput';
 import { CheckEmailExistQueryHandler } from '@usecases/user/user/queries/check-email-exist/CheckEmailExistQueryHandler';
 import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
-import { v4 } from 'uuid';
 import { CreateManagerCommandInput } from './CreateManagerCommandInput';
 import { CreateManagerCommandOutput } from './CreateManagerCommandOutput';
 
 @Service()
 export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCommandInput, CreateManagerCommandOutput> {
-    @Inject('db.context')
-    private readonly _dbContext: IDbContext;
-
     @Inject()
     private readonly _checkEmailExistQueryHandler: CheckEmailExistQueryHandler;
 
     @Inject()
     private readonly _createAuthByEmailCommandHandler: CreateAuthByEmailCommandHandler;
+
+    @Inject('db.context')
+    private readonly _dbContext: IDbContext;
 
     @Inject('manager.repository')
     private readonly _managerRepository: IManagerRepository;
@@ -37,7 +38,7 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
     async handle(param: CreateManagerCommandInput): Promise<CreateManagerCommandOutput> {
         await validateDataInput(param);
 
-        const data = new Manager({ id: v4() } as IManager);
+        const data = new Manager({ id: randomUUID() } as IManager);
         data.roleId = RoleId.Manager;
         data.status = ManagerStatus.Actived;
         data.firstName = param.firstName;
@@ -62,7 +63,9 @@ export class CreateManagerCommandHandler extends CommandHandler<CreateManagerCom
             const result = new CreateManagerCommandOutput();
             result.setData(id);
 
-            await this._createAuthByEmailCommandHandler.handle(auth, queryRunner);
+            const handleOption = new HandleOption();
+            handleOption.queryRunner = queryRunner;
+            await this._createAuthByEmailCommandHandler.handle(auth, handleOption);
             return result;
         });
     }

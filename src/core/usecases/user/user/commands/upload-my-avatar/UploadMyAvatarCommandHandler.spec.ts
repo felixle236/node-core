@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import path from 'path';
 import { User } from '@domain/entities/user/User';
 import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
@@ -13,7 +14,6 @@ import { expect } from 'chai';
 import mime from 'mime-types';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { UploadMyAvatarCommandHandler } from './UploadMyAvatarCommandHandler';
 import { UploadMyAvatarCommandInput } from './UploadMyAvatarCommandInput';
 
@@ -54,7 +54,7 @@ describe('User usecases - Upload my avatar', () => {
             buffer: Buffer.from('test')
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await uploadMyAvatarCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.PARAM_INVALID, 'avatar');
 
         expect(error.code).to.eq(err.code);
@@ -74,7 +74,7 @@ describe('User usecases - Upload my avatar', () => {
             buffer
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await uploadMyAvatarCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.DATA_NOT_FOUND);
 
         expect(error.code).to.eq(err.code);
@@ -96,7 +96,7 @@ describe('User usecases - Upload my avatar', () => {
             buffer
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarCommandHandler.handle(v4(), param).catch(error => error);
+        const error = await uploadMyAvatarCommandHandler.handle(randomUUID(), param).catch(error => error);
         const err = new SystemError(MessageError.PARAM_CANNOT_UPLOAD, 'avatar');
 
         expect(error.code).to.eq(err.code);
@@ -112,7 +112,7 @@ describe('User usecases - Upload my avatar', () => {
         const filePath = path.join(__dirname, '../../../../../../resources/images/test/workplace.jpg');
         const buffer = await fileLib.readFile(filePath);
 
-        const id = v4();
+        const id = randomUUID();
         const ext = mime.extension(mime.lookup('jpg') as string);
         const pathExpected = User.getAvatarPath(id, ext as string);
 

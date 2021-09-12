@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Manager } from '@domain/entities/user/Manager';
 import { IManager } from '@domain/interfaces/user/IManager';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
@@ -9,7 +10,6 @@ import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { DeleteManagerCommandHandler } from './DeleteManagerCommandHandler';
 
 describe('Manager usecases - Delete manager', () => {
@@ -29,7 +29,7 @@ describe('Manager usecases - Delete manager', () => {
     });
 
     beforeEach(() => {
-        managerTest = new Manager({ id: v4() } as IManager);
+        managerTest = new Manager({ id: randomUUID() } as IManager);
     });
 
     afterEach(() => {

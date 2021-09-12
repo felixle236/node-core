@@ -1,6 +1,6 @@
-import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
+import { IDataResponse } from './DataResponse';
+import { HandleOption } from './HandleOption';
 
-export abstract class QueryHandler<TIn, TOut> {
-    abstract handle(param: TIn): Promise<TOut>;
-    abstract handle(param: TIn, param2: IDbQueryRunner): Promise<TOut>;
+export abstract class QueryHandler<TIn, TOut extends IDataResponse> {
+    abstract handle(param: number | string | TIn, param2?: HandleOption): Promise<TOut>;
 }

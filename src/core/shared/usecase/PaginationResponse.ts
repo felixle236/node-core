@@ -1,5 +1,6 @@
 import { RefSchemaObject } from '@shared/decorators/RefSchema';
 import { IsInt, IsObject, Min } from 'class-validator';
+import { DataResponse } from './DataResponse';
 
 export class Pagination {
     @IsInt()
@@ -15,15 +16,10 @@ export class Pagination {
     total: number;
 }
 
-export abstract class PaginationResponse<T> {
+export abstract class PaginationResponse<T> extends DataResponse<T[]> {
     @IsObject()
     @RefSchemaObject(Pagination)
     pagination: Pagination;
-
-    abstract data: T[];
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    abstract setData(data: any): void;
 
     setPagination(total: number, skip: number, limit: number): void {
         this.pagination = new Pagination();

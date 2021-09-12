@@ -13,7 +13,7 @@ export class Get{PascalName}ByIdQueryHandler implements QueryHandler<string, Get
     async handle(id: string): Promise<Get{PascalName}ByIdQueryOutput> {
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{moduleNameTextLowerCase}');
 
         const result = new Get{PascalName}ByIdQueryOutput();
         result.setData({camelName});

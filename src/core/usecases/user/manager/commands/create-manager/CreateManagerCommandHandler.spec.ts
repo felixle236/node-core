@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { Auth } from '@domain/entities/auth/Auth';
 import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
@@ -14,7 +15,6 @@ import { CheckEmailExistQueryOutput } from '@usecases/user/user/queries/check-em
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { CreateManagerCommandHandler } from './CreateManagerCommandHandler';
 import { CreateManagerCommandInput } from './CreateManagerCommandInput';
 
@@ -95,7 +95,7 @@ describe('Manager usecases - Create manager', () => {
         checkEmailResult.setData(false);
         sandbox.stub(checkEmailExistQueryHandler, 'handle').resolves(checkEmailResult);
         sandbox.stub(authRepository, 'getByUsername').resolves(null);
-        const id = v4();
+        const id = randomUUID();
         sandbox.stub(managerRepository, 'create').resolves(id);
 
         const result = await createManagerCommandHandler.handle(param);

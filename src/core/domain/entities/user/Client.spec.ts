@@ -1,25 +1,25 @@
-import crypto from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { addSeconds } from '@utils/datetime';
 import { expect } from 'chai';
-import { v4 } from 'uuid';
 import { Client } from './Client';
 
 describe('Client entity', () => {
-    it('Set email with invalid value', () => {
+    it('Set email with invalid value', done => {
         try {
             const client = new Client();
             client.email = 'client.test@';
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
+            done();
         }
     });
 
-    it('Set phone with the length greater than 20', () => {
+    it('Set phone with the length greater than 20', done => {
         try {
             let str = '';
             [...Array(5)].forEach(() => {
@@ -28,12 +28,13 @@ describe('Client entity', () => {
             const client = new Client();
             client.phone = str;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'phone', 20).message);
+            done();
         }
     });
 
-    it('Set address with the length greater than 200', () => {
+    it('Set address with the length greater than 200', done => {
         try {
             let str = '';
             [...Array(30)].forEach(() => {
@@ -42,34 +43,37 @@ describe('Client entity', () => {
             const client = new Client();
             client.address = str;
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'address', 200).message);
+            done();
         }
     });
 
-    it('Set locale with invalid value', () => {
+    it('Set locale with invalid value', done => {
         try {
             const client = new Client();
             client.locale = 'ens';
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'locale').message);
+            done();
         }
     });
 
-    it('Set active key with the length not equal 64', () => {
+    it('Set active key with the length not equal 64', done => {
         try {
             const client = new Client();
             client.activeKey = 'active key';
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, 'active key', 64).message);
+            done();
         }
     });
 
     it('Get data from entity', () => {
         const dataTest = {
-            id: v4(),
+            id: randomUUID(),
             email: 'client.test@localhost.com',
             phone: '0123456789',
             address: '123 Abc',

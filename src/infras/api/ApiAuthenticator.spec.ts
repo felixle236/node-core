@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
+import { mockJwtToken } from '@shared/test/MockAuthentication';
+import { mockHttpRequest } from '@shared/test/MockWebApi';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
 import { GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
 import { expect } from 'chai';
-import jwt from 'jsonwebtoken';
 import { Action } from 'routing-controllers';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { ApiAuthenticator } from './ApiAuthenticator';
 
 describe('Api authenticator', () => {
@@ -26,17 +27,14 @@ describe('Api authenticator', () => {
     } as Action;
 
     before(() => {
+        mockHttpRequest(action.request);
         Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
 
         getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
     });
 
     beforeEach(() => {
-        action.request.headers.authorization = 'Bearer ' + jwt.sign({}, '123456', {
-            subject: v4(),
-            expiresIn: 24 * 60 * 60,
-            algorithm: 'HS256'
-        } as jwt.SignOptions);
+        action.request.headers.authorization = 'Bearer ' + mockJwtToken();
     });
 
     afterEach(() => {
@@ -59,7 +57,7 @@ describe('Api authenticator', () => {
     it('Authorize with access denied error', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
+            userId: randomUUID(),
             roleId: RoleId.Client,
             type: AuthType.PersonalEmail
         });
@@ -74,7 +72,7 @@ describe('Api authenticator', () => {
     it('Authorize success without checking role', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
+            userId: randomUUID(),
             roleId: RoleId.Client,
             type: AuthType.PersonalEmail
         });
@@ -87,7 +85,7 @@ describe('Api authenticator', () => {
     it('Authorize success with checking role', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
+            userId: randomUUID(),
             roleId: RoleId.Client,
             type: AuthType.PersonalEmail
         });
@@ -100,7 +98,7 @@ describe('Api authenticator', () => {
     it('Authorize success and get current user authorized', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
-            userId: v4(),
+            userId: randomUUID(),
             roleId: RoleId.Client,
             type: AuthType.PersonalEmail
         });
@@ -108,8 +106,8 @@ describe('Api authenticator', () => {
         await ApiAuthenticator.authorizationChecker(action, []);
         const currentUser = ApiAuthenticator.currentUserChecker(action);
 
-        expect(currentUser.type).to.eq(result.data.type);
-        expect(currentUser.userId).to.eq(result.data.userId);
-        expect(currentUser.roleId).to.eq(result.data.roleId);
+        expect(currentUser && currentUser.type).to.eq(result.data.type);
+        expect(currentUser && currentUser.userId).to.eq(result.data.userId);
+        expect(currentUser && currentUser.roleId).to.eq(result.data.roleId);
     });
 });

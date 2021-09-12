@@ -1,3 +1,5 @@
+import { HandleOptionRequest } from '@shared/decorators/HandleOptionRequest';
+import { HandleOption } from '@shared/usecase/HandleOption';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
 import { ForgotPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
 import { ForgotPasswordByEmailCommandInput } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandInput';
@@ -17,7 +19,7 @@ import { LoginByEmailQueryOutput } from '@usecases/auth/auth/queries/login-by-em
 import { ValidateForgotKeyForEmailCommandHandler } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandHandler';
 import { ValidateForgotKeyForEmailCommandInput } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandInput';
 import { ValidateForgotKeyForEmailCommandOutput } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandOutput';
-import { Authorized, Body, CurrentUser, HeaderParam, JsonController, Patch, Post, QueryParam } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, HeaderParam, JsonController, Patch, Post, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
@@ -39,15 +41,13 @@ export class AuthController {
         security: []
     })
     @ResponseSchema(GetUserAuthByJwtQueryOutput)
-    async authenticate(@HeaderParam('authorization') authorization: string, @QueryParam('token') token: string): Promise<GetUserAuthByJwtQueryOutput> {
-        let accessToken = token;
+    async authenticate(@QueryParams() param: GetUserAuthByJwtQueryInput, @HeaderParam('authorization') authorization: string, @HandleOptionRequest() handleOption: HandleOption): Promise<GetUserAuthByJwtQueryOutput> {
         if (authorization) {
             const parts = authorization.split(' ');
-            accessToken = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
+            const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';
+            param.token = token;
         }
-        const param = new GetUserAuthByJwtQueryInput();
-        param.token = accessToken;
-        return await this._getUserAuthByJwtQueryHandler.handle(param);
+        return await this._getUserAuthByJwtQueryHandler.handle(param, handleOption);
     }
 
     @Post('/login')

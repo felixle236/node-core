@@ -11,5 +11,5 @@ export interface IDbConnection {
     runTransaction<T>(runInTransaction: (queryRunner: IDbQueryRunner) => Promise<T>, rollback: (error: Error) => Promise<void>, done: () => Promise<void>, isolationLevel: TransactionIsolationLevel): Promise<T>;
 
     runMigrations(): Promise<IDbMigration[]>;
-    runMigrations(options: { transaction?: 'all' | 'none' | 'each' }): Promise<IDbMigration[]>;
+    runMigrations(options: { transaction: 'all' | 'none' | 'each' }): Promise<IDbMigration[]>;
 }

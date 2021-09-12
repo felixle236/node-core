@@ -48,7 +48,7 @@ describe('Utils - File', () => {
         expect(files.length).to.gt(0);
     });
 
-    it('Create directory with the path invalid', () => {
+    it('Create directory with the path invalid', done => {
         let path = '/tmp';
         [...Array(12)].forEach(() => {
             path += path;
@@ -57,8 +57,9 @@ describe('Utils - File', () => {
         try {
             createDirectory(path);
         }
-        catch (error) {
+        catch (error: any) {
             expect(error.message).to.eq('The path is invalid!');
+            done();
         }
     });
 

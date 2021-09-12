@@ -1,5 +1,3 @@
-import { ENVIRONMENT } from '@configs/Configuration';
-import { Environment } from '@configs/Enums';
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
 import { InputValidationError, InputValidationFieldError } from '@shared/exceptions/InputValidationError';
 import { InternalServerError } from '@shared/exceptions/InternalServerError';
@@ -20,42 +18,41 @@ interface IErrorExtend extends Error {
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
     error(err: IErrorExtend, req: IRequest, res: Response): void {
-        let errLogStack = err.stack;
-        if (errLogStack && ENVIRONMENT !== Environment.Local)
-            errLogStack = errLogStack.replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
+        const trace = req.getTraceHeader();
+        let error = { ...err, stackDetail: err.stack } as any;
 
-        if (err.httpCode === 400) {
-            if (err.errors) {
-                err = new InputValidationError(err.errors);
-                req.log.warn(err.fields);
+        if (error.httpCode === 400) {
+            if (error.errors) {
+                error = new InputValidationError(error.errors);
+                req.logService.warn('[input-validation]', error, trace);
             }
-            else if (!err.code) {
-                err = new SystemError(MessageError.OTHER, err.message);
-                req.log.warn(errLogStack);
+            else if (!error.code) {
+                req.logService.warn('[undefined]', error, trace);
+                error = new SystemError(MessageError.OTHER, error.message);
             }
             else
-                req.log.warn(err.message); // Logical error
+                req.logService.warn('[logical]', error, trace);
         }
-        else if (err.httpCode === 403) {
-            req.log.warn(err.message);
-            err = new AccessDeniedError();
+        else if (error.httpCode === 403) {
+            req.logService.warn('[access-denied]', error, trace);
+            error = new AccessDeniedError();
         }
-        else if (!err.code || !err.httpCode || err.httpCode >= 500) {
-            req.log.error(errLogStack);
-            err = new InternalServerError();
+        else if (!error.code || !error.httpCode || error.httpCode >= 500) {
+            req.logService.error('[internal-server]', error, trace);
+            error = new InternalServerError();
         }
         else
-            req.log.warn(err.message); // Unknown error
+            req.logService.warn('[unknown]', error, trace);
 
         const errRes = {
-            code: err.code,
-            message: err.message
+            code: error.code,
+            message: error.message
         } as IErrorExtend;
 
-        if (err.fields)
-            errRes.fields = err.fields;
+        if (error.fields)
+            errRes.fields = error.fields;
 
-        res.status(err.httpCode);
+        res.status(error.httpCode);
         res.send(errRes);
     }
 }

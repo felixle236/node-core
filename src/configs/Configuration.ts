@@ -29,6 +29,14 @@ export const WEB_PORT = Number(process.env.WEB_PORT);
 export const ENABLE_SOCKET_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_SOCKET_SERVICE);
 export const SOCKET_PORT = Number(process.env.SOCKET_PORT);
 
+// CLOUD CREDENTIALS
+
+export const AWS_REGION: string = process.env.AWS_REGION ?? '';
+export const AWS_ACCESS_KEY: string = process.env.AWS_ACCESS_KEY ?? '';
+export const AWS_SECRET_KEY: string = process.env.AWS_SECRET_KEY ?? '';
+
+export const GOOGLE_APPLICATION_CREDENTIALS: string = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? '';
+
 // DATABASE CONFIGURATION
 
 export const DB_TYPE: string = process.env.DB_TYPE ?? '';
@@ -60,11 +68,11 @@ export const AUTH_SECRET_OR_PUBLIC_KEY: string = process.env.AUTH_SECRET_KEY ?? 
 
 // LOG SERVICE
 
-export const LOG_PROVIDER: number = process.env.LOG_PROVIDER ? Number(process.env.LOG_PROVIDER) : LogProvider.Winston;
+export const LOG_PROVIDER: LogProvider = process.env.LOG_PROVIDER ? Number(process.env.LOG_PROVIDER) : LogProvider.Winston;
 
 // STORAGE SERVICE
 
-export const STORAGE_PROVIDER: number = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.Console;
+export const STORAGE_PROVIDER: StorageProvider = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.Console;
 export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
 export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? 'uploads';
 export const STORAGE_BUCKET_NAME: string = process.env.STORAGE_BUCKET_NAME ?? '';
@@ -76,17 +84,12 @@ export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MINIO_USE_SSL: boolean = convertStringToBoolean(process.env.MINIO_USE_SSL);
 
-export const S3_REGION: string = process.env.S3_REGION ?? '';
-export const S3_ACCESS_KEY: string = process.env.S3_ACCESS_KEY ?? '';
-export const S3_SECRET_KEY: string = process.env.S3_SECRET_KEY ?? '';
-
-export const GOOGLE_APPLICATION_CREDENTIALS: string = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? '';
 export const GOOGLE_STORAGE_LOCATION: string = process.env.GOOGLE_STORAGE_LOCATION ?? '';
 export const GOOGLE_STORAGE_CLASS: string = process.env.GOOGLE_STORAGE_CLASS ?? '';
 
 // MAIL SERVICE
 
-export const MAIL_PROVIDER: number = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.Console;
+export const MAIL_PROVIDER: MailProvider = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.Console;
 export const MAIL_SENDER_NAME: string = process.env.MAIL_SENDER_NAME ?? '';
 export const MAIL_SENDER_EMAIL: string = process.env.MAIL_SENDER_EMAIL ?? '';
 
@@ -100,7 +103,7 @@ export const SENDINBLUE_API_KEY: string = process.env.SENDINBLUE_API_KEY ?? '';
 
 // SMS SERVICE
 
-export const SMS_PROVIDER: number = process.env.SMS_PROVIDER ? Number(process.env.SMS_PROVIDER) : SmsProvider.Console;
+export const SMS_PROVIDER: SmsProvider = process.env.SMS_PROVIDER ? Number(process.env.SMS_PROVIDER) : SmsProvider.Console;
 export const SMS_SENDER_OR_PHONE: string = process.env.SMS_SENDER_OR_PHONE ?? '';
 
 export const TWILIO_ACCOUNT_SID: string = process.env.TWILIO_ACCOUNT_SID ?? '';
@@ -113,6 +116,6 @@ export const PAYPAL_KEY: string = process.env.PAYPAL_KEY ?? '';
 
 // NOTIFICATION SERVICE
 
-export const NOTIFICATION_PROVIDER: number = process.env.NOTIFICATION_PROVIDER ? Number(process.env.NOTIFICATION_PROVIDER) : NotificationProvider.Console;
+export const NOTIFICATION_PROVIDER: NotificationProvider = process.env.NOTIFICATION_PROVIDER ? Number(process.env.NOTIFICATION_PROVIDER) : NotificationProvider.Console;
 export const FCM_KEY: string = process.env.FCM_KEY ?? '';
 export const APN_KEY: string = process.env.APN_KEY ?? '';

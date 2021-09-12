@@ -3,6 +3,7 @@ import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{Pasca
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { CommandHandler } from '@shared/usecase/CommandHandler';
+import { validateDataInput } from '@utils/validator';
 import { Inject, Service } from 'typedi';
 import { Update{PascalName}CommandInput } from './Update{PascalName}CommandInput';
 import { Update{PascalName}CommandOutput } from './Update{PascalName}CommandOutput';
@@ -13,12 +14,14 @@ export class Update{PascalName}CommandHandler implements CommandHandler<Update{P
     private readonly _{camelName}Repository: I{PascalName}Repository;
 
     async handle(id: string, param: Update{PascalName}CommandInput): Promise<Update{PascalName}CommandOutput> {
+        await validateDataInput(param);
+
         const data = new {PascalName}();
         data.name = param.name;
 
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{moduleNameTextLowerCase}');
 
         const isExist = await this._{camelName}Repository.checkNameExist(data.name, id);
         if (isExist)

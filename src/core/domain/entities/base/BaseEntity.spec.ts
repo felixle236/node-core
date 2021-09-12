@@ -1,6 +1,6 @@
+import { randomUUID } from 'crypto';
 import { IEntity } from '@domain/interfaces/base/IEntity';
 import { expect } from 'chai';
-import { v4 } from 'uuid';
 import { BaseEntity } from './BaseEntity';
 
 interface ITestEntity extends IEntity<string> {
@@ -20,7 +20,7 @@ class TestEntity extends BaseEntity<string, ITestEntity> implements ITestEntity 
 describe('Base entity', () => {
     it('Get data from base entity', async () => {
         const dataTest = {
-            id: v4(),
+            id: randomUUID(),
             name: 'test',
             createdAt: new Date(),
             updatedAt: new Date(),

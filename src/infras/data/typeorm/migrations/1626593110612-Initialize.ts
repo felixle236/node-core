@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { STORAGE_BUCKET_NAME } from '@configs/Configuration';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Manager } from '@domain/entities/user/Manager';
@@ -13,7 +14,6 @@ import { IStorageService } from '@gateways/services/IStorageService';
 import { LogService } from '@services/log/LogService';
 import { StorageService } from '@services/storage/StorageService';
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { v4 } from 'uuid';
 import { AuthRepository } from '../repositories/auth/AuthRepository';
 import { ManagerRepository } from '../repositories/user/ManagerRepository';
 
@@ -29,7 +29,7 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
 
     // Create user "Super Admin"
 
-    const manager = new Manager({ id: v4() } as IManager);
+    const manager = new Manager({ id: randomUUID() } as IManager);
     manager.roleId = RoleId.SuperAdmin;
     manager.status = ManagerStatus.Actived;
     manager.firstName = 'Super';
@@ -96,10 +96,10 @@ export class Initialize1626593110612 implements MigrationInterface {
     name = 'Initialize1626593110612'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query('CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "role_id" uuid NOT NULL, "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "avatar" character varying(200), "gender" character varying(6), "birthday" date, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
+        await queryRunner.query('CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_randomUUID(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "role_id" uuid NOT NULL, "first_name" character varying(20) NOT NULL, "last_name" character varying(20), "avatar" character varying(200), "gender" character varying(6), "birthday" date, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE INDEX "IDX_a2cecd1a3531c0b041e29ba46e" ON "users" ("role_id") ');
         await queryRunner.query('CREATE TYPE "auth_type_enum" AS ENUM(\'personal_email\', \'personal_phone\')');
-        await queryRunner.query('CREATE TABLE "auth" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "user_id" uuid NOT NULL, "type" "auth_type_enum" NOT NULL, "username" character varying(120) NOT NULL, "password" character varying(32) NOT NULL, "forgot_key" character varying(64), "forgot_expire" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_7e416cf6172bc5aec04244f6459" PRIMARY KEY ("id"))');
+        await queryRunner.query('CREATE TABLE "auth" ("id" uuid NOT NULL DEFAULT uuid_generate_randomUUID(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "user_id" uuid NOT NULL, "type" "auth_type_enum" NOT NULL, "username" character varying(120) NOT NULL, "password" character varying(32) NOT NULL, "forgot_key" character varying(64), "forgot_expire" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_7e416cf6172bc5aec04244f6459" PRIMARY KEY ("id"))');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_968b36cde50de085eb4cbb9486" ON "auth" ("username") WHERE deleted_at IS NULL');
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_4f6bf4f0ab35e68dfe3bc087e3" ON "auth" ("user_id", "type") WHERE deleted_at IS NULL');
         await queryRunner.query('CREATE TYPE "client_gender_enum" AS ENUM(\'male\', \'female\')');

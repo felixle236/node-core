@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
-import crypto from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import { Client } from '@domain/entities/user/Client';
 import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
@@ -12,7 +12,6 @@ import { addSeconds } from '@utils/datetime';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { ActiveClientCommandHandler } from './ActiveClientCommandHandler';
 import { ActiveClientCommandInput } from './ActiveClientCommandInput';
 
@@ -33,7 +32,7 @@ describe('Client usecases - Active client', () => {
     });
 
     beforeEach(() => {
-        clientTest = new Client({ id: v4() } as IClient);
+        clientTest = new Client({ id: randomUUID() } as IClient);
     });
 
     afterEach(() => {

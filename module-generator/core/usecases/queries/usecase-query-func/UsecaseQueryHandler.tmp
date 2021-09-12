@@ -13,7 +13,7 @@ export class {UsecaseName}QueryHandler implements QueryHandler<string, {UsecaseN
     async handle(id: string): Promise<{UsecaseName}QueryOutput> {
         const {camelName} = await this._{camelName}Repository.getById(id);
         if (!{camelName})
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{camelName}');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, '{moduleNameTextLowerCase}');
 
         const result = new {UsecaseName}QueryOutput();
         result.setData({camelName});

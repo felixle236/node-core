@@ -52,7 +52,7 @@ export class MinioFactory implements IStorageProvider {
         return this._client.setBucketPolicy(bucketName, '');
     }
 
-    getObjects(bucketName: string, prefix?: string): Promise<IBucketItem[]> {
+    getObjects(bucketName: string, prefix = ''): Promise<IBucketItem[]> {
         return new Promise((resolve, reject) => {
             const items: IBucketItem[] = [];
             const bucketStream = this._client.listObjectsV2(bucketName, prefix);
@@ -79,7 +79,7 @@ export class MinioFactory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<boolean> {
         const metaData = {} as minio.ItemBucketMetadata;
         if (options) {
             if (options.mimetype)

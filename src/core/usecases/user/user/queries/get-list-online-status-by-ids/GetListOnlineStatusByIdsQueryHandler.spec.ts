@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
+import { randomUUID } from 'crypto';
 import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { v4 } from 'uuid';
 import { GetListOnlineStatusByIdsQueryHandler } from './GetListOnlineStatusByIdsQueryHandler';
 import { GetListOnlineStatusByIdsQueryInput } from './GetListOnlineStatusByIdsQueryInput';
 
@@ -46,18 +46,18 @@ describe('User usecases - Get list online status by ids', () => {
 
     it('Get list online status by ids', async () => {
         const list: {id: string, isOnline: boolean, onlineAt: Date | null}[] = [{
-            id: v4(),
+            id: randomUUID(),
             isOnline: true,
             onlineAt: new Date()
         }, {
-            id: v4(),
+            id: randomUUID(),
             isOnline: false,
             onlineAt: new Date()
         }];
         sandbox.stub(userOnlineStatusRepository, 'getListOnlineStatusByIds').resolves(list.map(item => JSON.stringify(item)));
 
         const param = new GetListOnlineStatusByIdsQueryInput();
-        param.ids = [v4(), v4()];
+        param.ids = [randomUUID(), randomUUID()];
 
         const result = await getListOnlineStatusByIdsQueryHandler.handle(param);
         expect(result.data[0].id).to.eq(param.ids[0]);

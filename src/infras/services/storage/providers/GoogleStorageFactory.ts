@@ -62,7 +62,7 @@ export class GoogleStorageFactory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    async upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<any> {
+    async upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<any> {
         const file = this._storage.bucket(bucketName).file(objectName);
         const param = {} as SaveOptions;
         if (options) {
