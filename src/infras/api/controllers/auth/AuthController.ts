@@ -19,7 +19,7 @@ import { LoginByEmailQueryOutput } from '@usecases/auth/auth/queries/login-by-em
 import { ValidateForgotKeyForEmailCommandHandler } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandHandler';
 import { ValidateForgotKeyForEmailCommandInput } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandInput';
 import { ValidateForgotKeyForEmailCommandOutput } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandOutput';
-import { Authorized, Body, CurrentUser, HeaderParam, JsonController, Patch, Post, QueryParams } from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, HeaderParam, JsonController, Patch, Post, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
@@ -35,13 +35,13 @@ export class AuthController {
         private readonly _updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler
     ) {}
 
-    @Post('/')
+    @Get('/')
     @OpenAPI({
-        summary: 'Verify access token by header param or query param',
+        summary: 'Get user authenticated by access token into header param or query param',
         security: []
     })
     @ResponseSchema(GetUserAuthByJwtQueryOutput)
-    async authenticate(@QueryParams() param: GetUserAuthByJwtQueryInput, @HeaderParam('authorization') authorization: string, @HandleOptionRequest() handleOption: HandleOption): Promise<GetUserAuthByJwtQueryOutput> {
+    async getUserAuth(@QueryParams() param: GetUserAuthByJwtQueryInput, @HeaderParam('authorization') authorization: string, @HandleOptionRequest() handleOption: HandleOption): Promise<GetUserAuthByJwtQueryOutput> {
         if (authorization) {
             const parts = authorization.split(' ');
             const token = parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : '';

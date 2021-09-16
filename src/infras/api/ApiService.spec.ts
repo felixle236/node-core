@@ -7,6 +7,7 @@ import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { InternalServerError } from '@shared/exceptions/InternalServerError';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
+import { TraceRequest } from '@shared/request/TraceRequest';
 import { mockLogService } from '@shared/test/MockLogService';
 import axios from 'axios';
 import { expect } from 'chai';
@@ -89,6 +90,15 @@ describe('Api service', () => {
 
         expect(status).to.eq(200);
         expect(data).to.eq('ok');
+    });
+
+    it('Send trace id header to outsite', async () => {
+        const headers = {};
+        const trace = new TraceRequest();
+        trace.setToHttpHeader(headers);
+        const { status } = await axios.get(endpoint + '/api/test', headers);
+
+        expect(status).to.eq(200);
     });
 
     it('Test api', async () => {

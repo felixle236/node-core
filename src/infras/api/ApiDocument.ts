@@ -1,4 +1,4 @@
-import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
+import { API_PORT, DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
 import { COMPONENT_SCHEMA_PATH } from '@shared/decorators/RefSchema';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { OpenAPIObject } from 'openapi3-ts';
@@ -24,7 +24,7 @@ export class ApiDocument {
                 }
             },
             servers: [{
-                url: 'http://localhost:3000',
+                url: `http://localhost:${API_PORT}`,
                 description: 'Localhost'
             }, {
                 url: 'https://dev.domain',

@@ -4,6 +4,8 @@ import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { Server } from 'http';
+import { API_PRIVATE_KEY } from '@configs/Configuration';
+import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
 import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockAuthentication } from '@shared/test/MockAuthentication';
@@ -89,5 +91,21 @@ describe('User controller', () => {
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
+    });
+
+    it('Test API private with access denied error', async () => {
+        const options = { headers: { 'x-private-key': '123' } };
+        const { status, data } = await axios.get(endpoint + '/api-private', options).catch(error => error.response);
+
+        expect(status).to.eq(403);
+        expect(data.code).to.eq(new AccessDeniedError().code);
+    });
+
+    it('Test API private successful', async () => {
+        const options = { headers: { 'x-private-key': API_PRIVATE_KEY } };
+        const { status, data } = await axios.get(endpoint + '/api-private', options);
+
+        expect(status).to.eq(200);
+        expect(data.data).to.eq(true);
     });
 });

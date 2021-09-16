@@ -10,6 +10,9 @@ export class {PascalName} extends BaseEntity<string, I{PascalName}> implements I
 
     set name(val: string) {
         val = val.trim();
+        if (!val)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'name');
+
         if (val.length > 50)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 50);
 

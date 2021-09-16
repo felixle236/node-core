@@ -1,5 +1,8 @@
+import '@services/log/LogService';
+import '@services/storage/StorageService';
 import { randomUUID } from 'crypto';
-import { STORAGE_BUCKET_NAME } from '@configs/Configuration';
+import { STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from '@configs/Configuration';
+import { StorageProvider } from '@configs/Enums';
 import { Auth } from '@domain/entities/auth/Auth';
 import { Manager } from '@domain/entities/user/Manager';
 import { AuthType } from '@domain/enums/auth/AuthType';
@@ -11,13 +14,13 @@ import { IAuthRepository } from '@gateways/repositories/auth/IAuthRepository';
 import { IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
 import { ILogService } from '@gateways/services/ILogService';
 import { IStorageService } from '@gateways/services/IStorageService';
-import { LogService } from '@services/log/LogService';
-import { StorageService } from '@services/storage/StorageService';
+import Container from 'typedi';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { AuthRepository } from '../repositories/auth/AuthRepository';
 import { ManagerRepository } from '../repositories/user/ManagerRepository';
 
-const logService: ILogService = new LogService();
+const logService: ILogService = Container.get('log.service');
+const storageService: IStorageService = Container.get('storage.service');
 
 /**
  * Initialize data for Role, User.
@@ -53,7 +56,6 @@ async function initData(queryRunner: QueryRunner): Promise<void> {
  * Initialize bucket.
  */
 async function initBucket(): Promise<void> {
-    const storageService: IStorageService = new StorageService();
     /* eslint-disable */
     const policy = {
         Version: '2012-10-17',
@@ -114,7 +116,8 @@ export class Initialize1626593110612 implements MigrationInterface {
         await queryRunner.query('CREATE UNIQUE INDEX "IDX_c94753b4da020c90870ab40b7a" ON "manager" ("email") WHERE deleted_at IS NULL');
 
         await initData(queryRunner);
-        await initBucket();
+        if ([StorageProvider.MinIO, StorageProvider.AwsS3].includes(STORAGE_PROVIDER))
+            await initBucket();
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

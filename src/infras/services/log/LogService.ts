@@ -1,9 +1,9 @@
-import { randomUUID } from 'crypto';
 import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, LOG_PROVIDER, PROJECT_ID } from '@configs/Configuration';
 import { LogProvider } from '@configs/Enums';
 import { ILogService } from '@gateways/services/ILogService';
 import { LoggingWinston } from '@google-cloud/logging-winston';
-import { IRequest } from '@shared/IRequest';
+import { IRequest } from '@shared/request/IRequest';
+import { TraceRequest } from '@shared/request/TraceRequest';
 import { isLiteralObject } from '@utils/validator';
 import { Handler, NextFunction, Request, Response } from 'express';
 import expressWinston from 'express-winston';
@@ -93,7 +93,7 @@ export class LogService implements ILogService {
         let metadata: any;
         if (meta) {
             if (isLiteralObject(meta))
-                metadata = meta;
+                metadata = JSON.parse(JSON.stringify(meta, Object.getOwnPropertyNames(meta)));
             else
                 metadata = { content: meta };
         }
@@ -136,7 +136,7 @@ export class LogService implements ILogService {
                     if (req) {
                         const reqExt = req as IRequest;
                         if (!meta[LoggingWinston.LOGGING_TRACE_KEY])
-                            meta[LoggingWinston.LOGGING_TRACE_KEY] = reqExt.getTraceHeader();
+                            meta[LoggingWinston.LOGGING_TRACE_KEY] = reqExt.trace.id;
 
                         meta.httpRequest = httpRequest;
                         httpRequest.requestMethod = req.method;
@@ -203,10 +203,8 @@ export class LogService implements ILogService {
         return (req: Request, res: Response, next: NextFunction) => {
             const reqExt = req as IRequest;
             reqExt.logService = this;
-            reqExt.getTraceHeader = () => req.headers['x-trace'] as string;
-
-            if (!req.headers['x-trace'])
-                req.headers['x-trace'] = randomUUID();
+            reqExt.trace = new TraceRequest();
+            reqExt.trace.getFromHttpHeader(req.headers);
 
             handler(req, res, next);
         };

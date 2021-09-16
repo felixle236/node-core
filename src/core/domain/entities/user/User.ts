@@ -27,6 +27,9 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
 
     set firstName(val: string) {
         val = val.trim();
+        if (!val)
+            throw new SystemError(MessageError.PARAM_REQUIRED, 'first name');
+
         if (val.length > 20)
             throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20);
 

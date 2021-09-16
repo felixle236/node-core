@@ -25,7 +25,7 @@ export class GetUserAuthByJwtQueryHandler extends QueryHandler<GetUserAuthByJwtQ
             payload = this._authJwtService.verify(param.token);
         }
         catch (error: any) {
-            this._logService.error('Verify token', error, handleOption.trace);
+            this._logService.error('Verify token', error, handleOption.trace.id);
             if (error.name === 'TokenExpiredError')
                 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
             else

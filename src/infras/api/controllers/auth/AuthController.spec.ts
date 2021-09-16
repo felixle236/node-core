@@ -70,7 +70,7 @@ describe('Authorization controller', () => {
         server.close(done);
     });
 
-    it('Authenticate user by token', async () => {
+    it('Get user authenticated by token', async () => {
         const result = new GetUserAuthByJwtQueryOutput();
         result.setData({
             userId: randomUUID(),
@@ -78,17 +78,17 @@ describe('Authorization controller', () => {
             type: AuthType.PersonalEmail
         });
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint + `?token=${mockJwtToken()}`, undefined, options);
+        const { status, data } = await axios.get(endpoint + `?token=${mockJwtToken()}`, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
     });
 
-    it('Authenticate user by token invalid', async () => {
+    it('Get user authenticated by token invalid', async () => {
         const opt = JSON.parse(JSON.stringify(options));
         opt.headers.Authorization = 'Bearer';
         sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').throwsException(new InputValidationError());
-        const { status, data } = await axios.post(endpoint, undefined, opt).catch(error => error.response);
+        const { status, data } = await axios.get(endpoint, opt).catch(error => error.response);
 
         expect(status).to.eq(400);
         expect(data.code).to.eq(new InputValidationError().code);

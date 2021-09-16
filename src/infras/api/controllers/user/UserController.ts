@@ -1,7 +1,8 @@
+import { PrivateAccessMiddleware } from '@infras/api/middlewares/PrivateAccessMiddleware';
 import { GetListOnlineStatusByIdsQueryHandler } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
 import { GetListOnlineStatusByIdsQueryInput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryInput';
 import { GetListOnlineStatusByIdsQueryOutput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryOutput';
-import { Authorized, Get, JsonController, QueryParams } from 'routing-controllers';
+import { Authorized, Get, JsonController, QueryParams, UseBefore } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
 
@@ -17,5 +18,11 @@ export class UserController {
     @ResponseSchema(GetListOnlineStatusByIdsQueryOutput)
     async getListOnlineStatusByIds(@QueryParams() param: GetListOnlineStatusByIdsQueryInput): Promise<GetListOnlineStatusByIdsQueryOutput> {
         return await this._getListOnlineStatusByIdsQueryHandler.handle(param);
+    }
+
+    @Get('/api-private')
+    @UseBefore(PrivateAccessMiddleware)
+    async testApiPrivate(): Promise<{data: boolean}> {
+        return { data: true };
     }
 }

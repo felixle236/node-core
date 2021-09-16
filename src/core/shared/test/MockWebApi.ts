@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
-import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import path from 'path';
 import { ApiService } from '@infras/api/ApiService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
-import { IRequest } from '@shared/IRequest';
+import { IRequest } from '@shared/request/IRequest';
+import { TraceRequest } from '@shared/request/TraceRequest';
 import express, { Request } from 'express';
 import { useContainer } from 'routing-controllers';
 import { Container } from 'typedi';
@@ -14,10 +14,8 @@ import { mockLogService } from './MockLogService';
 export const mockHttpRequest = (req: Request): IRequest => {
     const reqExt = req as IRequest;
     reqExt.logService = mockLogService();
-    reqExt.getTraceHeader = () => req.headers['x-trace'] as string;
-
-    if (!req.headers['x-trace'])
-        req.headers['x-trace'] = randomUUID();
+    reqExt.trace = new TraceRequest();
+    reqExt.trace.getFromHttpHeader(req.headers);
 
     return reqExt;
 };

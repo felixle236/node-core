@@ -1,4 +1,4 @@
-import { IRequest } from '@shared/IRequest';
+import { IRequest } from '@shared/request/IRequest';
 import { HandleOption } from '@shared/usecase/HandleOption';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
 import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
@@ -15,7 +15,7 @@ export class WebAuthenticator {
         param.token = token;
 
         const handleOption = new HandleOption();
-        handleOption.trace = reqExt.getTraceHeader();
+        handleOption.trace = reqExt.trace;
 
         const { data } = await getUserAuthByJwtQueryHandler.handle(param, handleOption).catch(() => ({ data: null }));
         if (data && (!roleIds || !roleIds.length || roleIds.some(roleId => roleId === data.roleId)))

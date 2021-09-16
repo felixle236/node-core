@@ -1,4 +1,5 @@
 import { RoleId } from '@domain/enums/user/RoleId';
+import { TraceRequest } from '@shared/request/TraceRequest';
 import { ISocket } from '@shared/socket/interfaces/ISocket';
 import { ChatNS } from '@shared/socket/namespaces/ChatNS';
 import { HandleOption } from '@shared/usecase/HandleOption';
@@ -29,7 +30,8 @@ export default class ChatChannel {
                 param.token = token;
 
                 const handleOption = new HandleOption();
-                handleOption.trace = socket.id;
+                handleOption.trace = new TraceRequest();
+                handleOption.trace.getFromSocket(socket);
 
                 const { data } = await this._getUserAuthByJwtQueryHandler.handle(param, handleOption);
                 socket.userAuth = new UserAuthenticated(data.userId, data.roleId, data.type);

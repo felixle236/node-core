@@ -1,4 +1,4 @@
-import './authorization/AuthJwtService';
+import './authentication/AuthJwtService';
 import './log/LogService';
 import './mail/MailService';
 import './notification/NotificationService';

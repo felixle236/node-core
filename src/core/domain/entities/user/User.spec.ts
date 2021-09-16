@@ -41,6 +41,17 @@ describe('User entity', () => {
         }
     });
 
+    it('Set first name with require error', done => {
+        try {
+            const user = new User();
+            user.firstName = '';
+        }
+        catch (error: any) {
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'first name').message);
+            done();
+        }
+    });
+
     it('Set first name with the length greater than 20', done => {
         try {
             let str = '';

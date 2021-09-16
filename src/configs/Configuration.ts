@@ -18,6 +18,7 @@ export const DOMAIN: string = process.env.DOMAIN ?? '';
 
 export const ENABLE_API_SERVICE: boolean = convertStringToBoolean(process.env.ENABLE_API_SERVICE);
 export const API_PORT = Number(process.env.API_PORT);
+export const API_PRIVATE_KEY: string = process.env.API_PRIVATE_KEY ?? '';
 
 // WEB SERVICE
 
