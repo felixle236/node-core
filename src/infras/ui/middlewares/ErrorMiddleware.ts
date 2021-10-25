@@ -1,4 +1,5 @@
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
+import { BaseError } from '@shared/exceptions/BaseError';
 import { InputValidationError, InputValidationFieldError } from '@shared/exceptions/InputValidationError';
 import { InternalServerError } from '@shared/exceptions/InternalServerError';
 import { MessageError } from '@shared/exceptions/message/MessageError';
@@ -8,7 +9,7 @@ import { ValidationError } from 'class-validator';
 import { Response } from 'express';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 
-interface IErrorExtend extends Error {
+interface IErrorExtend extends BaseError {
     httpCode: number;
     code: string;
     fields?: InputValidationFieldError[];
@@ -26,22 +27,24 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
                 req.logService.warn('[input-validation]', error, trace.id);
             }
             else if (!error.code) {
-                req.logService.warn('[undefined]', error, trace.id);
-                error = new SystemError(MessageError.OTHER, error.message);
+                req.logService.warn('[unknown]', error, trace.id);
+                error = new SystemError(MessageError.UNKNOWN, error.message);
             }
             else
                 req.logService.warn('[logical]', error, trace.id);
         }
+        else if (error.httpCode === 401)
+            req.logService.warn('[unauthorized]', error, trace.id);
         else if (error.httpCode === 403) {
             req.logService.warn('[access-denied]', error, trace.id);
             error = new AccessDeniedError();
         }
-        else if (!error.code || !error.httpCode || error.httpCode >= 500) {
+        else {
             req.logService.error('[internal-server]', error, trace.id);
             error = new InternalServerError();
         }
-        else
-            req.logService.warn('[unknown]', error, trace.id);
+
+        error.translate(req.__);
 
         const errRes = {
             code: error.code,

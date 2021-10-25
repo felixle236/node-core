@@ -137,7 +137,7 @@ describe('Base repository', () => {
         });
     });
 
-    describe('Get data by id', () => {
+    describe('Get data', () => {
         afterEach(() => {
             sandbox.restore();
         });
@@ -149,7 +149,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves(data);
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(randomUUID());
+            const result = await dataTestRepository.get(randomUUID());
 
             expect(result).to.not.eq(null);
         });
@@ -160,7 +160,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves();
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(randomUUID());
+            const result = await dataTestRepository.get(randomUUID());
 
             expect(result).to.eq(null);
         });
@@ -173,7 +173,7 @@ describe('Base repository', () => {
             selectQueryBuilder.getOne.resolves(data);
 
             const dataTestRepository = new DataTestRepository(DataTestDb, DATA_TEST_SCHEMA);
-            const result = await dataTestRepository.getById(randomUUID(), queryRunner);
+            const result = await dataTestRepository.get(randomUUID(), queryRunner);
 
             expect(result).to.not.eq(null);
         });

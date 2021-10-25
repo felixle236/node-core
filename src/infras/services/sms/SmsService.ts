@@ -12,8 +12,8 @@ export class SmsService implements ISmsService {
         this._sender = new SmsSender();
     }
 
-    async sendVerificationCode(phone: string): Promise<void> {
-        const content = UserActivationCodeTemplate.getTemplate(Date.now().toString());
+    async sendVerificationCode(phone: string, code: string, locale?: string): Promise<void> {
+        const content = UserActivationCodeTemplate.getTemplate(code, locale);
         await this._sender.send(SMS_SENDER_OR_PHONE, phone, content);
     }
 }

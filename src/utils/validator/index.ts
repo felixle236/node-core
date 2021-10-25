@@ -1,15 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { InputValidationError } from '@shared/exceptions/InputValidationError';
-import { isArray, isDate, validate } from 'class-validator';
-
-/**
- * Validate data input
- */
-export async function validateDataInput(data: object): Promise<void> {
-    const errors = await validate(data, { whitelist: true, validationError: { target: false } });
-    if (errors && errors.length)
-        throw new InputValidationError(errors);
-}
+import { isArray, isDate } from 'class-validator';
 
 /**
  * Check whether the value is a literal object or not

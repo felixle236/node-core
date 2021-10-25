@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { RoleId } from '@domain/enums/user/RoleId';
+import { IAuthJwtService } from '@gateways/services/IAuthJwtService';
 import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
 import { mockJwtToken } from '@shared/test/MockAuthentication';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockHttpRequest } from '@shared/test/MockWebApi';
-import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
-import { GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
+import { GetUserAuthByJwtHandler } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
+import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
 import { expect } from 'chai';
 import { Action } from 'routing-controllers';
 import { createSandbox } from 'sinon';
@@ -17,7 +19,8 @@ import { ApiAuthenticator } from './ApiAuthenticator';
 
 describe('Api authenticator', () => {
     const sandbox = createSandbox();
-    let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
+    let authJwtService: IAuthJwtService;
+    let getUserAuthByJwtHandler: GetUserAuthByJwtHandler;
     const action = {
         request: {
             headers: {
@@ -28,9 +31,11 @@ describe('Api authenticator', () => {
 
     before(() => {
         mockHttpRequest(action.request);
-        Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
+        Container.set('auth_jwt.service', mockAuthJwtService());
+        Container.set(GetUserAuthByJwtHandler, mockUsecase());
 
-        getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
+        authJwtService = Container.get<IAuthJwtService>('auth_jwt.service');
+        getUserAuthByJwtHandler = Container.get(GetUserAuthByJwtHandler);
     });
 
     beforeEach(() => {
@@ -46,7 +51,6 @@ describe('Api authenticator', () => {
     });
 
     it('Authorize with unauthorized error', async () => {
-        action.request.headers.authorization = '';
         const error: UnauthorizedError = await ApiAuthenticator.authorizationChecker(action, []).catch(error => error);
         const err = new UnauthorizedError();
 
@@ -55,13 +59,16 @@ describe('Api authenticator', () => {
     });
 
     it('Authorize with access denied error', async () => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: RoleId.Client,
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
+        const d = new GetUserAuthByJwtData();
+        d.userId = randomUUID();
+        d.roleId = RoleId.Client;
+        d.type = AuthType.PersonalEmail;
+
+        const result = new GetUserAuthByJwtOutput();
+        result.data = d;
+
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
         const error: AccessDeniedError = await ApiAuthenticator.authorizationChecker(action, [RoleId.Manager]).catch(error => error);
         const err = new AccessDeniedError();
 
@@ -70,39 +77,46 @@ describe('Api authenticator', () => {
     });
 
     it('Authorize success without checking role', async () => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: RoleId.Client,
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
+        const d = new GetUserAuthByJwtData();
+        d.userId = randomUUID();
+        d.roleId = RoleId.Client;
+        d.type = AuthType.PersonalEmail;
+
+        const result = new GetUserAuthByJwtOutput();
+        result.data = d;
+
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
         const isSucceed = await ApiAuthenticator.authorizationChecker(action, []);
 
         expect(isSucceed).to.eq(true);
     });
 
     it('Authorize success with checking role', async () => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: RoleId.Client,
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
+        const d = new GetUserAuthByJwtData();
+        d.userId = randomUUID();
+        d.roleId = RoleId.Client;
+        d.type = AuthType.PersonalEmail;
+
+        const result = new GetUserAuthByJwtOutput();
+        result.data = d;
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
         const isSucceed = await ApiAuthenticator.authorizationChecker(action, [RoleId.Client]);
 
         expect(isSucceed).to.eq(true);
     });
 
     it('Authorize success and get current user authorized', async () => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: RoleId.Client,
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
+        const d = new GetUserAuthByJwtData();
+        d.userId = randomUUID();
+        d.roleId = RoleId.Client;
+        d.type = AuthType.PersonalEmail;
+
+        const result = new GetUserAuthByJwtOutput();
+        result.data = d;
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
         await ApiAuthenticator.authorizationChecker(action, []);
         const currentUser = ApiAuthenticator.currentUserChecker(action);
 

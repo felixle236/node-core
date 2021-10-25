@@ -1,3 +1,3 @@
 export interface ISmsService {
-    sendVerificationCode(phone: string): Promise<void>;
+    sendVerificationCode(phone: string, code: string, locale?: string): Promise<void>;
 }

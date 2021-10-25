@@ -19,91 +19,13 @@ describe('User entity', () => {
         Container.set('storage.service', mockStorageService());
     });
 
-    it('Set role id with invalid value', done => {
-        try {
-            const user = new User();
-            user.roleId = 'role id';
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role').message);
-            done();
-        }
-    });
-
-    it('Set role id with invalid value by id not in role id list', done => {
-        try {
-            const user = new User();
-            user.roleId = randomUUID();
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'role').message);
-            done();
-        }
-    });
-
-    it('Set first name with require error', done => {
-        try {
-            const user = new User();
-            user.firstName = '';
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_REQUIRED, 'first name').message);
-            done();
-        }
-    });
-
-    it('Set first name with the length greater than 20', done => {
-        try {
-            let str = '';
-            [...Array(3)].forEach(() => {
-                str += 'firstName';
-            });
-            const user = new User();
-            user.firstName = str;
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20).message);
-            done();
-        }
-    });
-
-    it('Set last name with the length greater than 20', done => {
-        try {
-            let str = '';
-            [...Array(3)].forEach(() => {
-                str += 'lastName';
-            });
-            const user = new User();
-            user.lastName = str;
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20).message);
-            done();
-        }
-    });
-
-    it('Set avatar with the length greater than 200', done => {
-        try {
-            let str = '';
-            [...Array(40)].forEach(() => {
-                str += 'avatar';
-            });
-            const user = new User();
-            user.avatar = str;
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200).message);
-            done();
-        }
-    });
-
     it('Set birthday with invalid value', done => {
         try {
             const user = new User();
             user.birthday = 'birthday';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, { t: 'birthday' }).message);
             done();
         }
     });
@@ -115,7 +37,7 @@ describe('User entity', () => {
             user.birthday = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'birthday').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, { t: 'birthday' }).message);
             done();
         }
     });
@@ -156,7 +78,7 @@ describe('User entity', () => {
             User.validateAvatarFile(file);
         }).catch(error => {
             const formats = ['jpeg', 'jpg', 'png', 'gif'];
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', ')).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_FORMAT_INVALID, { t: 'avatar' }, formats.join(', ')).message);
             done();
         });
     });
@@ -173,7 +95,7 @@ describe('User entity', () => {
             User.validateAvatarFile(file);
         }).catch(error => {
             const maxSize = 100 * 1024; // 100KB
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_SIZE_MAX, { t: 'avatar' }, maxSize / 1024, 'KB').message);
             done();
         });
     });

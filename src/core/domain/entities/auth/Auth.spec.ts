@@ -17,7 +17,7 @@ describe('Authorization entity', () => {
             auth.userId = 'id';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'user').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, { t: 'user' }).message);
             done();
         }
     });
@@ -28,7 +28,7 @@ describe('Authorization entity', () => {
             auth.username = 'user';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_GREATER_OR_EQUAL, 'username', 6).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_GREATER_OR_EQUAL, { t: 'username' }, 6).message);
             done();
         }
     });
@@ -43,7 +43,7 @@ describe('Authorization entity', () => {
             auth.username = str;
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'username', 120).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'username' }, 120).message);
             done();
         }
     });
@@ -54,7 +54,7 @@ describe('Authorization entity', () => {
             auth.password = 'Us@1';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, { t: 'password' }, 6, 20).message);
             done();
         }
     });
@@ -69,7 +69,7 @@ describe('Authorization entity', () => {
             auth.password = str;
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, { t: 'password' }, 6, 20).message);
             done();
         }
     });
@@ -80,7 +80,7 @@ describe('Authorization entity', () => {
             auth.password = 'password123';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, 'password', 6, 20).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, { t: 'password' }, 6, 20).message);
             done();
         }
     });
@@ -91,7 +91,7 @@ describe('Authorization entity', () => {
             auth.forgotKey = 'forgot key';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, 'forgot key', 64).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, { t: 'forgot_key' }, 64).message);
             done();
         }
     });

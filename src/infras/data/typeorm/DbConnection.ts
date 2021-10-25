@@ -11,10 +11,10 @@ export class DbConnection implements IDbConnection {
 
     async clearCaching(keyCaching: string): Promise<void> {
         if (!keyCaching)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'key caching');
+            throw new SystemError(MessageError.PARAM_REQUIRED, { t: 'key_caching' });
 
         if (!this._connection.queryResultCache)
-            throw new SystemError(MessageError.PARAM_NOT_SUPPORTED, 'caching feature');
+            throw new SystemError(MessageError.PARAM_NOT_SUPPORTED, { t: 'caching_feature' });
 
         await this._connection.queryResultCache.remove([keyCaching]);
     }

@@ -2,12 +2,11 @@ import { RoleId } from '@domain/enums/user/RoleId';
 import { TraceRequest } from '@shared/request/TraceRequest';
 import { ISocket } from '@shared/socket/interfaces/ISocket';
 import { ChatNS } from '@shared/socket/namespaces/ChatNS';
-import { HandleOption } from '@shared/usecase/HandleOption';
+import { UsecaseOption } from '@shared/usecase/UsecaseOption';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
-import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
-import { GetUserAuthByJwtQueryInput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryInput';
-import { UpdateUserOnlineStatusCommandHandler } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
-import { UpdateUserOnlineStatusCommandInput } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandInput';
+import { GetUserAuthByJwtHandler } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
+import { UpdateUserOnlineStatusHandler } from '@usecases/user/user/update-user-online-status/UpdateUserOnlineStatusHandler';
+import { UpdateUserOnlineStatusInput } from '@usecases/user/user/update-user-online-status/UpdateUserOnlineStatusInput';
 import { sendAll } from '@utils/socket';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
@@ -15,8 +14,8 @@ import { Service } from 'typedi';
 @Service()
 export default class ChatChannel {
     constructor(
-        private readonly _getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler,
-        private readonly _updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler
+        private readonly _getUserAuthByJwtHandler: GetUserAuthByJwtHandler,
+        private readonly _updateUserOnlineStatusHandler: UpdateUserOnlineStatusHandler
     ) {}
 
     init(io: Server): void {
@@ -26,14 +25,11 @@ export default class ChatChannel {
         nsp.use(async (socket: ISocket, next: (err?: Error) => void) => {
             try {
                 const token = (socket.handshake.auth as {token: string}).token;
-                const param = new GetUserAuthByJwtQueryInput();
-                param.token = token;
+                const usecaseOption = new UsecaseOption();
+                usecaseOption.trace = new TraceRequest();
+                usecaseOption.trace.getFromSocket(socket);
 
-                const handleOption = new HandleOption();
-                handleOption.trace = new TraceRequest();
-                handleOption.trace.getFromSocket(socket);
-
-                const { data } = await this._getUserAuthByJwtQueryHandler.handle(param, handleOption);
+                const { data } = await this._getUserAuthByJwtHandler.handle(token, usecaseOption);
                 socket.userAuth = new UserAuthenticated(data.userId, data.roleId, data.type);
                 next();
             }
@@ -44,11 +40,11 @@ export default class ChatChannel {
 
         nsp.on('connection', async (socket: ISocket) => {
             const userAuth = socket.userAuth as UserAuthenticated;
-            const param = new UpdateUserOnlineStatusCommandInput();
+            const param = new UpdateUserOnlineStatusInput();
             param.isOnline = true;
             param.onlineAt = new Date();
 
-            const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
+            const result = await this._updateUserOnlineStatusHandler.handle(userAuth.userId, param);
             if (result.data && userAuth.roleId !== RoleId.SuperAdmin) {
                 sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
                     userId: userAuth.userId,
@@ -60,11 +56,11 @@ export default class ChatChannel {
             socket.join(userAuth.userId);
 
             socket.on('disconnecting', async () => {
-                const param = new UpdateUserOnlineStatusCommandInput();
+                const param = new UpdateUserOnlineStatusInput();
                 param.isOnline = false;
                 param.onlineAt = new Date();
 
-                const result = await this._updateUserOnlineStatusCommandHandler.handle(userAuth.userId, param);
+                const result = await this._updateUserOnlineStatusHandler.handle(userAuth.userId, param);
                 if (result.data && userAuth.roleId !== RoleId.SuperAdmin) {
                     sendAll(socket, ChatNS.EVENTS.ONLINE_STATUS_CHANGED, {
                         userId: userAuth.userId,

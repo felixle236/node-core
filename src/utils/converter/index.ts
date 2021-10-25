@@ -23,9 +23,9 @@ export function convertStringToBoolean(val: string | undefined | null, defaultVa
         return defaultValue;
 
     switch (val.toLowerCase().trim()) {
-    case 'true': case 'yes': case '1': return true;
-    case 'false': case 'no': case '0': return false;
-    default: return defaultValue;
+        case 'true': case 'yes': case '1': return true;
+        case 'false': case 'no': case '0': return false;
+        default: return defaultValue;
     }
 }
 

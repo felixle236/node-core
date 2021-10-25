@@ -15,15 +15,13 @@ module.exports = {
     extends: [
         'standard',
         'eslint:recommended'
-        // 'plugin:security/recommended'
     ],
     plugins: [
-        // 'security',
         'import',
         'node'
     ],
     rules: {
-        indent: ['error', 4],
+        indent: ['error', 4, { SwitchCase: 1 }],
         semi: ['error', 'always'],
         'no-var': ['error'],
         'one-var': ['error', 'never'],

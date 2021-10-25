@@ -1,29 +1,29 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { mockAuthentication } from '@shared/test/MockAuthentication';
+import { mockUserAuthentication } from '@shared/test/MockAuthentication';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockWebApi } from '@shared/test/MockWebApi';
-import { ArchiveManagerCommandHandler } from '@usecases/user/manager/commands/archive-manager/ArchiveManagerCommandHandler';
-import { ArchiveManagerCommandOutput } from '@usecases/user/manager/commands/archive-manager/ArchiveManagerCommandOutput';
-import { CreateManagerCommandHandler } from '@usecases/user/manager/commands/create-manager/CreateManagerCommandHandler';
-import { CreateManagerCommandOutput } from '@usecases/user/manager/commands/create-manager/CreateManagerCommandOutput';
-import { DeleteManagerCommandHandler } from '@usecases/user/manager/commands/delete-manager/DeleteManagerCommandHandler';
-import { DeleteManagerCommandOutput } from '@usecases/user/manager/commands/delete-manager/DeleteManagerCommandOutput';
-import { UpdateManagerCommandHandler } from '@usecases/user/manager/commands/update-manager/UpdateManagerCommandHandler';
-import { UpdateManagerCommandOutput } from '@usecases/user/manager/commands/update-manager/UpdateManagerCommandOutput';
-import { UpdateMyProfileManagerCommandHandler } from '@usecases/user/manager/commands/update-my-profile-manager/UpdateMyProfileManagerCommandHandler';
-import { UpdateMyProfileManagerCommandOutput } from '@usecases/user/manager/commands/update-my-profile-manager/UpdateMyProfileManagerCommandOutput';
-import { FindManagerQueryHandler } from '@usecases/user/manager/queries/find-manager/FindManagerQueryHandler';
-import { FindManagerQueryOutput } from '@usecases/user/manager/queries/find-manager/FindManagerQueryOutput';
-import { GetManagerByIdQueryHandler } from '@usecases/user/manager/queries/get-manager-by-id/GetManagerByIdQueryHandler';
-import { GetManagerByIdQueryOutput } from '@usecases/user/manager/queries/get-manager-by-id/GetManagerByIdQueryOutput';
-import { GetMyProfileManagerQueryHandler } from '@usecases/user/manager/queries/get-my-profile-manager/GetMyProfileManagerQueryHandler';
-import { GetMyProfileManagerQueryOutput } from '@usecases/user/manager/queries/get-my-profile-manager/GetMyProfileManagerQueryOutput';
+import { ArchiveManagerHandler } from '@usecases/user/manager/archive-manager/ArchiveManagerHandler';
+import { ArchiveManagerOutput } from '@usecases/user/manager/archive-manager/ArchiveManagerOutput';
+import { CreateManagerHandler } from '@usecases/user/manager/create-manager/CreateManagerHandler';
+import { CreateManagerOutput } from '@usecases/user/manager/create-manager/CreateManagerOutput';
+import { DeleteManagerHandler } from '@usecases/user/manager/delete-manager/DeleteManagerHandler';
+import { DeleteManagerOutput } from '@usecases/user/manager/delete-manager/DeleteManagerOutput';
+import { FindManagerHandler } from '@usecases/user/manager/find-manager/FindManagerHandler';
+import { FindManagerData, FindManagerOutput } from '@usecases/user/manager/find-manager/FindManagerOutput';
+import { GetManagerHandler } from '@usecases/user/manager/get-manager/GetManagerHandler';
+import { GetManagerData, GetManagerOutput } from '@usecases/user/manager/get-manager/GetManagerOutput';
+import { GetMyProfileManagerHandler } from '@usecases/user/manager/get-my-profile-manager/GetMyProfileManagerHandler';
+import { GetMyProfileManagerData, GetMyProfileManagerOutput } from '@usecases/user/manager/get-my-profile-manager/GetMyProfileManagerOutput';
+import { UpdateManagerHandler } from '@usecases/user/manager/update-manager/UpdateManagerHandler';
+import { UpdateManagerOutput } from '@usecases/user/manager/update-manager/UpdateManagerOutput';
+import { UpdateMyProfileManagerHandler } from '@usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerHandler';
+import { UpdateMyProfileManagerOutput } from '@usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
@@ -34,39 +34,41 @@ describe('Manager controller', () => {
     let server: Server;
     const port = 3301;
     const endpoint = `http://localhost:${port}/api/v1/managers`;
-    const options = { headers: { Authorization: 'Bearer token' } };
-    let findManagerQueryHandler: FindManagerQueryHandler;
-    let getManagerByIdQueryHandler: GetManagerByIdQueryHandler;
-    let getMyProfileManagerQueryHandler: GetMyProfileManagerQueryHandler;
-    let createManagerCommandHandler: CreateManagerCommandHandler;
-    let updateManagerCommandHandler: UpdateManagerCommandHandler;
-    let updateMyProfileManagerCommandHandler: UpdateMyProfileManagerCommandHandler;
-    let deleteManagerCommandHandler: DeleteManagerCommandHandler;
-    let archiveManagerCommandHandler: ArchiveManagerCommandHandler;
+    const options = { headers: { authorization: 'Bearer token' } };
+    let findManagerHandler: FindManagerHandler;
+    let getManagerHandler: GetManagerHandler;
+    let getMyProfileManagerHandler: GetMyProfileManagerHandler;
+    let createManagerHandler: CreateManagerHandler;
+    let updateManagerHandler: UpdateManagerHandler;
+    let updateMyProfileManagerHandler: UpdateMyProfileManagerHandler;
+    let deleteManagerHandler: DeleteManagerHandler;
+    let archiveManagerHandler: ArchiveManagerHandler;
 
     before(done => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const ManagerController = require('./ManagerController').ManagerController;
-        server = mockWebApi(ManagerController, port, () => {
-            Container.set(FindManagerQueryHandler, { handle() {} });
-            Container.set(GetManagerByIdQueryHandler, { handle() {} });
-            Container.set(GetMyProfileManagerQueryHandler, { handle() {} });
-            Container.set(CreateManagerCommandHandler, { handle() {} });
-            Container.set(UpdateManagerCommandHandler, { handle() {} });
-            Container.set(UpdateMyProfileManagerCommandHandler, { handle() {} });
-            Container.set(DeleteManagerCommandHandler, { handle() {} });
-            Container.set(ArchiveManagerCommandHandler, { handle() {} });
+        Container.set('auth_jwt.service', mockAuthJwtService());
 
-            findManagerQueryHandler = Container.get(FindManagerQueryHandler);
-            getManagerByIdQueryHandler = Container.get(GetManagerByIdQueryHandler);
-            getMyProfileManagerQueryHandler = Container.get(GetMyProfileManagerQueryHandler);
-            createManagerCommandHandler = Container.get(CreateManagerCommandHandler);
-            updateManagerCommandHandler = Container.get(UpdateManagerCommandHandler);
-            updateMyProfileManagerCommandHandler = Container.get(UpdateMyProfileManagerCommandHandler);
-            deleteManagerCommandHandler = Container.get(DeleteManagerCommandHandler);
-            archiveManagerCommandHandler = Container.get(ArchiveManagerCommandHandler);
+        import('./ManagerController').then(obj => {
+            server = mockWebApi(obj.ManagerController, port, () => {
+                Container.set(FindManagerHandler, mockUsecase());
+                Container.set(GetManagerHandler, mockUsecase());
+                Container.set(GetMyProfileManagerHandler, mockUsecase());
+                Container.set(CreateManagerHandler, mockUsecase());
+                Container.set(UpdateManagerHandler, mockUsecase());
+                Container.set(UpdateMyProfileManagerHandler, mockUsecase());
+                Container.set(DeleteManagerHandler, mockUsecase());
+                Container.set(ArchiveManagerHandler, mockUsecase());
 
-            done();
+                findManagerHandler = Container.get(FindManagerHandler);
+                getManagerHandler = Container.get(GetManagerHandler);
+                getMyProfileManagerHandler = Container.get(GetMyProfileManagerHandler);
+                createManagerHandler = Container.get(CreateManagerHandler);
+                updateManagerHandler = Container.get(UpdateManagerHandler);
+                updateMyProfileManagerHandler = Container.get(UpdateMyProfileManagerHandler);
+                deleteManagerHandler = Container.get(DeleteManagerHandler);
+                archiveManagerHandler = Container.get(ArchiveManagerHandler);
+
+                done();
+            });
         });
     });
 
@@ -87,13 +89,14 @@ describe('Manager controller', () => {
     });
 
     it('Find managers by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new FindManagerQueryOutput();
-        result.setData([{
-            id: randomUUID()
-        }] as any);
-        sandbox.stub(findManagerQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const d = new FindManagerData();
+        d.id = randomUUID();
+        const result = new FindManagerOutput();
+        result.data = [d];
+
+        sandbox.stub(findManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
@@ -108,17 +111,17 @@ describe('Manager controller', () => {
     });
 
     it('Get manager by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const id = randomUUID();
-        const result = new GetManagerByIdQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getManagerByIdQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/' + id, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const d = new GetManagerData();
+        d.id = randomUUID();
+        const result = new GetManagerOutput();
+        result.data = d;
+
+        sandbox.stub(getManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/' + d.id, options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Get my profile with unauthorized error', async () => {
@@ -129,31 +132,31 @@ describe('Manager controller', () => {
     });
 
     it('Get my profile by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const id = randomUUID();
-        const result = new GetMyProfileManagerQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getMyProfileManagerQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/my-profile', options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const d = new GetMyProfileManagerData();
+        d.id = randomUUID();
+        const result = new GetMyProfileManagerOutput();
+        result.data = d;
+
+        sandbox.stub(getMyProfileManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Get my profile by manager', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
-        const id = randomUUID();
-        const result = new GetMyProfileManagerQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getMyProfileManagerQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/my-profile', options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
+        const d = new GetMyProfileManagerData();
+        d.id = randomUUID();
+        const result = new GetMyProfileManagerOutput();
+        result.data = d;
+
+        sandbox.stub(getMyProfileManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Create manager with unauthorized error', async () => {
@@ -169,13 +172,12 @@ describe('Manager controller', () => {
     });
 
     it('Create manager by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const id = randomUUID();
-        const result = new CreateManagerCommandOutput();
-        result.setData(id);
-        sandbox.stub(createManagerCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new CreateManagerOutput();
+        result.data = randomUUID();
+        sandbox.stub(createManagerHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint, {
+        const { status, data }: any = await axios.post(endpoint, {
             firstName: 'manager',
             lastName: 'test',
             email: 'manager.test@localhost.com',
@@ -183,7 +185,7 @@ describe('Manager controller', () => {
         }, options);
 
         expect(status).to.eq(200);
-        expect(data.data).to.eq(id);
+        expect(data.data).to.eq(result.data);
     });
 
     it('Update manager with unauthorized error', async () => {
@@ -197,12 +199,12 @@ describe('Manager controller', () => {
     });
 
     it('Update manager by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new UpdateManagerCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateManagerCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new UpdateManagerOutput();
+        result.data = true;
+        sandbox.stub(updateManagerHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
+        const { status, data }: any = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'manager',
             lastName: 'test'
         }, options);
@@ -222,12 +224,12 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new UpdateMyProfileManagerCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new UpdateMyProfileManagerOutput();
+        result.data = true;
+        sandbox.stub(updateMyProfileManagerHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
             firstName: 'manager',
             lastName: 'test'
         }, options);
@@ -237,12 +239,12 @@ describe('Manager controller', () => {
     });
 
     it('Update my manager profile by manager', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
-        const result = new UpdateMyProfileManagerCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateMyProfileManagerCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
+        const result = new UpdateMyProfileManagerOutput();
+        result.data = true;
+        sandbox.stub(updateMyProfileManagerHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
             firstName: 'manager',
             lastName: 'test'
         }, options);
@@ -259,11 +261,11 @@ describe('Manager controller', () => {
     });
 
     it('Delete manager by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new DeleteManagerCommandOutput();
-        result.setData(true);
-        sandbox.stub(deleteManagerCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.delete(endpoint + '/' + randomUUID(), options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new DeleteManagerOutput();
+        result.data = true;
+        sandbox.stub(deleteManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.delete(endpoint + '/' + randomUUID(), options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);
@@ -277,11 +279,11 @@ describe('Manager controller', () => {
     });
 
     it('Archive manager by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new ArchiveManagerCommandOutput();
-        result.setData(true);
-        sandbox.stub(archiveManagerCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new ArchiveManagerOutput();
+        result.data = true;
+        sandbox.stub(archiveManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

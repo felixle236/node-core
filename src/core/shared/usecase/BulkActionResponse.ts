@@ -1,4 +1,4 @@
-import { IsInt, Min } from 'class-validator';
+import { IsInt, Min } from '@shared/decorators/ValidationDecorator';
 
 export abstract class BulkActionResponse<T> {
     @IsInt()

@@ -1,6 +1,5 @@
 import { RefSchemaObject } from '@shared/decorators/RefSchema';
-import { IsInt, IsObject, Min } from 'class-validator';
-import { DataResponse } from './DataResponse';
+import { IsInt, IsObject, Min } from '@shared/decorators/ValidationDecorator';
 
 export class Pagination {
     @IsInt()
@@ -16,10 +15,12 @@ export class Pagination {
     total: number;
 }
 
-export abstract class PaginationResponse<T> extends DataResponse<T[]> {
+export abstract class PaginationResponse<T> {
     @IsObject()
     @RefSchemaObject(Pagination)
     pagination: Pagination;
+
+    abstract data: T[];
 
     setPagination(total: number, skip: number, limit: number): void {
         this.pagination = new Pagination();

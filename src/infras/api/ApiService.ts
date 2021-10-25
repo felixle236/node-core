@@ -5,6 +5,8 @@ import { ENVIRONMENT } from '@configs/Configuration';
 import { Environment } from '@configs/Enums';
 import { ILogService } from '@gateways/services/ILogService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
+import i18n from '@shared/localization';
+import { ValidatorOptions } from 'class-validator';
 import express from 'express';
 import { RoutingControllersOptions } from 'routing-controllers';
 import swaggerUiExpress from 'swagger-ui-express';
@@ -23,6 +25,7 @@ export class ApiService {
 
         const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
+        app.use(i18n.init);
 
         const options = this.getOptions({
             controllers: [
@@ -34,7 +37,6 @@ export class ApiService {
             interceptors: [
                 path.join(__dirname, './interceptors/*Interceptor{.js,.ts}')
             ],
-            validation: false,
             development: ENVIRONMENT === Environment.Local
         });
 
@@ -51,7 +53,7 @@ export class ApiService {
         controllers?: string[] | Function[],
         middlewares?: string[] | Function[],
         interceptors?: string[] | Function[],
-        validation: boolean,
+        validation?: ValidatorOptions,
         development: boolean
     }): RoutingControllersOptions {
         return {
@@ -67,7 +69,7 @@ export class ApiService {
             controllers: param.controllers,
             middlewares: param.middlewares,
             interceptors: param.interceptors,
-            validation: param.validation,
+            validation: param.validation || { whitelist: true, validationError: { target: false, value: false } },
             defaultErrorHandler: false,
             development: param.development,
             authorizationChecker: ApiAuthenticator.authorizationChecker,

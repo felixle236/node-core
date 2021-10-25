@@ -1,8 +1,5 @@
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { IManager } from '@domain/interfaces/user/IManager';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
-import { isEmail } from 'class-validator';
 import { UserBase } from './User';
 
 export class Manager extends UserBase<IManager> implements IManager {
@@ -11,10 +8,6 @@ export class Manager extends UserBase<IManager> implements IManager {
     }
 
     set email(val: string) {
-        val = val.trim().toLowerCase();
-        if (!isEmail(val))
-            throw new SystemError(MessageError.PARAM_INVALID, 'email');
-
         this.data.email = val;
     }
 

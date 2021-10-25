@@ -1,24 +1,12 @@
 import { randomUUID } from 'crypto';
-import { IJwtPayloadExtend } from '@gateways/services/IAuthJwtService';
-import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
-import { GetUserAuthByJwtQueryData, GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
+import { IAuthJwtService, IJwtPayloadExtend } from '@gateways/services/IAuthJwtService';
+import { GetUserAuthByJwtHandler } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
+import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
 import jwt from 'jsonwebtoken';
+import { SinonSandbox } from 'sinon';
 import { Container } from 'typedi';
 import { mockAuthJwtService } from './MockAuthJwtService';
 import { mockLogService } from './MockLogService';
-
-export const mockAuthentication = (data: GetUserAuthByJwtQueryData): void => {
-    Container.set('auth_jwt.service', mockAuthJwtService());
-    Container.set('log.service', mockLogService());
-
-    const userAuth = new GetUserAuthByJwtQueryOutput();
-    userAuth.setData(data);
-    Container.set(GetUserAuthByJwtQueryHandler, {
-        async handle() {
-            return userAuth;
-        }
-    });
-};
 
 export const mockJwtToken = (subject = randomUUID(), secretOrPrivateKey = '123456'): string => {
     return jwt.sign({}, secretOrPrivateKey, {
@@ -32,4 +20,24 @@ export const mockVerifyJwtToken = (token: string, secretOrPrivateKey = '123456')
     return jwt.verify(token, secretOrPrivateKey, {
         algorithm: 'HS256'
     } as jwt.VerifyOptions) as IJwtPayloadExtend;
+};
+
+export const mockUserAuthentication = (sandbox: SinonSandbox, data: { userId: string, roleId: string }): void => {
+    const authJwtService: IAuthJwtService = mockAuthJwtService();
+    sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
+    Container.set('auth_jwt.service', authJwtService);
+    Container.set('log.service', mockLogService());
+
+    const userAuthData = new GetUserAuthByJwtData();
+    userAuthData.roleId = data.roleId;
+    userAuthData.userId = data.userId;
+
+    const userAuth = new GetUserAuthByJwtOutput();
+    userAuth.data = userAuthData;
+
+    Container.set(GetUserAuthByJwtHandler, {
+        async handle() {
+            return userAuth;
+        }
+    });
 };

@@ -1,3 +1,4 @@
+import { IncomingHttpHeaders } from 'http';
 import { AuthType } from '@domain/enums/auth/AuthType';
 
 export interface IJwtPayload {
@@ -9,11 +10,14 @@ export interface IJwtPayload {
 }
 
 export interface IJwtPayloadExtend extends IJwtPayload {
+    userId: string;
     roleId: string;
     type: AuthType;
 }
 
 export interface IAuthJwtService {
+    getTokenFromHeader(headers: IncomingHttpHeaders): string;
+
     sign(userId: string, roleId: string, type: AuthType): string;
 
     verify(token: string): IJwtPayloadExtend;

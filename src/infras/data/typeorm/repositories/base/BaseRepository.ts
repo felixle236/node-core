@@ -31,7 +31,7 @@ export abstract class BaseRepository<TIdentityType, TEntity extends IEntity<TIde
         return await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner).getCount();
     }
 
-    async getById(id: TIdentityType, queryRunner: IDbQueryRunner | null = null): Promise<TEntity | null> {
+    async get(id: TIdentityType, queryRunner: IDbQueryRunner | null = null): Promise<TEntity | null> {
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, queryRunner as QueryRunner)
             .whereInIds(id)
             .getOne();

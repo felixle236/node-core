@@ -15,22 +15,22 @@ export class StorageService implements IStorageService {
 
     constructor() {
         switch (STORAGE_PROVIDER) {
-        case StorageProvider.MinIO:
-            this._provider = new MinioFactory(MINIO_HOST, MINIO_PORT, MINIO_USE_SSL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
-            break;
+            case StorageProvider.MinIO:
+                this._provider = new MinioFactory(MINIO_HOST, MINIO_PORT, MINIO_USE_SSL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY);
+                break;
 
-        case StorageProvider.AwsS3:
-            this._provider = new AwsS3Factory(AWS_REGION, AWS_ACCESS_KEY, AWS_SECRET_KEY);
-            break;
+            case StorageProvider.AwsS3:
+                this._provider = new AwsS3Factory(AWS_REGION, AWS_ACCESS_KEY, AWS_SECRET_KEY);
+                break;
 
-        case StorageProvider.GoogleStorage:
-            this._provider = new GoogleStorageFactory();
-            break;
+            case StorageProvider.GoogleStorage:
+                this._provider = new GoogleStorageFactory();
+                break;
 
-        case StorageProvider.Console:
-        default:
-            this._provider = new StorageConsoleFactory();
-            break;
+            case StorageProvider.Console:
+            default:
+                this._provider = new StorageConsoleFactory();
+                break;
         }
     }
 

@@ -11,10 +11,9 @@ import { TraceRequest } from '@shared/request/TraceRequest';
 import { mockLogService } from '@shared/test/MockLogService';
 import axios from 'axios';
 import { expect } from 'chai';
-import { useContainer } from 'class-validator';
 import { Get, JsonController } from 'routing-controllers';
 import { createSandbox } from 'sinon';
-import Container from 'typedi';
+import { Container } from 'typedi';
 import { ApiService } from './ApiService';
 
 @JsonController('/test')
@@ -40,7 +39,7 @@ export class TestController {
 
     @Get('/test-400-logic')
     async test400Logic(): Promise<boolean> {
-        throw new SystemError(MessageError.OTHER);
+        throw new SystemError(MessageError.UNKNOWN);
     }
 
     @Get('/test-403-access-denied')
@@ -55,7 +54,6 @@ export class TestController {
 }
 
 describe('Api service', () => {
-    useContainer(Container);
     const sandbox = createSandbox();
     let server: Server;
     const port = 3301;
@@ -71,7 +69,6 @@ describe('Api service', () => {
             interceptors: [
                 path.join(__dirname, './interceptors/*Interceptor{.js,.ts}')
             ],
-            validation: true,
             development: true
         });
         sandbox.stub(ApiService, 'getOptions').returns(options);
@@ -118,14 +115,14 @@ describe('Api service', () => {
         const { status, data } = await axios.get(endpoint + '/api/test/test-400-not-cover-yet').catch(error => error.response);
 
         expect(status).to.eq(400);
-        expect(data.code).to.eq(new SystemError(MessageError.OTHER).code);
+        expect(data.code).to.eq(new SystemError(MessageError.UNKNOWN).code);
     });
 
     it('Test 400 logic error', async () => {
         const { status, data } = await axios.get(endpoint + '/api/test/test-400-logic').catch(error => error.response);
 
         expect(status).to.eq(400);
-        expect(data.code).to.eq(new SystemError(MessageError.OTHER).code);
+        expect(data.code).to.eq(new SystemError(MessageError.UNKNOWN).code);
     });
 
     it('Test 403 access denied', async () => {

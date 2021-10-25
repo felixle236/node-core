@@ -4,11 +4,12 @@ import { Server } from 'http';
 import path from 'path';
 import { ApiService } from '@infras/api/ApiService';
 import { HttpServer } from '@infras/servers/http/HttpServer';
+import i18n from '@shared/localization';
 import { IRequest } from '@shared/request/IRequest';
 import { TraceRequest } from '@shared/request/TraceRequest';
 import express, { Request } from 'express';
 import { useContainer } from 'routing-controllers';
-import { Container } from 'typedi';
+import { Container } from 'typeorm-typedi-extensions';
 import { mockLogService } from './MockLogService';
 
 export const mockHttpRequest = (req: Request): IRequest => {
@@ -28,6 +29,7 @@ export const mockWebApi = (controller: string | Function, port = 3000, callback?
         mockHttpRequest(req);
         next();
     });
+    app.use(i18n.init);
 
     const options = ApiService.getOptions({
         controllers: [controller as any],
@@ -37,7 +39,6 @@ export const mockWebApi = (controller: string | Function, port = 3000, callback?
         interceptors: [
             path.join(__dirname, '../../../infras/api/interceptors/*{.js,.ts}')
         ],
-        validation: true,
         development: true
     });
 

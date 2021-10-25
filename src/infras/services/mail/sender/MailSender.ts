@@ -11,22 +11,22 @@ export class MailSender implements IMailProvider {
 
     constructor() {
         switch (MAIL_PROVIDER) {
-        case MailProvider.GoogleSmtp:
-            this._provider = new GoogleSmtpFactory();
-            break;
+            case MailProvider.GoogleSmtp:
+                this._provider = new GoogleSmtpFactory();
+                break;
 
-        case MailProvider.MailGun:
-            this._provider = new MailGunFactory();
-            break;
+            case MailProvider.MailGun:
+                this._provider = new MailGunFactory();
+                break;
 
-        case MailProvider.SendInBlue:
-            this._provider = new SendInBlueFactory();
-            break;
+            case MailProvider.SendInBlue:
+                this._provider = new SendInBlueFactory();
+                break;
 
-        case MailProvider.Console:
-        default:
-            this._provider = new MailConsoleFactory();
-            break;
+            case MailProvider.Console:
+            default:
+                this._provider = new MailConsoleFactory();
+                break;
         }
     }
 

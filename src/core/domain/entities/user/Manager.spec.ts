@@ -1,23 +1,10 @@
 import { randomUUID } from 'crypto';
 import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
 import { IManager } from '@domain/interfaces/user/IManager';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
 import { expect } from 'chai';
 import { Manager } from './Manager';
 
 describe('Manager entity', () => {
-    it('Set email with invalid value', done => {
-        try {
-            const manager = new Manager();
-            manager.email = 'manager.test@';
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
-            done();
-        }
-    });
-
     it('Get data from entity', () => {
         const dataTest = {
             id: randomUUID(),

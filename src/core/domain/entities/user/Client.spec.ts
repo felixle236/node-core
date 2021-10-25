@@ -8,54 +8,13 @@ import { expect } from 'chai';
 import { Client } from './Client';
 
 describe('Client entity', () => {
-    it('Set email with invalid value', done => {
-        try {
-            const client = new Client();
-            client.email = 'client.test@';
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'email').message);
-            done();
-        }
-    });
-
-    it('Set phone with the length greater than 20', done => {
-        try {
-            let str = '';
-            [...Array(5)].forEach(() => {
-                str += 'phone';
-            });
-            const client = new Client();
-            client.phone = str;
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'phone', 20).message);
-            done();
-        }
-    });
-
-    it('Set address with the length greater than 200', done => {
-        try {
-            let str = '';
-            [...Array(30)].forEach(() => {
-                str += 'address';
-            });
-            const client = new Client();
-            client.address = str;
-        }
-        catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'address', 200).message);
-            done();
-        }
-    });
-
     it('Set locale with invalid value', done => {
         try {
             const client = new Client();
             client.locale = 'ens';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, 'locale').message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_INVALID, { t: 'locale' }).message);
             done();
         }
     });
@@ -63,10 +22,10 @@ describe('Client entity', () => {
     it('Set active key with the length not equal 64', done => {
         try {
             const client = new Client();
-            client.activeKey = 'active key';
+            client.activeKey = 'activation key';
         }
         catch (error: any) {
-            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, 'active key', 64).message);
+            expect(error.message).to.eq(new SystemError(MessageError.PARAM_LEN_EQUAL, { t: 'activation_key' }, 64).message);
             done();
         }
     });

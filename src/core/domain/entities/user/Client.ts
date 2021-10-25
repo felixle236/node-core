@@ -2,7 +2,6 @@ import { ClientStatus } from '@domain/enums/user/ClientStatus';
 import { IClient } from '@domain/interfaces/user/IClient';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { isEmail } from 'class-validator';
 import localeCode from 'locale-code';
 import { UserBase } from './User';
 
@@ -12,10 +11,6 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set email(val: string) {
-        val = val.trim().toLowerCase();
-        if (!isEmail(val))
-            throw new SystemError(MessageError.PARAM_INVALID, 'email');
-
         this.data.email = val;
     }
 
@@ -24,12 +19,6 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set phone(val: string | null) {
-        if (val) {
-            val = val.trim();
-            if (val.length > 20)
-                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'phone', 20);
-        }
-
         this.data.phone = val;
     }
 
@@ -38,12 +27,6 @@ export class Client extends UserBase<IClient> implements IClient {
     }
 
     set address(val: string | null) {
-        if (val) {
-            val = val.trim();
-            if (val.length > 200)
-                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'address', 200);
-        }
-
         this.data.address = val;
     }
 
@@ -54,7 +37,7 @@ export class Client extends UserBase<IClient> implements IClient {
     set locale(val: string | null) {
         if (val) {
             if (!localeCode.validate(val))
-                throw new SystemError(MessageError.PARAM_INVALID, 'locale');
+                throw new SystemError(MessageError.PARAM_INVALID, { t: 'locale' });
         }
 
         this.data.locale = val;
@@ -74,7 +57,7 @@ export class Client extends UserBase<IClient> implements IClient {
 
     set activeKey(val: string | null) {
         if (val && val.length !== 64)
-            throw new SystemError(MessageError.PARAM_LEN_EQUAL, 'active key', 64);
+            throw new SystemError(MessageError.PARAM_LEN_EQUAL, { t: 'activation_key' }, 64);
         this.data.activeKey = val;
     }
 

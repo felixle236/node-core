@@ -8,8 +8,8 @@ export interface IBaseRepository<TIdentityType, TEntity> {
     count(param: IDbFilter): Promise<number>;
     count(param: IDbFilter, queryRunner: IDbQueryRunner | null): Promise<number>;
 
-    getById(id: TIdentityType): Promise<TEntity | null>;
-    getById(id: TIdentityType, queryRunner: IDbQueryRunner | null): Promise<TEntity | null>;
+    get(id: TIdentityType): Promise<TEntity | null>;
+    get(id: TIdentityType, queryRunner: IDbQueryRunner | null): Promise<TEntity | null>;
 
     create(data: TEntity): Promise<TIdentityType>;
     create(data: TEntity, queryRunner: IDbQueryRunner | null): Promise<TIdentityType>;

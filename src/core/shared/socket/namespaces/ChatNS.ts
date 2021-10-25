@@ -9,5 +9,5 @@ export class ChatNS {
         MESSAGE_DELETE: 'message_deleted',
         MESSAGE_RECEIVE: 'message_received',
         MESSAGE_READ: 'message_read'
-    }
+    };
 }

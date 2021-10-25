@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { AuthType } from '@domain/enums/auth/AuthType';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockWebSocket } from '@shared/test/MockWebSocket';
-import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
-import { GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
-import { UpdateUserOnlineStatusCommandHandler } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandHandler';
-import { UpdateUserOnlineStatusCommandOutput } from '@usecases/user/user/commands/update-user-online-status/UpdateUserOnlineStatusCommandOutput';
+import { GetUserAuthByJwtHandler } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
+import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
+import { UpdateUserOnlineStatusHandler } from '@usecases/user/user/update-user-online-status/UpdateUserOnlineStatusHandler';
+import { UpdateUserOnlineStatusOutput } from '@usecases/user/user/update-user-online-status/UpdateUserOnlineStatusOutput';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 import { Server } from 'socket.io';
@@ -23,15 +23,15 @@ describe('Chat channel', () => {
     let socket: Socket;
     const port = 5001;
     const endpoint = `http://localhost:${port}/chat`;
-    let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
-    let updateUserOnlineStatusCommandHandler: UpdateUserOnlineStatusCommandHandler;
+    let getUserAuthByJwtHandler: GetUserAuthByJwtHandler;
+    let updateUserOnlineStatusHandler: UpdateUserOnlineStatusHandler;
 
     before(() => {
-        Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
-        Container.set(UpdateUserOnlineStatusCommandHandler, { handle() {} });
+        Container.set(GetUserAuthByJwtHandler, mockUsecase());
+        Container.set(UpdateUserOnlineStatusHandler, mockUsecase());
 
-        getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
-        updateUserOnlineStatusCommandHandler = Container.get(UpdateUserOnlineStatusCommandHandler);
+        getUserAuthByJwtHandler = Container.get(GetUserAuthByJwtHandler);
+        updateUserOnlineStatusHandler = Container.get(UpdateUserOnlineStatusHandler);
 
         server = mockWebSocket(port);
         const channel = Container.get(ChatChannel);
@@ -50,7 +50,7 @@ describe('Chat channel', () => {
     });
 
     it('Connect socket without token', done => {
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').throwsException(new UnauthorizedError(MessageError.PARAM_INVALID, 'token'));
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').throwsException(new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' }));
 
         socket = io(endpoint, {
             reconnection: false,
@@ -59,23 +59,23 @@ describe('Chat channel', () => {
         });
 
         socket.on('connect_error', (err: Error) => {
-            expect(err.message).to.be.eq(new UnauthorizedError(MessageError.PARAM_INVALID, 'token').message);
+            expect(err.message).to.be.eq(new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' }).message);
             done();
         });
     });
 
     it('Connect socket', done => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: randomUUID(),
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        const result = new GetUserAuthByJwtOutput();
+        result.data = new GetUserAuthByJwtData();
+        result.data.userId = randomUUID();
+        result.data.roleId = randomUUID();
+        result.data.type = AuthType.PersonalEmail;
 
-        const updateResult = new UpdateUserOnlineStatusCommandOutput();
-        updateResult.setData(true);
-        sandbox.stub(updateUserOnlineStatusCommandHandler, 'handle').resolves(updateResult);
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
+
+        const updateResult = new UpdateUserOnlineStatusOutput();
+        updateResult.data = true;
+        sandbox.stub(updateUserOnlineStatusHandler, 'handle').resolves(updateResult);
 
         socket = io(endpoint, {
             reconnection: false,
@@ -88,17 +88,17 @@ describe('Chat channel', () => {
 
     it('Connect socket and update user online status', done => {
         const userId = randomUUID();
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: userId,
-            roleId: randomUUID(),
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        const result = new GetUserAuthByJwtOutput();
+        result.data = new GetUserAuthByJwtData();
+        result.data.userId = userId;
+        result.data.roleId = randomUUID();
+        result.data.type = AuthType.PersonalEmail;
 
-        const updateResult = new UpdateUserOnlineStatusCommandOutput();
-        updateResult.setData(true);
-        sandbox.stub(updateUserOnlineStatusCommandHandler, 'handle').resolves(updateResult);
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
+
+        const updateResult = new UpdateUserOnlineStatusOutput();
+        updateResult.data = true;
+        sandbox.stub(updateUserOnlineStatusHandler, 'handle').resolves(updateResult);
 
         socket = io(endpoint, {
             reconnection: false,
@@ -114,17 +114,17 @@ describe('Chat channel', () => {
     });
 
     it('Disconnect socket', done => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: randomUUID(),
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
+        const result = new GetUserAuthByJwtOutput();
+        result.data = new GetUserAuthByJwtData();
+        result.data.userId = randomUUID();
+        result.data.roleId = randomUUID();
+        result.data.type = AuthType.PersonalEmail;
 
-        const updateResult = new UpdateUserOnlineStatusCommandOutput();
-        updateResult.setData(true);
-        sandbox.stub(updateUserOnlineStatusCommandHandler, 'handle').resolves(updateResult);
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').resolves(result);
+
+        const updateResult = new UpdateUserOnlineStatusOutput();
+        updateResult.data = true;
+        sandbox.stub(updateUserOnlineStatusHandler, 'handle').resolves(updateResult);
 
         socket = io(endpoint, {
             reconnection: false,

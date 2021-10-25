@@ -1,23 +1,12 @@
-import { IsString } from 'class-validator';
+import { BaseError } from './BaseError';
 import { MessageError } from './message/MessageError';
 
-export class AccessDeniedError extends Error {
-    httpCode: number;
-
-    @IsString()
-    code: string;
-
-    @IsString()
-    override name: string;
-
-    @IsString()
-    override message: string;
-
+export class AccessDeniedError extends BaseError {
     constructor() {
         super();
         this.httpCode = 403;
         this.code = MessageError.ACCESS_DENIED.code;
         this.name = 'AccessDeniedError';
-        this.message = MessageError.ACCESS_DENIED.message;
+        this.message = JSON.stringify({ key: MessageError.ACCESS_DENIED.message });
     }
 }

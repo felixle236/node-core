@@ -5,7 +5,7 @@ import { IRedisContext } from '@shared/database/interfaces/IRedisContext';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
 import redis from 'redis';
-import redisCommands from 'redis-commands';
+import rediss from 'redis-commands';
 import { Service } from 'typedi';
 
 @Service('redis.context')
@@ -18,7 +18,7 @@ export class RedisContext implements IRedisContext {
 
     get redisClient(): IRedisClient {
         if (!this._connection)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'redis connection');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'redis_connection' });
         return this._connection;
     }
 
@@ -63,8 +63,8 @@ const promisifyRedis = (redis) => {
         };
     };
 
-    redisCommands.list.forEach(function(fullCommand) {
-        const cmd = fullCommand.split(' ')[0];
+    rediss.list.forEach(function(full) {
+        const cmd = full.split(' ')[0];
 
         if (cmd !== 'multi') {
             clproto[cmd + 'Async'] = promisify(clproto[cmd]);

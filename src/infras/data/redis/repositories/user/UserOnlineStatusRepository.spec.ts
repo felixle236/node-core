@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import { randomUUID } from 'crypto';
+import { IUserOnlineStatusRepository } from '@gateways/repositories/user/IUserOnlineStatusRepository';
 import { IRedisContext } from '@shared/database/interfaces/IRedisContext';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
@@ -10,7 +11,7 @@ import { UserOnlineStatusRepository } from './UserOnlineStatusRepository';
 describe('Authorization JWT service', () => {
     const sandbox = createSandbox();
     let redisContext: IRedisContext;
-    let userOnlineStatusRepository: UserOnlineStatusRepository;
+    let userOnlineStatusRepository: IUserOnlineStatusRepository;
 
     before(() => {
         Container.set('redis.context', {
@@ -22,7 +23,8 @@ describe('Authorization JWT service', () => {
         });
 
         redisContext = Container.get<IRedisContext>('redis.context');
-        userOnlineStatusRepository = Container.get(UserOnlineStatusRepository);
+        Container.set('user_online_status.repository', new UserOnlineStatusRepository(redisContext));
+        userOnlineStatusRepository = Container.get<IUserOnlineStatusRepository>('user_online_status.repository');
     });
 
     afterEach(() => {

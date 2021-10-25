@@ -10,18 +10,18 @@ export class SmsSender implements ISmsProvider {
 
     constructor() {
         switch (SMS_PROVIDER) {
-        case SmsProvider.Twilio:
-            this._provider = new TwilioFactory(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-            break;
+            case SmsProvider.Twilio:
+                this._provider = new TwilioFactory(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+                break;
 
-        case SmsProvider.SendInBlue:
-            this._provider = new SendInBlueFactory(SENDINBLUE_API_KEY);
-            break;
+            case SmsProvider.SendInBlue:
+                this._provider = new SendInBlueFactory(SENDINBLUE_API_KEY);
+                break;
 
-        case SmsProvider.Console:
-        default:
-            this._provider = new SmsConsoleFactory();
-            break;
+            case SmsProvider.Console:
+            default:
+                this._provider = new SmsConsoleFactory();
+                break;
         }
     }
 

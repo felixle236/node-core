@@ -1,8 +1,8 @@
 import { STORAGE_UPLOAD_DIR } from '@configs/Configuration';
 import { UserAuthenticated } from '@shared/UserAuthenticated';
-import { UploadMyAvatarCommandHandler } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
-import { UploadMyAvatarCommandInput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandInput';
-import { UploadMyAvatarCommandOutput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandOutput';
+import { UploadMyAvatarHandler } from '@usecases/user/user/upload-my-avatar/UploadMyAvatarHandler';
+import { UploadMyAvatarInput } from '@usecases/user/user/upload-my-avatar/UploadMyAvatarInput';
+import { UploadMyAvatarOutput } from '@usecases/user/user/upload-my-avatar/UploadMyAvatarOutput';
 import multer from 'multer';
 import { Authorized, CurrentUser, JsonController, Post, UploadedFile } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -21,16 +21,16 @@ const storage = multer.diskStorage({
 @JsonController('/v1/me')
 export class MeController {
     constructor(
-        private readonly _uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler
+        private readonly _uploadMyAvatarHandler: UploadMyAvatarHandler
     ) {}
 
     @Post('/avatar')
     @Authorized()
     @OpenAPI({ summary: 'Upload my avatar' })
-    @ResponseSchema(UploadMyAvatarCommandOutput)
-    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadMyAvatarCommandOutput> {
-        const param = new UploadMyAvatarCommandInput();
+    @ResponseSchema(UploadMyAvatarOutput)
+    async uploadMyAvatar(@UploadedFile('avatar', { required: true, options: { storage } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadMyAvatarOutput> {
+        const param = new UploadMyAvatarInput();
         param.file = file;
-        return await this._uploadMyAvatarCommandHandler.handle(userAuth.userId, param);
+        return await this._uploadMyAvatarHandler.handle(userAuth.userId, param);
     }
 }

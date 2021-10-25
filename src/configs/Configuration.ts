@@ -82,7 +82,6 @@ export const MINIO_HOST: string = process.env.MINIO_HOST ?? '';
 export const MINIO_PORT: number = process.env.MINIO_PORT ? Number(process.env.MINIO_PORT) : 0;
 export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY ?? '';
 export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const MINIO_USE_SSL: boolean = convertStringToBoolean(process.env.MINIO_USE_SSL);
 
 export const GOOGLE_STORAGE_LOCATION: string = process.env.GOOGLE_STORAGE_LOCATION ?? '';

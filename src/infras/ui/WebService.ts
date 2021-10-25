@@ -4,6 +4,8 @@ import path from 'path';
 import { ENVIRONMENT } from '@configs/Configuration';
 import { Environment } from '@configs/Enums';
 import { ILogService } from '@gateways/services/ILogService';
+import i18n from '@shared/localization';
+import { ValidatorOptions } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { RoutingControllersOptions } from 'routing-controllers';
@@ -18,6 +20,7 @@ export class WebService {
 
         const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
+        app.use(i18n.init);
 
         // view engine setup
         app.set('views', path.join(__dirname, 'views'));
@@ -36,7 +39,6 @@ export class WebService {
             interceptors: [
                 path.join(__dirname, './interceptors/Interceptor*{.js,.ts}')
             ],
-            validation: false,
             development: ENVIRONMENT === Environment.Local
         });
 
@@ -58,14 +60,14 @@ export class WebService {
         controllers?: string[] | Function[],
         middlewares?: string[] | Function[],
         interceptors?: string[] | Function[],
-        validation: boolean,
+        validation?: ValidatorOptions,
         development: boolean
     }): RoutingControllersOptions {
         return {
             controllers: param.controllers,
             middlewares: param.middlewares,
             interceptors: param.interceptors,
-            validation: param.validation,
+            validation: param.validation || { whitelist: true, validationError: { target: false, value: false } },
             defaultErrorHandler: false,
             development: param.development,
             authorizationChecker: WebAuthenticator.authorizationChecker,

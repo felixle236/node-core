@@ -8,7 +8,8 @@ Implementing advanced architectures like clean architecture and domain driven de
 * Support both RESTful API and WebSocket.
 * Support caching from Redis.
 * Support database connection and database migration via TypeORM.
-* Support coding rules with ESLint.
+* Support multiple languages.
+* Support coding rules with ESLint and auto-fix ESLint with Visual Code.
 * Support unit test and coverage.
 * Support auto-generating API documentation and expose to Swagger UI.
 * Support docker container.
@@ -36,7 +37,6 @@ Implementing advanced architectures like clean architecture and domain driven de
 
 - Clean architecture
 - Domain driven design (DDD)
-- CQRS pattern
 - Repository pattern
 - Transfer object pattern
 - Data mapper pattern
@@ -53,6 +53,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 - Redis
 - Socket.io
 - Routing controllers
+- I18n
 - Open API 3
 - ESLint
 - Mocha
@@ -63,7 +64,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 
 ## Required
 
-- NodeJS version >= `14.x.x`, current version: NodeJS `v14.17.5` and NPM `v6.14.14` (We can install global `n` package to switch NodeJS versions easier).
+- NodeJS version >= `14.17.x`, current version: NodeJS `v14.17.5` and NPM `v6.14.14` (We can install global `n` package to switch NodeJS versions easier).
 - Knowledge of Typescript, ES6, TypeORM, PostgreSQL.
 
 ## Document Related
@@ -185,8 +186,8 @@ npm run migration:down ------------------------// Revert migration for updating 
 npm run lint
 npm run build ---------------------------------// Build source before start with production environment.
 npm test --------------------------------------// Start unit test and coverage report.
-npm run dev -----------------------------------// Start with local environment.
-npm start -------------------------------------// Start with production environment, we can change variable for each environment as development, test, staging,....
+npm run dev -----------------------------------// Start with local environment (NODE_ENV into .env file).
+npm start -------------------------------------// Start with production environment (NODE_ENV into .env file), we can change variable for each environment as development, test, staging,....
 ```
 
 ## Grunt Commands
@@ -218,7 +219,7 @@ Run the migration for updating database structure (need to create database befor
 npm run migration:up
 ```
 
-Run the below command for starting with development mode (or debug by visual code), NODE_ENV will be `local`:
+Run the below command for starting with development mode (or debug by visual code), NODE_ENV will be `local` (NODE_ENV into .env file):
 
 ```
 npm run dev
@@ -254,10 +255,10 @@ npm test
 ## Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- Create `Client` module, you can try: `npm run generate:module Client`. It will generate entity, schema, repository, usecase, controller,....
-- Create sub module as `ClientCategory` into `Client` module: `npm run generate:module Client#ClientCategory`. It will generate entity, schema, repository, usecase, controller,...into `Client` module (`client` folders).
-- Create `FindClientByOwner` usecase: `npm run generate:usecase Client:Query:FindClientByOwner`. It will generate that usecase only. We have 2 methods: `Query`, `Command`.
-- Create `CreateClientTest` usecase for sub-module `ClientTest` into `Client` module: `npm run generate:usecase Client#ClientTest:Command:CreateClientTest`.
+- Create `Customer` module, you can try: `npm run generate:module Customer`. It will generate entity, schema, repository, usecase, controller,....
+- Create sub module as `CustomerTest` into `Customer` module: `npm run generate:module Customer#CustomerTest`. It will generate entity, schema, repository, usecase, controller,...into `Customer` module (`customer` folders).
+- Create `FindCustomerByOwner` usecase: `npm run generate:usecase Customer Find#FindCustomerByOwner`. It will generate that usecase only. We have 5 method templates: `Find`, `Get`, `Create`, `Update`, `Delete`.
+- Create `CreateCustomerTestByOwner` usecase for sub-module `CustomerTest` into `Customer` module: `npm run generate:usecase Customer#CustomerTest Create#CreateCustomerTestByOwner`.
 
 > After generate the module or usecase, we need to modify the content of them suited for.
 
@@ -287,6 +288,96 @@ npm test
 > But don't forget to set expire time and clear cache if have any update on the data related. Refer to [TypeORM Caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
 - To clear cache, execute command `await this.dbContext.clearCaching('key')`, we also use typeorm `typeorm cache:clear` or use npm `npm run cache:clear` for clearing all data caching.
 
+## Multiple Languages
+
+- The default language used is English, to use multiple languages we need to update the configuration at `src/core/shared/localization/index.ts`. Refer to [I18n](https://www.npmjs.com/package/i18n).
+- When we want to add error/mail/sms content, we need to add the required language files like `en.json`.
+#### Usage for errors:
+```
+// Define new error:
+export class MessageError {
+   ...
+   static PARAM_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, '%s_not_found');
+   ...
+}
+```
+```
+// Define new key message and label for translation:
+{
+   ...
+   "message": {
+      ...
+      "%s_not_found": "%s not found",
+      ...
+   },
+   ...
+   "label": {
+      ...
+      "data": "data",
+      ...
+   },
+   ...
+}
+```
+```
+// To use translation, the key label should passed into `t` field:
+throw new SystemError(MessageError.PARAM_NOT_FOUND, { t: 'data' });
+
+// With this case, 'count' and '10' will be passed without translation:
+throw new SystemError(MessageError.PARAM_MAX_NUMBER, 'count', 10);
+```
+```
+// Execute translation is called into ErrorMiddleware:
+error.translate(req.__);
+```
+#### Usage for validation errors:
+```
+// Define new validation decorator into ValidationDecorator:
+...
+export const IsEmail = (eOpts?: ValidatorJS.IsEmailOptions, opts?: classValidator.ValidationOptions): PropertyDecorator =>
+    classValidator.IsEmail(eOpts, { ...opts, message: intlMsg('is_email') });
+...
+```
+```
+// Define new key validation for translation:
+{
+   "validation": {
+      ...
+      "is_email": "{{field}} must be an email",
+      ...
+   },
+   ...
+}
+```
+```
+// Execute validation
+import { IsEmail } from '@shared/decorators/ValidationDecorator';
+
+export class ForgotPasswordByEmailInput {
+    @IsEmail()
+    email: string;
+}
+```
+#### Usage for mail/sms content:
+```
+// Define new key mail for translation:
+{
+   "mail": {
+      "account_activation": {
+			"greeting": "Hi",
+      }
+      ...
+   },
+   ...
+}
+```
+```
+// To use translation, we need to import our i18n definition and use the locale variable from request:
+import i18n from '@shared/localization';
+...
+i18n.__({ phrase: 'mail.account_activation.greeting', locale })
+```
+
 ## Authentication & Authorization
 
 - We are using `JWT` to authenticate user access for http request and socket io. Default we use the authencation signature with `HS256`.
@@ -297,15 +388,15 @@ npm test
    - `Anonymous` (Non-user) to allow access API, we don't need to do anything about permission.
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
    - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` or `@Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])` on controller functions.
-- `@Authorized()` is a method decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object via parameter decorator `@CurrentUser()`. We can use paramter decorator `@HandleOptionRequest()` to get `UserAuthenticated` object also.
-> `@HandleOptionRequest()` decorator is built to assist in retrieving the user authenticated and trace id (trace log) from the API request.
+- `@Authorized()` is a method decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object via parameter decorator `@CurrentUser()`. We can use paramter decorator `@UsecaseOptionRequest()` to get `UserAuthenticated` object also.
+> `@UsecaseOptionRequest()` decorator is built to assist in retrieving the user authenticated and trace id (trace log) from the API request.
 
 ## Logging
 
 - `winston` is designed to be a simple and universal logging library with support for multiple transports.
 - `console` is logging default in log service and it will write to log file with `error` level.
 - Support API logging middleware to log the request detail as remote ip, http method, endpoint, response size, response status code, latency, headers,...
-- Support trace log feature also with `@HandleOptionRequest()` decorator, refer to endpoint `POST /v1/auths`.
+- Support trace log feature also with `@UsecaseOptionRequest()` decorator, refer to endpoint `POST /v1/auths`.
 - We also switch to AWS CloudWatch or Google Logging by change the configuration of environment `LOG_PROVIDER` in `.env`.
 - Refer with values `WINSTON (1) - AWS_WINSTON (2) - GOOGLE_WINSTON (3)`.
 
@@ -329,7 +420,7 @@ npm test
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
    > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.Processing` vs `order.status = 2`.
 
-- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, 'order status');`
+- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, { t: 'order_status' });`
 
 ## Exception
 
@@ -353,9 +444,9 @@ import { SystemError } from '@shared/exceptions/SystemError';
 ....
 throw new AccessDeniedError();
 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
-throw new UnauthorizedError(MessageError.PARAM_INVALID, 'token');
+throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
 throw new SystemError(MessageError.DATA_NOT_FOUND);
-throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
+throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'name' }, 30);
 ```
 
 > If you got error with status code 500, it's system error or logical error. Almost, this error is your source code, you need to find and fix it soon.
@@ -372,6 +463,12 @@ throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'name', 30);
 ```
 @Inject('db.context')
 private readonly _dbContext: IDbContext;
+
+or
+
+constructor(
+   @Inject('db.context') private readonly _dbContext: IDbContext
+) {}
 ....
 
 await this._dbContext.getConnection().runTransaction(async queryRunner => {
@@ -409,7 +506,7 @@ await this._dbContext.getConnection().runTransaction(async queryRunner => {
 ```
 npm run migration:generate Migration_Name
 ```
-> Migration_Name should be named full meaning. Ex: Create_Table_Client, Add_Field_Email_In_Client, Modify_Field_Email_In_Client, Migrate_Old_Data_To_New_Data,....
+> Migration_Name should be named full meaning. Ex: Create_Table_Customer, Add_Field_Email_In_Customer, Modify_Field_Email_In_Customer, Migrate_Old_Data_To_New_Data,....
 
 - To run the next migrations for update database structure:
 ```
@@ -544,7 +641,7 @@ Status code: 200 OK
 {
    "data": {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "firstName": "Client",
+      "firstName": "Customer",
       "lastName": "Test"
    }
 }

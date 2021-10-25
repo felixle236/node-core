@@ -1,23 +1,12 @@
-import { IsString } from 'class-validator';
+import { BaseError } from './BaseError';
 import { MessageError } from './message/MessageError';
 
-export class InternalServerError extends Error {
-    httpCode: number;
-
-    @IsString()
-    code: string;
-
-    @IsString()
-    override name: string;
-
-    @IsString()
-    override message: string;
-
+export class InternalServerError extends BaseError {
     constructor() {
         super();
         this.httpCode = 500;
         this.code = MessageError.SOMETHING_WRONG.code;
         this.name = 'InternalServerError';
-        this.message = MessageError.SOMETHING_WRONG.message;
+        this.message = JSON.stringify({ key: MessageError.SOMETHING_WRONG.message });
     }
 }

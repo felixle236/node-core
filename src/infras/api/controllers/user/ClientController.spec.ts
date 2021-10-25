@@ -1,35 +1,35 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import { RoleId } from '@domain/enums/user/RoleId';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { mockAuthentication } from '@shared/test/MockAuthentication';
+import { mockUserAuthentication } from '@shared/test/MockAuthentication';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockWebApi } from '@shared/test/MockWebApi';
-import { ActiveClientCommandHandler } from '@usecases/user/client/commands/active-client/ActiveClientCommandHandler';
-import { ActiveClientCommandOutput } from '@usecases/user/client/commands/active-client/ActiveClientCommandOutput';
-import { ArchiveClientCommandHandler } from '@usecases/user/client/commands/archive-client/ArchiveClientCommandHandler';
-import { ArchiveClientCommandOutput } from '@usecases/user/client/commands/archive-client/ArchiveClientCommandOutput';
-import { CreateClientCommandHandler } from '@usecases/user/client/commands/create-client/CreateClientCommandHandler';
-import { CreateClientCommandOutput } from '@usecases/user/client/commands/create-client/CreateClientCommandOutput';
-import { DeleteClientCommandHandler } from '@usecases/user/client/commands/delete-client/DeleteClientCommandHandler';
-import { DeleteClientCommandOutput } from '@usecases/user/client/commands/delete-client/DeleteClientCommandOutput';
-import { RegisterClientCommandHandler } from '@usecases/user/client/commands/register-client/RegisterClientCommandHandler';
-import { RegisterClientCommandOutput } from '@usecases/user/client/commands/register-client/RegisterClientCommandOutput';
-import { ResendActivationCommandHandler } from '@usecases/user/client/commands/resend-activation/ResendActivationCommandHandler';
-import { ResendActivationCommandOutput } from '@usecases/user/client/commands/resend-activation/ResendActivationCommandOutput';
-import { UpdateClientCommandHandler } from '@usecases/user/client/commands/update-client/UpdateClientCommandHandler';
-import { UpdateClientCommandOutput } from '@usecases/user/client/commands/update-client/UpdateClientCommandOutput';
-import { UpdateMyProfileClientCommandHandler } from '@usecases/user/client/commands/update-my-profile-client/UpdateMyProfileClientCommandHandler';
-import { UpdateMyProfileClientCommandOutput } from '@usecases/user/client/commands/update-my-profile-client/UpdateMyProfileClientCommandOutput';
-import { FindClientQueryHandler } from '@usecases/user/client/queries/find-client/FindClientQueryHandler';
-import { FindClientQueryOutput } from '@usecases/user/client/queries/find-client/FindClientQueryOutput';
-import { GetClientByIdQueryHandler } from '@usecases/user/client/queries/get-client-by-id/GetClientByIdQueryHandler';
-import { GetClientByIdQueryOutput } from '@usecases/user/client/queries/get-client-by-id/GetClientByIdQueryOutput';
-import { GetMyProfileClientQueryHandler } from '@usecases/user/client/queries/get-my-profile-client/GetMyProfileClientQueryHandler';
-import { GetMyProfileClientQueryOutput } from '@usecases/user/client/queries/get-my-profile-client/GetMyProfileClientQueryOutput';
+import { ActiveClientHandler } from '@usecases/user/client/active-client/ActiveClientHandler';
+import { ActiveClientOutput } from '@usecases/user/client/active-client/ActiveClientOutput';
+import { ArchiveClientHandler } from '@usecases/user/client/archive-client/ArchiveClientHandler';
+import { ArchiveClientOutput } from '@usecases/user/client/archive-client/ArchiveClientOutput';
+import { CreateClientHandler } from '@usecases/user/client/create-client/CreateClientHandler';
+import { CreateClientOutput } from '@usecases/user/client/create-client/CreateClientOutput';
+import { DeleteClientHandler } from '@usecases/user/client/delete-client/DeleteClientHandler';
+import { DeleteClientOutput } from '@usecases/user/client/delete-client/DeleteClientOutput';
+import { FindClientHandler } from '@usecases/user/client/find-client/FindClientHandler';
+import { FindClientData, FindClientOutput } from '@usecases/user/client/find-client/FindClientOutput';
+import { GetClientHandler } from '@usecases/user/client/get-client/GetClientHandler';
+import { GetClientData, GetClientOutput } from '@usecases/user/client/get-client/GetClientOutput';
+import { GetMyProfileClientHandler } from '@usecases/user/client/get-my-profile-client/GetMyProfileClientHandler';
+import { GetMyProfileClientData, GetMyProfileClientOutput } from '@usecases/user/client/get-my-profile-client/GetMyProfileClientOutput';
+import { RegisterClientHandler } from '@usecases/user/client/register-client/RegisterClientHandler';
+import { RegisterClientOutput } from '@usecases/user/client/register-client/RegisterClientOutput';
+import { ResendActivationHandler } from '@usecases/user/client/resend-activation/ResendActivationHandler';
+import { ResendActivationOutput } from '@usecases/user/client/resend-activation/ResendActivationOutput';
+import { UpdateClientHandler } from '@usecases/user/client/update-client/UpdateClientHandler';
+import { UpdateClientOutput } from '@usecases/user/client/update-client/UpdateClientOutput';
+import { UpdateMyProfileClientHandler } from '@usecases/user/client/update-my-profile-client/UpdateMyProfileClientHandler';
+import { UpdateMyProfileClientOutput } from '@usecases/user/client/update-my-profile-client/UpdateMyProfileClientOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
@@ -40,48 +40,50 @@ describe('Client controller', () => {
     let server: Server;
     const port = 3301;
     const endpoint = `http://localhost:${port}/api/v1/clients`;
-    const options = { headers: { Authorization: 'Bearer token' } };
-    let findClientQueryHandler: FindClientQueryHandler;
-    let getClientByIdQueryHandler: GetClientByIdQueryHandler;
-    let getMyProfileClientQueryHandler: GetMyProfileClientQueryHandler;
-    let registerClientCommandHandler: RegisterClientCommandHandler;
-    let activeClientCommandHandler: ActiveClientCommandHandler;
-    let resendActivationCommandHandler: ResendActivationCommandHandler;
-    let createClientCommandHandler: CreateClientCommandHandler;
-    let updateClientCommandHandler: UpdateClientCommandHandler;
-    let updateMyProfileClientCommandHandler: UpdateMyProfileClientCommandHandler;
-    let deleteClientCommandHandler: DeleteClientCommandHandler;
-    let archiveClientCommandHandler: ArchiveClientCommandHandler;
+    const options = { headers: { authorization: 'Bearer token' } };
+    let findClientHandler: FindClientHandler;
+    let getClientHandler: GetClientHandler;
+    let getMyProfileClientHandler: GetMyProfileClientHandler;
+    let registerClientHandler: RegisterClientHandler;
+    let activeClientHandler: ActiveClientHandler;
+    let resendActivationHandler: ResendActivationHandler;
+    let createClientHandler: CreateClientHandler;
+    let updateClientHandler: UpdateClientHandler;
+    let updateMyProfileClientHandler: UpdateMyProfileClientHandler;
+    let deleteClientHandler: DeleteClientHandler;
+    let archiveClientHandler: ArchiveClientHandler;
 
     before(done => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const ClientController = require('./ClientController').ClientController;
-        server = mockWebApi(ClientController, port, () => {
-            Container.set(FindClientQueryHandler, { handle() {} });
-            Container.set(GetClientByIdQueryHandler, { handle() {} });
-            Container.set(GetMyProfileClientQueryHandler, { handle() {} });
-            Container.set(RegisterClientCommandHandler, { handle() {} });
-            Container.set(ActiveClientCommandHandler, { handle() {} });
-            Container.set(ResendActivationCommandHandler, { handle() {} });
-            Container.set(CreateClientCommandHandler, { handle() {} });
-            Container.set(UpdateClientCommandHandler, { handle() {} });
-            Container.set(UpdateMyProfileClientCommandHandler, { handle() {} });
-            Container.set(DeleteClientCommandHandler, { handle() {} });
-            Container.set(ArchiveClientCommandHandler, { handle() {} });
+        Container.set('auth_jwt.service', mockAuthJwtService());
 
-            findClientQueryHandler = Container.get(FindClientQueryHandler);
-            getClientByIdQueryHandler = Container.get(GetClientByIdQueryHandler);
-            getMyProfileClientQueryHandler = Container.get(GetMyProfileClientQueryHandler);
-            registerClientCommandHandler = Container.get(RegisterClientCommandHandler);
-            activeClientCommandHandler = Container.get(ActiveClientCommandHandler);
-            resendActivationCommandHandler = Container.get(ResendActivationCommandHandler);
-            createClientCommandHandler = Container.get(CreateClientCommandHandler);
-            updateClientCommandHandler = Container.get(UpdateClientCommandHandler);
-            updateMyProfileClientCommandHandler = Container.get(UpdateMyProfileClientCommandHandler);
-            deleteClientCommandHandler = Container.get(DeleteClientCommandHandler);
-            archiveClientCommandHandler = Container.get(ArchiveClientCommandHandler);
+        import('./ClientController').then(obj => {
+            server = mockWebApi(obj.ClientController, port, () => {
+                Container.set(FindClientHandler, mockUsecase());
+                Container.set(GetClientHandler, mockUsecase());
+                Container.set(GetMyProfileClientHandler, mockUsecase());
+                Container.set(RegisterClientHandler, mockUsecase());
+                Container.set(ActiveClientHandler, mockUsecase());
+                Container.set(ResendActivationHandler, mockUsecase());
+                Container.set(CreateClientHandler, mockUsecase());
+                Container.set(UpdateClientHandler, mockUsecase());
+                Container.set(UpdateMyProfileClientHandler, mockUsecase());
+                Container.set(DeleteClientHandler, mockUsecase());
+                Container.set(ArchiveClientHandler, mockUsecase());
 
-            done();
+                findClientHandler = Container.get(FindClientHandler);
+                getClientHandler = Container.get(GetClientHandler);
+                getMyProfileClientHandler = Container.get(GetMyProfileClientHandler);
+                registerClientHandler = Container.get(RegisterClientHandler);
+                activeClientHandler = Container.get(ActiveClientHandler);
+                resendActivationHandler = Container.get(ResendActivationHandler);
+                createClientHandler = Container.get(CreateClientHandler);
+                updateClientHandler = Container.get(UpdateClientHandler);
+                updateMyProfileClientHandler = Container.get(UpdateMyProfileClientHandler);
+                deleteClientHandler = Container.get(DeleteClientHandler);
+                archiveClientHandler = Container.get(ArchiveClientHandler);
+
+                done();
+            });
         });
     });
 
@@ -102,26 +104,28 @@ describe('Client controller', () => {
     });
 
     it('Find clients by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new FindClientQueryOutput();
-        result.setData([{
-            id: randomUUID()
-        }] as any);
-        sandbox.stub(findClientQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new FindClientOutput();
+        const d = new FindClientData();
+        d.id = randomUUID();
+        result.data = [d];
+
+        sandbox.stub(findClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
     });
 
     it('Find clients by manager', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
-        const result = new FindClientQueryOutput();
-        result.setData([{
-            id: randomUUID()
-        }] as any);
-        sandbox.stub(findClientQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
+        const result = new FindClientOutput();
+        const d = new FindClientData();
+        d.id = randomUUID();
+        result.data = [d];
+
+        sandbox.stub(findClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.not.eq(undefined);
@@ -136,31 +140,31 @@ describe('Client controller', () => {
     });
 
     it('Get client by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const id = randomUUID();
-        const result = new GetClientByIdQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getClientByIdQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/' + id, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const d = new GetClientData();
+        d.id = randomUUID();
+        const result = new GetClientOutput();
+        result.data = d;
+
+        sandbox.stub(getClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/' + d.id, options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Get client by manager', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Manager } as any);
-        const id = randomUUID();
-        const result = new GetClientByIdQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getClientByIdQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/' + id, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
+        const d = new GetClientData();
+        d.id = randomUUID();
+        const result = new GetClientOutput();
+        result.data = d;
+
+        sandbox.stub(getClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/' + d.id, options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Get my profile with unauthorized error', async () => {
@@ -171,25 +175,25 @@ describe('Client controller', () => {
     });
 
     it('Get my profile by client', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Client } as any);
-        const id = randomUUID();
-        const result = new GetMyProfileClientQueryOutput();
-        result.setData({
-            id
-        } as any);
-        sandbox.stub(getMyProfileClientQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + '/my-profile', options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Client });
+        const d = new GetMyProfileClientData();
+        d.id = randomUUID();
+        const result = new GetMyProfileClientOutput();
+        result.data = d;
+
+        sandbox.stub(getMyProfileClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
 
         expect(status).to.eq(200);
-        expect(data.data.id).to.eq(id);
+        expect(data.data.id).to.eq(d.id);
     });
 
     it('Register new client account', async () => {
-        const result = new RegisterClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(registerClientCommandHandler, 'handle').resolves(result);
+        const result = new RegisterClientOutput();
+        result.data = true;
+        sandbox.stub(registerClientHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/register', {
+        const { status, data }: any = await axios.post(endpoint + '/register', {
             firstName: 'client',
             lastName: 'test',
             email: 'client.test@localhost.com',
@@ -201,11 +205,11 @@ describe('Client controller', () => {
     });
 
     it('Active client account', async () => {
-        const result = new ActiveClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(activeClientCommandHandler, 'handle').resolves(result);
+        const result = new ActiveClientOutput();
+        result.data = true;
+        sandbox.stub(activeClientHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/active', {
+        const { status, data }: any = await axios.post(endpoint + '/active', {
             email: 'client.test@localhost.com',
             activeKey: 'active key'
         });
@@ -215,11 +219,11 @@ describe('Client controller', () => {
     });
 
     it('Resend activation', async () => {
-        const result = new ResendActivationCommandOutput();
-        result.setData(true);
-        sandbox.stub(resendActivationCommandHandler, 'handle').resolves(result);
+        const result = new ResendActivationOutput();
+        result.data = true;
+        sandbox.stub(resendActivationHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/resend-activation', {
+        const { status, data }: any = await axios.post(endpoint + '/resend-activation', {
             email: 'client.test@localhost.com'
         });
 
@@ -240,13 +244,12 @@ describe('Client controller', () => {
     });
 
     it('Create client by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const id = randomUUID();
-        const result = new CreateClientCommandOutput();
-        result.setData(id);
-        sandbox.stub(createClientCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new CreateClientOutput();
+        result.data = randomUUID();
+        sandbox.stub(createClientHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint, {
+        const { status, data }: any = await axios.post(endpoint, {
             firstName: 'client',
             lastName: 'test',
             email: 'client.test@localhost.com',
@@ -254,7 +257,7 @@ describe('Client controller', () => {
         }, options);
 
         expect(status).to.eq(200);
-        expect(data.data).to.eq(id);
+        expect(data.data).to.eq(result.data);
     });
 
     it('Update client with unauthorized error', async () => {
@@ -268,12 +271,12 @@ describe('Client controller', () => {
     });
 
     it('Update client by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new UpdateClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateClientCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new UpdateClientOutput();
+        result.data = true;
+        sandbox.stub(updateClientHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/' + randomUUID(), {
+        const { status, data }: any = await axios.put(endpoint + '/' + randomUUID(), {
             firstName: 'client',
             lastName: 'test'
         }, options);
@@ -293,12 +296,12 @@ describe('Client controller', () => {
     });
 
     it('Update my client profile by client', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.Client } as any);
-        const result = new UpdateMyProfileClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateMyProfileClientCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Client });
+        const result = new UpdateMyProfileClientOutput();
+        result.data = true;
+        sandbox.stub(updateMyProfileClientHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
             firstName: 'client',
             lastName: 'test'
         }, options);
@@ -315,11 +318,11 @@ describe('Client controller', () => {
     });
 
     it('Delete client by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new DeleteClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(deleteClientCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.delete(endpoint + '/' + randomUUID(), options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new DeleteClientOutput();
+        result.data = true;
+        sandbox.stub(deleteClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.delete(endpoint + '/' + randomUUID(), options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);
@@ -333,11 +336,11 @@ describe('Client controller', () => {
     });
 
     it('Archive client by super admin', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: RoleId.SuperAdmin } as any);
-        const result = new ArchiveClientCommandOutput();
-        result.setData(true);
-        sandbox.stub(archiveClientCommandHandler, 'handle').resolves(result);
-        const { status, data } = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        const result = new ArchiveClientOutput();
+        result.data = true;
+        sandbox.stub(archiveClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.post(endpoint + '/' + randomUUID() + '/archive', undefined, options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

@@ -1,26 +1,24 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { Server } from 'http';
-import { AuthType } from '@domain/enums/auth/AuthType';
 import { InputValidationError } from '@shared/exceptions/InputValidationError';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { mockAuthentication, mockJwtToken } from '@shared/test/MockAuthentication';
+import { mockUserAuthentication } from '@shared/test/MockAuthentication';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockWebApi } from '@shared/test/MockWebApi';
-import { ForgotPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandHandler';
-import { ForgotPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/forgot-password-by-email/ForgotPasswordByEmailCommandOutput';
-import { ResetPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/reset-password-by-email/ResetPasswordByEmailCommandHandler';
-import { ResetPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/reset-password-by-email/ResetPasswordByEmailCommandOutput';
-import { UpdateMyPasswordByEmailCommandHandler } from '@usecases/auth/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandHandler';
-import { UpdateMyPasswordByEmailCommandOutput } from '@usecases/auth/auth/commands/update-my-password-by-email/UpdateMyPasswordByEmailCommandOutput';
-import { GetUserAuthByJwtQueryHandler } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryHandler';
-import { GetUserAuthByJwtQueryOutput } from '@usecases/auth/auth/queries/get-user-auth-by-jwt/GetUserAuthByJwtQueryOutput';
-import { LoginByEmailQueryHandler } from '@usecases/auth/auth/queries/login-by-email/LoginByEmailQueryHandler';
-import { LoginByEmailQueryOutput } from '@usecases/auth/auth/queries/login-by-email/LoginByEmailQueryOutput';
-import { ValidateForgotKeyForEmailCommandHandler } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandHandler';
-import { ValidateForgotKeyForEmailCommandOutput } from '@usecases/auth/auth/queries/validate-forgot-key-for-email/ValidateForgotKeyForEmailCommandOutput';
+import { ForgotPasswordByEmailHandler } from '@usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailHandler';
+import { ForgotPasswordByEmailOutput } from '@usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailOutput';
+import { GetUserAuthByJwtHandler } from '@usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
+import { LoginByEmailHandler } from '@usecases/auth/auth/login-by-email/LoginByEmailHandler';
+import { LoginByEmailOutput } from '@usecases/auth/auth/login-by-email/LoginByEmailOutput';
+import { ResetPasswordByEmailHandler } from '@usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailHandler';
+import { ResetPasswordByEmailOutput } from '@usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailOutput';
+import { UpdateMyPasswordByEmailHandler } from '@usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailHandler';
+import { UpdateMyPasswordByEmailOutput } from '@usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailOutput';
+import { ValidateForgotKeyForEmailHandler } from '@usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailHandler';
+import { ValidateForgotKeyForEmailOutput } from '@usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
@@ -31,33 +29,35 @@ describe('Authorization controller', () => {
     let server: Server;
     const port = 3301;
     const endpoint = `http://localhost:${port}/api/v1/auths`;
-    const options = { headers: { Authorization: 'Bearer token' } };
-    let getUserAuthByJwtQueryHandler: GetUserAuthByJwtQueryHandler;
-    let loginByEmailQueryHandler: LoginByEmailQueryHandler;
-    let forgotPasswordByEmailCommandHandler: ForgotPasswordByEmailCommandHandler;
-    let validateForgotKeyForEmailCommandHandler: ValidateForgotKeyForEmailCommandHandler;
-    let resetPasswordByEmailCommandHandler: ResetPasswordByEmailCommandHandler;
-    let updateMyPasswordByEmailCommandHandler: UpdateMyPasswordByEmailCommandHandler;
+    const options = { headers: { authorization: 'Bearer token' } };
+    let getUserAuthByJwtHandler: GetUserAuthByJwtHandler;
+    let loginByEmailHandler: LoginByEmailHandler;
+    let forgotPasswordByEmailHandler: ForgotPasswordByEmailHandler;
+    let validateForgotKeyForEmailHandler: ValidateForgotKeyForEmailHandler;
+    let resetPasswordByEmailHandler: ResetPasswordByEmailHandler;
+    let updateMyPasswordByEmailHandler: UpdateMyPasswordByEmailHandler;
 
     before(done => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const AuthController = require('./AuthController').AuthController;
-        server = mockWebApi(AuthController, port, () => {
-            Container.set(GetUserAuthByJwtQueryHandler, { handle() {} });
-            Container.set(LoginByEmailQueryHandler, { handle() {} });
-            Container.set(ForgotPasswordByEmailCommandHandler, { handle() {} });
-            Container.set(ValidateForgotKeyForEmailCommandHandler, { handle() {} });
-            Container.set(ResetPasswordByEmailCommandHandler, { handle() {} });
-            Container.set(UpdateMyPasswordByEmailCommandHandler, { handle() {} });
+        Container.set('auth_jwt.service', mockAuthJwtService());
 
-            getUserAuthByJwtQueryHandler = Container.get(GetUserAuthByJwtQueryHandler);
-            loginByEmailQueryHandler = Container.get(LoginByEmailQueryHandler);
-            forgotPasswordByEmailCommandHandler = Container.get(ForgotPasswordByEmailCommandHandler);
-            validateForgotKeyForEmailCommandHandler = Container.get(ValidateForgotKeyForEmailCommandHandler);
-            resetPasswordByEmailCommandHandler = Container.get(ResetPasswordByEmailCommandHandler);
-            updateMyPasswordByEmailCommandHandler = Container.get(UpdateMyPasswordByEmailCommandHandler);
+        import('./AuthController').then(obj => {
+            server = mockWebApi(obj.AuthController, port, () => {
+                Container.set(GetUserAuthByJwtHandler, mockUsecase());
+                Container.set(LoginByEmailHandler, mockUsecase());
+                Container.set(ForgotPasswordByEmailHandler, mockUsecase());
+                Container.set(ValidateForgotKeyForEmailHandler, mockUsecase());
+                Container.set(ResetPasswordByEmailHandler, mockUsecase());
+                Container.set(UpdateMyPasswordByEmailHandler, mockUsecase());
 
-            done();
+                getUserAuthByJwtHandler = Container.get(GetUserAuthByJwtHandler);
+                loginByEmailHandler = Container.get(LoginByEmailHandler);
+                forgotPasswordByEmailHandler = Container.get(ForgotPasswordByEmailHandler);
+                validateForgotKeyForEmailHandler = Container.get(ValidateForgotKeyForEmailHandler);
+                resetPasswordByEmailHandler = Container.get(ResetPasswordByEmailHandler);
+                updateMyPasswordByEmailHandler = Container.get(UpdateMyPasswordByEmailHandler);
+
+                done();
+            });
         });
     });
 
@@ -70,24 +70,10 @@ describe('Authorization controller', () => {
         server.close(done);
     });
 
-    it('Get user authenticated by token', async () => {
-        const result = new GetUserAuthByJwtQueryOutput();
-        result.setData({
-            userId: randomUUID(),
-            roleId: randomUUID(),
-            type: AuthType.PersonalEmail
-        });
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').resolves(result);
-        const { status, data } = await axios.get(endpoint + `?token=${mockJwtToken()}`, options);
-
-        expect(status).to.eq(200);
-        expect(data.data).to.not.eq(undefined);
-    });
-
     it('Get user authenticated by token invalid', async () => {
         const opt = JSON.parse(JSON.stringify(options));
         opt.headers.Authorization = 'Bearer';
-        sandbox.stub(getUserAuthByJwtQueryHandler, 'handle').throwsException(new InputValidationError());
+        sandbox.stub(getUserAuthByJwtHandler, 'handle').throwsException(new InputValidationError());
         const { status, data } = await axios.get(endpoint, opt).catch(error => error.response);
 
         expect(status).to.eq(400);
@@ -95,11 +81,11 @@ describe('Authorization controller', () => {
     });
 
     it('Login by email', async () => {
-        const result = new LoginByEmailQueryOutput();
-        result.setData('token');
-        sandbox.stub(loginByEmailQueryHandler, 'handle').resolves(result);
+        const result = new LoginByEmailOutput();
+        result.data = 'token';
+        sandbox.stub(loginByEmailHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/login', {
+        const { status, data }: any = await axios.post(endpoint + '/login', {
             email: 'user.test@localhost.com',
             password: 'Nodecore@2'
         });
@@ -109,11 +95,11 @@ describe('Authorization controller', () => {
     });
 
     it('Forgot password', async () => {
-        const result = new ForgotPasswordByEmailCommandOutput();
-        result.setData(true);
-        sandbox.stub(forgotPasswordByEmailCommandHandler, 'handle').resolves(result);
+        const result = new ForgotPasswordByEmailOutput();
+        result.data = true;
+        sandbox.stub(forgotPasswordByEmailHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/forgot-password', {
+        const { status, data }: any = await axios.post(endpoint + '/forgot-password', {
             email: 'user.test@localhost.com'
         });
 
@@ -122,11 +108,11 @@ describe('Authorization controller', () => {
     });
 
     it('Forgot password', async () => {
-        const result = new ValidateForgotKeyForEmailCommandOutput();
-        result.setData(true);
-        sandbox.stub(validateForgotKeyForEmailCommandHandler, 'handle').resolves(result);
+        const result = new ValidateForgotKeyForEmailOutput();
+        result.data = true;
+        sandbox.stub(validateForgotKeyForEmailHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/validate-forgot-key', {
+        const { status, data }: any = await axios.post(endpoint + '/validate-forgot-key', {
             email: 'user.test@localhost.com',
             forgotKey: 'forgot key'
         });
@@ -136,11 +122,11 @@ describe('Authorization controller', () => {
     });
 
     it('Reset password', async () => {
-        const result = new ResetPasswordByEmailCommandOutput();
-        result.setData(true);
-        sandbox.stub(resetPasswordByEmailCommandHandler, 'handle').resolves(result);
+        const result = new ResetPasswordByEmailOutput();
+        result.data = true;
+        sandbox.stub(resetPasswordByEmailHandler, 'handle').resolves(result);
 
-        const { status, data } = await axios.post(endpoint + '/reset-password', {
+        const { status, data }: any = await axios.post(endpoint + '/reset-password', {
             forgotKey: 'forgot key',
             email: 'user.test@localhost.com',
             password: 'Nodecore@2'
@@ -158,15 +144,15 @@ describe('Authorization controller', () => {
     });
 
     it('Update my password', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: randomUUID() } as any);
-        const result = new UpdateMyPasswordByEmailCommandOutput();
-        result.setData(true);
-        sandbox.stub(updateMyPasswordByEmailCommandHandler, 'handle').resolves(result);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: randomUUID() });
+        const result = new UpdateMyPasswordByEmailOutput();
+        result.data = true;
+        sandbox.stub(updateMyPasswordByEmailHandler, 'handle').resolves(result);
 
         const { status, data } = await axios.patch(endpoint + '/password', {
             oldPassword: 'Nodecore@2',
             password: 'Nodecore@222'
-        }, options);
+        }, options).catch(error => error.response);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

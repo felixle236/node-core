@@ -7,6 +7,10 @@ export abstract class BaseEntity<TIdentityType, TEntity extends IEntity<TIdentit
         return this.data.id;
     }
 
+    set id(val: TIdentityType) {
+        this.data.id = val;
+    }
+
     get createdAt(): Date {
         return this.data.createdAt;
     }

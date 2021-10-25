@@ -11,7 +11,8 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "**/test/**"
+        "**/test/**",
+        "**/ValidationDecorator.ts"
     ],
     "extension": [
         ".ts"

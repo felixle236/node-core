@@ -1,21 +1,24 @@
 import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
+import i18n from '@shared/localization';
 import Mailgen from 'mailgen';
 
 export class UserActivationTemplate {
-    static getTemplate(name: string, email: string, activeKey: string): Mailgen.Content {
+    static getTemplate(name: string, email: string, activeKey: string, locale?: string): Mailgen.Content {
         return {
             body: {
+                greeting: i18n.__({ phrase: 'mail.account_activation.greeting', locale }),
                 name,
-                intro: `Welcome to ${PROJECT_NAME}! We're very excited to have you on board.`,
+                intro: i18n.__({ phrase: 'mail.account_activation.intro', locale }, { projectName: PROJECT_NAME }),
                 action: {
-                    instructions: `To get started with ${PROJECT_NAME}, please click here:`,
+                    instructions: i18n.__({ phrase: 'mail.account_activation.instructions', locale }, { projectName: PROJECT_NAME }),
                     button: {
                         color: '#22BC66',
-                        text: 'Confirm your account',
+                        text: i18n.__({ phrase: 'mail.account_activation.button', locale }),
                         link: `${PROTOTYPE}://${DOMAIN}/confirm-account?email=${email}&key=${activeKey}`
                     }
                 },
-                outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                outro: i18n.__({ phrase: 'mail.account_activation.outro', locale }),
+                signature: i18n.__({ phrase: 'mail.account_activation.signature', locale })
             }
         };
     }

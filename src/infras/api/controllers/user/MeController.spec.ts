@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
 import { Server } from 'http';
 import path from 'path';
 import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { mockAuthentication } from '@shared/test/MockAuthentication';
+import { mockUserAuthentication } from '@shared/test/MockAuthentication';
+import { mockAuthJwtService } from '@shared/test/MockAuthJwtService';
+import { mockUsecase } from '@shared/test/MockUsecase';
 import { mockWebApi } from '@shared/test/MockWebApi';
-import { UploadMyAvatarCommandHandler } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandHandler';
-import { UploadMyAvatarCommandOutput } from '@usecases/user/user/commands/upload-my-avatar/UploadMyAvatarCommandOutput';
+import { UploadMyAvatarHandler } from '@usecases/user/user/upload-my-avatar/UploadMyAvatarHandler';
+import { UploadMyAvatarOutput } from '@usecases/user/user/upload-my-avatar/UploadMyAvatarOutput';
 import { readFile } from '@utils/file';
 import axios from 'axios';
 import { expect } from 'chai';
@@ -24,18 +24,20 @@ describe('Me controller', () => {
     let server: Server;
     const port = 3301;
     const endpoint = `http://localhost:${port}/api/v1/me`;
-    const options = { headers: { Authorization: 'Bearer token' } };
-    let uploadMyAvatarCommandHandler: UploadMyAvatarCommandHandler;
+    const options = { headers: { authorization: 'Bearer token' } };
+    let uploadMyAvatarHandler: UploadMyAvatarHandler;
 
     before(done => {
+        Container.set('auth_jwt.service', mockAuthJwtService());
         sandbox2.stub(multer, 'diskStorage').returns(multer.memoryStorage());
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const MeController = require('./MeController').MeController;
-        server = mockWebApi(MeController, port, () => {
-            Container.set(UploadMyAvatarCommandHandler, { handle() {} });
-            uploadMyAvatarCommandHandler = Container.get(UploadMyAvatarCommandHandler);
 
-            done();
+        import('./MeController').then(obj => {
+            server = mockWebApi(obj.MeController, port, () => {
+                Container.set(UploadMyAvatarHandler, mockUsecase());
+                uploadMyAvatarHandler = Container.get(UploadMyAvatarHandler);
+
+                done();
+            });
         });
     });
 
@@ -57,22 +59,22 @@ describe('Me controller', () => {
     });
 
     it('Upload my avatar', async () => {
-        mockAuthentication({ userId: randomUUID(), roleId: randomUUID() } as any);
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: randomUUID() });
         const filePath = path.join(__dirname, '../../../../resources/images/test/workplace.jpg');
         const file = await readFile(filePath);
         const formData = new FormData();
         formData.append('avatar', file, 'avatar.jpg');
 
-        const result = new UploadMyAvatarCommandOutput();
-        result.setData('url');
-        sandbox.stub(uploadMyAvatarCommandHandler, 'handle').resolves(result);
+        const result = new UploadMyAvatarOutput();
+        result.data = 'url';
+        sandbox.stub(uploadMyAvatarHandler, 'handle').resolves(result);
 
         let headers = JSON.parse(JSON.stringify(options.headers));
         headers = {
             ...headers,
             ...formData.getHeaders()
         };
-        const { status, data } = await axios.post(endpoint + '/avatar', formData, { headers });
+        const { status, data }: any = await axios.post(endpoint + '/avatar', formData, { headers });
 
         expect(status).to.eq(200);
         expect(data.data).to.eq('url');

@@ -1,0 +1,30 @@
+import { {PascalName} } from '@domain/entities/{folder}/{PascalName}';
+import { I{PascalName}Repository } from '@gateways/repositories/{folder}/I{PascalName}Repository';
+import { MessageError } from '@shared/exceptions/message/MessageError';
+import { SystemError } from '@shared/exceptions/SystemError';
+import { UsecaseHandler } from '@shared/usecase/UsecaseHandler';
+import { Inject, Service } from 'typedi';
+import { {CreateUsecaseName}Input } from './{CreateUsecaseName}Input';
+import { {CreateUsecaseName}Output } from './{CreateUsecaseName}Output';
+
+@Service()
+export class {CreateUsecaseName}Handler extends UsecaseHandler<{CreateUsecaseName}Input, {CreateUsecaseName}Output> {
+    constructor(
+        @Inject('{lower_case_name}.repository') private readonly _{camelName}Repository: I{PascalName}Repository
+    ) {
+        super();
+    }
+
+    async handle(param: {CreateUsecaseName}Input): Promise<{CreateUsecaseName}Output> {
+        const data = new {PascalName}();
+        data.name = param.name;
+
+        const isExist = await this._{camelName}Repository.checkNameExist(data.name);
+        if (isExist)
+            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'name' });
+
+        const result = new {CreateUsecaseName}Output();
+        result.data = await this._{camelName}Repository.create(data);
+        return result;
+    }
+}

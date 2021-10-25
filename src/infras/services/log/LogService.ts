@@ -19,57 +19,57 @@ export class LogService implements ILogService {
         const { combine, colorize, simple } = format;
 
         switch (LOG_PROVIDER) {
-        case LogProvider.AwsWinston:
-            this._logger = createLogger({
-                level: 'debug',
-                transports: [
-                    new WinstonCloudWatch({
-                        name: PROJECT_ID,
-                        logGroupName: PROJECT_ID,
-                        logStreamName: PROJECT_ID,
-                        awsRegion: AWS_REGION,
-                        awsAccessKeyId: AWS_ACCESS_KEY,
-                        awsSecretKey: AWS_SECRET_KEY,
-                        messageFormatter: ({ level, message, ...meta }) => {
-                            return level + ': ' + message + (meta && Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '');
-                        }
-                    })
-                ]
-            });
-            break;
-        case LogProvider.GoogleWinston:
-            this._logger = createLogger({
-                level: 'debug',
-                transports: [
-                    new LoggingWinston({
-                        prefix: PROJECT_ID
-                    })
-                ]
-            });
-            break;
-        case LogProvider.Winston:
-        default:
-            this._logger = createLogger({
-                level: 'debug',
-                transports: [
-                    new transports.Console({
-                        format: combine(
-                            colorize(),
-                            simple()
-                        )
-                    }),
-                    new transports.File({
-                        level: 'error',
-                        filename: process.cwd() + '/logs/error.log',
-                        maxsize: 10485760,
-                        maxFiles: 5,
-                        format: combine(
-                            simple()
-                        )
-                    })
-                ]
-            });
-            break;
+            case LogProvider.AwsWinston:
+                this._logger = createLogger({
+                    level: 'debug',
+                    transports: [
+                        new WinstonCloudWatch({
+                            name: PROJECT_ID,
+                            logGroupName: PROJECT_ID,
+                            logStreamName: PROJECT_ID,
+                            awsRegion: AWS_REGION,
+                            awsAccessKeyId: AWS_ACCESS_KEY,
+                            awsSecretKey: AWS_SECRET_KEY,
+                            messageFormatter: ({ level, message, ...meta }) => {
+                                return level + ': ' + message + (meta && Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '');
+                            }
+                        })
+                    ]
+                });
+                break;
+            case LogProvider.GoogleWinston:
+                this._logger = createLogger({
+                    level: 'debug',
+                    transports: [
+                        new LoggingWinston({
+                            prefix: PROJECT_ID
+                        })
+                    ]
+                });
+                break;
+            case LogProvider.Winston:
+            default:
+                this._logger = createLogger({
+                    level: 'debug',
+                    transports: [
+                        new transports.Console({
+                            format: combine(
+                                colorize(),
+                                simple()
+                            )
+                        }),
+                        new transports.File({
+                            level: 'error',
+                            filename: process.cwd() + '/logs/error.log',
+                            maxsize: 10485760,
+                            maxFiles: 5,
+                            format: combine(
+                                simple()
+                            )
+                        })
+                    ]
+                });
+                break;
         }
     }
 

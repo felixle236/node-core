@@ -1,7 +1,7 @@
 import { PrivateAccessMiddleware } from '@infras/api/middlewares/PrivateAccessMiddleware';
-import { GetListOnlineStatusByIdsQueryHandler } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryHandler';
-import { GetListOnlineStatusByIdsQueryInput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryInput';
-import { GetListOnlineStatusByIdsQueryOutput } from '@usecases/user/user/queries/get-list-online-status-by-ids/GetListOnlineStatusByIdsQueryOutput';
+import { GetListOnlineStatusByIdsHandler } from '@usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
+import { GetListOnlineStatusByIdsInput } from '@usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsInput';
+import { GetListOnlineStatusByIdsOutput } from '@usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
 import { Authorized, Get, JsonController, QueryParams, UseBefore } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
@@ -10,14 +10,14 @@ import { Service } from 'typedi';
 @JsonController('/v1/users')
 export class UserController {
     constructor(
-        private readonly _getListOnlineStatusByIdsQueryHandler: GetListOnlineStatusByIdsQueryHandler
+        private readonly _getListOnlineStatusByIdsHandler: GetListOnlineStatusByIdsHandler
     ) {}
 
     @Get('/list-online-status')
     @Authorized()
-    @ResponseSchema(GetListOnlineStatusByIdsQueryOutput)
-    async getListOnlineStatusByIds(@QueryParams() param: GetListOnlineStatusByIdsQueryInput): Promise<GetListOnlineStatusByIdsQueryOutput> {
-        return await this._getListOnlineStatusByIdsQueryHandler.handle(param);
+    @ResponseSchema(GetListOnlineStatusByIdsOutput)
+    async getListOnlineStatusByIds(@QueryParams() param: GetListOnlineStatusByIdsInput): Promise<GetListOnlineStatusByIdsOutput> {
+        return await this._getListOnlineStatusByIdsHandler.handle(param);
     }
 
     @Get('/api-private')

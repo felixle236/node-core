@@ -16,7 +16,7 @@ export class DbContext implements IDbContext {
         }
         catch { }
         if (!connection || !connection.isConnected)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, 'database connection');
+            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
         return new DbConnection(connection);
     }
 

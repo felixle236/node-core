@@ -8,5 +8,5 @@ export class TrackingNS {
         ORDER_SHIPPER_ACCEPT: 'order_shipper_accepted',
         ORDER_DELIVERING: 'order_delivering',
         ORDER_COMPLETE: 'order_completed'
-    }
+    };
 }

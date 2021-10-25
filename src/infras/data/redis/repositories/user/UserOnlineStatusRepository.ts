@@ -4,10 +4,11 @@ import { Inject, Service } from 'typedi';
 
 @Service('user_online_status.repository')
 export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
-    @Inject('redis.context')
-    private readonly _redisContext: IRedisContext;
-
     private readonly _onlineStatusKey = 'user_online_status';
+
+    constructor(
+        @Inject('redis.context') private readonly _redisContext: IRedisContext
+    ) {}
 
     async getListOnlineStatusByIds(ids: string[]): Promise<string[]> {
         return await this._redisContext.redisClient.hmgetAsync(this._onlineStatusKey, ids);

@@ -1,0 +1,8 @@
+import { IsOptional, IsString } from '@shared/decorators/ValidationDecorator';
+import { PaginationRequest } from '@shared/usecase/PaginationRequest';
+
+export class {FindUsecaseName}Input extends PaginationRequest {
+    @IsString()
+    @IsOptional()
+    keyword: string;
+}

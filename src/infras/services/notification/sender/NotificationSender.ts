@@ -9,14 +9,14 @@ export class NotificationSender implements INotificationProvider {
 
     constructor() {
         switch (NOTIFICATION_PROVIDER) {
-        case NotificationProvider.NodePushNotification:
-            this._provider = new NodePushNotificationFactory();
-            break;
+            case NotificationProvider.NodePushNotification:
+                this._provider = new NodePushNotificationFactory();
+                break;
 
-        case NotificationProvider.Console:
-        default:
-            this._provider = new NotificationConsoleFactory();
-            break;
+            case NotificationProvider.Console:
+            default:
+                this._provider = new NotificationConsoleFactory();
+                break;
         }
     }
 

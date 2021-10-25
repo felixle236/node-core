@@ -1,10 +1,8 @@
 import { GenderType } from '@domain/enums/user/GenderType';
-import { RoleId } from '@domain/enums/user/RoleId';
 import { IUser } from '@domain/interfaces/user/IUser';
 import { IStorageService } from '@gateways/services/IStorageService';
 import { MessageError } from '@shared/exceptions/message/MessageError';
 import { SystemError } from '@shared/exceptions/SystemError';
-import { isEnum, isUUID } from 'class-validator';
 import { Container } from 'typedi';
 import { Auth } from '../auth/Auth';
 import { BaseEntity } from '../base/BaseEntity';
@@ -15,9 +13,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set roleId(val: string) {
-        if (!isUUID(val) || !isEnum(val, RoleId))
-            throw new SystemError(MessageError.PARAM_INVALID, 'role');
-
         this.data.roleId = val;
     }
 
@@ -26,13 +21,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set firstName(val: string) {
-        val = val.trim();
-        if (!val)
-            throw new SystemError(MessageError.PARAM_REQUIRED, 'first name');
-
-        if (val.length > 20)
-            throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'first name', 20);
-
         this.data.firstName = val;
     }
 
@@ -41,11 +29,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set lastName(val: string | null) {
-        if (val) {
-            val = val.trim();
-            if (val.length > 20)
-                throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, 'last name', 20);
-        }
         this.data.lastName = val;
     }
 
@@ -55,11 +38,6 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     }
 
     set avatar(val: string | null) {
-        if (val) {
-            val = val.trim();
-            if (val.length > 200)
-                throw new SystemError(MessageError.PARAM_LEN_MAX, 'avatar path', 200);
-        }
         this.data.avatar = val;
     }
 
@@ -78,10 +56,10 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
     set birthday(val: string | null) {
         if (val) {
             if (!/(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})/u.test(val))
-                throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
+                throw new SystemError(MessageError.PARAM_INVALID, { t: 'birthday' });
 
             if (new Date(val) > new Date())
-                throw new SystemError(MessageError.PARAM_INVALID, 'birthday');
+                throw new SystemError(MessageError.PARAM_INVALID, { t: 'birthday' });
         }
         this.data.birthday = val;
     }
@@ -100,10 +78,10 @@ export class UserBase<T extends IUser> extends BaseEntity<string, T> implements 
 
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
-            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, 'avatar', formats.join(', '));
+            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, { t: 'avatar' }, formats.join(', '));
 
         if (file.size > maxSize)
-            throw new SystemError(MessageError.PARAM_SIZE_MAX, 'avatar', maxSize / 1024, 'KB');
+            throw new SystemError(MessageError.PARAM_SIZE_MAX, { t: 'avatar' }, maxSize / 1024, 'KB');
     }
 
     static getAvatarPath(id: string, ext: string): string {
