@@ -1,5 +1,5 @@
-import { PROJECT_NAME } from '@configs/Configuration';
-import i18n from '@shared/localization';
+import { PROJECT_NAME } from 'config/Configuration';
+import i18n from 'shared/localization';
 
 export class UserActivationCodeTemplate {
     static getTemplate(code: string, locale?: string): string {

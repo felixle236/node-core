@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import 'mocha';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';

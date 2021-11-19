@@ -1,6 +1,6 @@
-import { DOMAIN, PROTOTYPE } from '@configs/Configuration';
-import i18n from '@shared/localization';
+import { DOMAIN, PROTOTYPE } from 'config/Configuration';
 import Mailgen from 'mailgen';
+import i18n from 'shared/localization';
 
 export class ForgotPasswordTemplate {
     static getTemplate(name: string, email: string, forgotKey: string, locale?: string): Mailgen.Content {

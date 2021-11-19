@@ -14,10 +14,10 @@ describe('Utils - File', () => {
 
     it('Get directories promise with error', async () => {
         sandbox.stub(fs, 'readdir').callsFake((_path, _options, cb) => {
-            cb(new Error(), []);
+            cb(new Error('error message'), []);
         });
         const error: Error = await getDirectories('.').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Get directories promise', async () => {
@@ -32,10 +32,10 @@ describe('Utils - File', () => {
 
     it('Get files with error', async () => {
         sandbox.stub(fs, 'readdir').callsFake((_path, _options, cb) => {
-            cb(new Error(), []);
+            cb(new Error('error message'), []);
         });
         const error: Error = await getFiles('.').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Get files promise', async () => {
@@ -79,18 +79,18 @@ describe('Utils - File', () => {
 
     it('Read file with error', async () => {
         sandbox.stub(fs, 'readFile').callsFake(((_path, _option, cb) => {
-            cb(new Error(), Buffer.from(''));
+            cb(new Error('error message'), Buffer.from(''));
         }) as any);
         const error: Error = await readFile('index.ts').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Read file', async () => {
         sandbox.stub(fs, 'readFile').callsFake(((_path, _option, cb) => {
-            cb(null, Buffer.from(''));
+            cb(undefined, Buffer.from(''));
         }) as any);
         const data = await readFile(path.join(__dirname, 'index.ts'));
-        expect(data).to.not.eq(undefined);
+        expect(!!data).to.eq(true);
     });
 
     it('Read file as text with file path invalid', async () => {
@@ -100,15 +100,15 @@ describe('Utils - File', () => {
 
     it('Read file as text with error', async () => {
         sandbox.stub(fs, 'readFile').callsFake(((_path, _option, cb) => {
-            cb(new Error(), '' as any);
+            cb(new Error('error message'), '' as any);
         }) as any);
         const error: Error = await readFileAsText('index.ts').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Read file as text', async () => {
         sandbox.stub(fs, 'readFile').callsFake(((_path, _option, cb) => {
-            cb(null, 'test' as any);
+            cb(undefined, 'test' as any);
         }) as any);
         const data = await readFileAsText(path.join(__dirname, 'index.ts'), 'utf8');
         expect(data).to.eq('test');
@@ -127,17 +127,17 @@ describe('Utils - File', () => {
     it('Write file with error', async () => {
         sandbox.stub(fs, 'existsSync').returns(true);
         sandbox.stub(fs, 'writeFile').callsFake(((_path, _content, _option, cb) => {
-            cb(new Error());
+            cb(new Error('error message'));
         }) as any);
 
         const error: Error = await writeFile('test.txt', 'abc').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Write file successful', async () => {
         sandbox.stub(fs, 'existsSync').onFirstCall().returns(false).onSecondCall().returns(true);
         sandbox.stub(fs, 'writeFile').callsFake(((_path, _content, _option, cb) => {
-            cb(null, Buffer.from(''));
+            cb(undefined, Buffer.from(''));
         }) as any);
 
         await writeFile('test.txt', 'abc');
@@ -157,17 +157,17 @@ describe('Utils - File', () => {
     it('Append file with error', async () => {
         sandbox.stub(fs, 'existsSync').returns(true);
         sandbox.stub(fs, 'appendFile').callsFake(((_path, _content, _option, cb) => {
-            cb(new Error());
+            cb(new Error('error message'));
         }) as any);
 
         const error: Error = await appendFile('test.txt', 'abc').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Append file successful', async () => {
         sandbox.stub(fs, 'existsSync').onFirstCall().returns(false).onSecondCall().returns(true);
         sandbox.stub(fs, 'appendFile').callsFake(((_path, _content, _option, cb) => {
-            cb(null, Buffer.from(''));
+            cb(undefined, Buffer.from(''));
         }) as any);
 
         await appendFile('test.txt', 'abc');
@@ -188,17 +188,17 @@ describe('Utils - File', () => {
     it('Remove file with error', async () => {
         sandbox.stub(fs, 'existsSync').returns(true);
         sandbox.stub(fs, 'unlink').callsFake(((_path, cb) => {
-            cb(new Error());
+            cb(new Error('error message'));
         }) as any);
 
         const error: Error = await removeFile('test.txt').catch(error => error);
-        expect(error.message).to.not.eq(undefined);
+        expect(!!error.message).to.eq(true);
     });
 
     it('Remove file successful', async () => {
         sandbox.stub(fs, 'existsSync').returns(true);
         sandbox.stub(fs, 'unlink').callsFake(((_path, cb) => {
-            cb(null);
+            cb(undefined);
         }) as any);
 
         await removeFile('test.txt');

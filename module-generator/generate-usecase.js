@@ -2,14 +2,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const param = process.argv.length > 2 && process.argv[2].trim();
-const param2 = process.argv.length > 3 && process.argv[3].trim();
+const param = process.argv.length > 2 && process.argv[2];
+const param2 = process.argv.length > 3 && process.argv[3];
 
 if (!param || !param2 || param2.split('#').length !== 2)
     throw new Error('\x1b[35mParam is invalid!\n\x1b[0m');
 
 let moduleName = param;
 let subModuleName = moduleName;
+const methodName = param2.split('#')[0];
+const usecaseFncName = param2.split('#')[1];
 
 if (moduleName.includes('#')) {
     subModuleName = moduleName.split('#')[1];
@@ -31,8 +33,6 @@ let moduleNameText = convertToDirectoryName(subModuleName).replace(/-/g, ' ').to
 moduleNameText = moduleNameText.substr(0, 1).toUpperCase() + moduleNameText.substr(1);
 const moduleNameTextLowerCase = moduleNameText.toLowerCase();
 
-const methodName = param2.split('#')[0];
-const usecaseFncName = param2.split('#')[1];
 let usecaseFncNameText = convertToDirectoryName(usecaseFncName).replace(/-/g, ' ').toLowerCase();
 usecaseFncNameText = usecaseFncNameText.substr(0, 1).toUpperCase() + usecaseFncNameText.substr(1);
 
@@ -55,14 +55,14 @@ const pascalName = subModuleName.substr(0, 1).toUpperCase() + subModuleName.subs
 const upperCaseName = convertToDirectoryName(subModuleName).replace(/-/g, '_').toUpperCase();
 const lowerCaseName = upperCaseName.toLowerCase();
 
-const usecaseHandlerSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Handler.spec.ts`);
-const usecaseHandlerSpec = getFileContent(path.join(__dirname, `./core/usecases/${methodNameLowerCase}/${methodName}Handler.spec.tmp`));
+const usecaseHandlerSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Handler.spec.ts`);
+const usecaseHandlerSpec = getFileContent(path.join(__dirname, `./application/usecases/${methodNameLowerCase}/${methodName}Handler.spec.tmp`));
 
-const usecaseHandlerPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Handler.ts`);
-const usecaseHandler = getFileContent(path.join(__dirname, `./core/usecases/${methodNameLowerCase}/${methodName}Handler.tmp`));
+const usecaseHandlerPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Handler.ts`);
+const usecaseHandler = getFileContent(path.join(__dirname, `./application/usecases/${methodNameLowerCase}/${methodName}Handler.tmp`));
 
-const usecaseOutputPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Output.ts`);
-const usecaseOutput = getFileContent(path.join(__dirname, `./core/usecases/${methodNameLowerCase}/${methodName}Output.tmp`));
+const usecaseOutputPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Output.ts`);
+const usecaseOutput = getFileContent(path.join(__dirname, `./application/usecases/${methodNameLowerCase}/${methodName}Output.tmp`));
 
 createDirectories(
     usecaseHandlerPath
@@ -73,8 +73,8 @@ fs.writeFileSync(usecaseHandlerPath, usecaseHandler);
 fs.writeFileSync(usecaseOutputPath, usecaseOutput);
 
 if (['find', 'create', 'update'].includes(methodNameLowerCase)) {
-    const usecaseInputPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Input.ts`);
-    const usecaseInput = getFileContent(path.join(__dirname, `./core/usecases/${methodNameLowerCase}/${methodName}Input.tmp`));
+    const usecaseInputPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/${usecaseFncFolder}/${usecaseFncName}Input.ts`);
+    const usecaseInput = getFileContent(path.join(__dirname, `./application/usecases/${methodNameLowerCase}/${methodName}Input.tmp`));
 
     fs.writeFileSync(usecaseInputPath, usecaseInput);
 }

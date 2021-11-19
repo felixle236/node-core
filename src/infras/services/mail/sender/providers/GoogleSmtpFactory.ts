@@ -1,4 +1,4 @@
-import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME } from '@configs/Configuration';
+import { GOOGLE_SMTP_PASSWORD, GOOGLE_SMTP_USERNAME } from 'config/Configuration';
 import nodeMailer from 'nodemailer';
 import { IMailProvider } from '../interfaces/IMailProvider';
 

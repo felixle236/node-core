@@ -1,9 +1,9 @@
-import { BASE_SCHEMA } from '../base/BaseSchema';
+import { SCHEMA } from '../../common/Schema';
 
 export const AUTH_SCHEMA = {
     TABLE_NAME: 'auth',
     COLUMNS: {
-        ...BASE_SCHEMA.COLUMNS,
+        ...SCHEMA.COLUMNS,
         USER_ID: 'user_id',
         TYPE: 'type',
         USERNAME: 'username',
@@ -16,6 +16,7 @@ export const AUTH_SCHEMA = {
         USER: 'user'
     },
     RELATED_MANY: {
+        // The field name that we're defined into entity to map the entity related.
 
     }
 };

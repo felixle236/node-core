@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { DB_CACHING_HOST, DB_CACHING_PASSWORD, DB_CACHING_PORT, DB_CACHING_PREFIX } from '@configs/Configuration';
-import { IRedisClient } from '@shared/database/interfaces/IRedisClient';
-import { IRedisContext } from '@shared/database/interfaces/IRedisContext';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
+import { DB_CACHING_HOST, DB_CACHING_PASSWORD, DB_CACHING_PORT, DB_CACHING_PREFIX } from 'config/Configuration';
 import redis from 'redis';
 import rediss from 'redis-commands';
+import { IRedisClient } from 'shared/database/interfaces/IRedisClient';
+import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
+import { MessageError } from 'shared/exceptions/message/MessageError';
+import { SystemError } from 'shared/exceptions/SystemError';
+import { InjectDb } from 'shared/types/Injection';
 import { Service } from 'typedi';
 
-@Service('redis.context')
+@Service(InjectDb.RedisContext)
 export class RedisContext implements IRedisContext {
     private _connection: IRedisClient;
 
@@ -82,9 +83,8 @@ const promisifyRedis = (redis) => {
 
 const createCb = (resolve, reject) => {
     return function(err, value) {
-        if (err !== null)
+        if (err)
             reject(err);
-
         else
             resolve(value);
     };

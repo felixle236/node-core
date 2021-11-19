@@ -1,0 +1,30 @@
+import { {PascalName} } from 'domain/entities/{folder}/{PascalName}';
+import { Column, Entity, Index } from 'typeorm';
+import { DbEntity } from '../../common/DbEntity';
+import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Schema';
+
+@Entity({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+export class {PascalName}Db extends DbEntity<{PascalName}> {
+    constructor() {
+        super({PascalName});
+    }
+
+    @Column('varchar', { name: {UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME })
+    @Index({ unique: true, where: DbEntity.getIndexFilterDeletedColumn() })
+    name: string;
+
+    /* Relationship */
+
+    /* Handlers */
+
+    override toEntity(): {PascalName} {
+        const entity = super.toEntity();
+        entity.name = this.name;
+        return entity;
+    }
+
+    override fromEntity(entity: {PascalName}): void {
+        super.fromEntity(entity);
+        this.name = entity.name;
+    }
+}

@@ -1,0 +1,17 @@
+import { ClientStatus } from 'domain/enums/user/ClientStatus';
+import { User } from './User';
+
+export class Client extends User {
+    email: string;
+    phone?: string;
+    locale?: string;
+    status: ClientStatus;
+    activeKey?: string;
+    activeExpire?: Date;
+    activedAt?: Date;
+    archivedAt?: Date;
+
+    /* Relationship */
+
+    /* Handlers */
+}

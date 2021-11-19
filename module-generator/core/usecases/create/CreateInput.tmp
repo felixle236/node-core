@@ -1,6 +1,0 @@
-import { IsString } from '@shared/decorators/ValidationDecorator';
-
-export class {CreateUsecaseName}Input {
-    @IsString()
-    name: string;
-}

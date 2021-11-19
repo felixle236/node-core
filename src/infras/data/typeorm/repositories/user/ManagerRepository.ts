@@ -1,46 +1,45 @@
-import { ManagerDb } from '@data/typeorm/entities/user/ManagerDb';
-import { MANAGER_SCHEMA } from '@data/typeorm/schemas/user/ManagerSchema';
-import { Manager } from '@domain/entities/user/Manager';
-import { FindManagerFilter, IManagerRepository } from '@gateways/repositories/user/IManagerRepository';
+import { Manager } from 'domain/entities/user/Manager';
+import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
+import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
+import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { Brackets } from 'typeorm';
-import { BaseRepository } from '../base/BaseRepository';
+import { Repository } from '../../common/Repository';
+import { ManagerDb } from '../../entities/user/ManagerDb';
+import { MANAGER_SCHEMA } from '../../schemas/user/ManagerSchema';
 
-@Service('manager.repository')
-export class ManagerRepository extends BaseRepository<string, Manager, ManagerDb> implements IManagerRepository {
+@Service(InjectRepository.Manager)
+export class ManagerRepository extends Repository<Manager, ManagerDb> implements IManagerRepository {
     constructor() {
         super(ManagerDb, MANAGER_SCHEMA);
     }
 
-    override async findAndCount(param: FindManagerFilter): Promise<[Manager[], number]> {
+    override async findAndCount(filter: { roleIds?: string[], keyword?: string, status?: ManagerStatus, skip: number, limit: number }): Promise<[Manager[], number]> {
         let query = this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME);
-        if (param.status)
-            query = query.where(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.STATUS} = :status`, { status: param.status });
+        if (filter.roleIds)
+            query = query.andWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: filter.roleIds });
 
-        if (param.roleIds)
-            query = query.andWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: param.roleIds });
+        if (filter.status)
+            query = query.where(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status });
 
-        if (param.keyword) {
-            const keyword = `%${param.keyword}%`;
+        if (filter.keyword) {
+            const keyword = `%${filter.keyword}%`;
             query = query.andWhere(new Brackets(qb => {
                 qb.where(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
                     .orWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));
         }
-
-        query = query
-            .skip(param.skip)
-            .take(param.limit);
+        query.skip(filter.skip).take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];
     }
 
-    async getByEmail(email: string): Promise<Manager | null> {
+    async getByEmail(email: string): Promise<Manager | undefined> {
         const result = await this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME)
             .where(`LOWER(${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.EMAIL}) = LOWER(:email)`, { email })
             .getOne();
-        return result ? result.toEntity() : null;
+        return result && result.toEntity();
     }
 
     async checkEmailExist(email: string): Promise<boolean> {

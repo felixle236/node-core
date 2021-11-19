@@ -1,0 +1,27 @@
+import { I{PascalName}Repository } from 'application/interfaces/repositories/{folder}/I{PascalName}Repository';
+import { NotFoundError } from 'shared/exceptions/NotFoundError';
+import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
+import { Inject, Service } from 'typedi';
+import { {GetUsecaseName}Data, {GetUsecaseName}Output } from './{GetUsecaseName}Output';
+
+@Service()
+export class {GetUsecaseName}Handler implements IUsecaseHandler<string, {GetUsecaseName}Output> {
+    constructor(
+        @Inject('{lower_case_name}.repository') private readonly _{camelName}Repository: I{PascalName}Repository
+    ) {}
+
+    async handle(id: string): Promise<{GetUsecaseName}Output> {
+        const {camelName} = await this._{camelName}Repository.get(id);
+        if (!{camelName})
+            throw new NotFoundError();
+
+        const data = new {GetUsecaseName}Data();
+        data.id = {camelName}.id;
+        data.createdAt = {camelName}.createdAt;
+        data.name = {camelName}.name;
+
+        const result = new {GetUsecaseName}Output();
+        result.data = data;
+        return result;
+    }
+}

@@ -1,7 +1,0 @@
-import { IEntity } from '../base/IEntity';
-
-export interface I{PascalName} extends IEntity<string> {
-    name: string;
-
-    /* Relationship */
-}

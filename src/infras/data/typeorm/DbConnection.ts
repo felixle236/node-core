@@ -1,9 +1,8 @@
-import { IDbConnection } from '@shared/database/interfaces/IDbConnection';
-import { IDbMigration } from '@shared/database/interfaces/IDbMigration';
-import { IDbQueryRunner } from '@shared/database/interfaces/IDbQueryRunner';
-import { TransactionIsolationLevel } from '@shared/database/TransactionIsolationLevel';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
+import { DbQuerySession, TransactionIsolationLevel } from 'shared/database/DbTypes';
+import { IDbConnection } from 'shared/database/interfaces/IDbConnection';
+import { IDbMigration } from 'shared/database/interfaces/IDbMigration';
+import { MessageError } from 'shared/exceptions/message/MessageError';
+import { SystemError } from 'shared/exceptions/SystemError';
 import { Connection } from 'typeorm';
 
 export class DbConnection implements IDbConnection {
@@ -20,27 +19,27 @@ export class DbConnection implements IDbConnection {
     }
 
     async runTransaction<T>(
-        runInTransaction: (queryRunner: IDbQueryRunner) => Promise<T>,
-        rollback: ((error: Error) => Promise<void>) | null = null,
-        done: (() => Promise<void>) | null = null,
-        isolationLevel: TransactionIsolationLevel | null = null
+        runInTransaction: (querySession: DbQuerySession) => Promise<T>,
+        rollback?: ((error: Error) => Promise<void>),
+        done?: (() => Promise<void>),
+        isolationLevel?: TransactionIsolationLevel
     ): Promise<T> {
-        const queryRunner = this._connection.createQueryRunner();
+        const querySession = this._connection.createQueryRunner();
         if (isolationLevel)
-            await queryRunner.startTransaction(isolationLevel);
+            await querySession.startTransaction(isolationLevel);
         else
-            await queryRunner.startTransaction();
+            await querySession.startTransaction();
 
-        return await runInTransaction(queryRunner).then(async result => {
-            await queryRunner.commitTransaction();
-            await queryRunner.release();
+        return await runInTransaction(querySession).then(async result => {
+            await querySession.commitTransaction();
+            await querySession.release();
 
             if (done)
                 await done();
             return result;
         }).catch(async error => {
-            await queryRunner.rollbackTransaction();
-            await queryRunner.release();
+            await querySession.rollbackTransaction();
+            await querySession.release();
 
             if (rollback)
                 await rollback(error);

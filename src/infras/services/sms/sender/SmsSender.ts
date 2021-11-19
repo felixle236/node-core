@@ -1,5 +1,5 @@
-import { SENDINBLUE_API_KEY, SMS_PROVIDER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from '@configs/Configuration';
-import { SmsProvider } from '@configs/Enums';
+import { SENDINBLUE_API_KEY, SMS_PROVIDER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from 'config/Configuration';
+import { SmsProvider } from 'shared/types/Environment';
 import { ISmsProvider } from './interfaces/ISmsProvider';
 import { SendInBlueFactory } from './providers/SendInBlueFactory';
 import { SmsConsoleFactory } from './providers/SmsConsoleFactory';

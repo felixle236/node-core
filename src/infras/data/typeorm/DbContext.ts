@@ -1,16 +1,17 @@
-import dbConfig from '@configs/DbConfig';
-import { IDbConnection } from '@shared/database/interfaces/IDbConnection';
-import { IDbContext } from '@shared/database/interfaces/IDbContext';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
+import dbConfig from 'config/DbConfig';
+import { IDbConnection } from 'shared/database/interfaces/IDbConnection';
+import { IDbContext } from 'shared/database/interfaces/IDbContext';
+import { MessageError } from 'shared/exceptions/message/MessageError';
+import { SystemError } from 'shared/exceptions/SystemError';
+import { InjectDb } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { Connection, createConnection, getConnection } from 'typeorm';
 import { DbConnection } from './DbConnection';
 
-@Service('db.context')
+@Service(InjectDb.DbContext)
 export class DbContext implements IDbContext {
     getConnection(connectionName = 'default'): IDbConnection {
-        let connection: Connection | null = null;
+        let connection: Connection | undefined;
         try {
             connection = getConnection(connectionName);
         }
@@ -21,7 +22,7 @@ export class DbContext implements IDbContext {
     }
 
     async createConnection(connectionName = 'default'): Promise<IDbConnection> {
-        let connection: Connection | null = null;
+        let connection: Connection | undefined;
         try {
             connection = getConnection(connectionName);
         }
@@ -34,7 +35,7 @@ export class DbContext implements IDbContext {
     }
 
     async destroyConnection(connectionName = 'default'): Promise<void> {
-        let connection: Connection | null = null;
+        let connection: Connection | undefined;
         try {
             connection = getConnection(connectionName);
         }

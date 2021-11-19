@@ -1,4 +1,4 @@
-import { MAILGUN_API_KEY, MAILGUN_DOMAIN } from '@configs/Configuration';
+import { MAILGUN_API_KEY, MAILGUN_DOMAIN } from 'config/Configuration';
 import mailgun from 'mailgun-js';
 import { IMailProvider } from '../interfaces/IMailProvider';
 

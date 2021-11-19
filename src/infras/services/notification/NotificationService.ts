@@ -1,8 +1,9 @@
-import { INotificationService } from '@gateways/services/INotificationService';
+import { INotificationService } from 'application/interfaces/services/INotificationService';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { NotificationSender } from './sender/NotificationSender';
 
-@Service('notification.service')
+@Service(InjectService.Notification)
 export class NotificationService implements INotificationService {
     private readonly _sender: NotificationSender;
 

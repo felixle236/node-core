@@ -5,7 +5,7 @@ import { convertObjectToString, convertStringToBoolean, convertToCurrency } from
 describe('Utils - Converter', () => {
     describe('Convert number to currency', () => {
         it('Convert number to currency without value', () => {
-            const data = convertToCurrency(null);
+            const data = convertToCurrency(undefined);
 
             expect(data).to.eq('$0.00');
         });
@@ -19,7 +19,7 @@ describe('Utils - Converter', () => {
 
     describe('Convert string to boolean', () => {
         it('Convert string to boolean without value', () => {
-            const isBoolean = convertStringToBoolean(null);
+            const isBoolean = convertStringToBoolean(undefined);
 
             expect(isBoolean).to.eq(false);
         });
@@ -81,7 +81,7 @@ describe('Utils - Converter', () => {
         });
 
         it('Convert object to string without value', () => {
-            const content = convertObjectToString(null);
+            const content = convertObjectToString(undefined);
 
             expect(content).to.eq('');
         });

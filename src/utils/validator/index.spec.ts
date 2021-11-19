@@ -1,6 +1,6 @@
 import 'mocha';
-import { IsString } from '@shared/decorators/ValidationDecorator';
 import { expect } from 'chai';
+import { IsString } from 'shared/decorators/ValidationDecorator';
 import { isLiteralObject } from '.';
 
 class Test {

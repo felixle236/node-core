@@ -1,10 +1,11 @@
-import { DB_SOCKET_HOST, DB_SOCKET_PASSWORD, DB_SOCKET_PORT, DB_SOCKET_PREFIX } from '@configs/Configuration';
-import { ISocketEmitterService } from '@gateways/services/ISocketEmitterService';
+import { ISocketEmitterService } from 'application/interfaces/services/ISocketEmitterService';
+import { DB_SOCKET_HOST, DB_SOCKET_PASSWORD, DB_SOCKET_PORT, DB_SOCKET_PREFIX } from 'config/Configuration';
 import { RedisClient } from 'redis';
+import { InjectService } from 'shared/types/Injection';
 import socketIOEmitter from 'socket.io-emitter';
 import { Service } from 'typedi';
 
-@Service('socket_emitter.service')
+@Service(InjectService.SocketEmitter)
 export class SocketEmitterService implements ISocketEmitterService {
     private readonly _socketEmitter: socketIOEmitter.SocketIOEmitter;
 

@@ -39,18 +39,12 @@ module.exports = {
             named: 'never',
             asyncArrow: 'always'
         }],
-        'sort-imports': ['error', {
-            ignoreCase: true,
-            ignoreMemberSort: false,
-            ignoreDeclarationSort: true,
-            memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
-        }],
         'import/order': [
             'error',
             {
                 'newlines-between': 'never',
                 alphabetize: { order: 'asc', caseInsensitive: true },
-                groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object']
+                groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object', 'type']
             }
         ],
         'no-console': 'error',

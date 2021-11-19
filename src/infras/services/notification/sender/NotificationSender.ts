@@ -1,5 +1,5 @@
-import { NOTIFICATION_PROVIDER } from '@configs/Configuration';
-import { NotificationProvider } from '@configs/Enums';
+import { NOTIFICATION_PROVIDER } from 'config/Configuration';
+import { NotificationProvider } from 'shared/types/Environment';
 import { INotificationProvider } from './interfaces/INotificationProvider';
 import { NodePushNotificationFactory } from './providers/NodePushNotificationFactory';
 import { NotificationConsoleFactory } from './providers/NotificationConsoleFactory';

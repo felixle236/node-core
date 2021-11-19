@@ -1,6 +1,6 @@
-import { mockSelectQueryBuilder } from '@shared/test/MockTypeORM';
 import 'mocha';
 import { expect } from 'chai';
+import { mockSelectQueryBuilder } from 'shared/test/MockTypeORM';
 import { createSandbox } from 'sinon';
 import { UserRepository } from './UserRepository';
 import { UserDb } from '../../entities/user/UserDb';
@@ -10,9 +10,8 @@ describe('User repository', () => {
         const sandbox = createSandbox();
         mockSelectQueryBuilder<UserDb>(sandbox);
 
-        // eslint-disable-next-line no-new
         const repository = new UserRepository();
-        expect(repository).to.not.eq(null);
+        expect(!!repository).to.eq(true);
         sandbox.restore();
     });
 });

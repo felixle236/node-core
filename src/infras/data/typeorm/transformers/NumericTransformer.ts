@@ -1,9 +1,9 @@
 export class NumericTransformer {
-    to(data: number | null): number | null {
+    to(data?: number): number | undefined {
         return data;
     }
 
-    from(data: string | null): number | null {
-        return data ? parseFloat(data) : null;
+    from(data?: string): number | undefined {
+        return data ? parseFloat(data) : undefined;
     }
 }

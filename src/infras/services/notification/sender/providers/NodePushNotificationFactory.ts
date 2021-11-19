@@ -1,6 +1,6 @@
-import { APN_KEY, ENVIRONMENT, FCM_KEY, PROJECT_NAME } from '@configs/Configuration';
-import { Environment } from '@configs/Enums';
+import { APN_KEY, ENVIRONMENT, FCM_KEY, PROJECT_NAME } from 'config/Configuration';
 import NodePushNotification from 'node-pushnotifications';
+import { Environment } from 'shared/types/Environment';
 import { INotificationProvider } from '../interfaces/INotificationProvider';
 
 export class NodePushNotificationFactory implements INotificationProvider {

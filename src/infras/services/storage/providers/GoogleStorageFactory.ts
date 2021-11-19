@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
-import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION, STORAGE_URL } from '@configs/Configuration';
 import { SaveOptions, Storage } from '@google-cloud/storage';
+import { GOOGLE_STORAGE_CLASS, GOOGLE_STORAGE_LOCATION, STORAGE_URL } from 'config/Configuration';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 import { IStorageProviderUploadOption } from '../interfaces/IStorageProviderUploadOption';
 
@@ -62,7 +62,7 @@ export class GoogleStorageFactory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    async upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<any> {
+    async upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<any> {
         const file = this._storage.bucket(bucketName).file(objectName);
         const param = {} as SaveOptions;
         if (options) {

@@ -1,0 +1,33 @@
+import { {PascalName} } from 'domain/entities/{folder}/{PascalName}';
+import { I{PascalName}Repository } from 'application/interfaces/repositories/{folder}/I{PascalName}Repository';
+import { MessageError } from 'shared/exceptions/message/MessageError';
+import { NotFoundError } from 'shared/exceptions/NotFoundError';
+import { SystemError } from 'shared/exceptions/SystemError';
+import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
+import { Inject, Service } from 'typedi';
+import { {UpdateUsecaseName}Input } from './{UpdateUsecaseName}Input';
+import { {UpdateUsecaseName}Output } from './{UpdateUsecaseName}Output';
+
+@Service()
+export class {UpdateUsecaseName}Handler implements IUsecaseHandler<{UpdateUsecaseName}Input, {UpdateUsecaseName}Output> {
+    constructor(
+        @Inject('{lower_case_name}.repository') private readonly _{camelName}Repository: I{PascalName}Repository
+    ) {}
+
+    async handle(id: string, param: {UpdateUsecaseName}Input): Promise<{UpdateUsecaseName}Output> {
+        const data = new {PascalName}();
+        data.name = param.name;
+
+        const {camelName} = await this._{camelName}Repository.get(id);
+        if (!{camelName})
+            throw new NotFoundError();
+
+        const isExist = await this._{camelName}Repository.checkNameExist(data.name, id);
+        if (isExist)
+            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'name' });
+
+        const result = new {UpdateUsecaseName}Output();
+        result.data = await this._{camelName}Repository.update(id, data);
+        return result;
+    }
+}

@@ -5,16 +5,16 @@ Implementing advanced architectures like clean architecture and domain driven de
 
 ## Features
 
-* Support both RESTful API and WebSocket.
+* Support RESTful API, WebSocket, Swagger UI, Web UI (enable is default).
 * Support caching from Redis.
 * Support database connection and database migration via TypeORM.
 * Support multiple languages.
-* Support coding rules with ESLint and auto-fix ESLint with Visual Code.
+* Support coding rules with ESLint and auto-fix ESLint by Visual Code.
 * Support unit test and coverage.
 * Support auto-generating API documentation and expose to Swagger UI.
 * Support docker container.
-* Support debugger on .ts files by Visual Code.
-* Build quickly with the generator module.
+* Support debugger into .ts files directly (ts-node) on Visual Code.
+* Support generator module, auto generate a lot of source code.
 
 ## Modules Integrated
 
@@ -38,7 +38,6 @@ Implementing advanced architectures like clean architecture and domain driven de
 - Clean architecture
 - Domain driven design (DDD)
 - Repository pattern
-- Transfer object pattern
 - Data mapper pattern
 - Singleton pattern
 - Factory pattern
@@ -79,38 +78,60 @@ Implementing advanced architectures like clean architecture and domain driven de
 ## Source Structure
 
 ```sh
-- |-- .husky -----------------------------------------// Husky configuration.
+- |-- .husky ------------------------------------------// Husky configuration.
 - |-- .nyc_output
-- |-- .vscode ----------------------------------------// Visual code configuration.
-- |-- coverage ---------------------------------------// Data report for testing coverage.
-- |-- dist -------------------------------------------// Built from the src directory.
-- |-- logs -------------------------------------------// Write logs.
-- |-- module-generator -------------------------------// Source templates for creating new module.
+- |-- .vscode -----------------------------------------// Visual code configuration.
+- |-- coverage ----------------------------------------// Data report for testing coverage.
+- |-- dist --------------------------------------------// Built from the src directory.
+- |-- logs --------------------------------------------// Write logs.
+- |-- module-generator --------------------------------// Source templates for creating new module.
 - |-- node_modules
-- |-- src --------------------------------------------// Source of development.
-- |------ configs
-- |------------ Configuration.ts ---------------------// Define environment variables from .env file.
-- |------------ DbConfig.ts --------------------------// Database configuration.
-- |------------ Enums.ts -----------------------------// Enums defination.
-- |------ core
-- |------------ domain
-- |------------------ entities
-- |------------------ enums
-- |------------------ interfaces
-- |------------ gateways
+- |-- src ---------------------------------------------// Source of development.
+- |------ application
+- |------------ interfaces
 - |------------------ repositories --------------------// Interface of repositories.
 - |------------------ services ------------------------// Interface of services.
-- |------------ shared --------------------------------// Common defination.
 - |------------ usecases ------------------------------// Business logic.
-- |------ infras
+- |------ config
+- |------------ Configuration.ts ----------------------// Define environment variables from .env file.
+- |------------ DbConfig.ts ---------------------------// Database configuration.
+- |------ domain
+- |------------ common
+- |------------ entities
+- |------------ enums
+- |------------ value-objects
+- |------ exposes
 - |------------ api
-- |------------------ controllers ---------------------// Navigate for requests.
-- |------------------ middlewares
-- |------------------------ BodyParserMiddleware.ts ---// Body parser.
-- |------------------------ ErrorMiddleware.ts --------// Handling of errors.
-- |------------------ ApiAuthenticator.ts
-- |------------------ ApiDocument.ts ------------------// Initialize Api document.
-- |------------------ ApiService.ts -------------------// Initialize Api service.
+- |------------------ [internal] ----------------------// Proposal to define the internal Api for our other services use.
+- |------------------ [external] ----------------------// Proposal to define the external Api as a service.
+- |------------------ mobile
+- |------------------------ controllers ---------------// Navigate for requests.
+- |------------------------ middlewares
+- |------------------------ ApiAuthenticator.ts
+- |------------------------ ApiDocument.ts ------------// Define Api document for mobile Api.
+- |------------------------ ApiService.ts -------------// Initialize Api service for mobile Api.
+- |------------------ web
+- |------------------------ controllers ---------------// Navigate for requests.
+- |------------------------ middlewares
+- |------------------------ ApiAuthenticator.ts
+- |------------------------ ApiDocument.ts ------------// Define Api document for web Api.
+- |------------------------ ApiService.ts -------------// Initialize Api service for web Api.
+- |------------ [queue] -------------------------------// Proposal to define the queue as the job subscription.
+- |------------ socket
+- |------------------ channels ------------------------// Initialize socket connection & event handling.
+- |------------------ SocketService.ts ----------------// Initialize socket service.
+- |------------ ui
+- |------------------ doc -----------------------------// API Document.
+- |------------------------ ApiGenerator.ts -----------// Generator Api documents.
+- |------------------------ ApiService.ts -------------// Initialize web service for swagger UI.
+- |------------------ web -----------------------------// Web UI.
+- |------------------------ controllers ---------------// Navigate for requests.
+- |------------------------ middlewares
+- |------------------------ public
+- |------------------------ views
+- |------------------------ WebAuthenticator.ts
+- |------------------------ WebService.ts -------------// Initialize web service.
+- |------ infras
 - |------------ data
 - |------------------ redis ---------------------------// In-memory database.
 - |------------------------ repositories --------------// Execution operations.
@@ -140,20 +161,11 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------------ storage -------------------------// Storage service.
 - |------------------ ServiceRegister.ts
 - |------------ SingletonRegister.ts ------------------// Define singleton and need to load first.
-- |------------ socket
-- |------------------ channels ------------------------// Initialize socket connection & event handling.
-- |------------------ SocketService.ts ----------------// Initialize socket service
-- |------------ ui
-- |------------------ controllers ---------------------// Navigate for requests.
-- |------------------ middlewares
-- |------------------ public
-- |------------------ views
-- |------------------ WebAuthenticator.ts
-- |------------------ WebService.ts -------------------// Initialize web service.
 - |------ resources
 - |------------ data ----------------------------------// Initialize data.
 - |------------ documents -----------------------------// Document files (doc, docx, xls, xlsx, pdf,...).
 - |------------ images --------------------------------// Image files (jpg, jpeg, png, gif,...).
+- |------ shared --------------------------------------// Common defination.
 - |------ utils
 - |------ app.ts --------------------------------------// Main application.
 - |-- .dockerignore -----------------------------------// Docker ignore configuration.
@@ -219,7 +231,7 @@ Run the migration for updating database structure (need to create database befor
 npm run migration:up
 ```
 
-Run the below command for starting with development mode (or debug by visual code), NODE_ENV will be `local` (NODE_ENV into .env file):
+Run the below command for starting with development mode (or start debug on Visual Code), NODE_ENV will be `local` (NODE_ENV into .env file):
 
 ```
 npm run dev
@@ -236,7 +248,9 @@ npm test
 - We must modify environment variables into `.env` on server and run the commands below:
 ```
 - npm install
+- npm run lint
 - npm run build
+- npm run generate:apidoc
 - npm test
 - npm run migration:up
 - npm start
@@ -255,10 +269,10 @@ npm test
 ## Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- Create `Customer` module, you can try: `npm run generate:module Customer`. It will generate entity, schema, repository, usecase, controller,....
-- Create sub module as `CustomerTest` into `Customer` module: `npm run generate:module Customer#CustomerTest`. It will generate entity, schema, repository, usecase, controller,...into `Customer` module (`customer` folders).
-- Create `FindCustomerByOwner` usecase: `npm run generate:usecase Customer Find#FindCustomerByOwner`. It will generate that usecase only. We have 5 method templates: `Find`, `Get`, `Create`, `Update`, `Delete`.
-- Create `CreateCustomerTestByOwner` usecase for sub-module `CustomerTest` into `Customer` module: `npm run generate:usecase Customer#CustomerTest Create#CreateCustomerTestByOwner`.
+- Create `Product` module, you can try: `npm run generate:module Product Api#Web`. It will generate entity, schema, repository, usecase, controller,....There are some expose types of the API such as `web`, `mobile`, `internal`, `external`. For another example: `npm run generate:module Product Api#Mobile`.
+- Create sub module as `ProductCategory` into `Product` module: `npm run generate:module Product#ProductCategory Api#Web`. It will generate entity, schema, repository, usecase, controller,...into `Product` module (`product` folders).
+- Create `FindProductByCategory` usecase: `npm run generate:usecase Product Find#FindProductByCategory`. It will generate that usecase only. We have 5 method templates: `Find`, `Get`, `Create`, `Update`, `Delete`.
+- Create `CreateProductCategoryByOwner` usecase for sub-module `ProductCategory` into `Product` module: `npm run generate:usecase Product#ProductCategory Create#CreateProductCategoryByOwner`.
 
 > After generate the module or usecase, we need to modify the content of them suited for.
 
@@ -290,7 +304,7 @@ npm test
 
 ## Multiple Languages
 
-- The default language used is English, to use multiple languages we need to update the configuration at `src/core/shared/localization/index.ts`. Refer to [I18n](https://www.npmjs.com/package/i18n).
+- The default language used is English, to use multiple languages we need to update the configuration at `src/shared/localization/index.ts`. Refer to [I18n](https://www.npmjs.com/package/i18n).
 - When we want to add error/mail/sms content, we need to add the required language files like `en.json`.
 #### Usage for errors:
 ```
@@ -351,7 +365,7 @@ export const IsEmail = (eOpts?: ValidatorJS.IsEmailOptions, opts?: classValidato
 ```
 ```
 // Execute validation
-import { IsEmail } from '@shared/decorators/ValidationDecorator';
+import { IsEmail } from 'shared/decorators/ValidationDecorator';
 
 export class ForgotPasswordByEmailInput {
     @IsEmail()
@@ -373,7 +387,7 @@ export class ForgotPasswordByEmailInput {
 ```
 ```
 // To use translation, we need to import our i18n definition and use the locale variable from request:
-import i18n from '@shared/localization';
+import i18n from 'shared/localization';
 ...
 i18n.__({ phrase: 'mail.account_activation.greeting', locale })
 ```
@@ -389,6 +403,7 @@ i18n.__({ phrase: 'mail.account_activation.greeting', locale })
    - `Any user authenticated` to allow access API, just use `@Authorized()` without the role on controller functions.
    - `Any user authenticated and role special` to allow access API, just use `@Authorized(RoleId.SUPER_ADMIN)` or `@Authorized([RoleId.SUPER_ADMIN, RoleId.MANAGER])` on controller functions.
 - `@Authorized()` is a method decorator, it will check `authorization` header, if authenticate success then return `UserAuthenticated` object via parameter decorator `@CurrentUser()`. We can use paramter decorator `@UsecaseOptionRequest()` to get `UserAuthenticated` object also.
+- `PrivateAccessMiddleware` is a middleware that we can use for the internal Api or private Api, just use `@UseBefore(PrivateAccessMiddleware)` on controller functions.
 > `@UsecaseOptionRequest()` decorator is built to assist in retrieving the user authenticated and trace id (trace log) from the API request.
 
 ## Logging
@@ -415,7 +430,7 @@ i18n.__({ phrase: 'mail.account_activation.greeting', locale })
 
 ## Common Type
 
-- Define enum type into `src/configs/Enums.ts`. It can be a number or a string.
+- Define common type into `src/shared/types`. We can use enum/type/interface to define them.
 - Why do we use the enum type?
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
    > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.Processing` vs `order.status = 2`.
@@ -424,28 +439,35 @@ i18n.__({ phrase: 'mail.account_activation.greeting', locale })
 
 ## Exception
 
-We should define message error into `src\core\shared\exceptions\message\MessageError.ts`. Ex:
+We should define message error into `src\shared\exceptions\message\MessageError.ts`. Ex:
 ```
-static SOMETHING_WRONG = new ErrorObject(ErrorCode.SOMETHING_WRONG, 'Something went wrong!');
+static SOMETHING_WRONG = new ErrorObject(ErrorCode.SOMETHING_WRONG, 'something_went_wrong');
 
-static INPUT_VALIDATION = new ErrorObject(ErrorCode.VALIDATION, 'Invalid data, check \'fields\' property for more info.');
+static UNKNOWN = new ErrorObject(ErrorCode.UNKNOWN, 'unknown');
 
-static OTHER = new ErrorObject(ErrorCode.OTHER, '{0}');
+static INPUT_VALIDATION = new ErrorObject(ErrorCode.VALIDATION, 'invalid_data_check_fields_property_for_more_info');
 
-static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, 'The {0} is not supported!');
+static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, '%s_is_not_supported');
+
+static UNAUTHORIZED = new ErrorObject(ErrorCode.UNAUTHORIZED, 'unauthorized');
+static ACCESS_DENIED = new ErrorObject(ErrorCode.ACCESS_DENIED, 'access_is_denied');
+
+static DATA_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, 'data_not_found');
+static PARAM_NOT_FOUND = new ErrorObject(ErrorCode.DATA_NOT_FOUND, '%s_not_found');
 ```
 
 Usage:
 ```
-import { AccessDeniedError } from '@shared/exceptions/AccessDeniedError';
-import { UnauthorizedError } from '@shared/exceptions/UnauthorizedError';
-import { MessageError } from '@shared/exceptions/message/MessageError';
-import { SystemError } from '@shared/exceptions/SystemError';
+import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
+import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
+import { MessageError } from 'shared/exceptions/message/MessageError';
+import { NotFoundError } from 'shared/exceptions/NotFoundError';
+import { SystemError } from 'shared/exceptions/SystemError';
 ....
 throw new AccessDeniedError();
+throw new NotFoundError();
 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
 throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
-throw new SystemError(MessageError.DATA_NOT_FOUND);
 throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'name' }, 30);
 ```
 
@@ -461,30 +483,30 @@ throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'name' }, 30);
 - We should use QueryBuilder for database execution, it will select and map to entity object.
 - To use database transaction:
 ```
-@Inject('db.context')
+@Inject(InjectDb.DbContext)
 private readonly _dbContext: IDbContext;
 
 or
 
 constructor(
-   @Inject('db.context') private readonly _dbContext: IDbContext
+   @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext
 ) {}
 ....
 
-await this._dbContext.getConnection().runTransaction(async queryRunner => {
-   const user = await this.userRepository.getByEmail(item.email, queryRunner);
+await this._dbContext.getConnection().runTransaction(async querySession => {
+   const user = await this.userRepository.getByEmail(item.email, querySession);
    // Handle something here.
 
-   const id = await this.userRepository.create(user, queryRunner);
+   const id = await this.userRepository.create(user, querySession);
    // Handle something here.
 
 });
 
-await this._dbContext.getConnection().runTransaction(async queryRunner => {
-   const user = await this.userRepository.getByEmail(item.email, queryRunner);
+await this._dbContext.getConnection().runTransaction(async querySession => {
+   const user = await this.userRepository.getByEmail(item.email, querySession);
    // Handle something here.
 
-   const id = await this.userRepository.create(user, queryRunner);
+   const id = await this.userRepository.create(user, querySession);
    // Handle something here.
 
 }, async (err) => {
@@ -532,7 +554,7 @@ Response:
 Status code: 401 Unauthorized
 {
    "code": "UNAUTHORIZED_ERR",
-   "message": "Unauthorized!"
+   "message": "unauthorized"
 }
 ```
 
@@ -548,7 +570,23 @@ Response:
 Status code: 403 Forbidden
 {
    "code": "ACCESS_DENIED_ERR",
-   "message": "Access is denied!"
+   "message": "access is denied"
+}
+```
+
+- Return error object [NotFoundError] with status code 404 and error code is "DATA_NOT_FOUND_ERR", this is handler of routing-controllers package.
+```
+Request:
+curl -X 'GET' \
+   'http://localhost:3000/api/v1/clients/3fa85f64-5717-4562-b3fc-2c963f66afa6' \
+   -H 'accept: application/json' \
+   -H 'Authorization: Bearer eyJhbGciOiJIUz...'
+
+Response:
+Status code: 404 Not Found
+{
+   "code": "DATA_NOT_FOUND_ERR",
+   "message": "data not found"
 }
 ```
 
@@ -568,7 +606,7 @@ Response:
 Status code: 400 Bad Request
 {
    "code": "DATA_INCORRECT_ERR",
-   "message": "The email or password is incorrect!"
+   "message": "email or password is incorrect!"
 }
 ```
 
@@ -585,7 +623,7 @@ Response:
 Status code: 400 Bad Request
 {
    "code": "VALIDATION_ERR",
-   "message": "Invalid data, check 'fields' property for more info.",
+   "message": "invalid data, check 'fields' property for more info",
    "fields": [
       {
          "name": "email",
@@ -758,15 +796,15 @@ DELETE http://localhost:3000/api/v1/clients/{:id}               --> Delete clien
 ## Other Experiences
 
 - Order of development:
-   - Core
-      - Domain
-         - Interfaces
-         - Entities
-         - Enums
-      - Use cases
-      - Gateways
+   - Domain
+      - Entities
+      - Enums
+      - ValueObject
+   - Application
+      - Interfaces
          - Repositories
          - Services
+      - Usecases
    - Infrastructure
       - Data (typeorm/redis)
          - Schemas
@@ -774,10 +812,10 @@ DELETE http://localhost:3000/api/v1/clients/{:id}               --> Delete clien
          - Repositories
          - Migrations
       - Services
-      - Web API:
-         - Controllers
-      - Web Socket:
-         - Channels
+   - Expose
+      - API
+      - Socket
+      - ....
 
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
 - The function order should be arranged in turn according to find, get, check, create, update, delete, remove.

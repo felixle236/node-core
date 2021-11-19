@@ -1,0 +1,9 @@
+import { {PascalName} } from 'domain/entities/{folder}/{PascalName}';
+import { IRepository } from 'shared/database/interfaces/IRepository';
+
+export interface I{PascalName}Repository extends IRepository<{PascalName}> {
+    findAndCount(filter: { keyword?: string, skip: number, limit: number }): Promise<[{PascalName}[], number]>;
+
+    checkNameExist(name: string): Promise<boolean>;
+    checkNameExist(name: string, excludeId: string): Promise<boolean>;
+}

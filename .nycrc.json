@@ -11,8 +11,9 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "**/test/**",
-        "**/ValidationDecorator.ts"
+        "**/shared/**",
+        "**/entities/**",
+        "**/middlewares/**"
     ],
     "extension": [
         ".ts"

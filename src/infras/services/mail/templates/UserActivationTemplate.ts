@@ -1,6 +1,6 @@
-import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
-import i18n from '@shared/localization';
+import { DOMAIN, PROJECT_NAME, PROTOTYPE } from 'config/Configuration';
 import Mailgen from 'mailgen';
+import i18n from 'shared/localization';
 
 export class UserActivationTemplate {
     static getTemplate(name: string, email: string, activeKey: string, locale?: string): Mailgen.Content {

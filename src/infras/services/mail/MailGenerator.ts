@@ -1,4 +1,4 @@
-import { DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
+import { DOMAIN, PROJECT_NAME, PROTOTYPE } from 'config/Configuration';
 import Mailgen from 'mailgen';
 
 export class MailGenerator {

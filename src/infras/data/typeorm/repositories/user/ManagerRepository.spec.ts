@@ -1,9 +1,8 @@
 import 'mocha';
-import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
-import { RoleId } from '@domain/enums/user/RoleId';
-import { FindManagerFilter } from '@gateways/repositories/user/IManagerRepository';
-import { mockSelectQueryBuilder, mockWhereExpression } from '@shared/test/MockTypeORM';
+import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
+import { RoleId } from 'domain/enums/user/RoleId';
 import { expect } from 'chai';
+import { mockSelectQueryBuilder, mockWhereExpressionBuilder } from 'shared/test/MockTypeORM';
 import { createSandbox } from 'sinon';
 import { Brackets } from 'typeorm';
 import { ManagerRepository } from './ManagerRepository';
@@ -27,11 +26,8 @@ describe('Manager repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([managerDbs, managerDbs.length]);
 
-            const filter = new FindManagerFilter();
-            filter.setPagination(0, 10);
-
             const managerRepository = new ManagerRepository();
-            const [list, count] = await managerRepository.findAndCount(filter);
+            const [list, count] = await managerRepository.findAndCount({ skip: 0, limit: 10 });
 
             expect(list.length).to.eq(managerDbs.length);
             expect(count).to.eq(managerDbs.length);
@@ -46,11 +42,8 @@ describe('Manager repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([[], 0]);
 
-            const filter = new FindManagerFilter();
-            filter.setPagination(0, 10);
-
             const managerRepository = new ManagerRepository();
-            const [list, count] = await managerRepository.findAndCount(filter);
+            const [list, count] = await managerRepository.findAndCount({ skip: 0, limit: 10 });
 
             expect(list.length).to.eq(0);
             expect(count).to.eq(0);
@@ -66,16 +59,10 @@ describe('Manager repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([managerDbs, managerDbs.length]);
 
-            const filter = new FindManagerFilter();
-            filter.setPagination(0, 10);
-            filter.roleIds = [RoleId.Manager, RoleId.Client];
-            filter.keyword = 'test';
-            filter.status = ManagerStatus.Actived;
-
             const managerRepository = new ManagerRepository();
-            const [list, count] = await managerRepository.findAndCount(filter);
+            const [list, count] = await managerRepository.findAndCount({ roleIds: [RoleId.Manager, RoleId.Client], keyword: 'test', status: ManagerStatus.Actived, skip: 0, limit: 10 });
 
-            const whereExpression = mockWhereExpression();
+            const whereExpression = mockWhereExpressionBuilder();
             const brackets = selectQueryBuilder.andWhere.secondCall.args[0] as Brackets;
             brackets.whereFactory(whereExpression);
 
@@ -98,7 +85,7 @@ describe('Manager repository', () => {
             const managerRepository = new ManagerRepository();
             const result = await managerRepository.getByEmail('test@localhost.com');
 
-            expect(result).to.not.eq(null);
+            expect(!!result).to.eq(true);
         });
 
         it('Get by email without data', async () => {
@@ -109,7 +96,7 @@ describe('Manager repository', () => {
             const managerRepository = new ManagerRepository();
             const result = await managerRepository.getByEmail('test@localhost.com');
 
-            expect(result).to.eq(null);
+            expect(!result).to.eq(true);
         });
     });
 

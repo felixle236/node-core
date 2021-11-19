@@ -1,8 +1,7 @@
 import 'mocha';
-import { ClientStatus } from '@domain/enums/user/ClientStatus';
-import { FindClientFilter } from '@gateways/repositories/user/IClientRepository';
-import { mockSelectQueryBuilder, mockWhereExpression } from '@shared/test/MockTypeORM';
+import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { expect } from 'chai';
+import { mockSelectQueryBuilder, mockWhereExpressionBuilder } from 'shared/test/MockTypeORM';
 import { createSandbox } from 'sinon';
 import { Brackets } from 'typeorm';
 import { ClientRepository } from './ClientRepository';
@@ -26,11 +25,8 @@ describe('Client repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([clientDbs, clientDbs.length]);
 
-            const filter = new FindClientFilter();
-            filter.setPagination(0, 10);
-
             const clientRepository = new ClientRepository();
-            const [list, count] = await clientRepository.findAndCount(filter);
+            const [list, count] = await clientRepository.findAndCount({ skip: 0, limit: 10 });
 
             expect(list.length).to.eq(clientDbs.length);
             expect(count).to.eq(clientDbs.length);
@@ -45,11 +41,8 @@ describe('Client repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([[], 0]);
 
-            const filter = new FindClientFilter();
-            filter.setPagination(0, 10);
-
             const clientRepository = new ClientRepository();
-            const [list, count] = await clientRepository.findAndCount(filter);
+            const [list, count] = await clientRepository.findAndCount({ skip: 0, limit: 10 });
 
             expect(list.length).to.eq(0);
             expect(count).to.eq(0);
@@ -65,15 +58,10 @@ describe('Client repository', () => {
             selectQueryBuilder.take.returnsThis();
             selectQueryBuilder.getManyAndCount.resolves([clientDbs, clientDbs.length]);
 
-            const filter = new FindClientFilter();
-            filter.setPagination(0, 10);
-            filter.keyword = 'test';
-            filter.status = ClientStatus.Actived;
-
             const clientRepository = new ClientRepository();
-            const [list, count] = await clientRepository.findAndCount(filter);
+            const [list, count] = await clientRepository.findAndCount({ keyword: 'test', status: ClientStatus.Actived, skip: 0, limit: 10 });
 
-            const whereExpression = mockWhereExpression();
+            const whereExpression = mockWhereExpressionBuilder();
             const brackets = selectQueryBuilder.andWhere.firstCall.args[0] as Brackets;
             brackets.whereFactory(whereExpression);
 
@@ -96,7 +84,7 @@ describe('Client repository', () => {
             const clientRepository = new ClientRepository();
             const result = await clientRepository.getByEmail('test@localhost.com');
 
-            expect(result).to.not.eq(null);
+            expect(!!result).to.eq(true);
         });
 
         it('Get by email without data', async () => {
@@ -107,7 +95,7 @@ describe('Client repository', () => {
             const clientRepository = new ClientRepository();
             const result = await clientRepository.getByEmail('test@localhost.com');
 
-            expect(result).to.eq(null);
+            expect(!result).to.eq(true);
         });
     });
 

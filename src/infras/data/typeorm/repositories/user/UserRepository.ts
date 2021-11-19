@@ -1,12 +1,13 @@
-import { UserDb } from '@data/typeorm/entities/user/UserDb';
-import { USER_SCHEMA } from '@data/typeorm/schemas/user/UserSchema';
-import { User } from '@domain/entities/user/User';
-import { IUserRepository } from '@gateways/repositories/user/IUserRepository';
+import { User } from 'domain/entities/user/User';
+import { IUserRepository } from 'application/interfaces/repositories/user/IUserRepository';
+import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
-import { BaseRepository } from '../base/BaseRepository';
+import { Repository } from '../../common/Repository';
+import { UserDb } from '../../entities/user/UserDb';
+import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 
-@Service('user.repository')
-export class UserRepository extends BaseRepository<string, User, UserDb> implements IUserRepository {
+@Service(InjectRepository.User)
+export class UserRepository extends Repository<User, UserDb> implements IUserRepository {
     constructor() {
         super(UserDb, USER_SCHEMA);
     }

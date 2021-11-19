@@ -1,7 +1,8 @@
 import { Readable } from 'stream';
-import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from '@configs/Configuration';
-import { StorageProvider } from '@configs/Enums';
-import { IStorageService, IStorageUploadOption } from '@gateways/services/IStorageService';
+import { IStorageService, IStorageUploadOption } from 'application/interfaces/services/IStorageService';
+import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, MINIO_ACCESS_KEY, MINIO_HOST, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL, STORAGE_BUCKET_NAME, STORAGE_PROVIDER } from 'config/Configuration';
+import { StorageProvider } from 'shared/types/Environment';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { IStorageProvider } from './interfaces/IStorageProvider';
 import { AwsS3Factory } from './providers/AwsS3Factory';
@@ -9,7 +10,7 @@ import { GoogleStorageFactory } from './providers/GoogleStorageFactory';
 import { MinioFactory } from './providers/MinioFactory';
 import { StorageConsoleFactory } from './providers/StorageConsoleFactory';
 
-@Service('storage.service')
+@Service(InjectService.Storage)
 export class StorageService implements IStorageService {
     private readonly _provider: IStorageProvider;
 
@@ -46,7 +47,7 @@ export class StorageService implements IStorageService {
         return this._provider.mapUrl(STORAGE_BUCKET_NAME, urlPath);
     }
 
-    async upload(urlPath: string, stream: string | Readable | Buffer, options: IStorageUploadOption | null = null): Promise<boolean> {
+    async upload(urlPath: string, stream: string | Readable | Buffer, options?: IStorageUploadOption): Promise<boolean> {
         return await this._provider.upload(STORAGE_BUCKET_NAME, urlPath, stream as any, options as any);
     }
 

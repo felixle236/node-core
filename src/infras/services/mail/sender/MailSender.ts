@@ -1,5 +1,5 @@
-import { MAIL_PROVIDER } from '@configs/Configuration';
-import { MailProvider } from '@configs/Enums';
+import { MAIL_PROVIDER } from 'config/Configuration';
+import { MailProvider } from 'shared/types/Environment';
 import { IMailProvider } from './interfaces/IMailProvider';
 import { GoogleSmtpFactory } from './providers/GoogleSmtpFactory';
 import { MailConsoleFactory } from './providers/MailConsoleFactory';

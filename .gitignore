@@ -60,6 +60,8 @@ typings/
 .env
 
 # Others
+src/api/docs/public/api-docs/*
+!src/api/docs/public/api-docs/.gitkeep
 uploads/
 tmp/
 .history

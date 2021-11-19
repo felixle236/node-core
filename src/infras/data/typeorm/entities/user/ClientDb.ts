@@ -1,49 +1,69 @@
-import { CLIENT_SCHEMA } from '@data/typeorm/schemas/user/ClientSchema';
-import { Client } from '@domain/entities/user/Client';
-import { ClientStatus } from '@domain/enums/user/ClientStatus';
-import { IClient } from '@domain/interfaces/user/IClient';
+import { Client } from 'domain/entities/user/Client';
+import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { Column, Entity, Index } from 'typeorm';
-import { UserDb } from './UserDb';
+import { UserBaseDb } from './UserDb';
+import { CLIENT_SCHEMA } from '../../schemas/user/ClientSchema';
 
 @Entity(CLIENT_SCHEMA.TABLE_NAME)
-export class ClientDb extends UserDb implements IClient {
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.EMAIL, length: 120 })
+export class ClientDb extends UserBaseDb<Client> {
+    constructor() {
+        super(Client);
+    }
+
+    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.EMAIL })
     @Index({ unique: true, where: ClientDb.getIndexFilterDeletedColumn() })
     email: string;
 
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.PHONE, length: 20, nullable: true })
-    phone: string | null;
+    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.PHONE, nullable: true })
+    phone?: string;
 
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.ADDRESS, length: 200, nullable: true })
-    address: string | null;
-
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, length: 5, nullable: true })
-    locale: string | null;
+    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, nullable: true })
+    locale?: string;
 
     @Column('enum', { name: CLIENT_SCHEMA.COLUMNS.STATUS, enum: ClientStatus, default: ClientStatus.Actived })
     status: ClientStatus;
 
-    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.ACTIVE_KEY, length: 64, nullable: true })
-    activeKey: string | null;
+    @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.ACTIVE_KEY, nullable: true })
+    activeKey?: string;
 
     @Column('timestamptz', { name: CLIENT_SCHEMA.COLUMNS.ACTIVE_EXPIRE, nullable: true })
-    activeExpire: Date | null;
+    activeExpire?: Date;
 
     @Column('timestamptz', { name: CLIENT_SCHEMA.COLUMNS.ACTIVED_AT, nullable: true })
-    activedAt: Date | null;
+    activedAt?: Date;
 
     @Column('timestamptz', { name: CLIENT_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
-    archivedAt: Date | null;
+    archivedAt?: Date;
 
     /* Relationship */
 
     /* Handlers */
 
     override toEntity(): Client {
-        return new Client(this);
+        const entity = super.toEntity();
+
+        entity.email = this.email;
+        entity.phone = this.phone;
+        entity.locale = this.locale;
+        entity.status = this.status;
+        entity.activeKey = this.activeKey;
+        entity.activeExpire = this.activeExpire;
+        entity.activedAt = this.activedAt;
+        entity.archivedAt = this.archivedAt;
+
+        return entity;
     }
 
-    override fromEntity(entity: Client): IClient {
-        return entity.toData();
+    override fromEntity(entity: Client): void {
+        super.fromEntity(entity);
+
+        this.email = entity.email;
+        this.phone = entity.phone;
+        this.locale = entity.locale;
+        this.status = entity.status;
+        this.activeKey = entity.activeKey;
+        this.activeExpire = entity.activeExpire;
+        this.activedAt = entity.activedAt;
+        this.archivedAt = entity.archivedAt;
     }
 }

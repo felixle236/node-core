@@ -6,7 +6,6 @@ export const CLIENT_SCHEMA = {
         ...USER_SCHEMA.COLUMNS,
         EMAIL: 'email',
         PHONE: 'phone',
-        ADDRESS: 'address',
         LOCALE: 'locale',
         STATUS: 'status',
         ACTIVE_KEY: 'active_key',
@@ -19,6 +18,7 @@ export const CLIENT_SCHEMA = {
 
     },
     RELATED_MANY: {
+        // The field name that we're defined into entity to map the entity related.
 
     }
 };

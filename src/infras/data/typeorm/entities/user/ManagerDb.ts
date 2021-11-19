@@ -1,13 +1,16 @@
-import { MANAGER_SCHEMA } from '@data/typeorm/schemas/user/ManagerSchema';
-import { Manager } from '@domain/entities/user/Manager';
-import { ManagerStatus } from '@domain/enums/user/ManagerStatus';
-import { IManager } from '@domain/interfaces/user/IManager';
+import { Manager } from 'domain/entities/user/Manager';
+import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
 import { Column, Entity, Index } from 'typeorm';
-import { UserDb } from './UserDb';
+import { UserBaseDb } from './UserDb';
+import { MANAGER_SCHEMA } from '../../schemas/user/ManagerSchema';
 
 @Entity(MANAGER_SCHEMA.TABLE_NAME)
-export class ManagerDb extends UserDb implements IManager {
-    @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL, length: 120 })
+export class ManagerDb extends UserBaseDb<Manager> {
+    constructor() {
+        super(Manager);
+    }
+
+    @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL })
     @Index({ unique: true, where: ManagerDb.getIndexFilterDeletedColumn() })
     email: string;
 
@@ -15,17 +18,27 @@ export class ManagerDb extends UserDb implements IManager {
     status: ManagerStatus;
 
     @Column('timestamptz', { name: MANAGER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
-    archivedAt: Date | null;
+    archivedAt?: Date;
 
     /* Relationship */
 
     /* Handlers */
 
     override toEntity(): Manager {
-        return new Manager(this);
+        const entity = super.toEntity();
+
+        entity.email = this.email;
+        entity.status = this.status;
+        entity.archivedAt = this.archivedAt;
+
+        return entity;
     }
 
-    override fromEntity(entity: Manager): IManager {
-        return entity.toData();
+    override fromEntity(entity: Manager): void {
+        super.fromEntity(entity);
+
+        this.email = entity.email;
+        this.status = entity.status;
+        this.archivedAt = entity.archivedAt;
     }
 }

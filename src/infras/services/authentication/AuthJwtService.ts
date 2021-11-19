@@ -1,11 +1,12 @@
+import { AuthType } from 'domain/enums/auth/AuthType';
 import { IncomingHttpHeaders } from 'http';
-import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SECRET_OR_PUBLIC_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from '@configs/Configuration';
-import { AuthType } from '@domain/enums/auth/AuthType';
-import { IAuthJwtService, IJwtPayloadExtend } from '@gateways/services/IAuthJwtService';
+import { IAuthJwtService, IJwtPayloadExtend } from 'application/interfaces/services/IAuthJwtService';
+import { AUTH_SECRET_OR_PRIVATE_KEY, AUTH_SECRET_OR_PUBLIC_KEY, AUTH_SIGNATURE, DOMAIN, PROJECT_NAME, PROTOTYPE } from 'config/Configuration';
 import jwt from 'jsonwebtoken';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 
-@Service('auth_jwt.service')
+@Service(InjectService.AuthJwt)
 export class AuthJwtService implements IAuthJwtService {
     getTokenFromHeader(headers: IncomingHttpHeaders): string {
         let token = '';

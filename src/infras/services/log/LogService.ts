@@ -1,17 +1,18 @@
-import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, LOG_PROVIDER, PROJECT_ID } from '@configs/Configuration';
-import { LogProvider } from '@configs/Enums';
-import { ILogService } from '@gateways/services/ILogService';
 import { LoggingWinston } from '@google-cloud/logging-winston';
-import { IRequest } from '@shared/request/IRequest';
-import { TraceRequest } from '@shared/request/TraceRequest';
-import { isLiteralObject } from '@utils/validator';
+import { ILogService } from 'application/interfaces/services/ILogService';
+import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, LOG_PROVIDER, PROJECT_ID } from 'config/Configuration';
 import { Handler, NextFunction, Request, Response } from 'express';
 import expressWinston from 'express-winston';
+import { IRequest } from 'shared/request/IRequest';
+import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogProvider } from 'shared/types/Environment';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
+import { isLiteralObject } from 'utils/validator';
 import { createLogger, format, Logger, transports } from 'winston';
 import WinstonCloudWatch from 'winston-cloudwatch';
 
-@Service('log.service')
+@Service(InjectService.Log)
 export class LogService implements ILogService {
     private readonly _logger: Logger;
 

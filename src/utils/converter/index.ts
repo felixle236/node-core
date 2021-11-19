@@ -1,7 +1,7 @@
 /**
  * Convert number to currency.
  */
-export function convertToCurrency(value: number | undefined | null, option?: { format: string, currency: string }): string {
+export function convertToCurrency(value: number | undefined, option?: { format: string, currency: string }): string {
     if (!value)
         value = 0;
 
@@ -18,7 +18,7 @@ export function convertToCurrency(value: number | undefined | null, option?: { f
 /**
  * Convert string to boolean.
  */
-export function convertStringToBoolean(val: string | undefined | null, defaultValue = false): boolean {
+export function convertStringToBoolean(val: string | undefined, defaultValue = false): boolean {
     if (!val)
         return defaultValue;
 
@@ -32,7 +32,7 @@ export function convertStringToBoolean(val: string | undefined | null, defaultVa
 /**
  * Convert object to string.
  */
-export function convertObjectToString(val: { [key: string]: any } | undefined | null, isPrettified = false): string {
+export function convertObjectToString(val: { [key: string]: any } | undefined, isPrettified = false): string {
     if (!val)
         return '';
 

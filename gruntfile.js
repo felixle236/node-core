@@ -22,6 +22,14 @@ module.exports = function(grunt) {
                 updateAndDelete: false, // Remove all files from dist that are not found in src. Default: false
                 compareUsing: 'md5' // compares via md5 hash of file contents, instead of file modification time. Default: "mtime"
             }
+        },
+        exec: {
+            'generate-api-docs': {
+                command: `
+                    ts-node -r tsconfig-paths/register src/exposes/ui/doc/ApiGenerator web
+                    && ts-node -r tsconfig-paths/register src/exposes/ui/doc/ApiGenerator mobile
+                `
+            }
         }
     });
 };

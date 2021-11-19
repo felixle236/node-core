@@ -1,13 +1,14 @@
-import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from '@configs/Configuration';
-import { IMailService } from '@gateways/services/IMailService';
-import i18n from '@shared/localization';
+import { IMailService } from 'application/interfaces/services/IMailService';
+import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from 'config/Configuration';
+import i18n from 'shared/localization';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { MailGenerator } from './MailGenerator';
 import { MailSender } from './sender/MailSender';
 import { ForgotPasswordTemplate } from './templates/ForgotPasswordTemplate';
 import { UserActivationTemplate } from './templates/UserActivationTemplate';
 
-@Service('mail.service')
+@Service(InjectService.Mail)
 export class MailService implements IMailService {
     private readonly _sender: MailSender;
     private readonly _generator: MailGenerator;

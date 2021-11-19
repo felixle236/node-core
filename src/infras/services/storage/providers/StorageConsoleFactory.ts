@@ -1,13 +1,14 @@
 import { Readable } from 'stream';
-import { STORAGE_URL } from '@configs/Configuration';
-import { ILogService } from '@gateways/services/ILogService';
+import { ILogService } from 'application/interfaces/services/ILogService';
+import { STORAGE_URL } from 'config/Configuration';
+import { InjectService } from 'shared/types/Injection';
 import Container from 'typedi';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
 import { IStorageProviderUploadOption } from '../interfaces/IStorageProviderUploadOption';
 
 export class StorageConsoleFactory implements IStorageProvider {
-    private readonly _logService = Container.get<ILogService>('log.service');
+    private readonly _logService = Container.get<ILogService>(InjectService.Log);
 
     async getBuckets(): Promise<string[]> {
         this._logService.info('StorageService.getBuckets');
@@ -49,7 +50,7 @@ export class StorageConsoleFactory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    async upload(bucketName: string, objectName: string, _stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<boolean> {
+    async upload(bucketName: string, objectName: string, _stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
         this._logService.info('StorageService.upload', { bucketName, objectName, options });
         return true;
     }

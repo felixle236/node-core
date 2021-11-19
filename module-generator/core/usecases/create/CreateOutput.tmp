@@ -1,7 +1,0 @@
-import { IsUUID } from '@shared/decorators/ValidationDecorator';
-import { DataResponse } from '@shared/usecase/DataResponse';
-
-export class {CreateUsecaseName}Output extends DataResponse<string> {
-    @IsUUID()
-    data: string;
-}

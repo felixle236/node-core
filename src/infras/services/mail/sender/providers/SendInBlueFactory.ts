@@ -1,4 +1,4 @@
-import { SENDINBLUE_API_KEY } from '@configs/Configuration';
+import { SENDINBLUE_API_KEY } from 'config/Configuration';
 import sibApiV3Sdk from 'sib-api-v3-sdk';
 import { IMailProvider } from '../interfaces/IMailProvider';
 

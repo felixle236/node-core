@@ -1,43 +1,77 @@
-import { User } from '@domain/entities/user/User';
-import { GenderType } from '@domain/enums/user/GenderType';
-import { IAuth } from '@domain/interfaces/auth/IAuth';
-import { IUser } from '@domain/interfaces/user/IUser';
+import { User } from 'domain/entities/user/User';
+import { GenderType } from 'domain/enums/user/GenderType';
+import { AddressInfo } from 'domain/value-objects/AddressInfo';
 import { Column, Entity, Index } from 'typeorm';
+import { DbEntity } from '../../common/DbEntity';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
-import { BaseDbEntity } from '../base/BaseDBEntity';
+import { AuthDb } from '../auth/AuthDb';
 
-@Entity(USER_SCHEMA.TABLE_NAME)
-export class UserDb extends BaseDbEntity<string, User> implements IUser {
+export abstract class UserBaseDb<TEntity extends User> extends DbEntity<TEntity> {
+    constructor(userType: { new(): TEntity } = User as any) {
+        super(userType);
+    }
+
     @Column('uuid', { name: USER_SCHEMA.COLUMNS.ROLE_ID })
     @Index()
     roleId: string;
 
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.FIRST_NAME, length: 20 })
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.FIRST_NAME })
     firstName: string;
 
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.LAST_NAME, length: 20, nullable: true })
-    lastName: string | null;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.LAST_NAME, nullable: true })
+    lastName?: string;
 
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.AVATAR, length: 200, nullable: true })
-    avatar: string | null;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.AVATAR, nullable: true })
+    avatar?: string;
 
-    @Column('varchar', { name: USER_SCHEMA.COLUMNS.GENDER, length: 6, nullable: true })
-    gender: GenderType | null;
+    @Column('varchar', { name: USER_SCHEMA.COLUMNS.GENDER, nullable: true })
+    gender?: GenderType;
 
     @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true })
-    birthday: string | null;
+    birthday?: string;
+
+    @Column('json', { name: USER_SCHEMA.COLUMNS.ADDRESS, nullable: true })
+    address?: AddressInfo;
 
     /* Relationship */
 
-    auths: IAuth[] | null;
+    auths?: AuthDb[];
 
     /* Handlers */
 
-    toEntity(): User {
-        return new User(this);
+    override toEntity(): TEntity {
+        const entity = super.toEntity();
+
+        entity.roleId = this.roleId;
+        entity.firstName = this.firstName;
+        entity.lastName = this.lastName;
+        entity.avatar = this.avatar;
+        entity.gender = this.gender;
+        entity.birthday = this.birthday;
+        entity.address = this.address;
+
+        /* Relationship */
+
+        if (this.auths)
+            entity.auths = this.auths.map(auth => auth.toEntity());
+
+        return entity;
     }
 
-    fromEntity(entity: User): IUser {
-        return entity.toData();
+    override fromEntity(entity: TEntity): void {
+        super.fromEntity(entity);
+
+        this.roleId = entity.roleId;
+        this.firstName = entity.firstName;
+        this.lastName = entity.lastName;
+        this.avatar = entity.avatar;
+        this.gender = entity.gender;
+        this.birthday = entity.birthday;
+        this.address = entity.address;
     }
+}
+
+@Entity(USER_SCHEMA.TABLE_NAME)
+export class UserDb extends UserBaseDb<User> {
+
 }

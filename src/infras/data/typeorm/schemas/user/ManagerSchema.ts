@@ -13,6 +13,7 @@ export const MANAGER_SCHEMA = {
 
     },
     RELATED_MANY: {
+        // The field name that we're defined into entity to map the entity related.
 
     }
 };

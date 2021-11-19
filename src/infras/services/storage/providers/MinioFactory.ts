@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { STORAGE_URL } from '@configs/Configuration';
+import { STORAGE_URL } from 'config/Configuration';
 import minio from 'minio';
 import { IBucketItem } from '../interfaces/IBucketItem';
 import { IStorageProvider } from '../interfaces/IStorageProvider';
@@ -79,7 +79,7 @@ export class MinioFactory implements IStorageProvider {
         return `${STORAGE_URL}/${bucketName}/${urlPath}`;
     }
 
-    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options: IStorageProviderUploadOption | null = null): Promise<boolean> {
+    upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
         const metaData = {} as minio.ItemBucketMetadata;
         if (options) {
             if (options.mimetype)

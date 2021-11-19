@@ -1,10 +1,11 @@
-import { SMS_SENDER_OR_PHONE } from '@configs/Configuration';
-import { ISmsService } from '@gateways/services/ISmsService';
+import { ISmsService } from 'application/interfaces/services/ISmsService';
+import { SMS_SENDER_OR_PHONE } from 'config/Configuration';
+import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { SmsSender } from './sender/SmsSender';
 import { UserActivationCodeTemplate } from './templates/UserActivationCodeTemplate';
 
-@Service('sms.service')
+@Service(InjectService.SMS)
 export class SmsService implements ISmsService {
     private readonly _sender: SmsSender;
 

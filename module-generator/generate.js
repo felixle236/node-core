@@ -2,10 +2,19 @@
 const fs = require('fs');
 const path = require('path');
 
-let moduleName = process.argv.length > 2 && process.argv[2].trim();
+const param = process.argv.length > 2 && process.argv[2];
+const param2 = process.argv.length > 3 && process.argv[3];
+
+if (!param || !param2 || param2.split('#').length !== 2)
+    throw new Error('\x1b[35mParam is invalid!\n\x1b[0m');
+
+let moduleName = param;
 let subModuleName = moduleName;
-if (!moduleName)
-    throw new Error('Missing name of the module!');
+const exposeType = param2.split('#')[0].toLowerCase();
+const exposeSubType = param2.split('#')[1].toLowerCase();
+
+if (!exposeType || !exposeSubType || !['api'].includes(exposeType) || !['web', 'mobile', 'internal', 'external'].includes(exposeSubType))
+    throw new Error('\x1b[35mParam is invalid!\n\x1b[0m');
 
 if (moduleName.includes('#')) {
     subModuleName = moduleName.split('#')[1];
@@ -39,105 +48,98 @@ const createUsecaseFncName = `Create${pascalName}`;
 const updateUsecaseFncName = `Update${pascalName}`;
 const deleteUsecaseFncName = `Delete${pascalName}`;
 
-// core
+// Domain
 
-const entityInterfacePath = path.join(__dirname, `../src/core/domain/interfaces/${folder}/I${pascalName}.ts`);
-const entityInterface = getFileContent(path.join(__dirname, './core/domain/Interface.tmp'));
+const entityPath = path.join(__dirname, `../src/domain/entities/${folder}/${pascalName}.ts`);
+const entity = getFileContent(path.join(__dirname, './domain/Entity.tmp'));
 
-const entitySpecPath = path.join(__dirname, `../src/core/domain/entities/${folder}/${pascalName}.spec.ts`);
-const entitySpec = getFileContent(path.join(__dirname, './core/domain/Entity.spec.tmp'));
+const repositoryInterfacePath = path.join(__dirname, `../src/application/interfaces/repositories/${folder}/I${pascalName}Repository.ts`);
+const repositoryInterface = getFileContent(path.join(__dirname, './application/interfaces/IRepository.tmp'));
 
-const entityPath = path.join(__dirname, `../src/core/domain/entities/${folder}/${pascalName}.ts`);
-const entity = getFileContent(path.join(__dirname, './core/domain/Entity.tmp'));
-
-const repositoryInterfacePath = path.join(__dirname, `../src/core/gateways/repositories/${folder}/I${pascalName}Repository.ts`);
-const repositoryInterface = getFileContent(path.join(__dirname, './core/gateways/IRepository.tmp'));
-
-const findHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Handler.spec.ts`);
-const findHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/find/FindHandler.spec.tmp'))
+const findHandlerUsecaseSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Handler.spec.ts`);
+const findHandlerUsecaseSpec = getFileContent(path.join(__dirname, './application/usecases/find/FindHandler.spec.tmp'))
     .replace(/{usecaseFncNameText}/g, `Find ${moduleNameTextLowerCase}`);
 
-const findHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Handler.ts`);
-const findHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/find/FindHandler.tmp'));
+const findHandlerUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Handler.ts`);
+const findHandlerUsecase = getFileContent(path.join(__dirname, './application/usecases/find/FindHandler.tmp'));
 
-const findInputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Input.ts`);
-const findInputUsecase = getFileContent(path.join(__dirname, './core/usecases/find/FindInput.tmp'));
+const findInputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Input.ts`);
+const findInputUsecase = getFileContent(path.join(__dirname, './application/usecases/find/FindInput.tmp'));
 
-const findOutputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Output.ts`);
-const findOutputUsecase = getFileContent(path.join(__dirname, './core/usecases/find/FindOutput.tmp'));
+const findOutputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/find-${subFolder}/${findUsecaseFncName}Output.ts`);
+const findOutputUsecase = getFileContent(path.join(__dirname, './application/usecases/find/FindOutput.tmp'));
 
-const getHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Handler.spec.ts`);
-const getHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/get/GetHandler.spec.tmp'))
+const getHandlerUsecaseSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Handler.spec.ts`);
+const getHandlerUsecaseSpec = getFileContent(path.join(__dirname, './application/usecases/get/GetHandler.spec.tmp'))
     .replace(/{usecaseFncNameText}/g, `Get ${moduleNameTextLowerCase}`);
 
-const getHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Handler.ts`);
-const getHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/get/GetHandler.tmp'));
+const getHandlerUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Handler.ts`);
+const getHandlerUsecase = getFileContent(path.join(__dirname, './application/usecases/get/GetHandler.tmp'));
 
-const getOutputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Output.ts`);
-const getOutputUsecase = getFileContent(path.join(__dirname, './core/usecases/get/GetOutput.tmp'));
+const getOutputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/get-${subFolder}/${getUsecaseFncName}Output.ts`);
+const getOutputUsecase = getFileContent(path.join(__dirname, './application/usecases/get/GetOutput.tmp'));
 
-const createHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Handler.ts`);
-const createHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/create/CreateHandler.tmp'));
+const createHandlerUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Handler.ts`);
+const createHandlerUsecase = getFileContent(path.join(__dirname, './application/usecases/create/CreateHandler.tmp'));
 
-const createHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Handler.spec.ts`);
-const createHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/create/CreateHandler.spec.tmp'))
+const createHandlerUsecaseSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Handler.spec.ts`);
+const createHandlerUsecaseSpec = getFileContent(path.join(__dirname, './application/usecases/create/CreateHandler.spec.tmp'))
     .replace(/{usecaseFncNameText}/g, `Create ${moduleNameTextLowerCase}`);
 
-const createInputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Input.ts`);
-const createInputUsecase = getFileContent(path.join(__dirname, './core/usecases/create/CreateInput.tmp'));
+const createInputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Input.ts`);
+const createInputUsecase = getFileContent(path.join(__dirname, './application/usecases/create/CreateInput.tmp'));
 
-const createOutputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Output.ts`);
-const createOutputUsecase = getFileContent(path.join(__dirname, './core/usecases/create/CreateOutput.tmp'));
+const createOutputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/create-${subFolder}/${createUsecaseFncName}Output.ts`);
+const createOutputUsecase = getFileContent(path.join(__dirname, './application/usecases/create/CreateOutput.tmp'));
 
-const updateHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Handler.spec.ts`);
-const updateHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/update/UpdateHandler.spec.tmp'))
+const updateHandlerUsecaseSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Handler.spec.ts`);
+const updateHandlerUsecaseSpec = getFileContent(path.join(__dirname, './application/usecases/update/UpdateHandler.spec.tmp'))
     .replace(/{usecaseFncNameText}/g, `Update ${moduleNameTextLowerCase}`);
 
-const updateHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Handler.ts`);
-const updateHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/update/UpdateHandler.tmp'));
+const updateHandlerUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Handler.ts`);
+const updateHandlerUsecase = getFileContent(path.join(__dirname, './application/usecases/update/UpdateHandler.tmp'));
 
-const updateInputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Input.ts`);
-const updateInputUsecase = getFileContent(path.join(__dirname, './core/usecases/update/UpdateInput.tmp'));
+const updateInputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Input.ts`);
+const updateInputUsecase = getFileContent(path.join(__dirname, './application/usecases/update/UpdateInput.tmp'));
 
-const updateOutputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Output.ts`);
-const updateOutputUsecase = getFileContent(path.join(__dirname, './core/usecases/update/UpdateOutput.tmp'));
+const updateOutputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/update-${subFolder}/${updateUsecaseFncName}Output.ts`);
+const updateOutputUsecase = getFileContent(path.join(__dirname, './application/usecases/update/UpdateOutput.tmp'));
 
-const deleteHandlerUsecaseSpecPath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Handler.spec.ts`);
-const deleteHandlerUsecaseSpec = getFileContent(path.join(__dirname, './core/usecases/delete/DeleteHandler.spec.tmp'))
+const deleteHandlerUsecaseSpecPath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Handler.spec.ts`);
+const deleteHandlerUsecaseSpec = getFileContent(path.join(__dirname, './application/usecases/delete/DeleteHandler.spec.tmp'))
     .replace(/{usecaseFncNameText}/g, `Delete ${moduleNameTextLowerCase}`);
 
-const deleteHandlerUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Handler.ts`);
-const deleteHandlerUsecase = getFileContent(path.join(__dirname, './core/usecases/delete/DeleteHandler.tmp'));
+const deleteHandlerUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Handler.ts`);
+const deleteHandlerUsecase = getFileContent(path.join(__dirname, './application/usecases/delete/DeleteHandler.tmp'));
 
-const deleteOutputUsecasePath = path.join(__dirname, `../src/core/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Output.ts`);
-const deleteOutputUsecase = getFileContent(path.join(__dirname, './core/usecases/delete/DeleteOutput.tmp'));
+const deleteOutputUsecasePath = path.join(__dirname, `../src/application/usecases/${folder}/${subFolder}/delete-${subFolder}/${deleteUsecaseFncName}Output.ts`);
+const deleteOutputUsecase = getFileContent(path.join(__dirname, './application/usecases/delete/DeleteOutput.tmp'));
 
-// infrastructure
+// Infrastructure
 
 const schemaPath = path.join(__dirname, `../src/infras/data/typeorm/schemas/${folder}/${pascalName}Schema.ts`);
-const schema = getFileContent(path.join(__dirname, './infras/data/Schema.tmp'));
+const schema = getFileContent(path.join(__dirname, './data/Schema.tmp'));
 
 const entityDbPath = path.join(__dirname, `../src/infras/data/typeorm/entities/${folder}/${pascalName}Db.ts`);
-const entityDb = getFileContent(path.join(__dirname, './infras/data/EntityDb.tmp'));
+const entityDb = getFileContent(path.join(__dirname, './data/EntityDb.tmp'));
 
 const repositorySpecPath = path.join(__dirname, `../src/infras/data/typeorm/repositories/${folder}/${pascalName}Repository.spec.ts`);
-const repositorySpec = getFileContent(path.join(__dirname, './infras/data/Repository.spec.tmp'));
+const repositorySpec = getFileContent(path.join(__dirname, './data/Repository.spec.tmp'));
 
 const repositoryPath = path.join(__dirname, `../src/infras/data/typeorm/repositories/${folder}/${pascalName}Repository.ts`);
-const repository = getFileContent(path.join(__dirname, './infras/data/Repository.tmp'));
+const repository = getFileContent(path.join(__dirname, './data/Repository.tmp'));
 
-// api
+// Expose
 
-const controllerSpecPath = path.join(__dirname, `../src/infras/api/controllers/${folder}/${pascalName}Controller.spec.ts`);
-const controllerSpec = getFileContent(path.join(__dirname, './infras/api/Controller.spec.tmp'));
+const controllerSpecPath = path.join(__dirname, `../src/exposes/${exposeType}/${exposeSubType}/controllers/${folder}/${pascalName}Controller.spec.ts`);
+const controllerSpec = getFileContent(path.join(__dirname, './api/Controller.spec.tmp'));
 
-const controllerPath = path.join(__dirname, `../src/infras/api/controllers/${folder}/${pascalName}Controller.ts`);
-const controller = getFileContent(path.join(__dirname, './infras/api/Controller.tmp'));
+const controllerPath = path.join(__dirname, `../src/exposes/${exposeType}/${exposeSubType}/controllers/${folder}/${pascalName}Controller.ts`);
+const controller = getFileContent(path.join(__dirname, './api/Controller.tmp'));
 
 // Handle
 
 createDirectories(
-    entityInterfacePath,
     entityPath,
     repositoryInterfacePath,
     findHandlerUsecasePath,
@@ -151,8 +153,6 @@ createDirectories(
     controllerPath
 );
 
-fs.writeFileSync(entityInterfacePath, entityInterface);
-fs.writeFileSync(entitySpecPath, entitySpec);
 fs.writeFileSync(entityPath, entity);
 fs.writeFileSync(repositoryInterfacePath, repositoryInterface);
 fs.writeFileSync(findHandlerUsecaseSpecPath, findHandlerUsecaseSpec);
