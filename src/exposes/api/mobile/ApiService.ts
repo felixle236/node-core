@@ -3,6 +3,7 @@ import path from 'path';
 import { ILogService } from 'application/interfaces/services/ILogService';
 import { ENVIRONMENT } from 'config/Configuration';
 import express from 'express';
+import helmet from 'helmet';
 import { HttpServer } from 'infras/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
 import i18n from 'shared/localization';
@@ -21,6 +22,7 @@ export class ApiService {
 
         const loggingMiddleware = logger.createMiddleware();
         app.use(loggingMiddleware);
+        app.use(helmet());
         app.use(i18n.init);
 
         const httpServer = new HttpServer();

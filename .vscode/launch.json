@@ -13,7 +13,7 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "runtimeExecutable": "node",
-            "runtimeArgs": ["--nolazy", "-r", "tsconfig-paths/register", "-r", "ts-node/register/transpile-only"],
+            "runtimeArgs": ["--nolazy", "-r", "tsconfig-paths/register", "-r", "ts-node/register"],
             "args": ["src/app.ts"],
             "skipFiles": ["node_modules/**"]
         }
