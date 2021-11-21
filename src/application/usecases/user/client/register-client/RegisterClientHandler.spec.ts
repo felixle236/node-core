@@ -11,10 +11,10 @@ import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { SystemError } from 'shared/exceptions/SystemError';
 import { IRequest } from 'shared/request/IRequest';
-import { mockDbContext } from 'shared/test/MockDbContext';
+import { mockDbContext } from 'shared/test/mockDbContext';
 import { mockFunction } from 'shared/test/MockFunction';
 import { mockInjection, mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
-import { InjectDb, InjectRepository, InjectService } from 'shared/types/Injection';
+import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
@@ -34,8 +34,8 @@ describe('Client usecases - Register client', () => {
     let registerClientHandler: RegisterClientHandler;
     let param: RegisterClientInput;
 
-    before(() => {
-        dbContext = mockInjection(InjectDb.DbContext, mockDbContext());
+    before(async () => {
+        dbContext = await mockDbContext();
         mailService = mockInjection(InjectService.Mail, {
             sendUserActivation: mockFunction()
         });
@@ -59,8 +59,9 @@ describe('Client usecases - Register client', () => {
         sandbox.restore();
     });
 
-    after(() => {
+    after(async () => {
         Container.reset();
+        await dbContext.destroyConnection();
     });
 
     it('Register client with email exist error', async () => {

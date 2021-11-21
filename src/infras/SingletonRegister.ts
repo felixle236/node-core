@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import 'infras/data/typeorm/DbRegister';
-import 'infras/data/redis/RedisRegister';
+import 'infras/data/DataRegister';
 import 'infras/services/ServiceRegister';
 import * as routingController from 'routing-controllers';
 import * as typeorm from 'typeorm';

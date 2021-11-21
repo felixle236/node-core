@@ -57,7 +57,7 @@ export class CreateClientHandler implements IUsecaseHandler<CreateClientInput, C
         if (isExistUsername)
             throw new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
 
-        return await this._dbContext.getConnection().runTransaction(async querySession => {
+        return await this._dbContext.runTransaction(async querySession => {
             const result = new CreateClientOutput();
             result.data = await this._clientRepository.create(data, querySession);
 

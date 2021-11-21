@@ -1,17 +1,28 @@
 import 'mocha';
 import { expect } from 'chai';
-import { mockSelectQueryBuilder } from 'shared/test/MockTypeORM';
-import { createSandbox } from 'sinon';
+import { IMemoryDb } from 'pg-mem';
+import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
 import { UserRepository } from './UserRepository';
+import { DbContext } from '../../DbContext';
 import { UserDb } from '../../entities/user/UserDb';
 
 describe('User repository', () => {
-    it('Initialize repository', async () => {
-        const sandbox = createSandbox();
-        mockSelectQueryBuilder<UserDb>(sandbox);
+    let db: IMemoryDb;
+    let dbContext: DbContext;
 
-        const repository = new UserRepository();
-        expect(!!repository).to.eq(true);
-        sandbox.restore();
+    before(async () => {
+        db = mockDb();
+        dbContext = await mockDbContext(db);
+    });
+
+    after(async () => {
+        await dbContext.destroyConnection();
+    });
+
+    it('Initialize repository', async () => {
+        dbContext.getConnection().getRepository(UserDb);
+        const userRepository = new UserRepository();
+
+        expect(!!userRepository).to.eq(true);
     });
 });

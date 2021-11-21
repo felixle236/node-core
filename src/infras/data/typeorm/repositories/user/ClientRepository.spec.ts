@@ -1,132 +1,98 @@
 import 'mocha';
 import { ClientStatus } from 'domain/enums/user/ClientStatus';
+import { RoleId } from 'domain/enums/user/RoleId';
 import { expect } from 'chai';
-import { mockSelectQueryBuilder, mockWhereExpressionBuilder } from 'shared/test/MockTypeORM';
-import { createSandbox } from 'sinon';
-import { Brackets } from 'typeorm';
+import { IBackup, IMemoryDb } from 'pg-mem';
+import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
 import { ClientRepository } from './ClientRepository';
+import { DbContext } from '../../DbContext';
 import { ClientDb } from '../../entities/user/ClientDb';
 
 describe('Client repository', () => {
-    const sandbox = createSandbox();
+    let db: IMemoryDb;
+    let dbContext: DbContext;
+    let backup: IBackup;
+    let clientRepository: ClientRepository;
+    const email = 'client.1@localhost.com';
+
+    before(async () => {
+        db = mockDb();
+        dbContext = await mockDbContext(db);
+
+        const clientDbRepo = dbContext.getConnection().getRepository(ClientDb);
+        clientRepository = new ClientRepository();
+
+        let client = new ClientDb();
+        client.roleId = RoleId.Client;
+        client.firstName = 'Client';
+        client.lastName = '1';
+        client.email = email;
+        client.status = ClientStatus.Actived;
+        await clientDbRepo.save(client);
+
+        client = new ClientDb();
+        client.roleId = RoleId.Client;
+        client.firstName = 'Client';
+        client.lastName = '2';
+        client.email = 'client.2@localhost.com';
+        client.status = ClientStatus.Actived;
+        await clientDbRepo.save(client);
+
+        backup = db.backup();
+    });
+
+    afterEach(() => {
+        backup.restore();
+    });
+
+    after(async () => {
+        await dbContext.destroyConnection();
+    });
 
     describe('Find and count', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Find and count data', async () => {
-            const clientDbs = [new ClientDb(), new ClientDb()];
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([clientDbs, clientDbs.length]);
-
-            const clientRepository = new ClientRepository();
             const [list, count] = await clientRepository.findAndCount({ skip: 0, limit: 10 });
 
-            expect(list.length).to.eq(clientDbs.length);
-            expect(count).to.eq(clientDbs.length);
+            expect(list.length).to.eq(2);
+            expect(count).to.eq(2);
         });
 
         it('Find and count without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([[], 0]);
-
-            const clientRepository = new ClientRepository();
-            const [list, count] = await clientRepository.findAndCount({ skip: 0, limit: 10 });
+            const [list, count] = await clientRepository.findAndCount({ keyword: 'no data', skip: 0, limit: 10 });
 
             expect(list.length).to.eq(0);
             expect(count).to.eq(0);
         });
 
         it('Find and count data with params', async () => {
-            const clientDbs = [new ClientDb(), new ClientDb()];
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([clientDbs, clientDbs.length]);
+            const [list, count] = await clientRepository.findAndCount({ keyword: 'client 1', status: ClientStatus.Actived, skip: 0, limit: 10 });
 
-            const clientRepository = new ClientRepository();
-            const [list, count] = await clientRepository.findAndCount({ keyword: 'test', status: ClientStatus.Actived, skip: 0, limit: 10 });
-
-            const whereExpression = mockWhereExpressionBuilder();
-            const brackets = selectQueryBuilder.andWhere.firstCall.args[0] as Brackets;
-            brackets.whereFactory(whereExpression);
-
-            expect(list.length).to.eq(clientDbs.length);
-            expect(count).to.eq(clientDbs.length);
+            expect(list.length).to.eq(1);
+            expect(count).to.eq(1);
         });
     });
 
     describe('Get by email', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Get by email', async () => {
-            const data = new ClientDb();
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves(data);
-
-            const clientRepository = new ClientRepository();
-            const result = await clientRepository.getByEmail('test@localhost.com');
-
-            expect(!!result).to.eq(true);
+            const result = await clientRepository.getByEmail(email);
+            expect(result && result.email).to.eq(email);
         });
 
         it('Get by email without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves();
-
-            const clientRepository = new ClientRepository();
             const result = await clientRepository.getByEmail('test@localhost.com');
-
-            expect(!result).to.eq(true);
+            expect(result).to.eq(undefined);
         });
     });
 
     describe('Check email exist', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Check email exist', async () => {
-            const data = new ClientDb();
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.select.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves(data);
-
-            const clientRepository = new ClientRepository();
-            const hasSucceed = await clientRepository.checkEmailExist('test@localhost.com');
-
-            expect(hasSucceed).to.eq(true);
+            const isExist = await clientRepository.checkEmailExist(email);
+            expect(isExist).to.eq(true);
         });
 
         it('Check email not exist', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ClientDb>(sandbox);
-            selectQueryBuilder.select.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves();
-
-            const clientRepository = new ClientRepository();
-            const hasSucceed = await clientRepository.checkEmailExist('test@localhost.com');
-
-            expect(hasSucceed).to.eq(false);
+            const isExist = await clientRepository.checkEmailExist('test@localhost.com');
+            expect(isExist).to.eq(false);
         });
     });
 });

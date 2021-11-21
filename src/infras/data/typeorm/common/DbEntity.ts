@@ -37,6 +37,12 @@ export abstract class DbEntity<TEntity extends Entity> {
         this.deletedAt = entity.deletedAt;
     }
 
+    toJSON(): any {
+        const data = JSON.parse(JSON.stringify({ ...this }));
+        delete data._type;
+        return data;
+    }
+
     static getIndexFilterDeletedColumn(): string {
         return `${SCHEMA.COLUMNS.DELETED_AT} IS NULL`;
     }

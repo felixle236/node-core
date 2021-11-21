@@ -52,7 +52,7 @@ export class CreateManagerHandler implements IUsecaseHandler<CreateManagerInput,
         if (isExistUsername)
             throw new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
 
-        return await this._dbContext.getConnection().runTransaction(async querySession => {
+        return await this._dbContext.runTransaction(async querySession => {
             const result = new CreateManagerOutput();
             result.data = await this._managerRepository.create(data, querySession);
 

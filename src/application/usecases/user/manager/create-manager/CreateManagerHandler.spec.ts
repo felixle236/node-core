@@ -9,9 +9,9 @@ import { expect } from 'chai';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { SystemError } from 'shared/exceptions/SystemError';
-import { mockDbContext } from 'shared/test/MockDbContext';
-import { mockInjection, mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
-import { InjectDb, InjectRepository } from 'shared/types/Injection';
+import { mockDbContext } from 'shared/test/mockDbContext';
+import { mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
+import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CreateManagerHandler } from './CreateManagerHandler';
@@ -29,8 +29,8 @@ describe('Manager usecases - Create manager', () => {
     let createManagerHandler: CreateManagerHandler;
     let param: CreateManagerInput;
 
-    before(() => {
-        dbContext = mockInjection(InjectDb.DbContext, mockDbContext());
+    before(async () => {
+        dbContext = await mockDbContext();
         managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
         authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getByUsername']);
         checkEmailExistHandler = mockUsecaseInjection(CheckEmailExistHandler);
@@ -51,8 +51,9 @@ describe('Manager usecases - Create manager', () => {
         sandbox.restore();
     });
 
-    after(() => {
+    after(async () => {
         Container.reset();
+        await dbContext.destroyConnection();
     });
 
     it('Create manager with email exist error', async () => {

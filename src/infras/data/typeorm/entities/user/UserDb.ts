@@ -1,7 +1,7 @@
 import { User } from 'domain/entities/user/User';
 import { GenderType } from 'domain/enums/user/GenderType';
 import { AddressInfo } from 'domain/value-objects/AddressInfo';
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { DbEntity } from '../../common/DbEntity';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 import { AuthDb } from '../auth/AuthDb';
@@ -35,6 +35,7 @@ export abstract class UserBaseDb<TEntity extends User> extends DbEntity<TEntity>
 
     /* Relationship */
 
+    @OneToMany(() => AuthDb, auth => auth.user)
     auths?: AuthDb[];
 
     /* Handlers */

@@ -1,4 +1,4 @@
-FROM node:14.17.6-alpine
+FROM node:16.13.0-alpine
 
 # Change working directory
 WORKDIR /usr/app
@@ -7,7 +7,9 @@ WORKDIR /usr/app
 COPY . .
 
 RUN npm install && \
+    npm run lint && \
     npm run build && \
-    npm run migration:run
+    npm test && \
+    npm run generate:apidoc
 
 CMD ["npm", "start"]

@@ -2,132 +2,97 @@ import 'mocha';
 import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { expect } from 'chai';
-import { mockSelectQueryBuilder, mockWhereExpressionBuilder } from 'shared/test/MockTypeORM';
-import { createSandbox } from 'sinon';
-import { Brackets } from 'typeorm';
+import { IBackup, IMemoryDb } from 'pg-mem';
+import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
 import { ManagerRepository } from './ManagerRepository';
+import { DbContext } from '../../DbContext';
 import { ManagerDb } from '../../entities/user/ManagerDb';
 
 describe('Manager repository', () => {
-    const sandbox = createSandbox();
+    let db: IMemoryDb;
+    let dbContext: DbContext;
+    let backup: IBackup;
+    let managerRepository: ManagerRepository;
+    const email = 'manager.1@localhost.com';
+
+    before(async () => {
+        db = mockDb();
+        dbContext = await mockDbContext(db);
+
+        const managerDbRepo = dbContext.getConnection().getRepository(ManagerDb);
+        managerRepository = new ManagerRepository();
+
+        let manager = new ManagerDb();
+        manager.roleId = RoleId.Manager;
+        manager.firstName = 'Manager';
+        manager.lastName = '1';
+        manager.email = email;
+        manager.status = ManagerStatus.Actived;
+        await managerDbRepo.save(manager);
+
+        manager = new ManagerDb();
+        manager.roleId = RoleId.Manager;
+        manager.firstName = 'Manager';
+        manager.lastName = '2';
+        manager.email = 'manager.2@localhost.com';
+        manager.status = ManagerStatus.Actived;
+        await managerDbRepo.save(manager);
+
+        backup = db.backup();
+    });
+
+    afterEach(() => {
+        backup.restore();
+    });
+
+    after(async () => {
+        await dbContext.destroyConnection();
+    });
 
     describe('Find and count', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Find and count data', async () => {
-            const managerDbs = [new ManagerDb(), new ManagerDb()];
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([managerDbs, managerDbs.length]);
-
-            const managerRepository = new ManagerRepository();
             const [list, count] = await managerRepository.findAndCount({ skip: 0, limit: 10 });
 
-            expect(list.length).to.eq(managerDbs.length);
-            expect(count).to.eq(managerDbs.length);
+            expect(list.length).to.eq(2);
+            expect(count).to.eq(2);
         });
 
         it('Find and count without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([[], 0]);
-
-            const managerRepository = new ManagerRepository();
-            const [list, count] = await managerRepository.findAndCount({ skip: 0, limit: 10 });
+            const [list, count] = await managerRepository.findAndCount({ keyword: 'no data', skip: 0, limit: 10 });
 
             expect(list.length).to.eq(0);
             expect(count).to.eq(0);
         });
 
         it('Find and count data with params', async () => {
-            const managerDbs = [new ManagerDb(), new ManagerDb()];
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.andWhere.returnsThis();
-            selectQueryBuilder.orWhere.returnsThis();
-            selectQueryBuilder.skip.returnsThis();
-            selectQueryBuilder.take.returnsThis();
-            selectQueryBuilder.getManyAndCount.resolves([managerDbs, managerDbs.length]);
+            const [list, count] = await managerRepository.findAndCount({ roleIds: [RoleId.Manager], keyword: 'manager 1', status: ManagerStatus.Actived, skip: 0, limit: 10 });
 
-            const managerRepository = new ManagerRepository();
-            const [list, count] = await managerRepository.findAndCount({ roleIds: [RoleId.Manager, RoleId.Client], keyword: 'test', status: ManagerStatus.Actived, skip: 0, limit: 10 });
-
-            const whereExpression = mockWhereExpressionBuilder();
-            const brackets = selectQueryBuilder.andWhere.secondCall.args[0] as Brackets;
-            brackets.whereFactory(whereExpression);
-
-            expect(list.length).to.eq(managerDbs.length);
-            expect(count).to.eq(managerDbs.length);
+            expect(list.length).to.eq(1);
+            expect(count).to.eq(1);
         });
     });
 
     describe('Get by email', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Get by email', async () => {
-            const data = new ManagerDb();
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves(data);
-
-            const managerRepository = new ManagerRepository();
-            const result = await managerRepository.getByEmail('test@localhost.com');
-
-            expect(!!result).to.eq(true);
+            const result = await managerRepository.getByEmail(email);
+            expect(result && result.email).to.eq(email);
         });
 
         it('Get by email without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves();
-
-            const managerRepository = new ManagerRepository();
             const result = await managerRepository.getByEmail('test@localhost.com');
-
-            expect(!result).to.eq(true);
+            expect(result).to.eq(undefined);
         });
     });
 
     describe('Check email exist', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Check email exist', async () => {
-            const data = new ManagerDb();
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.select.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves(data);
-
-            const managerRepository = new ManagerRepository();
-            const hasSucceed = await managerRepository.checkEmailExist('test@localhost.com');
-
-            expect(hasSucceed).to.eq(true);
+            const isExist = await managerRepository.checkEmailExist(email);
+            expect(isExist).to.eq(true);
         });
 
         it('Check email not exist', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<ManagerDb>(sandbox);
-            selectQueryBuilder.select.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves();
-
-            const managerRepository = new ManagerRepository();
-            const hasSucceed = await managerRepository.checkEmailExist('test@localhost.com');
-
-            expect(hasSucceed).to.eq(false);
+            const isExist = await managerRepository.checkEmailExist('test@localhost.com');
+            expect(isExist).to.eq(false);
         });
     });
 });

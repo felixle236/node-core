@@ -95,8 +95,8 @@ async function initBucket(): Promise<void> {
     logService.info('\x1b[32m Create bucket successfully. \x1b[0m');
 }
 
-export class Initialize1637288444103 implements MigrationInterface {
-    name = 'Initialize1637288444103'
+export class Initialize1637384079608 implements MigrationInterface {
+    name = 'Initialize1637384079608'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query('CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "role_id" uuid NOT NULL, "first_name" character varying NOT NULL, "last_name" character varying, "avatar" character varying, "gender" character varying, "birthday" date, "address" json, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))');

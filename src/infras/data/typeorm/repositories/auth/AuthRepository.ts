@@ -5,7 +5,6 @@ import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { Repository } from '../../common/Repository';
 import { AuthDb } from '../../entities/auth/AuthDb';
-import { UserDb } from '../../entities/user/UserDb';
 import { AUTH_SCHEMA } from '../../schemas/auth/AuthSchema';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 
@@ -24,7 +23,7 @@ export class AuthRepository extends Repository<Auth, AuthDb> implements IAuthRep
 
     async getByUsername(username: string): Promise<Auth | undefined> {
         const query = this.repository.createQueryBuilder(AUTH_SCHEMA.TABLE_NAME)
-            .innerJoinAndMapOne(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.RELATED_ONE.USER}`, UserDb, USER_SCHEMA.TABLE_NAME, `${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USER_ID} = ${USER_SCHEMA.TABLE_NAME}.${USER_SCHEMA.COLUMNS.ID}`)
+            .innerJoinAndSelect(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.RELATED_ONE.USER}`, USER_SCHEMA.TABLE_NAME)
             .where(`LOWER(${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USERNAME}) = LOWER(:username)`, { username });
 
         const result = await query.getOne();

@@ -1,84 +1,77 @@
 import 'mocha';
 import { randomUUID } from 'crypto';
+import { AuthType } from 'domain/enums/auth/AuthType';
+import { RoleId } from 'domain/enums/user/RoleId';
 import { expect } from 'chai';
-import { mockQuerySession, mockSelectQueryBuilder } from 'shared/test/MockTypeORM';
-import { createSandbox } from 'sinon';
+import { IBackup, IMemoryDb } from 'pg-mem';
+import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
+import { hashMD5 } from 'utils/crypt';
 import { AuthRepository } from './AuthRepository';
+import { DbContext } from '../../DbContext';
 import { AuthDb } from '../../entities/auth/AuthDb';
+import { UserDb } from '../../entities/user/UserDb';
 
 describe('Authorization repository', () => {
-    const sandbox = createSandbox();
+    let db: IMemoryDb;
+    let dbContext: DbContext;
+    let backup: IBackup;
+    let authRepository: AuthRepository;
+    const userId = randomUUID();
+    const username = 'email.1@localhost.com';
+
+    before(async () => {
+        db = mockDb();
+        dbContext = await mockDbContext(db);
+
+        const userDbRepo = dbContext.getConnection().getRepository(UserDb);
+        const authDbRepo = dbContext.getConnection().getRepository(AuthDb);
+        authRepository = new AuthRepository();
+
+        const user = new UserDb();
+        user.id = userId;
+        user.roleId = RoleId.Client;
+        user.firstName = 'User';
+        await userDbRepo.save(user);
+
+        const auth = new AuthDb();
+        auth.userId = userId;
+        auth.type = AuthType.PersonalEmail;
+        auth.username = username;
+        auth.password = hashMD5('123456');
+        await authDbRepo.save(auth);
+
+        backup = db.backup();
+    });
+
+    afterEach(() => {
+        backup.restore();
+    });
+
+    after(async () => {
+        await dbContext.destroyConnection();
+    });
 
     describe('Get all by user', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Get all by user', async () => {
-            const authDbs = [new AuthDb(), new AuthDb()];
-            const { selectQueryBuilder } = mockSelectQueryBuilder<AuthDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getMany.resolves(authDbs);
-
-            const authRepository = new AuthRepository();
-            const list = await authRepository.getAllByUser(randomUUID());
-
-            expect(list.length).to.eq(authDbs.length);
+            const list = await authRepository.getAllByUser(userId);
+            expect(list.length).to.eq(1);
         });
 
         it('Get all by user without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<AuthDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getMany.resolves([]);
-
-            const authRepository = new AuthRepository();
             const list = await authRepository.getAllByUser(randomUUID());
-
             expect(list.length).to.eq(0);
-        });
-
-        it('Get all by user with transaction', async () => {
-            const authDbs = [new AuthDb(), new AuthDb()];
-            const { querySession } = mockQuerySession(sandbox);
-            const { selectQueryBuilder } = mockSelectQueryBuilder<AuthDb>(sandbox);
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getMany.resolves(authDbs);
-
-            const authRepository = new AuthRepository();
-            const list = await authRepository.getAllByUser(randomUUID(), querySession);
-
-            expect(list.length).to.eq(authDbs.length);
         });
     });
 
     describe('Get by username', () => {
-        afterEach(() => {
-            sandbox.restore();
-        });
-
         it('Get by username', async () => {
-            const data = new AuthDb();
-            const { selectQueryBuilder } = mockSelectQueryBuilder<AuthDb>(sandbox);
-            selectQueryBuilder.innerJoinAndMapOne.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves(data);
-
-            const authRepository = new AuthRepository();
-            const result = await authRepository.getByUsername(randomUUID());
-
-            expect(!!result).to.eq(true);
+            const result = await authRepository.getByUsername(username);
+            expect(result?.username).to.eq(username);
         });
 
         it('Get by username without data', async () => {
-            const { selectQueryBuilder } = mockSelectQueryBuilder<AuthDb>(sandbox);
-            selectQueryBuilder.innerJoinAndMapOne.returnsThis();
-            selectQueryBuilder.where.returnsThis();
-            selectQueryBuilder.getOne.resolves();
-
-            const authRepository = new AuthRepository();
             const result = await authRepository.getByUsername(randomUUID());
-
-            expect(!result).to.eq(true);
+            expect(result).to.eq(undefined);
         });
     });
 });

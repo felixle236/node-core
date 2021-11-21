@@ -37,6 +37,6 @@ export function convertObjectToString(val: { [key: string]: any } | undefined, i
         return '';
 
     if (isPrettified)
-        return JSON.stringify(val, undefined, 2);
-    return JSON.stringify(val, undefined, '');
+        return JSON.stringify({ ...val }, undefined, 2);
+    return JSON.stringify({ ...val }, undefined, '');
 }

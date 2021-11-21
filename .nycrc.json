@@ -13,7 +13,8 @@
     "exclude": [
         "**/shared/**",
         "**/entities/**",
-        "**/middlewares/**"
+        "**/middlewares/**",
+        "**/DbContext.ts"
     ],
     "extension": [
         ".ts"

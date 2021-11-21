@@ -59,7 +59,7 @@ export class RegisterClientHandler implements IUsecaseHandler<RegisterClientInpu
         data.activeKey = activeKey;
         data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 
-        return await this._dbContext.getConnection().runTransaction(async querySession => {
+        return await this._dbContext.runTransaction(async querySession => {
             await this._clientRepository.create(data, querySession);
             usecaseOption.querySession = querySession;
             await this._createAuthByEmailHandler.handle(auth, usecaseOption);

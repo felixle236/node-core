@@ -11,9 +11,9 @@ import { expect } from 'chai';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { SystemError } from 'shared/exceptions/SystemError';
-import { mockDbContext } from 'shared/test/MockDbContext';
-import { mockInjection, mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
-import { InjectDb, InjectRepository } from 'shared/types/Injection';
+import { mockDbContext } from 'shared/test/mockDbContext';
+import { mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
+import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CreateClientHandler } from './CreateClientHandler';
@@ -31,8 +31,8 @@ describe('Client usecases - Create client', () => {
     let createClientHandler: CreateClientHandler;
     let param: CreateClientInput;
 
-    before(() => {
-        dbContext = mockInjection(InjectDb.DbContext, mockDbContext());
+    before(async () => {
+        dbContext = await mockDbContext();
         checkEmailExistHandler = mockUsecaseInjection(CheckEmailExistHandler);
         createAuthByEmailHandler = mockUsecaseInjection(CreateAuthByEmailHandler);
         authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getByUsername']);
@@ -58,8 +58,9 @@ describe('Client usecases - Create client', () => {
         sandbox.restore();
     });
 
-    after(() => {
+    after(async () => {
         Container.reset();
+        await dbContext.destroyConnection();
     });
 
     it('Create client with email exist error', async () => {

@@ -6,15 +6,13 @@ import { IRedisClient } from 'shared/database/interfaces/IRedisClient';
 import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { SystemError } from 'shared/exceptions/SystemError';
-import { InjectDb } from 'shared/types/Injection';
-import { Service } from 'typedi';
 
-@Service(InjectDb.RedisContext)
 export class RedisContext implements IRedisContext {
-    private _connection: IRedisClient;
+    private _connection?: IRedisClient;
 
     constructor(connection?: IRedisClient) {
-        if (connection) this._connection = connection;
+        if (connection)
+            this._connection = connection;
     }
 
     get redisClient(): IRedisClient {

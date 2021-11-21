@@ -1,6 +1,11 @@
-import './DbContext';
 import path from 'path';
+import { IDbContext } from 'shared/database/interfaces/IDbContext';
+import { InjectDb } from 'shared/types/Injection';
+import Container from 'typedi';
 import { getDirectoriesSync, getFilesSync } from 'utils/file';
+import { DbContext } from './DbContext';
+
+Container.set<IDbContext>(InjectDb.DbContext, new DbContext());
 
 const folder = path.join(__dirname, './repositories');
 getDirectoriesSync(folder).forEach(childFolder => {

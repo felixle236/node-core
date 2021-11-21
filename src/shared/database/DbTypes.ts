@@ -1,3 +1,5 @@
+export type DbConnection = any;
+
 export type DbQuerySession = any;
 
 export type SelectFilterQuery<T> = { [k in Extract<keyof T, string>]?: any } & { relations?: string[] } & { [key: string]: any };

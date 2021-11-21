@@ -1,6 +1,6 @@
 import { Auth } from 'domain/entities/auth/Auth';
 import { AuthType } from 'domain/enums/auth/AuthType';
-import { Column, Entity, Index, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { DbEntity } from '../../common/DbEntity';
 import { AUTH_SCHEMA } from '../../schemas/auth/AuthSchema';
 import { UserDb } from '../user/UserDb';
@@ -33,6 +33,7 @@ export class AuthDb extends DbEntity<Auth> {
 
     /* Relationship */
 
+    @ManyToOne(() => UserDb, user => user.auths, { createForeignKeyConstraints: false })
     @JoinColumn({ name: AUTH_SCHEMA.COLUMNS.USER_ID })
     user?: UserDb;
 

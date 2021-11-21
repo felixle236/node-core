@@ -6,8 +6,8 @@ import { DbEntity } from './DbEntity';
 export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEntity<TEntity>> {
     protected readonly repository: typeorm.Repository<TDbEntity>;
 
-    constructor(private _type: { new(): TDbEntity }, private _schema: {TABLE_NAME: string}) {
-        this.repository = typeorm.getRepository(this._type);
+    constructor(private readonly _type: { new(): TDbEntity }, private readonly _schema: {TABLE_NAME: string}) {
+        this.repository = typeorm.getRepository(_type);
     }
 
     async findAll(_filter: SelectFilterListQuery<TEntity>, querySession?: DbQuerySession): Promise<TEntity[]> {
@@ -59,7 +59,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
             .insert()
-            .values(dataObject as any)
+            .values(dataObject.toJSON())
             .execute();
         return result.identifiers[0].id;
     }
@@ -70,7 +70,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
             .insert()
-            .values(dataObject as any)
+            .values(dataObject.toJSON())
             .execute();
 
         const result2 = await this.get(result.identifiers[0].id, _relations, querySession);
@@ -82,12 +82,12 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         const arr = list.map(item => {
             const dataObject = new this._type();
             dataObject.fromEntity(item);
-            return dataObject;
+            return dataObject.toJSON();
         });
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
             .insert()
-            .values(arr as any)
+            .values(arr)
             .execute();
         return result.identifiers.map(identifier => identifier.id);
     }
@@ -107,7 +107,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         dataObject.fromEntity(data);
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
-            .update(dataObject as any)
+            .update(dataObject.toJSON())
             .whereInIds(id)
             .execute();
         return !!result.affected;
@@ -118,7 +118,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         dataObject.fromEntity(data);
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
-            .update(dataObject as any)
+            .update(dataObject.toJSON())
             .whereInIds(id)
             .execute();
 
@@ -132,10 +132,11 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     async updateFields(id: string, data: TEntity, fields: UpdateFieldQuery<TEntity>, querySession?: DbQuerySession): Promise<boolean> {
         const dataObject = new this._type();
         dataObject.fromEntity(data);
+        const dataJson = dataObject.toJSON();
 
         const obj = {} as any;
         fields.forEach(field => {
-            obj[field] = dataObject[field as any];
+            obj[field] = dataJson[field as any];
         });
 
         const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)

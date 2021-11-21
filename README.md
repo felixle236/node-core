@@ -63,7 +63,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 
 ## Required
 
-- NodeJS version >= `14.17.x`, current version: NodeJS `v14.17.5` and NPM `v6.14.14` (We can install global `n` package to switch NodeJS versions easier).
+- NodeJS version >= `14.17.x`, current version: NodeJS `v16.13.0` and NPM `v8.1.0` (We can install global `n` package to switch NodeJS versions easier).
 - Knowledge of Typescript, ES6, TypeORM, PostgreSQL.
 
 ## Document Related
@@ -493,7 +493,7 @@ constructor(
 ) {}
 ....
 
-await this._dbContext.getConnection().runTransaction(async querySession => {
+await this._dbContext.runTransaction(async querySession => {
    const user = await this.userRepository.getByEmail(item.email, querySession);
    // Handle something here.
 
@@ -502,7 +502,7 @@ await this._dbContext.getConnection().runTransaction(async querySession => {
 
 });
 
-await this._dbContext.getConnection().runTransaction(async querySession => {
+await this._dbContext.runTransaction(async querySession => {
    const user = await this.userRepository.getByEmail(item.email, querySession);
    // Handle something here.
 
@@ -820,6 +820,6 @@ DELETE http://localhost:3000/api/v1/clients/{:id}               --> Delete clien
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
 - The function order should be arranged in turn according to find, get, check, create, update, delete, remove.
 - The query param (url-path?param1=&param2=) will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()` into QueryInput object.
-- If we use the table inheritance then we shouldn't use the enum type for parent table in database schema, with the logic code is still good.
+- If we use the table inheritance then we shouldn't use the enum type for parent table in database schema and we shouldn't define the foreign key of the other tables to this parent table, with the logic code is still good. To prevent foreign key definition, we can set `createForeignKeyConstraints` to `false`, for example: `@ManyToOne(() => UserDb, user => user.auths, { createForeignKeyConstraints: false })`.
 - Refer the joining relations document to have the best practice: https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations
 - With TypeORM version < 0.3.0, there is a bug `Cannot read property 'databaseName' of undefined` when we use `join` + `orderBy` together, please follow this issue in [here](https://github.com/typeorm/typeorm/issues/4270). Temporary [solution](https://github.com/typeorm/typeorm/issues/747#issuecomment-519553920)

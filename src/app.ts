@@ -12,7 +12,7 @@ import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
 import { Environment } from 'shared/types/Environment';
 import { InjectDb, InjectService } from 'shared/types/Injection';
-import { Container } from 'typedi';
+import Container from 'typedi';
 
 const logService = Container.get<ILogService>(InjectService.Log);
 const dbContext = Container.get<IDbContext>(InjectDb.DbContext);

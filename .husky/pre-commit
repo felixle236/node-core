@@ -3,5 +3,5 @@
 
 npm run lint
 npm run build
-npm run generate:apidoc
 npm test
+npm run generate:apidoc
