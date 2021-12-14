@@ -4,8 +4,8 @@ import { Client } from 'domain/entities/user/Client';
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { IRequest } from 'shared/request/IRequest';
 import { mockFunction } from 'shared/test/MockFunction';
 import { mockInjection, mockRepositoryInjection } from 'shared/test/MockInjection';
@@ -52,7 +52,7 @@ describe('Client usecases - Resend activation', () => {
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
         const error = await resendActivationHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.DATA_INVALID);
+        const err = new LogicalError(MessageError.DATA_INVALID);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

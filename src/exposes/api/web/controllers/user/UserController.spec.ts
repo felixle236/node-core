@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
+import { RoleId } from 'domain/enums/user/RoleId';
 import { Server } from 'http';
+import { ImportClientTestHandler } from 'application/usecases/user/client/import-client-test/ImportClientTestHandler';
+import { ImportManagerTestHandler } from 'application/usecases/user/manager/import-manager-test/ImportManagerTestHandler';
 import { GetListOnlineStatusByIdsHandler } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
 import { GetListOnlineStatusByIdsData, GetListOnlineStatusByIdsOutput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
 import axios from 'axios';
@@ -25,6 +28,8 @@ describe('User controller', () => {
     const endpoint = `http://localhost:${port}/api/v1/users`;
     const options = { headers: { authorization: 'Bearer token' } };
     let getListOnlineStatusByIdsHandler: GetListOnlineStatusByIdsHandler;
+    let importManagerTestHandler: ImportManagerTestHandler;
+    let importClientTestHandler: ImportClientTestHandler;
 
     before(done => {
         mockInjection(InjectService.AuthJwt, mockAuthJwtService());
@@ -32,6 +37,8 @@ describe('User controller', () => {
         import('./UserController').then(obj => {
             server = mockWebApi(obj.UserController, port, () => {
                 getListOnlineStatusByIdsHandler = mockUsecaseInjection(GetListOnlineStatusByIdsHandler);
+                importManagerTestHandler = mockUsecaseInjection(ImportManagerTestHandler);
+                importClientTestHandler = mockUsecaseInjection(ImportClientTestHandler);
 
                 done();
             });
@@ -97,7 +104,7 @@ describe('User controller', () => {
         expect(data.data).to.not.eq(undefined);
     });
 
-    it('Test API private with access denied error', async () => {
+    it('Access Api private with access denied error', async () => {
         const options = { headers: { 'x-private-key': '123' } };
         const { status, data } = await axios.get(endpoint + '/api-private', options).catch(error => error.response);
 
@@ -105,9 +112,19 @@ describe('User controller', () => {
         expect(data.code).to.eq(new AccessDeniedError().code);
     });
 
-    it('Test API private successful', async () => {
+    it('Access Api private successful', async () => {
         const options = { headers: { 'x-private-key': WEB_API_PRIVATE_KEY } };
         const { status, data }: any = await axios.get(endpoint + '/api-private', options);
+
+        expect(status).to.eq(200);
+        expect(data.data).to.eq(true);
+    });
+
+    it('Import user test', async () => {
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
+        sandbox.stub(importManagerTestHandler, 'handle').resolves({ data: true });
+        sandbox.stub(importClientTestHandler, 'handle').resolves({ data: true });
+        const { status, data }: any = await axios.post(endpoint + '/import-user-test', options);
 
         expect(status).to.eq(200);
         expect(data.data).to.eq(true);

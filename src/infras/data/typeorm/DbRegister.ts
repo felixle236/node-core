@@ -1,16 +1,11 @@
+import './DbContext';
 import path from 'path';
-import { IDbContext } from 'shared/database/interfaces/IDbContext';
-import { InjectDb } from 'shared/types/Injection';
-import Container from 'typedi';
-import { getDirectoriesSync, getFilesSync } from 'utils/file';
-import { DbContext } from './DbContext';
-
-Container.set<IDbContext>(InjectDb.DbContext, new DbContext());
+import { getDirectoriesSync, getFilesSync } from 'utils/File';
 
 const folder = path.join(__dirname, './repositories');
-getDirectoriesSync(folder).forEach(childFolder => {
-    getFilesSync(`${folder}/${childFolder}`).forEach(file => {
+for (const childFolder of getDirectoriesSync(folder)) {
+    for (const file of getFilesSync(`${folder}/${childFolder}`)) {
         if (!file.includes('.spec'))
             require(`${folder}/${childFolder}/${file}`);
-    });
-});
+    }
+}

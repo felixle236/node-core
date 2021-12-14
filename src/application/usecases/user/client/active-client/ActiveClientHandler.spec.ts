@@ -5,13 +5,13 @@ import { Client } from 'domain/entities/user/Client';
 import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { addSeconds } from 'utils/datetime';
+import { addSeconds } from 'utils/Datetime';
 import { ActiveClientHandler } from './ActiveClientHandler';
 import { ActiveClientInput } from './ActiveClientInput';
 
@@ -47,7 +47,7 @@ describe('Client usecases - Active client', () => {
         param.activeKey = crypto.randomBytes(32).toString('hex');
 
         const error = await activeClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.DATA_INVALID);
+        const err = new LogicalError(MessageError.DATA_INVALID);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -61,7 +61,7 @@ describe('Client usecases - Active client', () => {
         param.activeKey = crypto.randomBytes(32).toString('hex');
 
         const error = await activeClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.DATA_INVALID);
+        const err = new LogicalError(MessageError.DATA_INVALID);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -77,7 +77,7 @@ describe('Client usecases - Active client', () => {
         param.activeKey = clientTest.activeKey;
 
         const error = await activeClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.DATA_INVALID);
+        const err = new LogicalError(MessageError.DATA_INVALID);
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -93,7 +93,7 @@ describe('Client usecases - Active client', () => {
         param.activeKey = clientTest.activeKey;
 
         const error = await activeClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXPIRED, { t: 'activation_key' });
+        const err = new LogicalError(MessageError.PARAM_EXPIRED, { t: 'activation_key' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

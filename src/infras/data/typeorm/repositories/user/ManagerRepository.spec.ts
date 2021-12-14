@@ -3,7 +3,8 @@ import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { expect } from 'chai';
 import { IBackup, IMemoryDb } from 'pg-mem';
-import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
+import { SortType } from 'shared/database/DbTypes';
+import { mockDb, mockDbContext } from 'shared/test/MockDbContext';
 import { ManagerRepository } from './ManagerRepository';
 import { DbContext } from '../../DbContext';
 import { ManagerDb } from '../../entities/user/ManagerDb';
@@ -66,6 +67,13 @@ describe('Manager repository', () => {
 
         it('Find and count data with params', async () => {
             const [list, count] = await managerRepository.findAndCount({ roleIds: [RoleId.Manager], keyword: 'manager 1', status: ManagerStatus.Actived, skip: 0, limit: 10 });
+
+            expect(list.length).to.eq(1);
+            expect(count).to.eq(1);
+        });
+
+        it('Find and count data with sort', async () => {
+            const [list, count] = await managerRepository.findAndCount({ roleIds: [RoleId.Manager], keyword: 'manager 1', status: ManagerStatus.Actived, sorts: [{ field: 'createdAt', type: SortType.Desc }, { field: 'firstName', type: SortType.Asc }], skip: 0, limit: 10 });
 
             expect(list.length).to.eq(1);
             expect(count).to.eq(1);

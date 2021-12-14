@@ -1,8 +1,8 @@
 import { Auth } from 'domain/entities/auth/Auth';
 import { AuthType } from 'domain/enums/auth/AuthType';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
@@ -23,7 +23,7 @@ export class UpdateMyPasswordByEmailHandler implements IUsecaseHandler<UpdateMyP
         const auths = await this._authRepository.getAllByUser(userId);
         const auth = auths.find(auth => auth.type === AuthType.PersonalEmail && Auth.hashPassword(param.oldPassword) === auth.password);
         if (!auth)
-            throw new SystemError(MessageError.PARAM_INCORRECT, { t: 'old_password' });
+            throw new LogicalError(MessageError.PARAM_INCORRECT, { t: 'old_password' });
 
         const result = new UpdateMyPasswordByEmailOutput();
         result.data = await this._authRepository.update(auth.id, data);

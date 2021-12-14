@@ -1,7 +1,7 @@
 import { {PascalName} } from 'domain/entities/{folder}/{PascalName}';
 import { I{PascalName}Repository } from 'application/interfaces/repositories/{folder}/I{PascalName}Repository';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { {CreateUsecaseName}Input } from './{CreateUsecaseName}Input';
@@ -19,7 +19,7 @@ export class {CreateUsecaseName}Handler implements IUsecaseHandler<{CreateUsecas
 
         const isExist = await this._{camelName}Repository.checkNameExist(data.name);
         if (isExist)
-            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'name' });
+            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'name' });
 
         const result = new {CreateUsecaseName}Output();
         result.data = await this._{camelName}Repository.create(data);

@@ -4,8 +4,10 @@ import redis from 'redis';
 import rediss from 'redis-commands';
 import { IRedisClient } from 'shared/database/interfaces/IRedisClient';
 import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
+import { InjectDb } from 'shared/types/Injection';
+import Container from 'typedi';
 
 export class RedisContext implements IRedisContext {
     private _connection?: IRedisClient;
@@ -17,7 +19,7 @@ export class RedisContext implements IRedisContext {
 
     get redisClient(): IRedisClient {
         if (!this._connection)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'redis_connection' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'redis_connection' });
         return this._connection;
     }
 
@@ -91,3 +93,5 @@ const createCb = (resolve, reject) => {
 const promiseFactory = (resolver): Promise<any> => {
     return new Promise(resolver);
 };
+
+Container.set<IRedisContext>(InjectDb.RedisContext, new RedisContext());

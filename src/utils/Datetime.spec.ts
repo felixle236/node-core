@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { addDays, addHours, addMiliseconds, addMinutes, addMonths, addSeconds, addYears, formatDateString, getBeginOfDay, getBeginOfMonth, getEndOfDay, getEndOfMonth } from '.';
+import { addDays, addHours, addMiliseconds, addMinutes, addMonths, addSeconds, addYears, formatDateString, getBeginOfDay, getBeginOfMonth, getEndOfDay, getEndOfMonth } from './Datetime';
 
 describe('Utils - Date time', () => {
     it('Format date string with empty value', () => {

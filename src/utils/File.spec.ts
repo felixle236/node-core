@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { appendFile, createDirectory, getDirectories, getDirectoriesSync, getFiles, getFilesSync, readFile, readFileAsText, removeFile, writeFile } from '.';
+import { appendFile, createDirectory, getDirectories, getDirectoriesSync, getFiles, getFilesSync, readFile, readFileAsText, removeFile, writeFile } from './File';
 
 describe('Utils - File', () => {
     const sandbox = createSandbox();

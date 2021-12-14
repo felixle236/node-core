@@ -3,8 +3,9 @@ import { randomUUID } from 'crypto';
 import { Entity } from 'domain/common/Entity';
 import { expect } from 'chai';
 import { IBackup, IMemoryDb } from 'pg-mem';
+import { SortType } from 'shared/database/DbTypes';
 import { IRepository } from 'shared/database/interfaces/IRepository';
-import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
+import { mockDb, mockDbContext } from 'shared/test/MockDbContext';
 import * as typeorm from 'typeorm';
 import { Column } from 'typeorm';
 import { DbEntity } from './DbEntity';
@@ -31,7 +32,7 @@ class DataTestDb extends DbEntity<DataTest> {
     }
 
     @Column('varchar', { name: DATA_TEST_SCHEMA.COLUMNS.NAME })
-    name: string;
+        name: string;
 
     override toEntity(): DataTest {
         const entity = super.toEntity();
@@ -100,6 +101,11 @@ describe('Base repository', () => {
             const list = await dataTestRepository.findAll({});
             expect(list.length).to.eq(0);
         });
+
+        it('Find all with sort', async () => {
+            const list = await dataTestRepository.findAll({ sorts: [{ field: 'createdAt', type: SortType.Desc }, { field: 'updatedAt', type: SortType.Desc }] });
+            expect(list.length).to.eq(2);
+        });
     });
 
     describe('Find', () => {
@@ -112,6 +118,11 @@ describe('Base repository', () => {
             await dataTestRepository.deleteMultiple([id, id2]);
             const list = await dataTestRepository.find({ skip: 0, limit: 10 });
             expect(list.length).to.eq(0);
+        });
+
+        it('Find data with sort', async () => {
+            const list = await dataTestRepository.find({ skip: 0, limit: 10, sorts: [{ field: 'createdAt', type: SortType.Desc }, { field: 'updatedAt', type: SortType.Desc }] });
+            expect(list.length).to.eq(2);
         });
     });
 
@@ -142,6 +153,13 @@ describe('Base repository', () => {
 
             expect(list.length).to.eq(0);
             expect(count).to.eq(0);
+        });
+
+        it('Find and count data with sort', async () => {
+            const [list, count] = await dataTestRepository.findAndCount({ skip: 0, limit: 10, sorts: [{ field: 'createdAt', type: SortType.Desc }, { field: 'updatedAt', type: SortType.Desc }] });
+
+            expect(list.length).to.eq(2);
+            expect(count).to.eq(2);
         });
     });
 
@@ -201,36 +219,6 @@ describe('Base repository', () => {
 
             expect(result[0]).to.eq(data.id);
             expect(result[1]).to.eq(data2.id);
-        });
-    });
-
-    describe('Create or update', () => {
-        afterEach(() => {
-            backup.restore();
-        });
-
-        it('Create data', async () => {
-            const data = new DataTest();
-            data.id = randomUUID();
-            data.name = 'Test';
-
-            const id = await dataTestRepository.createOrUpdate(data);
-            const count = await dataTestRepository.count({});
-
-            expect(id).to.eq(data.id);
-            expect(count).to.eq(3);
-        });
-
-        it('Update data', async () => {
-            const data = new DataTest();
-            data.id = id;
-            data.name = 'Test 1';
-
-            const newId = await dataTestRepository.createOrUpdate(data);
-            const count = await dataTestRepository.count({});
-
-            expect(newId).to.eq(data.id);
-            expect(count).to.eq(2);
         });
     });
 

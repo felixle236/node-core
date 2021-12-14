@@ -5,15 +5,15 @@ function login() {
 
     $.ajax({
         method: 'POST',
-        url: baseUrl + '/api/v1/auth/login',
+        url: baseUrl + '/api/v1/auths/login',
         contentType: 'application/json',
         data: JSON.stringify({
             email: email,
             password: password
         })
     }).done(function(result) {
-        if (result.data && result.data.token) {
-            setCookie('token', result.data.token, 1);
+        if (result.data) {
+            setCookie('token', result.data, 1);
             setTimeout(function() { location.reload() }, 100);
         }
     }).fail(function(jqXHR, textStatus) {

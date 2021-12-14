@@ -17,7 +17,7 @@ import { mockWebApi } from 'shared/test/MockWebApi';
 import { InjectService } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { readFile } from 'utils/file';
+import { readFile } from 'utils/File';
 
 describe('Me controller', () => {
     const sandbox = createSandbox();

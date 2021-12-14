@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import path from 'path';
 import dotenv from 'dotenv';
-import { convertStringToBoolean } from 'utils/converter';
+import { convertStringToBoolean } from 'utils/Converter';
 import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from '../shared/types/Environment';
 dotenv.config();
 
@@ -89,7 +90,7 @@ export const LOG_PROVIDER: LogProvider = process.env.LOG_PROVIDER ? Number(proce
 
 export const STORAGE_PROVIDER: StorageProvider = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.Console;
 export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
-export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? 'uploads';
+export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? path.join(__dirname, 'uploads');
 export const STORAGE_BUCKET_NAME: string = process.env.STORAGE_BUCKET_NAME ?? '';
 
 export const MINIO_HOST: string = process.env.MINIO_HOST ?? '';

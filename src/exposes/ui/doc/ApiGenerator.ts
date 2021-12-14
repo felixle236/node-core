@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
-import { writeFile } from 'utils/file';
+import { writeFile } from 'utils/File';
 
 const type = process.argv[2];
 if (!type || !['web', 'mobile'].includes(type))

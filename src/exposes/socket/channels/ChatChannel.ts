@@ -9,7 +9,7 @@ import { ChatNS } from 'shared/socket/namespaces/ChatNS';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Server } from 'socket.io';
 import { Service } from 'typedi';
-import { sendAll } from 'utils/socket';
+import { sendAll } from 'utils/Socket';
 
 @Service()
 export default class ChatChannel {

@@ -1,9 +1,11 @@
 import dbConfig from 'config/DbConfig';
-import { DbQuerySession, TransactionIsolationLevel } from 'shared/database/DbTypes';
+import { DbQuerySession } from 'shared/database/DbTypes';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { IDbMigration } from 'shared/database/interfaces/IDbMigration';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
+import { InjectDb } from 'shared/types/Injection';
+import Container from 'typedi';
 import { Connection, createConnection } from 'typeorm';
 
 export class DbContext implements IDbContext {
@@ -16,7 +18,7 @@ export class DbContext implements IDbContext {
 
     getConnection(): Connection {
         if (!this._connection || !this._connection.isConnected)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
         return this._connection;
     }
 
@@ -35,13 +37,13 @@ export class DbContext implements IDbContext {
 
     async clearCaching(keyCaching: string): Promise<void> {
         if (!keyCaching)
-            throw new SystemError(MessageError.PARAM_REQUIRED, { t: 'key_caching' });
+            throw new LogicalError(MessageError.PARAM_REQUIRED, { t: 'key_caching' });
 
         if (!this._connection || !this._connection.isConnected)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
 
         if (!this._connection.queryResultCache)
-            throw new SystemError(MessageError.PARAM_NOT_SUPPORTED, { t: 'caching_feature' });
+            throw new LogicalError(MessageError.PARAM_NOT_SUPPORTED, { t: 'caching_feature' });
 
         await this._connection.queryResultCache.remove([keyCaching]);
     }
@@ -49,17 +51,13 @@ export class DbContext implements IDbContext {
     async runTransaction<T>(
         runInTransaction: (querySession: DbQuerySession) => Promise<T>,
         rollback?: ((error: Error) => Promise<void>),
-        done?: (() => Promise<void>),
-        isolationLevel?: TransactionIsolationLevel
+        done?: (() => Promise<void>)
     ): Promise<T> {
         if (!this._connection || !this._connection.isConnected)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
 
         const querySession = this._connection.createQueryRunner();
-        if (isolationLevel)
-            await querySession.startTransaction(isolationLevel);
-        else
-            await querySession.startTransaction();
+        await querySession.startTransaction();
 
         return await runInTransaction(querySession).then(async result => {
             await querySession.commitTransaction();
@@ -80,8 +78,10 @@ export class DbContext implements IDbContext {
 
     async runMigrations(options?: { transaction?: 'all' | 'none' | 'each' }): Promise<IDbMigration[]> {
         if (!this._connection || !this._connection.isConnected)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'database_connection' });
 
         return await this._connection.runMigrations(options);
     }
 }
+
+Container.set<IDbContext>(InjectDb.DbContext, new DbContext());

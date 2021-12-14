@@ -2,13 +2,13 @@ import { User } from 'domain/entities/user/User';
 import { IUserRepository } from 'application/interfaces/repositories/user/IUserRepository';
 import { IStorageService } from 'application/interfaces/services/IStorageService';
 import mime from 'mime-types';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { removeFile } from 'utils/file';
+import { removeFile } from 'utils/File';
 import { UploadMyAvatarInput } from './UploadMyAvatarInput';
 import { UploadMyAvatarOutput } from './UploadMyAvatarOutput';
 
@@ -23,7 +23,7 @@ export class UploadMyAvatarHandler implements IUsecaseHandler<UploadMyAvatarInpu
         const file = param.file;
         const ext = mime.extension(file.mimetype);
         if (!ext)
-            throw new SystemError(MessageError.PARAM_INVALID, { t: 'avatar' });
+            throw new LogicalError(MessageError.PARAM_INVALID, { t: 'avatar' });
 
         User.validateAvatarFile(file);
         const avatarPath = `users/${id}/images/avatar.${ext}`;
@@ -35,7 +35,7 @@ export class UploadMyAvatarHandler implements IUsecaseHandler<UploadMyAvatarInpu
         let hasSucceed = await this._storageService.upload(avatarPath, file.path, { mimetype: file.mimetype, size: file.size })
             .finally(() => removeFile(file.path));
         if (!hasSucceed)
-            throw new SystemError(MessageError.PARAM_CANNOT_UPLOAD, { t: 'avatar' });
+            throw new LogicalError(MessageError.PARAM_CANNOT_UPLOAD, { t: 'avatar' });
 
         const data = new User();
         data.avatar = this._storageService.mapUrl(avatarPath);

@@ -9,8 +9,7 @@ export const USER_SCHEMA = {
         LAST_NAME: 'last_name',
         AVATAR: 'avatar',
         GENDER: 'gender',
-        BIRTHDAY: 'birthday',
-        ADDRESS: 'address'
+        BIRTHDAY: 'birthday'
     },
     RELATED_ONE: {
         // The field name that we're defined into entity to map the entity related.

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import { HttpServer } from 'infras/servers/http/HttpServer';
 import { RoutingControllersOptions } from 'routing-controllers';
-import i18n from 'shared/localization';
+import { i18n } from 'shared/localization/Localization';
 import { Environment } from 'shared/types/Environment';
 import { InjectService } from 'shared/types/Injection';
 import { Container } from 'typedi';

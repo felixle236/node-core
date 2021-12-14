@@ -1,14 +1,12 @@
-import path from 'path';
+const path = require('path');
 
-module.exports = [{
-    roleId: '80d81a05-649a-4a53-a896-ad978c2f501e',
+exports.managers = [{
     firstName: 'Product',
     lastName: 'Owner',
     email: 'product.owner@localhost.com',
     password: 'Nodecore@2',
     avatar: path.join(__dirname, '../images/docker.png')
 }, {
-    roleId: '80d81a05-649a-4a53-a896-ad978c2f501e',
     firstName: 'Product',
     lastName: 'Manager',
     email: 'product.manager@localhost.com',

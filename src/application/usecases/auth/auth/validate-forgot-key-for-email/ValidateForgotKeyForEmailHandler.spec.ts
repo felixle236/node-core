@@ -16,7 +16,7 @@ import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { addMinutes } from 'utils/datetime';
+import { addMinutes } from 'utils/Datetime';
 import { ValidateForgotKeyForEmailHandler } from './ValidateForgotKeyForEmailHandler';
 import { ValidateForgotKeyForEmailInput } from './ValidateForgotKeyForEmailInput';
 

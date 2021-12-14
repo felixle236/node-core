@@ -1,7 +1,7 @@
 import { IUserOnlineStatusRepository } from 'application/interfaces/repositories/user/IUserOnlineStatusRepository';
 import { isUUID } from 'class-validator';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
@@ -16,7 +16,7 @@ export class GetListOnlineStatusByIdsHandler implements IUsecaseHandler<GetListO
 
     async handle(param: GetListOnlineStatusByIdsInput): Promise<GetListOnlineStatusByIdsOutput> {
         if (param.ids.some(id => !isUUID(id)))
-            throw new SystemError(MessageError.PARAM_INVALID, 'ids');
+            throw new LogicalError(MessageError.PARAM_INVALID, 'ids');
 
         const ids = param.ids ?? [];
         const onlineStatuses = await this._userOnlineStatusRepository.getListOnlineStatusByIds(ids);

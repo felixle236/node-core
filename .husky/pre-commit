@@ -2,6 +2,6 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm run lint
+npm run generate:apidoc
 npm run build
 npm test
-npm run generate:apidoc

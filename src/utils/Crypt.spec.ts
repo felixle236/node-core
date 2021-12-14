@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { hashMD5 } from '.';
+import { hashMD5 } from './Crypt';
 
 describe('Utils - Crypt', () => {
     it('Hash md5', () => {

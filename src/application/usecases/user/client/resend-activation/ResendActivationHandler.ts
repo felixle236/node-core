@@ -3,13 +3,13 @@ import { Client } from 'domain/entities/user/Client';
 import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
-import { addSeconds } from 'utils/datetime';
+import { addSeconds } from 'utils/Datetime';
 import { ResendActivationInput } from './ResendActivationInput';
 import { ResendActivationOutput } from './ResendActivationOutput';
 
@@ -23,7 +23,7 @@ export class ResendActivationHandler implements IUsecaseHandler<ResendActivation
     async handle(param: ResendActivationInput, usecaseOption: UsecaseOption): Promise<ResendActivationOutput> {
         const client = await this._clientRepository.getByEmail(param.email);
         if (!client || client.status === ClientStatus.Actived)
-            throw new SystemError(MessageError.DATA_INVALID);
+            throw new LogicalError(MessageError.DATA_INVALID);
 
         const data = new Client();
         data.activeKey = crypto.randomBytes(32).toString('hex');

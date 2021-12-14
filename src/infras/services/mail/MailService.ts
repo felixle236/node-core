@@ -1,6 +1,6 @@
 import { IMailService } from 'application/interfaces/services/IMailService';
 import { MAIL_SENDER_EMAIL, MAIL_SENDER_NAME } from 'config/Configuration';
-import i18n from 'shared/localization';
+import { i18n } from 'shared/localization/Localization';
 import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { MailGenerator } from './MailGenerator';

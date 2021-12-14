@@ -4,7 +4,7 @@ import { ApiService } from 'exposes/api/web/ApiService';
 import express, { Request } from 'express';
 import { HttpServer } from 'infras/servers/http/HttpServer';
 import { useContainer } from 'routing-controllers';
-import i18n from 'shared/localization';
+import { i18n } from 'shared/localization/Localization';
 import { IRequest } from 'shared/request/IRequest';
 import { TraceRequest } from 'shared/request/TraceRequest';
 import { Container } from 'typeorm-typedi-extensions';

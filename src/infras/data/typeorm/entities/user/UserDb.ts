@@ -1,6 +1,5 @@
 import { User } from 'domain/entities/user/User';
 import { GenderType } from 'domain/enums/user/GenderType';
-import { AddressInfo } from 'domain/value-objects/AddressInfo';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { DbEntity } from '../../common/DbEntity';
 import { USER_SCHEMA } from '../../schemas/user/UserSchema';
@@ -30,9 +29,6 @@ export abstract class UserBaseDb<TEntity extends User> extends DbEntity<TEntity>
     @Column('date', { name: USER_SCHEMA.COLUMNS.BIRTHDAY, nullable: true })
     birthday?: string;
 
-    @Column('json', { name: USER_SCHEMA.COLUMNS.ADDRESS, nullable: true })
-    address?: AddressInfo;
-
     /* Relationship */
 
     @OneToMany(() => AuthDb, auth => auth.user)
@@ -49,7 +45,6 @@ export abstract class UserBaseDb<TEntity extends User> extends DbEntity<TEntity>
         entity.avatar = this.avatar;
         entity.gender = this.gender;
         entity.birthday = this.birthday;
-        entity.address = this.address;
 
         /* Relationship */
 
@@ -68,7 +63,6 @@ export abstract class UserBaseDb<TEntity extends User> extends DbEntity<TEntity>
         this.avatar = entity.avatar;
         this.gender = entity.gender;
         this.birthday = entity.birthday;
-        this.address = entity.address;
     }
 }
 

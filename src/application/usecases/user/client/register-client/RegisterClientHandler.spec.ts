@@ -8,10 +8,10 @@ import { IMailService } from 'application/interfaces/services/IMailService';
 import { CreateAuthByEmailHandler } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailHandler';
 import { expect } from 'chai';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { IRequest } from 'shared/request/IRequest';
-import { mockDbContext } from 'shared/test/mockDbContext';
+import { mockDbContext } from 'shared/test/MockDbContext';
 import { mockFunction } from 'shared/test/MockFunction';
 import { mockInjection, mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
@@ -71,8 +71,8 @@ describe('Client usecases - Register client', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await registerClientHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+        const error: LogicalError = await registerClientHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -87,8 +87,8 @@ describe('Client usecases - Register client', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await registerClientHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+        const error: LogicalError = await registerClientHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

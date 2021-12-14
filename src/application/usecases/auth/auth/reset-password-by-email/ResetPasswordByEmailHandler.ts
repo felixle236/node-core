@@ -1,7 +1,7 @@
 import { Auth } from 'domain/entities/auth/Auth';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
@@ -17,13 +17,13 @@ export class ResetPasswordByEmailHandler implements IUsecaseHandler<ResetPasswor
     async handle(param: ResetPasswordByEmailInput): Promise<ResetPasswordByEmailOutput> {
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.user)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         if (auth.forgotKey !== param.forgotKey)
-            throw new SystemError(MessageError.PARAM_INCORRECT, { t: 'forgot_key' });
+            throw new LogicalError(MessageError.PARAM_INCORRECT, { t: 'forgot_key' });
 
         if (!auth.forgotExpire || auth.forgotExpire < new Date())
-            throw new SystemError(MessageError.PARAM_EXPIRED, { t: 'forgot_key' });
+            throw new LogicalError(MessageError.PARAM_EXPIRED, { t: 'forgot_key' });
 
         const data = new Auth();
         Auth.validatePassword(param.password);

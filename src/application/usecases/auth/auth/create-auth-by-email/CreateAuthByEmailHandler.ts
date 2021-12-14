@@ -1,8 +1,8 @@
 import { Auth } from 'domain/entities/auth/Auth';
 import { AuthType } from 'domain/enums/auth/AuthType';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
@@ -25,7 +25,7 @@ export class CreateAuthByEmailHandler implements IUsecaseHandler<CreateAuthByEma
 
         const auths = await this._authRepository.getAllByUser(param.userId, usecaseOption.querySession);
         if (auths && auths.find(auth => auth.type === AuthType.PersonalEmail))
-            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'data' });
+            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'data' });
 
         const result = new CreateAuthByEmailOutput();
         result.data = await this._authRepository.create(data, usecaseOption.querySession);

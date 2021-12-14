@@ -7,13 +7,13 @@ import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthR
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
-import { addSeconds } from 'utils/datetime';
+import { addSeconds } from 'utils/Datetime';
 import { ForgotPasswordByEmailInput } from './ForgotPasswordByEmailInput';
 import { ForgotPasswordByEmailOutput } from './ForgotPasswordByEmailOutput';
 
@@ -29,21 +29,21 @@ export class ForgotPasswordByEmailHandler implements IUsecaseHandler<ForgotPassw
     async handle(param: ForgotPasswordByEmailInput, usecaseOption: UsecaseOption): Promise<ForgotPasswordByEmailOutput> {
         const auth = await this._authRepository.getByUsername(param.email);
         if (!auth || !auth.user)
-            throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+            throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         if (auth.user.roleId === RoleId.Client) {
             const client = await this._clientRepository.get(auth.userId);
             if (!client)
-                throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+                throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
             if (client.status !== ClientStatus.Actived)
-                throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+                throw new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
         }
         else {
             const manager = await this._managerRepository.get(auth.userId);
             if (!manager)
-                throw new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+                throw new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
             if (manager.status !== ManagerStatus.Actived)
-                throw new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+                throw new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
         }
 
         const data = new Auth();

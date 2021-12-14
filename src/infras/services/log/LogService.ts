@@ -8,7 +8,7 @@ import { TraceRequest } from 'shared/request/TraceRequest';
 import { LogProvider } from 'shared/types/Environment';
 import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
-import { isLiteralObject } from 'utils/validator';
+import { isLiteralObject } from 'utils/Validator';
 import { createLogger, format, Logger, transports } from 'winston';
 import WinstonCloudWatch from 'winston-cloudwatch';
 

@@ -6,6 +6,7 @@ export const CLIENT_SCHEMA = {
         ...USER_SCHEMA.COLUMNS,
         EMAIL: 'email',
         PHONE: 'phone',
+        ADDRESS: 'address',
         LOCALE: 'locale',
         STATUS: 'status',
         ACTIVE_KEY: 'active_key',

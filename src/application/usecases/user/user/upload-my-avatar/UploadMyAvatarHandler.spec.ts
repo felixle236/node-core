@@ -7,15 +7,15 @@ import { IUserRepository } from 'application/interfaces/repositories/user/IUserR
 import { IStorageService } from 'application/interfaces/services/IStorageService';
 import { expect } from 'chai';
 import mime from 'mime-types';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockInjection, mockRepositoryInjection } from 'shared/test/MockInjection';
 import { mockStorageService } from 'shared/test/MockStorageService';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import * as fileLib from 'utils/file';
+import * as fileLib from 'utils/File';
 import { UploadMyAvatarHandler } from './UploadMyAvatarHandler';
 import { UploadMyAvatarInput } from './UploadMyAvatarInput';
 
@@ -51,7 +51,7 @@ describe('User usecases - Upload my avatar', () => {
         } as Express.Multer.File;
 
         const error = await uploadMyAvatarHandler.handle(randomUUID(), param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_INVALID, { t: 'avatar' });
+        const err = new LogicalError(MessageError.PARAM_INVALID, { t: 'avatar' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -93,7 +93,7 @@ describe('User usecases - Upload my avatar', () => {
         } as Express.Multer.File;
 
         const error = await uploadMyAvatarHandler.handle(randomUUID(), param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_CANNOT_UPLOAD, { t: 'avatar' });
+        const err = new LogicalError(MessageError.PARAM_CANNOT_UPLOAD, { t: 'avatar' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

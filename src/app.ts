@@ -10,6 +10,7 @@ import { ApiService as DocApiService } from 'exposes/ui/doc/ApiService';
 import { WebService } from 'exposes/ui/web/WebService';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
+import { configureI18n } from 'shared/localization/Localization';
 import { Environment } from 'shared/types/Environment';
 import { InjectDb, InjectService } from 'shared/types/Injection';
 import Container from 'typedi';
@@ -19,6 +20,7 @@ const dbContext = Container.get<IDbContext>(InjectDb.DbContext);
 const redisContext = Container.get<IRedisContext>(InjectDb.RedisContext);
 
 const startApplication = async (): Promise<void> => {
+    configureI18n(['en']);
     redisContext.createConnection();
     await dbContext.createConnection();
 

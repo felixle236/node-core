@@ -116,7 +116,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------------------ ApiAuthenticator.ts
 - |------------------------ ApiDocument.ts ------------// Define Api document for web Api.
 - |------------------------ ApiService.ts -------------// Initialize Api service for web Api.
-- |------------ [queue] -------------------------------// Proposal to define the queue as the job subscription.
+- |------------ [queue] -------------------------------// Proposal to define the queue as the job subscription/consumer.
 - |------------ socket
 - |------------------ channels ------------------------// Initialize socket connection & event handling.
 - |------------------ SocketService.ts ----------------// Initialize socket service.
@@ -156,6 +156,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 - |------------------ mail ----------------------------// Mail service.
 - |------------------ notification --------------------// Notification service.
 - |------------------ payment -------------------------// Payment services.
+- |------------------ [queue] -------------------------// Proposal to define the queue service as the job publisher/provider.
 - |------------------ sms -----------------------------// SMS service.
 - |------------------ socket-emitter ------------------// Socket emitter.
 - |------------------ storage -------------------------// Storage service.
@@ -193,8 +194,9 @@ npm run generate:module {param} ---------------// Generate module or sub-module:
 npm run generate:usecase {param} --------------// Generate usecase for module or sub-module. Please refer to "Generate Module" section below.
 npm run cache:clear ---------------------------// Clear cache of TypeORM.
 npm run migration:generate {Migration_Name} ---// Generate migration for updating database structure.
-npm run migration:up --------------------------// Run the next migrations for updating database structure.
-npm run migration:down ------------------------// Revert migration for updating database structure.
+npm run migration:create {Migration_Name} -----// Create a new empty migration.
+npm run migration:up --------------------------// Run the next migrations.
+npm run migration:down ------------------------// Revert a previous migration.
 npm run lint
 npm run build ---------------------------------// Build source before start with production environment.
 npm test --------------------------------------// Start unit test and coverage report.
@@ -306,6 +308,7 @@ npm test
 
 - The default language used is English, to use multiple languages we need to update the configuration at `src/shared/localization/index.ts`. Refer to [I18n](https://www.npmjs.com/package/i18n).
 - When we want to add error/mail/sms content, we need to add the required language files like `en.json`.
+
 #### Usage for errors:
 ```
 // Define new error:
@@ -335,10 +338,10 @@ export class MessageError {
 ```
 ```
 // To use translation, the key label should passed into `t` field:
-throw new SystemError(MessageError.PARAM_NOT_FOUND, { t: 'data' });
+throw new LogicalError(MessageError.PARAM_NOT_FOUND, { t: 'data' });
 
 // With this case, 'count' and '10' will be passed without translation:
-throw new SystemError(MessageError.PARAM_MAX_NUMBER, 'count', 10);
+throw new LogicalError(MessageError.PARAM_MAX_NUMBER, 'count', 10);
 ```
 ```
 // Execute translation is called into ErrorMiddleware:
@@ -435,7 +438,7 @@ i18n.__({ phrase: 'mail.account_activation.greeting', locale })
    > Define a serial of data in a column in the database that we can identify earlier. Ex: RoleId, OrderStatus, InvoiceStatus, AccountType,....
    > It will be easier to understand and maintain your source code. Please take a look and compare them: `if (order.status === OrderStatus.Draft)` vs `if (order.status === 1)`, `order.status = OrderStatus.Processing` vs `order.status = 2`.
 
-- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new SystemError(MessageError.PARAM_REQUIRED, { t: 'order_status' });`
+- The advice is that you should use a starting value of `1` if you are using the number data type. It will be easier to validate the data input. Ex: `if (!data.status) throw new LogicalError(MessageError.PARAM_REQUIRED, { t: 'order_status' });`
 
 ## Exception
 
@@ -462,13 +465,13 @@ import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
-import { SystemError } from 'shared/exceptions/SystemError';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 ....
 throw new AccessDeniedError();
 throw new NotFoundError();
 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, 'token');
 throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
-throw new SystemError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'name' }, 30);
+throw new LogicalError(MessageError.PARAM_LEN_LESS_OR_EQUAL, { t: 'name' }, 30);
 ```
 
 > If you got error with status code 500, it's system error or logical error. Almost, this error is your source code, you need to find and fix it soon.
@@ -530,12 +533,17 @@ npm run migration:generate Migration_Name
 ```
 > Migration_Name should be named full meaning. Ex: Create_Table_Customer, Add_Field_Email_In_Customer, Modify_Field_Email_In_Customer, Migrate_Old_Data_To_New_Data,....
 
-- To run the next migrations for update database structure:
+- To create a new empty migration:
+```
+npm run migration:create Migration_Name
+```
+
+- To run the next migrations:
 ```
 npm run migration:up
 ```
 
-- To revert back the previous migration:
+- To revert back a previous migration:
 ```
 npm run migration:down
 ```
@@ -590,7 +598,7 @@ Status code: 404 Not Found
 }
 ```
 
-- Return error object [SystemError] with status code 400, this is logic handler.
+- Return error object [LogicalError] with status code 400, this is logic handler.
 ```
 Request:
 curl -X 'POST' \

@@ -2,22 +2,21 @@ export type DbConnection = any;
 
 export type DbQuerySession = any;
 
-export type SelectFilterQuery<T> = { [k in Extract<keyof T, string>]?: any } & { relations?: string[] } & { [key: string]: any };
+export type DbFilterQuery<T> = { [k in Extract<keyof T, string>]?: any } & { [key: string]: any };
 
-export type SelectFilterListQuery<T> = SelectFilterQuery<T> & { sorts?: string[] };
+export type SelectRelationQuery<T> = Extract<keyof T, string>;
+
+export type SelectSortQuery<T> = { field: Extract<keyof T, string>, type: SortType } & { field: string, type: SortType };
+
+export type SelectFilterQuery<T> = { relations?: SelectRelationQuery<T>[] | string[] };
+
+export type SelectFilterListQuery<T> = SelectFilterQuery<T> & { sorts?: SelectSortQuery<T>[] };
 
 export type SelectFilterPaginationQuery<T> = SelectFilterListQuery<T> & { skip: number, limit: number };
 
-export type UpdateFieldQuery<T> = Extract<keyof T, string>[] | string[];
+export type UpdateFieldQuery<T> = Extract<keyof T, string>;
 
 export enum SortType {
     Asc = 'ASC',
     Desc = 'DESC'
-}
-
-export enum TransactionIsolationLevel {
-    ReadUncommitted = 'READ UNCOMMITTED',
-    ReadCommitted = 'READ COMMITTED',
-    RepeatableRead = 'REPEATABLE READ',
-    Serializable = 'SERIALIZABLE'
 }

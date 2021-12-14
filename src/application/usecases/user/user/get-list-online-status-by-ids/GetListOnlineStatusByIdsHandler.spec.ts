@@ -3,8 +3,8 @@ import 'mocha';
 import { randomUUID } from 'crypto';
 import { IUserOnlineStatusRepository } from 'application/interfaces/repositories/user/IUserOnlineStatusRepository';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
@@ -34,8 +34,8 @@ describe('User usecases - Get list online status by ids', () => {
         const param = new GetListOnlineStatusByIdsInput();
         param.ids = ['a'];
 
-        const error: SystemError = await getListOnlineStatusByIdsHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_INVALID, 'ids');
+        const error: LogicalError = await getListOnlineStatusByIdsHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_INVALID, 'ids');
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

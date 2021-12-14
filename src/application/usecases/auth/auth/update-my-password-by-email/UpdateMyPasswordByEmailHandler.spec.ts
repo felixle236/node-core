@@ -5,8 +5,8 @@ import { Auth } from 'domain/entities/auth/Auth';
 import { AuthType } from 'domain/enums/auth/AuthType';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
@@ -48,8 +48,8 @@ describe('Authorization usecases - Update my password by email', () => {
     it('Update my password by email with user is not exist error', async () => {
         sandbox.stub(authRepository, 'getAllByUser').resolves([]);
 
-        const error: SystemError = await updateMyPasswordByEmailHandler.handle(randomUUID(), param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_INCORRECT, { t: 'old_password' });
+        const error: LogicalError = await updateMyPasswordByEmailHandler.handle(randomUUID(), param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_INCORRECT, { t: 'old_password' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

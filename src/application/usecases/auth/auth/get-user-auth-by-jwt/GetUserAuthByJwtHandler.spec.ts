@@ -6,8 +6,8 @@ import { IAuthJwtService, IJwtPayloadExtend } from 'application/interfaces/servi
 import { ILogService } from 'application/interfaces/services/ILogService';
 import { expect } from 'chai';
 import jwt from 'jsonwebtoken';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
 import { TraceRequest } from 'shared/request/TraceRequest';
 import { mockAuthJwtService } from 'shared/test/MockAuthJwtService';
@@ -51,7 +51,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
     });
 
     it('Get user authorization by JWT with unauthorized error', async () => {
-        const error: SystemError = await getUserAuthByJwtHandler.handle('', usecaseOption).catch(error => error);
+        const error: LogicalError = await getUserAuthByJwtHandler.handle('', usecaseOption).catch(error => error);
         const err = new UnauthorizedError(MessageError.PARAM_REQUIRED, { t: 'token' });
 
         expect(error.code).to.eq(err.code);
@@ -63,7 +63,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
         errTest.name = 'TokenExpiredError';
         sandbox.stub(authJwtService, 'verify').throwsException(errTest);
 
-        const error: SystemError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
+        const error: LogicalError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
         const err = new UnauthorizedError(MessageError.PARAM_EXPIRED, { t: 'token' });
 
         expect(error.code).to.eq(err.code);
@@ -73,7 +73,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
     it('Get user authorization by JWT with token is invalid error', async () => {
         sandbox.stub(authJwtService, 'verify').throwsException(new Error());
 
-        const error: SystemError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
+        const error: LogicalError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
         const err = new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
 
         expect(error.code).to.eq(err.code);
@@ -83,7 +83,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
     it('Get user authorization by JWT with token payload is invalid error', async () => {
         sandbox.stub(authJwtService, 'verify').returns({} as IJwtPayloadExtend);
 
-        const error: SystemError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
+        const error: LogicalError = await getUserAuthByJwtHandler.handle(token, usecaseOption).catch(error => error);
         const err = new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token_payload' });
 
         expect(error.code).to.eq(err.code);

@@ -1,6 +1,7 @@
 import { Client } from 'domain/entities/user/Client';
 import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
+import { SelectFilterPaginationQuery, SelectSortQuery } from 'shared/database/DbTypes';
 import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { Brackets, WhereExpressionBuilder } from 'typeorm';
@@ -14,7 +15,22 @@ export class ClientRepository extends Repository<Client, ClientDb> implements IC
         super(ClientDb, CLIENT_SCHEMA);
     }
 
-    override async findAndCount(filter: { keyword?: string, status?: ClientStatus, skip: number, limit: number }): Promise<[Client[], number]> {
+    protected override handleSortQuery(query, sorts?: SelectSortQuery<Client>[]): void {
+        if (sorts) {
+            sorts.forEach(sort => {
+                let field = '';
+                if (sort.field === 'firstName')
+                    field = `${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.FIRST_NAME}`;
+                else if (sort.field === 'createdAt')
+                    field = `${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.CREATED_AT}`;
+
+                if (field)
+                    query.addOrderBy(field, sort.type);
+            });
+        }
+    }
+
+    override async findAndCount(filter: { keyword?: string, status?: ClientStatus } & SelectFilterPaginationQuery<Client>): Promise<[Client[], number]> {
         const query = this.repository.createQueryBuilder(CLIENT_SCHEMA.TABLE_NAME);
         if (filter.status)
             query.where(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status });
@@ -26,7 +42,10 @@ export class ClientRepository extends Repository<Client, ClientDb> implements IC
                     .orWhere(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));
         }
-        query.skip(filter.skip).take(filter.limit);
+
+        this.handleSortQuery(query, filter.sorts);
+        query.skip(filter.skip);
+        query.take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];

@@ -1,4 +1,4 @@
-import { Authorized, Controller, CurrentUser, Get, Render } from 'routing-controllers';
+import { Controller, CurrentUser, Get, Render } from 'routing-controllers';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { Service } from 'typedi';
 
@@ -7,7 +7,6 @@ import { Service } from 'typedi';
 export class HomeController {
     @Get('/')
     @Render('index')
-    @Authorized()
     async home(@CurrentUser() userAuth: UserAuthenticated): Promise<any> {
         return {
             title: 'Node Core',

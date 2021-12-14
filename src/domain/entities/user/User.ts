@@ -1,8 +1,7 @@
 import { Entity } from 'domain/common/Entity';
 import { GenderType } from 'domain/enums/user/GenderType';
-import { AddressInfo } from 'domain/value-objects/AddressInfo';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { Auth } from '../auth/Auth';
 
 export class User extends Entity {
@@ -12,7 +11,6 @@ export class User extends Entity {
     avatar?: string;
     gender?: GenderType;
     birthday?: string;
-    address?: AddressInfo;
 
     /* Relationship */
 
@@ -26,9 +24,9 @@ export class User extends Entity {
 
         const format = file.mimetype.replace('image/', '');
         if (!formats.includes(format))
-            throw new SystemError(MessageError.PARAM_FORMAT_INVALID, { t: 'avatar' }, formats.join(', '));
+            throw new LogicalError(MessageError.PARAM_FORMAT_INVALID, { t: 'avatar' }, formats.join(', '));
 
         if (file.size > maxSize)
-            throw new SystemError(MessageError.PARAM_SIZE_MAX, { t: 'avatar' }, maxSize / 1024, 'KB');
+            throw new LogicalError(MessageError.PARAM_SIZE_MAX, { t: 'avatar' }, maxSize / 1024, 'KB');
     }
 }

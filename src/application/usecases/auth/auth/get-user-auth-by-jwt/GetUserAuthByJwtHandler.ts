@@ -1,7 +1,7 @@
 import { IAuthJwtService, IJwtPayloadExtend } from 'application/interfaces/services/IAuthJwtService';
 import { ILogService } from 'application/interfaces/services/ILogService';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
 import { InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
@@ -18,7 +18,7 @@ export class GetUserAuthByJwtHandler implements IUsecaseHandler<string, GetUserA
 
     async handle(token: string, usecaseOption: UsecaseOption): Promise<GetUserAuthByJwtOutput> {
         if (!token)
-            throw new SystemError(MessageError.PARAM_REQUIRED, { t: 'token' });
+            throw new LogicalError(MessageError.PARAM_REQUIRED, { t: 'token' });
 
         let payload: IJwtPayloadExtend;
         try {

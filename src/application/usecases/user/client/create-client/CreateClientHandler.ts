@@ -8,8 +8,8 @@ import { IClientRepository } from 'application/interfaces/repositories/user/ICli
 import { CreateAuthByEmailHandler } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailHandler';
 import { CreateAuthByEmailInput } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailInput';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { InjectDb, InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
@@ -51,11 +51,11 @@ export class CreateClientHandler implements IUsecaseHandler<CreateClientInput, C
 
         const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
         if (checkEmailResult.data)
-            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         const isExistUsername = await this._authRepository.getByUsername(data.email);
         if (isExistUsername)
-            throw new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         return await this._dbContext.runTransaction(async querySession => {
             const result = new CreateClientOutput();

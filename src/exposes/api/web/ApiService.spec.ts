@@ -10,8 +10,8 @@ import { IsEmail, IsString } from 'shared/decorators/ValidationDecorator';
 import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
 import { InputValidationError } from 'shared/exceptions/InputValidationError';
 import { InternalServerError } from 'shared/exceptions/InternalServerError';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { TraceRequest } from 'shared/request/TraceRequest';
 import { mockInjection } from 'shared/test/MockInjection';
 import { mockLogService } from 'shared/test/MockLogService';
@@ -49,7 +49,7 @@ export class TestController {
 
     @Get('/test-400-logic')
     async test400Logic(): Promise<boolean> {
-        throw new SystemError(MessageError.UNKNOWN);
+        throw new LogicalError(MessageError.UNKNOWN);
     }
 
     @Get('/test-403-access-denied')
@@ -118,14 +118,14 @@ describe('Api service', () => {
         const { status, data } = await axios.get(endpoint + '/api/test/test-400-not-cover-yet').catch(error => error.response);
 
         expect(status).to.eq(400);
-        expect(data.code).to.eq(new SystemError(MessageError.UNKNOWN).code);
+        expect(data.code).to.eq(new LogicalError(MessageError.UNKNOWN).code);
     });
 
     it('Test 400 logic error', async () => {
         const { status, data } = await axios.get(endpoint + '/api/test/test-400-logic').catch(error => error.response);
 
         expect(status).to.eq(400);
-        expect(data.code).to.eq(new SystemError(MessageError.UNKNOWN).code);
+        expect(data.code).to.eq(new LogicalError(MessageError.UNKNOWN).code);
     });
 
     it('Test 403 access denied', async () => {

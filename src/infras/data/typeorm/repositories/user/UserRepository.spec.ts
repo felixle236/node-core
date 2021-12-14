@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { IMemoryDb } from 'pg-mem';
-import { mockDb, mockDbContext } from 'shared/test/mockDbContext';
+import { mockDb, mockDbContext } from 'shared/test/MockDbContext';
 import { UserRepository } from './UserRepository';
 import { DbContext } from '../../DbContext';
 import { UserDb } from '../../entities/user/UserDb';

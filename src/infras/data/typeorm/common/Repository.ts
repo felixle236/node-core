@@ -1,17 +1,34 @@
 import { Entity } from 'domain/common/Entity';
-import { DbQuerySession, SelectFilterListQuery, SelectFilterPaginationQuery, SelectFilterQuery, UpdateFieldQuery } from 'shared/database/DbTypes';
+import { DbQuerySession, SelectFilterListQuery, SelectFilterPaginationQuery, SelectFilterQuery, SelectRelationQuery, SelectSortQuery, UpdateFieldQuery } from 'shared/database/DbTypes';
 import * as typeorm from 'typeorm';
 import { DbEntity } from './DbEntity';
+import { SCHEMA } from './Schema';
 
 export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEntity<TEntity>> {
     protected readonly repository: typeorm.Repository<TDbEntity>;
 
-    constructor(private readonly _type: { new(): TDbEntity }, private readonly _schema: {TABLE_NAME: string}) {
+    constructor(private readonly _type: { new(): TDbEntity }, private readonly _schema: { TABLE_NAME: string } & typeof SCHEMA) {
         this.repository = typeorm.getRepository(_type);
     }
 
-    async findAll(_filter: SelectFilterListQuery<TEntity>, querySession?: DbQuerySession): Promise<TEntity[]> {
+    protected handleSortQuery(query, sorts?: SelectSortQuery<TEntity>[]): void {
+        if (sorts) {
+            sorts.forEach(sort => {
+                let field = '';
+                if (sort.field === 'createdAt')
+                    field = `${this._schema.TABLE_NAME}.${this._schema.COLUMNS.CREATED_AT}`;
+                else if (sort.field === 'updatedAt')
+                    field = `${this._schema.TABLE_NAME}.${this._schema.COLUMNS.UPDATED_AT}`;
+
+                if (field)
+                    query.addOrderBy(field, sort.type);
+            });
+        }
+    }
+
+    async findAll(filter: SelectFilterListQuery<TEntity>, querySession?: DbQuerySession): Promise<TEntity[]> {
         const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession);
+        this.handleSortQuery(query, filter.sorts);
 
         const list = await query.getMany();
         return list.map(item => item.toEntity());
@@ -19,7 +36,10 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
 
     async find(filter: SelectFilterPaginationQuery<TEntity>, querySession?: DbQuerySession): Promise<TEntity[]> {
         const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession);
-        query.skip(filter.skip).take(filter.limit);
+        this.handleSortQuery(query, filter.sorts);
+
+        query.skip(filter.skip);
+        query.take(filter.limit);
 
         const list = await query.getMany();
         return list.map(item => item.toEntity());
@@ -34,7 +54,10 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
 
     async findAndCount(filter: SelectFilterPaginationQuery<TEntity>, querySession?: DbQuerySession): Promise<[TEntity[], number]> {
         const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession);
-        query.skip(filter.skip).take(filter.limit);
+        this.handleSortQuery(query, filter.sorts);
+
+        query.skip(filter.skip);
+        query.take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];
@@ -45,7 +68,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         return await query.getCount();
     }
 
-    async get(id: string, _relations?: string[], querySession?: DbQuerySession): Promise<TEntity | undefined> {
+    async get(id: string, _relations?: SelectRelationQuery<TEntity>[] | string[], querySession?: DbQuerySession): Promise<TEntity | undefined> {
         const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession)
             .whereInIds(id);
 
@@ -64,7 +87,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         return result.identifiers[0].id;
     }
 
-    async createGet(data: TEntity, _relations?: string[], querySession?: DbQuerySession): Promise<TEntity> {
+    async createGet(data: TEntity, _relations?: SelectRelationQuery<TEntity>[] | string[], querySession?: DbQuerySession): Promise<TEntity> {
         const dataObject = new this._type();
         dataObject.fromEntity(data);
 
@@ -92,16 +115,6 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         return result.identifiers.map(identifier => identifier.id);
     }
 
-    async createOrUpdate(data: TEntity, querySession?: DbQuerySession): Promise<string> {
-        let id = data.id;
-        const entity = await this.get(id, querySession);
-        if (!entity)
-            id = await this.create(data, querySession);
-        else
-            await this.update(id, data, querySession);
-        return id;
-    }
-
     async update(id: string, data: TEntity, querySession?: DbQuerySession): Promise<boolean> {
         const dataObject = new this._type();
         dataObject.fromEntity(data);
@@ -113,7 +126,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         return !!result.affected;
     }
 
-    async updateGet(id: string, data: TEntity, _relations?: string[], querySession?: DbQuerySession): Promise<TEntity | undefined> {
+    async updateGet(id: string, data: TEntity, _relations?: SelectRelationQuery<TEntity>[] | string[], querySession?: DbQuerySession): Promise<TEntity | undefined> {
         const dataObject = new this._type();
         dataObject.fromEntity(data);
 
@@ -129,7 +142,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         return result2;
     }
 
-    async updateFields(id: string, data: TEntity, fields: UpdateFieldQuery<TEntity>, querySession?: DbQuerySession): Promise<boolean> {
+    async updateFields(id: string, data: TEntity, fields: UpdateFieldQuery<TEntity>[], querySession?: DbQuerySession): Promise<boolean> {
         const dataObject = new this._type();
         dataObject.fromEntity(data);
         const dataJson = dataObject.toJSON();

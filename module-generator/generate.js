@@ -33,11 +33,11 @@ const folder = convertToDirectoryName(moduleName);
 const subFolder = convertToDirectoryName(subModuleName);
 
 let moduleNameText = convertToDirectoryName(subModuleName).replace(/-/g, ' ').toLowerCase();
-moduleNameText = moduleNameText.substr(0, 1).toUpperCase() + moduleNameText.substr(1);
+moduleNameText = moduleNameText.substring(0, 1).toUpperCase() + moduleNameText.substring(1);
 const moduleNameTextLowerCase = moduleNameText.toLowerCase();
 
-const camelName = subModuleName.substr(0, 1).toLowerCase() + subModuleName.substr(1);
-const pascalName = subModuleName.substr(0, 1).toUpperCase() + subModuleName.substr(1);
+const camelName = subModuleName.substring(0, 1).toLowerCase() + subModuleName.substring(1);
+const pascalName = subModuleName.substring(0, 1).toUpperCase() + subModuleName.substring(1);
 
 const upperCaseName = convertToDirectoryName(subModuleName).replace(/-/g, '_').toUpperCase();
 const lowerCaseName = upperCaseName.toLowerCase();
@@ -223,9 +223,9 @@ function convertToDirectoryName(directoryName) {
     let match;
     while ((match = /[A-Z]/g.exec(directoryName)) != null) {
         if (match.index === 0)
-            directoryName = directoryName[match.index].toLowerCase() + directoryName.substr(match.index + 1);
+            directoryName = directoryName[match.index].toLowerCase() + directoryName.substring(match.index + 1);
         else
-            directoryName = directoryName.substr(0, match.index) + '-' + directoryName[match.index].toLowerCase() + directoryName.substr(match.index + 1);
+            directoryName = directoryName.substring(0, match.index) + '-' + directoryName[match.index].toLowerCase() + directoryName.substring(match.index + 1);
     }
     return directoryName;
 }

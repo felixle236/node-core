@@ -9,9 +9,9 @@ import { CreateAuthByEmailHandler } from 'application/usecases/auth/auth/create-
 import { AddressInfoData } from 'application/usecases/common/AddressInfoData';
 import { expect } from 'chai';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
-import { mockDbContext } from 'shared/test/mockDbContext';
+import { mockDbContext } from 'shared/test/MockDbContext';
 import { mockRepositoryInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
@@ -68,8 +68,8 @@ describe('Client usecases - Create client', () => {
         checkEmailResult.data = true;
         sandbox.stub(checkEmailExistHandler, 'handle').resolves(checkEmailResult);
 
-        const error: SystemError = await createClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+        const error: LogicalError = await createClientHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -82,8 +82,8 @@ describe('Client usecases - Create client', () => {
         const auth = new Auth();
         sandbox.stub(authRepository, 'getByUsername').resolves(auth);
 
-        const error: SystemError = await createClientHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXISTED, { t: 'email' });
+        const error: LogicalError = await createClientHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

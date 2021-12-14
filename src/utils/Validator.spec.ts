@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { IsString } from 'shared/decorators/ValidationDecorator';
-import { isLiteralObject } from '.';
+import { isLiteralObject } from './Validator';
 
 class Test {
     @IsString()

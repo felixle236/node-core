@@ -5,8 +5,8 @@ import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
 import { BaseError } from 'shared/exceptions/BaseError';
 import { InputValidationError, InputValidationFieldError } from 'shared/exceptions/InputValidationError';
 import { InternalServerError } from 'shared/exceptions/InternalServerError';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { IRequest } from 'shared/request/IRequest';
 
 interface IErrorExtend extends BaseError {
@@ -28,7 +28,7 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
             }
             else if (!error.code) {
                 req.logService.warn('[unknown]', error, trace.id);
-                error = new SystemError(MessageError.UNKNOWN, error.message);
+                error = new LogicalError(MessageError.UNKNOWN, error.message);
             }
             else
                 req.logService.warn('[logical]', error, trace.id);
@@ -56,7 +56,9 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
         if (error.fields)
             errRes.fields = error.fields;
 
-        res.status(error.httpCode);
-        res.render('error', errRes);
+        if (!res.headersSent) {
+            res.status(error.httpCode);
+            res.render('error', errRes);
+        }
     }
 }

@@ -1,5 +1,6 @@
 import { Client } from 'domain/entities/user/Client';
 import { ClientStatus } from 'domain/enums/user/ClientStatus';
+import { AddressInfo } from 'domain/value-objects/AddressInfo';
 import { Column, Entity, Index } from 'typeorm';
 import { UserBaseDb } from './UserDb';
 import { CLIENT_SCHEMA } from '../../schemas/user/ClientSchema';
@@ -16,6 +17,9 @@ export class ClientDb extends UserBaseDb<Client> {
 
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.PHONE, nullable: true })
     phone?: string;
+
+    @Column('json', { name: CLIENT_SCHEMA.COLUMNS.ADDRESS, nullable: true })
+    address?: AddressInfo;
 
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, nullable: true })
     locale?: string;
@@ -44,6 +48,7 @@ export class ClientDb extends UserBaseDb<Client> {
 
         entity.email = this.email;
         entity.phone = this.phone;
+        entity.address = this.address;
         entity.locale = this.locale;
         entity.status = this.status;
         entity.activeKey = this.activeKey;
@@ -59,6 +64,7 @@ export class ClientDb extends UserBaseDb<Client> {
 
         this.email = entity.email;
         this.phone = entity.phone;
+        this.address = entity.address;
         this.locale = entity.locale;
         this.status = entity.status;
         this.activeKey = entity.activeKey;

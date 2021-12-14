@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { convertObjectToString, convertStringToBoolean, convertToCurrency } from '.';
+import { convertObjectToString, convertStringToBoolean, convertToCurrency } from './Converter';
 
 describe('Utils - Converter', () => {
     describe('Convert number to currency', () => {

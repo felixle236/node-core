@@ -1,4 +1,5 @@
 import { ValidationError } from 'class-validator';
+import { TranslateOptions } from 'i18n';
 import { RefSchemaArray } from 'shared/decorators/RefSchema';
 import { IsArray, IsString } from 'shared/decorators/ValidationDecorator';
 import { BaseError } from './BaseError';
@@ -40,7 +41,7 @@ export class InputValidationError extends BaseError {
         }
     }
 
-    override translate(t: (phraseOrOptions: string | i18n.TranslateOptions, ...replace: string[]) => string): void {
+    override translate(t: (phraseOrOptions: string | TranslateOptions, ...replace: string[]) => string): void {
         super.translate(t);
 
         this.fields.forEach(field => {

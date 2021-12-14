@@ -13,8 +13,8 @@ import { IClientRepository } from 'application/interfaces/repositories/user/ICli
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { IAuthJwtService } from 'application/interfaces/services/IAuthJwtService';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockAuthJwtService } from 'shared/test/MockAuthJwtService';
 import { mockInjection, mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
@@ -82,8 +82,8 @@ describe('Authorization usecases - Login by email', () => {
     it('Login by email with email or password is incorrect error', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves();
 
-        const error: SystemError = await loginByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_INCORRECT, { t: 'email_or_password' });
+        const error: LogicalError = await loginByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_INCORRECT, { t: 'email_or_password' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -93,8 +93,8 @@ describe('Authorization usecases - Login by email', () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(clientRepository, 'get').resolves();
 
-        const error: SystemError = await loginByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await loginByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -105,8 +105,8 @@ describe('Authorization usecases - Login by email', () => {
         clientTest.status = ClientStatus.Inactived;
         sandbox.stub(clientRepository, 'get').resolves(clientTest);
 
-        const error: SystemError = await loginByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+        const error: LogicalError = await loginByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -123,8 +123,8 @@ describe('Authorization usecases - Login by email', () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         sandbox.stub(managerRepository, 'get').resolves();
 
-        const error: SystemError = await loginByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await loginByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -143,8 +143,8 @@ describe('Authorization usecases - Login by email', () => {
         managerTest.status = ManagerStatus.Archived;
         sandbox.stub(managerRepository, 'get').resolves(managerTest);
 
-        const error: SystemError = await loginByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+        const error: LogicalError = await loginByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

@@ -12,8 +12,8 @@ import { IClientRepository } from 'application/interfaces/repositories/user/ICli
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { IRequest } from 'shared/request/IRequest';
 import { mockFunction } from 'shared/test/MockFunction';
 import { mockInjection, mockRepositoryInjection } from 'shared/test/MockInjection';
@@ -81,8 +81,8 @@ describe('Authorization usecases - Forgot password by email', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -94,8 +94,8 @@ describe('Authorization usecases - Forgot password by email', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -108,8 +108,8 @@ describe('Authorization usecases - Forgot password by email', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+        const error: LogicalError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -126,8 +126,8 @@ describe('Authorization usecases - Forgot password by email', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -145,8 +145,8 @@ describe('Authorization usecases - Forgot password by email', () => {
 
         const usecaseOption = new UsecaseOption();
         usecaseOption.req = {} as IRequest;
-        const error: SystemError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
+        const error: LogicalError = await forgotPasswordByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

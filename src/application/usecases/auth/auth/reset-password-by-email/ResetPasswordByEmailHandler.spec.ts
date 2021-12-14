@@ -7,13 +7,13 @@ import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { addMinutes } from 'utils/datetime';
+import { addMinutes } from 'utils/Datetime';
 import { ResetPasswordByEmailHandler } from './ResetPasswordByEmailHandler';
 import { ResetPasswordByEmailInput } from './ResetPasswordByEmailInput';
 
@@ -63,8 +63,8 @@ describe('Authorization usecases - Reset password by email', () => {
     it('Reset password by email with account authorization is not exist error', async () => {
         sandbox.stub(authRepository, 'getByUsername').resolves();
 
-        const error: SystemError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
+        const error: LogicalError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_NOT_EXISTS, { t: 'account' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -74,8 +74,8 @@ describe('Authorization usecases - Reset password by email', () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         authTest.forgotKey = crypto.randomBytes(32).toString('hex');
 
-        const error: SystemError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_INCORRECT, { t: 'forgot_key' });
+        const error: LogicalError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_INCORRECT, { t: 'forgot_key' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
@@ -85,8 +85,8 @@ describe('Authorization usecases - Reset password by email', () => {
         sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
         authTest.forgotExpire = addMinutes(new Date(), -10);
 
-        const error: SystemError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXPIRED, { t: 'forgot_key' });
+        const error: LogicalError = await resetPasswordByEmailHandler.handle(param).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXPIRED, { t: 'forgot_key' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);

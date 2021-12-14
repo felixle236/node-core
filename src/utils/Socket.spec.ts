@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { send, sendAll, sendWithSender } from '.';
+import { send, sendAll, sendWithSender } from './Socket';
 
 describe('Utils - Socket', () => {
     const sandbox = createSandbox();

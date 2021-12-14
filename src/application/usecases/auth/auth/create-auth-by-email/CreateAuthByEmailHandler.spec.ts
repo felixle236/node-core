@@ -5,8 +5,8 @@ import { Auth } from 'domain/entities/auth/Auth';
 import { AuthType } from 'domain/enums/auth/AuthType';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { expect } from 'chai';
+import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { SystemError } from 'shared/exceptions/SystemError';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
@@ -50,8 +50,8 @@ describe('Authorization usecases - Create authorization by email', () => {
         sandbox.stub(authRepository, 'getAllByUser').resolves(authTests);
 
         const usecaseOption = new UsecaseOption();
-        const error: SystemError = await createAuthByEmailHandler.handle(param, usecaseOption).catch(error => error);
-        const err = new SystemError(MessageError.PARAM_EXISTED, { t: 'data' });
+        const error: LogicalError = await createAuthByEmailHandler.handle(param, usecaseOption).catch(error => error);
+        const err = new LogicalError(MessageError.PARAM_EXISTED, { t: 'data' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
