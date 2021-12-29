@@ -26,6 +26,12 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
         }
     }
 
+    protected async clearCaching(key: string, querySession?: DbQuerySession): Promise<void> {
+        const queryResultCache = this.repository.manager.connection.queryResultCache;
+        if (queryResultCache)
+            await queryResultCache.remove([key], querySession);
+    }
+
     async findAll(filter: SelectFilterListQuery<TEntity>, querySession?: DbQuerySession): Promise<TEntity[]> {
         const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession);
         this.handleSortQuery(query, filter.sorts);

@@ -4,13 +4,13 @@ import { FindClientInput } from 'application/usecases/user/client/find-client/Fi
 import { Response } from 'express';
 import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
-import { Inject, Service } from 'typedi';
+import { Service } from 'typedi';
 
 @Service()
 @Controller('/users')
 export class UserController {
     constructor(
-        @Inject() private readonly _findClientHandler: FindClientHandler
+        private readonly _findClientHandler: FindClientHandler
     ) {}
 
     @Get('/')

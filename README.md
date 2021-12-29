@@ -190,6 +190,7 @@ Implementing advanced architectures like clean architecture and domain driven de
 ## NPM Commands
 
 ```s
+npm run generate:apidoc -----------------------// Generate the API documentation.
 npm run generate:module {param} ---------------// Generate module or sub-module: entity, schema, repository, usecase, controller,.... Please refer to "Generate Module" section below.
 npm run generate:usecase {param} --------------// Generate usecase for module or sub-module. Please refer to "Generate Module" section below.
 npm run cache:clear ---------------------------// Clear cache of TypeORM.
@@ -271,8 +272,8 @@ npm test
 ## Generate Module
 
 - This feature is very useful. It helps developers to reduce a part of development time.
-- Create `Product` module, you can try: `npm run generate:module Product Api#Web`. It will generate entity, schema, repository, usecase, controller,....There are some expose types of the API such as `web`, `mobile`, `internal`, `external`. For another example: `npm run generate:module Product Api#Mobile`.
-- Create sub module as `ProductCategory` into `Product` module: `npm run generate:module Product#ProductCategory Api#Web`. It will generate entity, schema, repository, usecase, controller,...into `Product` module (`product` folders).
+- Create `Product` module, you can try: `npm run generate:module Product`. It will generate entity, schema, repository, usecase, controller,....There are some expose types of the API such as `web`, `mobile`, `internal`, `external`. For another example: `npm run generate:module Product` or define expose api folder: `npm run generate:module Product Api#Mobile`, `Api#Web` param will be added as default.
+- Create sub module as `ProductCategory` into `Product` module: `npm run generate:module Product#ProductCategory`. It will generate entity, schema, repository, usecase, controller,...into `Product` module (`product` folders).
 - Create `FindProductByCategory` usecase: `npm run generate:usecase Product Find#FindProductByCategory`. It will generate that usecase only. We have 5 method templates: `Find`, `Get`, `Create`, `Update`, `Delete`.
 - Create `CreateProductCategoryByOwner` usecase for sub-module `ProductCategory` into `Product` module: `npm run generate:usecase Product#ProductCategory Create#CreateProductCategoryByOwner`.
 
@@ -295,7 +296,7 @@ npm test
 
 ## Data Storage
 
-- PostgreSQL is default database that used in this project. If you want to use the other database, please refer to [TypeORM](https://github.com/typeorm/typeorm).
+- PostgreSQL is default database that used in this project. If you want to use the other database, please refer to [TypeORM](https://github.com/typeorm/typeorm), [data type](https://github.com/typeorm/typeorm/blob/master/test/functional/database-schema/column-types/postgres/entity/Post.ts), [joining relations](https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations)
 - Redis is memory database that we use to increase performance.
 
 ## Data Caching
@@ -828,6 +829,5 @@ DELETE http://localhost:3000/api/v1/clients/{:id}               --> Delete clien
 - API controllers order should be arranged in turn according to GET, POST, PUT, PATCH, DELETE.
 - The function order should be arranged in turn according to find, get, check, create, update, delete, remove.
 - The query param (url-path?param1=&param2=) will be a string value, if you want to get another type (boolean, number,...), you need to parse them with decorator like `@IsBoolean()` into QueryInput object.
-- If we use the table inheritance then we shouldn't use the enum type for parent table in database schema and we shouldn't define the foreign key of the other tables to this parent table, with the logic code is still good. To prevent foreign key definition, we can set `createForeignKeyConstraints` to `false`, for example: `@ManyToOne(() => UserDb, user => user.auths, { createForeignKeyConstraints: false })`.
-- Refer the joining relations document to have the best practice: https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations
+- If we use the table inheritance then we shouldn't use the enum type for parent table in database schema and we shouldn't define the foreign key of the other tables to this parent table, with the logic code is still good. To prevent foreign key definition and keep to use `leftJoinAndSelect` function, we can set `createForeignKeyConstraints` to `false`, for example: `@ManyToOne(() => UserDb, user => user.auths, { createForeignKeyConstraints: false })`.
 - With TypeORM version < 0.3.0, there is a bug `Cannot read property 'databaseName' of undefined` when we use `join` + `orderBy` together, please follow this issue in [here](https://github.com/typeorm/typeorm/issues/4270). Temporary [solution](https://github.com/typeorm/typeorm/issues/747#issuecomment-519553920)

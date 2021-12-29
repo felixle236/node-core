@@ -20,7 +20,7 @@ export class NotificationSender implements INotificationProvider {
         }
     }
 
-    async send(deviceIds: string[], title: string, content: string): Promise<any> {
-        return await this._provider.send(deviceIds, title, content);
+    async send(deviceTokens: string[], title: string, content: string): Promise<any> {
+        return await this._provider.send(deviceTokens, title, content);
     }
 }

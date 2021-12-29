@@ -4,7 +4,7 @@ import { RefSchemaObject } from 'shared/decorators/RefSchema';
 import { IsDateString, IsEnum, IsObject, IsOptional, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
 import { DataResponse } from 'shared/usecase/DataResponse';
 
-export class GetMyProfileClientData {
+export class GetProfileClientData {
     @IsUUID()
     id: string;
 
@@ -47,8 +47,8 @@ export class GetMyProfileClientData {
     locale?: string;
 }
 
-export class GetMyProfileClientOutput extends DataResponse<GetMyProfileClientData> {
+export class GetProfileClientOutput extends DataResponse<GetProfileClientData> {
     @IsObject()
-    @RefSchemaObject(GetMyProfileClientData)
-    data: GetMyProfileClientData;
+    @RefSchemaObject(GetProfileClientData)
+    data: GetProfileClientData;
 }

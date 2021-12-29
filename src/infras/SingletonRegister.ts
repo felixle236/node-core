@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import 'infras/data/DataRegister';
-import 'infras/services/ServiceRegister';
+import './data/DataRegister';
+import './services/ServiceRegister';
 import * as routingController from 'routing-controllers';
 import * as typeorm from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';

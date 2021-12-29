@@ -4,7 +4,7 @@ import { IClientRepository } from 'application/interfaces/repositories/user/ICli
 import { SelectFilterPaginationQuery, SelectSortQuery } from 'shared/database/DbTypes';
 import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
-import { Brackets, WhereExpressionBuilder } from 'typeorm';
+import { Brackets } from 'typeorm';
 import { Repository } from '../../common/Repository';
 import { ClientDb } from '../../entities/user/ClientDb';
 import { CLIENT_SCHEMA } from '../../schemas/user/ClientSchema';
@@ -37,7 +37,7 @@ export class ClientRepository extends Repository<Client, ClientDb> implements IC
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
-            query.andWhere(new Brackets((qb: WhereExpressionBuilder): any => {
+            query.andWhere(new Brackets(qb => {
                 qb.where(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
                     .orWhere(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));

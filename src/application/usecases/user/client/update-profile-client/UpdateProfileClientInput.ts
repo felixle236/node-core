@@ -3,7 +3,7 @@ import { AddressInfoData } from 'application/usecases/common/AddressInfoData';
 import { RefSchemaObject } from 'shared/decorators/RefSchema';
 import { IsDateOnlyString, IsEnum, IsLocale, IsObject, IsOptional, IsPhoneNumber, IsString, MaxLength } from 'shared/decorators/ValidationDecorator';
 
-export class UpdateMyProfileClientInput {
+export class UpdateProfileClientInput {
     @IsString()
     @MaxLength(20)
     firstName: string;

@@ -26,9 +26,7 @@ export class ApiService {
         app.use(i18n.init);
 
         const httpServer = new HttpServer();
-        const options = ApiService.getRoutingOptions();
-        httpServer.createApp(app, options);
-        return httpServer.start(port, callback);
+        return httpServer.start(app, port, ApiService.getRoutingOptions(), callback);
     }
 
     static getRoutingOptions(): RoutingControllersOptions {

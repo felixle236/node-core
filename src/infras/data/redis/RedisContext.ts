@@ -7,8 +7,9 @@ import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectDb } from 'shared/types/Injection';
-import Container from 'typedi';
+import { Service } from 'typedi';
 
+@Service(InjectDb.RedisContext)
 export class RedisContext implements IRedisContext {
     private _connection?: IRedisClient;
 
@@ -93,5 +94,3 @@ const createCb = (resolve, reject) => {
 const promiseFactory = (resolver): Promise<any> => {
     return new Promise(resolver);
 };
-
-Container.set<IRedisContext>(InjectDb.RedisContext, new RedisContext());

@@ -11,14 +11,14 @@ import { FindManagerInput } from 'application/usecases/user/manager/find-manager
 import { FindManagerOutput } from 'application/usecases/user/manager/find-manager/FindManagerOutput';
 import { GetManagerHandler } from 'application/usecases/user/manager/get-manager/GetManagerHandler';
 import { GetManagerOutput } from 'application/usecases/user/manager/get-manager/GetManagerOutput';
-import { GetMyProfileManagerHandler } from 'application/usecases/user/manager/get-my-profile-manager/GetMyProfileManagerHandler';
-import { GetMyProfileManagerOutput } from 'application/usecases/user/manager/get-my-profile-manager/GetMyProfileManagerOutput';
+import { GetProfileManagerHandler } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerHandler';
+import { GetProfileManagerOutput } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerOutput';
 import { UpdateManagerHandler } from 'application/usecases/user/manager/update-manager/UpdateManagerHandler';
 import { UpdateManagerInput } from 'application/usecases/user/manager/update-manager/UpdateManagerInput';
 import { UpdateManagerOutput } from 'application/usecases/user/manager/update-manager/UpdateManagerOutput';
-import { UpdateMyProfileManagerHandler } from 'application/usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerHandler';
-import { UpdateMyProfileManagerInput } from 'application/usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerInput';
-import { UpdateMyProfileManagerOutput } from 'application/usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerOutput';
+import { UpdateProfileManagerHandler } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerHandler';
+import { UpdateProfileManagerInput } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerInput';
+import { UpdateProfileManagerOutput } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerOutput';
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
@@ -30,10 +30,10 @@ export class ManagerController {
     constructor(
         private readonly _findManagerHandler: FindManagerHandler,
         private readonly _getManagerHandler: GetManagerHandler,
-        private readonly _getMyProfileManagerHandler: GetMyProfileManagerHandler,
+        private readonly _getProfileManagerHandler: GetProfileManagerHandler,
         private readonly _createManagerHandler: CreateManagerHandler,
         private readonly _updateManagerHandler: UpdateManagerHandler,
-        private readonly _updateMyProfileManagerHandler: UpdateMyProfileManagerHandler,
+        private readonly _updateProfileManagerHandler: UpdateProfileManagerHandler,
         private readonly _deleteManagerHandler: DeleteManagerHandler,
         private readonly _archiveManagerHandler: ArchiveManagerHandler
     ) {}
@@ -54,12 +54,12 @@ export class ManagerController {
         return this._getManagerHandler.handle(id);
     }
 
-    @Get('/my-profile')
+    @Get('/profile')
     @Authorized([RoleId.SuperAdmin, RoleId.Manager])
-    @OpenAPI({ summary: 'Get my profile information' })
-    @ResponseSchema(GetMyProfileManagerOutput)
-    getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileManagerOutput> {
-        return this._getMyProfileManagerHandler.handle(userAuth.userId);
+    @OpenAPI({ summary: 'Get profile information' })
+    @ResponseSchema(GetProfileManagerOutput)
+    getProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetProfileManagerOutput> {
+        return this._getProfileManagerHandler.handle(userAuth.userId);
     }
 
     @Post('/')
@@ -78,12 +78,12 @@ export class ManagerController {
         return this._updateManagerHandler.handle(id, param);
     }
 
-    @Put('/my-profile')
+    @Put('/profile')
     @Authorized([RoleId.SuperAdmin, RoleId.Manager])
-    @OpenAPI({ summary: 'Update my profile information' })
-    @ResponseSchema(UpdateMyProfileManagerOutput)
-    updateMyProfile(@Body() param: UpdateMyProfileManagerInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateMyProfileManagerOutput> {
-        return this._updateMyProfileManagerHandler.handle(userAuth.userId, param);
+    @OpenAPI({ summary: 'Update profile information' })
+    @ResponseSchema(UpdateProfileManagerOutput)
+    updateProfile(@Body() param: UpdateProfileManagerInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateProfileManagerOutput> {
+        return this._updateProfileManagerHandler.handle(userAuth.userId, param);
     }
 
     @Delete('/:id([0-9a-f-]{36})')

@@ -18,7 +18,7 @@ export class ClientDb extends UserBaseDb<Client> {
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.PHONE, nullable: true })
     phone?: string;
 
-    @Column('json', { name: CLIENT_SCHEMA.COLUMNS.ADDRESS, nullable: true })
+    @Column('jsonb', { name: CLIENT_SCHEMA.COLUMNS.ADDRESS, nullable: true })
     address?: AddressInfo;
 
     @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, nullable: true })

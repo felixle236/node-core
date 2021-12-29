@@ -11,8 +11,6 @@ export interface IDbContext {
     destroyConnection(): Promise<void>;
     destroyConnection(connectionName: string): Promise<void>;
 
-    clearCaching(keyCaching: string): Promise<void>;
-
     runTransaction<T>(runInTransaction: (querySession: DbQuerySession) => Promise<T>): Promise<T>;
     runTransaction<T>(runInTransaction: (querySession: DbQuerySession) => Promise<T>, rollback: (error: Error) => Promise<void>): Promise<T>;
     runTransaction<T>(runInTransaction: (querySession: DbQuerySession) => Promise<T>, rollback: (error: Error) => Promise<void>, done: () => Promise<void>): Promise<T>;

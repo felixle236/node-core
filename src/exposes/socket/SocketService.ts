@@ -5,7 +5,7 @@ import { RedisClient } from 'redis';
 import { Server, ServerOptions } from 'socket.io';
 import { createAdapter } from 'socket.io-redis';
 import { Container } from 'typedi';
-import { getFilesSync } from 'utils/File';
+import { searchFilesSync } from 'utils/File';
 
 export class SocketService {
     static io: Server;
@@ -37,14 +37,12 @@ export class SocketService {
     }
 
     private static _initChannels(): void {
-        const folder = path.join(__dirname, './channels');
-        for (const file of getFilesSync(folder)) {
-            if (!file.includes('.spec')) {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const controller = require(`${folder}/${file}`).default;
-                const con = Container.get(controller) as { init: (io: Server) => void};
-                con.init(this.io);
-            }
+        const files = searchFilesSync(path.join(__dirname, './channels/**/*Channel{.js,.ts}'));
+        for (const file of files) {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const controller = require(file).default;
+            const con = Container.get(controller) as { init: (io: Server) => void};
+            con.init(this.io);
         }
     }
 }

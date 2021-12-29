@@ -2,7 +2,7 @@ import { RefSchemaObject } from 'shared/decorators/RefSchema';
 import { IsDateString, IsObject, IsOptional, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
 import { DataResponse } from 'shared/usecase/DataResponse';
 
-export class GetMyProfileManagerData {
+export class GetProfileManagerData {
     @IsUUID()
     id: string;
 
@@ -24,8 +24,8 @@ export class GetMyProfileManagerData {
     avatar?: string;
 }
 
-export class GetMyProfileManagerOutput extends DataResponse<GetMyProfileManagerData> {
+export class GetProfileManagerOutput extends DataResponse<GetProfileManagerData> {
     @IsObject()
-    @RefSchemaObject(GetMyProfileManagerData)
-    data: GetMyProfileManagerData;
+    @RefSchemaObject(GetProfileManagerData)
+    data: GetProfileManagerData;
 }

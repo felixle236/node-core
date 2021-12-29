@@ -22,8 +22,8 @@ import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailE
 export class CreateClientHandler implements IUsecaseHandler<CreateClientInput, CreateClientOutput> {
     constructor(
         @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
-        @Inject() private readonly _checkEmailExistHandler: CheckEmailExistHandler,
-        @Inject() private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
+        private readonly _checkEmailExistHandler: CheckEmailExistHandler,
+        private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
         @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
         @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository
     ) {}

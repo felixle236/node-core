@@ -46,7 +46,8 @@
 		"max_length": "{{field}} must be shorter than or equal to {{max}} characters",
 		"min_date": "minimum allowed date for {{field}} is {{date}}",
 		"max_date": "maximum allowed date for {{field}} is {{date}}",
-		"is_past_date": "{{field}} must be a day in the past"
+		"is_past_date": "{{field}} must be a day in the past",
+		"is_future_date": "{{field}} must be a day in the future"
 	},
 	"message": {
 		"something_went_wrong": "something went wrong",
@@ -100,9 +101,7 @@
 		"locale": "locale",
 		"data": "data",
 		"database_connection": "database connection",
-		"redis_connection": "redis connection",
-		"key_caching": "key caching",
-		"caching_feature": "caching feature"
+		"redis_connection": "redis connection"
 	},
 	"sms": {
 		"your_verification_code_from_{{projectName}}_is_{{code}}": "Your verification code from {{projectName}} is: {{code}}"

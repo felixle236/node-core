@@ -61,6 +61,60 @@ function isDateOnlyString(validationOptions?: classValidator.ValidationOptions):
 export const IsDateOnlyString = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
     isDateOnlyString({ ...opts, message: intlMsg('is_date_only_string') });
 
+/**
+ * Checks if the value is a date in the past.
+ */
+function isPastDate(validationOptions?: classValidator.ValidationOptions) {
+    return function(object: Object, propertyName: string | any) {
+        classValidator.registerDecorator({
+            name: 'isPastDate',
+            target: object.constructor,
+            propertyName,
+            constraints: [],
+            options: validationOptions,
+            validator: {
+                validate(value: any, args: classValidator.ValidationArguments) {
+                    if (classValidator.isDateString(value)) {
+                        value = new Date(value);
+                        args.object[propertyName] = value;
+                    }
+                    return value instanceof Date && !isNaN(value.getDate()) && value.getTime() < Date.now();
+                }
+            }
+        });
+    };
+}
+
+export const IsPastDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
+    isPastDate({ ...opts, message: intlMsg('is_past_date') });
+
+/**
+ * Checks if the value is a date in the future.
+ */
+function isFutureDate(validationOptions?: classValidator.ValidationOptions) {
+    return function(object: Object, propertyName: string | any) {
+        classValidator.registerDecorator({
+            name: 'isFutureDate',
+            target: object.constructor,
+            propertyName: propertyName,
+            constraints: [],
+            options: validationOptions,
+            validator: {
+                validate(value: any, args: classValidator.ValidationArguments) {
+                    if (classValidator.isDateString(value)) {
+                        value = new Date(value);
+                        args.object[propertyName] = value;
+                    }
+                    return value instanceof Date && !isNaN(value.getDate()) && value.getTime() > Date.now();
+                }
+            }
+        });
+    };
+}
+
+export const IsFutureDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
+    isFutureDate({ ...opts, message: intlMsg('is_future_date') });
+
 export const IsEnum = (entity: object, opts?: classValidator.ValidationOptions): PropertyDecorator =>
     classValidator.IsEnum(entity, { ...opts, message: intlMsg('is_enum') });
 
@@ -183,6 +237,3 @@ export const MinDate = (date: Date, opts?: classValidator.ValidationOptions): Pr
 
 export const MaxDate = (date: Date, opts?: classValidator.ValidationOptions): PropertyDecorator =>
     classValidator.MaxDate(date, { ...opts, message: intlMsg('max_date', { date }) });
-
-export const IsPastDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-    classValidator.MaxDate(new Date(), { ...opts, message: intlMsg('is_past_date') });

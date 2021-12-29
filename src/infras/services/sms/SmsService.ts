@@ -1,9 +1,9 @@
 import { ISmsService } from 'application/interfaces/services/ISmsService';
-import { SMS_SENDER_OR_PHONE } from 'config/Configuration';
+import { PROJECT_NAME } from 'config/Configuration';
+import { i18n } from 'shared/localization/Localization';
 import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { SmsSender } from './sender/SmsSender';
-import { UserActivationCodeTemplate } from './templates/UserActivationCodeTemplate';
 
 @Service(InjectService.SMS)
 export class SmsService implements ISmsService {
@@ -13,8 +13,8 @@ export class SmsService implements ISmsService {
         this._sender = new SmsSender();
     }
 
-    async sendVerificationCode(phone: string, code: string, locale?: string): Promise<void> {
-        const content = UserActivationCodeTemplate.getTemplate(code, locale);
-        await this._sender.send(SMS_SENDER_OR_PHONE, phone, content);
+    async sendVerificationCode(phone: string, param: { code: string, locale?: string }): Promise<void> {
+        const content = i18n.__({ phrase: 'sms.your_verification_code_from_{{projectName}}_is_{{code}}', locale: param.locale }, { projectName: PROJECT_NAME, code: param.code });
+        await this._sender.send(phone, content);
     }
 }

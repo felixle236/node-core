@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { appendFile, createDirectory, getDirectories, getDirectoriesSync, getFiles, getFilesSync, readFile, readFileAsText, removeFile, writeFile } from './File';
+import { appendFile, createDirectory, getDirectories, getDirectoriesSync, getFiles, getFilesSync, readFile, readFileAsText, removeFile, searchFiles, searchFilesSync, writeFile } from './File';
 
 describe('Utils - File', () => {
     const sandbox = createSandbox();
@@ -45,6 +45,16 @@ describe('Utils - File', () => {
 
     it('Get files', () => {
         const files = getFilesSync('.');
+        expect(files.length).to.gt(0);
+    });
+
+    it('Search files promise', async () => {
+        const files = await searchFiles('.');
+        expect(files.length).to.gt(0);
+    });
+
+    it('Search files', () => {
+        const files = searchFilesSync('.');
         expect(files.length).to.gt(0);
     });
 

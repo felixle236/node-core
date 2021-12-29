@@ -1,10 +1,14 @@
 import 'reflect-metadata';
 import 'mocha';
 import { randomUUID } from 'crypto';
+import { Auth } from 'domain/entities/auth/Auth';
 import { Manager } from 'domain/entities/user/Manager';
+import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { expect } from 'chai';
+import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
+import { mockDbContext } from 'shared/test/MockDbContext';
 import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
@@ -13,13 +17,17 @@ import { DeleteManagerHandler } from './DeleteManagerHandler';
 
 describe('Manager usecases - Delete manager', () => {
     const sandbox = createSandbox();
+    let dbContext: IDbContext;
     let managerRepository: IManagerRepository;
+    let authRepository: IAuthRepository;
     let deleteManagerHandler: DeleteManagerHandler;
     let managerTest: Manager;
 
-    before(() => {
+    before(async () => {
+        dbContext = await mockDbContext();
+        authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getAllByUser']);
         managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
-        deleteManagerHandler = new DeleteManagerHandler(managerRepository);
+        deleteManagerHandler = new DeleteManagerHandler(dbContext, managerRepository, authRepository);
     });
 
     beforeEach(() => {
@@ -31,8 +39,9 @@ describe('Manager usecases - Delete manager', () => {
         sandbox.restore();
     });
 
-    after(() => {
+    after(async () => {
         Container.reset();
+        await dbContext.destroyConnection();
     });
 
     it('Delete manager with data not found error', async () => {
@@ -47,6 +56,8 @@ describe('Manager usecases - Delete manager', () => {
     it('Delete manager', async () => {
         sandbox.stub(managerRepository, 'get').resolves(managerTest);
         sandbox.stub(managerRepository, 'softDelete').resolves(true);
+        sandbox.stub(authRepository, 'getAllByUser').resolves([{ id: randomUUID() } as Auth]);
+        sandbox.stub(authRepository, 'softDelete').resolves(true);
 
         const result = await deleteManagerHandler.handle(managerTest.id);
         expect(result.data).to.eq(true);

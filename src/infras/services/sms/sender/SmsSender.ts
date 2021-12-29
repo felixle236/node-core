@@ -25,7 +25,7 @@ export class SmsSender implements ISmsProvider {
         }
     }
 
-    async send(senderOrPhone: string, phoneNumber: string, content: string): Promise<any> {
-        return await this._provider.send(senderOrPhone, phoneNumber, content);
+    async send(phoneNumber: string, content: string): Promise<any> {
+        return await this._provider.send(phoneNumber, content);
     }
 }

@@ -3,13 +3,18 @@ import 'mocha';
 import { randomUUID } from 'crypto';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { Server } from 'http';
+import path from 'path';
 import { ImportClientTestHandler } from 'application/usecases/user/client/import-client-test/ImportClientTestHandler';
 import { ImportManagerTestHandler } from 'application/usecases/user/manager/import-manager-test/ImportManagerTestHandler';
 import { GetListOnlineStatusByIdsHandler } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
 import { GetListOnlineStatusByIdsData, GetListOnlineStatusByIdsOutput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
+import { UploadAvatarHandler } from 'application/usecases/user/user/upload-avatar/UploadAvatarHandler';
+import { UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { WEB_API_PRIVATE_KEY } from 'config/Configuration';
+import FormData from 'form-data';
+import multer from 'multer';
 import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
 import { InputValidationError } from 'shared/exceptions/InputValidationError';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
@@ -17,9 +22,11 @@ import { mockUserAuthentication } from 'shared/test/MockAuthentication';
 import { mockAuthJwtService } from 'shared/test/MockAuthJwtService';
 import { mockInjection, mockUsecaseInjection } from 'shared/test/MockInjection';
 import { mockWebApi } from 'shared/test/MockWebApi';
+import { HttpHeaderKey } from 'shared/types/Common';
 import { InjectService } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
+import { readFile } from 'utils/File';
 
 describe('User controller', () => {
     const sandbox = createSandbox();
@@ -27,15 +34,18 @@ describe('User controller', () => {
     const port = 6789;
     const endpoint = `http://localhost:${port}/api/v1/users`;
     const options = { headers: { authorization: 'Bearer token' } };
+    let uploadAvatarHandler: UploadAvatarHandler;
     let getListOnlineStatusByIdsHandler: GetListOnlineStatusByIdsHandler;
     let importManagerTestHandler: ImportManagerTestHandler;
     let importClientTestHandler: ImportClientTestHandler;
 
     before(done => {
         mockInjection(InjectService.AuthJwt, mockAuthJwtService());
+        sandbox.stub(multer, 'diskStorage').returns(multer.memoryStorage());
 
         import('./UserController').then(obj => {
             server = mockWebApi(obj.UserController, port, () => {
+                uploadAvatarHandler = mockUsecaseInjection(UploadAvatarHandler);
                 getListOnlineStatusByIdsHandler = mockUsecaseInjection(GetListOnlineStatusByIdsHandler);
                 importManagerTestHandler = mockUsecaseInjection(ImportManagerTestHandler);
                 importClientTestHandler = mockUsecaseInjection(ImportClientTestHandler);
@@ -52,6 +62,35 @@ describe('User controller', () => {
     after(done => {
         Container.reset();
         server.close(done);
+    });
+
+    it('Upload avatar with unauthorized error', async () => {
+        const { status, data } = await axios.post(endpoint + '/avatar').catch(error => error.response);
+
+        expect(status).to.eq(401);
+        expect(data.code).to.eq(new UnauthorizedError().code);
+    });
+
+    it('Upload avatar', async () => {
+        mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: randomUUID() });
+        const filePath = path.join(__dirname, '../../../../../resources/images/test/workplace.jpg');
+        const file = await readFile(filePath);
+        const formData = new FormData();
+        formData.append('avatar', file, 'avatar.jpg');
+
+        const result = new UploadAvatarOutput();
+        result.data = 'url';
+        sandbox.stub(uploadAvatarHandler, 'handle').resolves(result);
+
+        let headers = JSON.parse(JSON.stringify(options.headers));
+        headers = {
+            ...headers,
+            ...formData.getHeaders()
+        };
+        const { status, data }: any = await axios.post(endpoint + '/avatar', formData, { headers });
+
+        expect(status).to.eq(200);
+        expect(data.data).to.eq('url');
     });
 
     it('Get list online status with unauthorized error', async () => {
@@ -105,7 +144,7 @@ describe('User controller', () => {
     });
 
     it('Access Api private with access denied error', async () => {
-        const options = { headers: { 'x-private-key': '123' } };
+        const options = { headers: { [HttpHeaderKey.PrivateKey]: '123' } };
         const { status, data } = await axios.get(endpoint + '/api-private', options).catch(error => error.response);
 
         expect(status).to.eq(403);
@@ -113,7 +152,7 @@ describe('User controller', () => {
     });
 
     it('Access Api private successful', async () => {
-        const options = { headers: { 'x-private-key': WEB_API_PRIVATE_KEY } };
+        const options = { headers: { [HttpHeaderKey.PrivateKey]: WEB_API_PRIVATE_KEY } };
         const { status, data }: any = await axios.get(endpoint + '/api-private', options);
 
         expect(status).to.eq(200);

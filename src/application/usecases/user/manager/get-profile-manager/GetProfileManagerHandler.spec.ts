@@ -10,17 +10,17 @@ import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { GetMyProfileManagerHandler } from './GetMyProfileManagerHandler';
+import { GetProfileManagerHandler } from './GetProfileManagerHandler';
 
-describe('Manager usecases - Get my profile manager', () => {
+describe('Manager usecases - Get profile manager', () => {
     const sandbox = createSandbox();
     let managerRepository: IManagerRepository;
-    let getMyProfileManagerHandler: GetMyProfileManagerHandler;
+    let getProfileManagerHandler: GetProfileManagerHandler;
     let managerTest: Manager;
 
     before(() => {
         managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
-        getMyProfileManagerHandler = new GetMyProfileManagerHandler(managerRepository);
+        getProfileManagerHandler = new GetProfileManagerHandler(managerRepository);
     });
 
     beforeEach(() => {
@@ -43,20 +43,20 @@ describe('Manager usecases - Get my profile manager', () => {
         Container.reset();
     });
 
-    it('Get my profile manager with not found error', async () => {
+    it('Get profile manager with not found error', async () => {
         sandbox.stub(managerRepository, 'get').resolves();
 
-        const error = await getMyProfileManagerHandler.handle(managerTest.id).catch(error => error);
+        const error = await getProfileManagerHandler.handle(managerTest.id).catch(error => error);
         const err = new NotFoundError();
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Get my profile manager', async () => {
+    it('Get profile manager', async () => {
         sandbox.stub(managerRepository, 'get').resolves(managerTest);
 
-        const result = await getMyProfileManagerHandler.handle(managerTest.id);
+        const result = await getProfileManagerHandler.handle(managerTest.id);
         expect(result.data.id).to.eq(managerTest.id);
     });
 });

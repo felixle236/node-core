@@ -1,4 +1,5 @@
 import { I{PascalName}Repository } from 'application/interfaces/repositories/{folder}/I{PascalName}Repository';
+import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { {FindUsecaseName}Input } from './{FindUsecaseName}Input';
@@ -7,7 +8,7 @@ import { {FindUsecaseName}Data, {FindUsecaseName}Output } from './{FindUsecaseNa
 @Service()
 export class {FindUsecaseName}Handler implements IUsecaseHandler<{FindUsecaseName}Input, {FindUsecaseName}Output> {
     constructor(
-        @Inject('{lower_case_name}.repository') private readonly _{camelName}Repository: I{PascalName}Repository
+        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
     ) {}
 
     async handle(param: {FindUsecaseName}Input): Promise<{FindUsecaseName}Output> {

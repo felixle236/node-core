@@ -1,5 +1,5 @@
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
-import { DOMAIN, ENVIRONMENT, MOBILE_API_URL, PROJECT_NAME, PROTOTYPE } from 'config/Configuration';
+import { PROJECT_DOMAIN, ENVIRONMENT, MOBILE_API_URL, PROJECT_NAME, PROJECT_PROTOTYPE, PROJECT_SUPPORT_EMAIL, PROJECT_SUPPORT_NAME } from 'config/Configuration';
 import { OpenAPIObject } from 'openapi3-ts';
 import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
@@ -21,12 +21,12 @@ export function getApiSpecs(): OpenAPIObject {
     return routingControllersToSpec(storage, options, {
         info: {
             title: `${PROJECT_NAME} API For Mobile Application`,
-            description: 'Developed by felix.le.236@gmail.com',
+            description: `Developed by ${PROJECT_SUPPORT_NAME}`,
             version: '1.0.0',
             contact: {
-                name: 'Felix Lee',
-                email: 'felix.le.236@gmail.com',
-                url: `${PROTOTYPE}://${DOMAIN}`
+                name: PROJECT_SUPPORT_NAME,
+                email: PROJECT_SUPPORT_EMAIL,
+                url: `${PROJECT_PROTOTYPE}://${PROJECT_DOMAIN}`
             }
         },
         servers: [{

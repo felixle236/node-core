@@ -3,10 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 const param = process.argv.length > 2 && process.argv[2];
-const param2 = process.argv.length > 3 && process.argv[3];
+let param2 = process.argv.length > 3 && process.argv[3];
 
-if (!param || !param2 || param2.split('#').length !== 2)
+if (!param)
     throw new Error('\x1b[35mParam is invalid!\n\x1b[0m');
+
+if (!param2 || param2.split('#').length !== 2)
+    param2 = 'Api#Web';
 
 let moduleName = param;
 let subModuleName = moduleName;

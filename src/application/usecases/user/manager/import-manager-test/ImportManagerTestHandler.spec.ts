@@ -11,21 +11,21 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import * as file from 'utils/File';
 import { ImportManagerTestHandler } from './ImportManagerTestHandler';
-import { UploadMyAvatarHandler } from '../../user/upload-my-avatar/UploadMyAvatarHandler';
+import { UploadAvatarHandler } from '../../user/upload-avatar/UploadAvatarHandler';
 import { CreateManagerHandler } from '../create-manager/CreateManagerHandler';
 
 describe('Manager usecases - Import manager test', () => {
     const sandbox = createSandbox();
     let createManagerHandler: CreateManagerHandler;
-    let uploadMyAvatarHandler: UploadMyAvatarHandler;
+    let uploadAvatarHandler: UploadAvatarHandler;
     let importManagerTestHandler: ImportManagerTestHandler;
     let logService: ILogService;
 
     before(async () => {
         createManagerHandler = mockUsecaseInjection(CreateManagerHandler);
-        uploadMyAvatarHandler = mockUsecaseInjection(UploadMyAvatarHandler);
+        uploadAvatarHandler = mockUsecaseInjection(UploadAvatarHandler);
         logService = mockInjection<ILogService>(InjectService.Log, mockLogService());
-        importManagerTestHandler = new ImportManagerTestHandler(createManagerHandler, uploadMyAvatarHandler, logService);
+        importManagerTestHandler = new ImportManagerTestHandler(createManagerHandler, uploadAvatarHandler, logService);
     });
 
     afterEach(() => {
@@ -39,7 +39,7 @@ describe('Manager usecases - Import manager test', () => {
     it('Import manager test', async () => {
         sandbox.stub(createManagerHandler, 'handle').resolves({ data: 'id' });
         sandbox.stub(file, 'writeFile').resolves();
-        sandbox.stub(uploadMyAvatarHandler, 'handle').resolves();
+        sandbox.stub(uploadAvatarHandler, 'handle').resolves();
 
         const result = await importManagerTestHandler.handle();
         expect(result.data).to.eq(true);

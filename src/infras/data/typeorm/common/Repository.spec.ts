@@ -52,6 +52,10 @@ class DataTestRepository extends Repository<DataTest, DataTestDb> implements IDa
     constructor() {
         super(DataTestDb, DATA_TEST_SCHEMA);
     }
+
+    async clearTestCaching(): Promise<void> {
+        await this.clearCaching('test');
+    }
 }
 
 describe('Base repository', () => {
@@ -88,6 +92,16 @@ describe('Base repository', () => {
 
     after(async () => {
         await dbContext.destroyConnection();
+    });
+
+    describe('Clear data caching', () => {
+        it('Clear data caching', async () => {
+            let hasSucceed = false;
+            await dataTestRepository.clearTestCaching().then(() => {
+                hasSucceed = true;
+            });
+            expect(hasSucceed).to.eq(true);
+        });
     });
 
     describe('Find all', () => {

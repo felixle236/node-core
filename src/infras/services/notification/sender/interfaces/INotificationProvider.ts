@@ -1,3 +1,3 @@
 export interface INotificationProvider {
-    send(deviceIds: string[], title: string, content: string): Promise<any>;
+    send(deviceTokens: string[], title: string, content: string): Promise<any>;
 }

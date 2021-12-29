@@ -31,16 +31,16 @@ export class ManagerRepository extends Repository<Manager, ManagerDb> implements
     }
 
     override async findAndCount(filter: { roleIds?: string[], keyword?: string, status?: ManagerStatus } & SelectFilterPaginationQuery<Manager>): Promise<[Manager[], number]> {
-        let query = this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME);
-        if (filter.roleIds)
-            query = query.andWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.ROLE_ID} = ANY(:roleIds)`, { roleIds: filter.roleIds });
+        const query = this.repository.createQueryBuilder(MANAGER_SCHEMA.TABLE_NAME);
+        if (filter.roleIds && filter.roleIds.length)
+            query.andWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.ROLE_ID} IN (:...roleIds)`, { roleIds: filter.roleIds });
 
         if (filter.status)
-            query = query.where(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status });
+            query.andWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status });
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
-            query = query.andWhere(new Brackets(qb => {
+            query.andWhere(new Brackets(qb => {
                 qb.where(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.FIRST_NAME} || ' ' || ${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.LAST_NAME} ILIKE :keyword`, { keyword })
                     .orWhere(`${MANAGER_SCHEMA.TABLE_NAME}.${MANAGER_SCHEMA.COLUMNS.EMAIL} ILIKE :keyword`, { keyword });
             }));

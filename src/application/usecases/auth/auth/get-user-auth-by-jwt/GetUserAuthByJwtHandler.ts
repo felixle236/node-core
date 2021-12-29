@@ -25,7 +25,7 @@ export class GetUserAuthByJwtHandler implements IUsecaseHandler<string, GetUserA
             payload = this._authJwtService.verify(token);
         }
         catch (error: any) {
-            this._logService.error('Verify token', error, usecaseOption.trace.id);
+            this._logService.error('Verify token', error, usecaseOption.trace);
             if (error.name === 'TokenExpiredError')
                 throw new UnauthorizedError(MessageError.PARAM_EXPIRED, { t: 'token' });
             else

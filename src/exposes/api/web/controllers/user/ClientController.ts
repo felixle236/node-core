@@ -14,8 +14,8 @@ import { FindClientInput } from 'application/usecases/user/client/find-client/Fi
 import { FindClientOutput } from 'application/usecases/user/client/find-client/FindClientOutput';
 import { GetClientHandler } from 'application/usecases/user/client/get-client/GetClientHandler';
 import { GetClientOutput } from 'application/usecases/user/client/get-client/GetClientOutput';
-import { GetMyProfileClientHandler } from 'application/usecases/user/client/get-my-profile-client/GetMyProfileClientHandler';
-import { GetMyProfileClientOutput } from 'application/usecases/user/client/get-my-profile-client/GetMyProfileClientOutput';
+import { GetProfileClientHandler } from 'application/usecases/user/client/get-profile-client/GetProfileClientHandler';
+import { GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientOutput';
 import { RegisterClientHandler } from 'application/usecases/user/client/register-client/RegisterClientHandler';
 import { RegisterClientInput } from 'application/usecases/user/client/register-client/RegisterClientInput';
 import { RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientOutput';
@@ -25,9 +25,9 @@ import { ResendActivationOutput } from 'application/usecases/user/client/resend-
 import { UpdateClientHandler } from 'application/usecases/user/client/update-client/UpdateClientHandler';
 import { UpdateClientInput } from 'application/usecases/user/client/update-client/UpdateClientInput';
 import { UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientOutput';
-import { UpdateMyProfileClientHandler } from 'application/usecases/user/client/update-my-profile-client/UpdateMyProfileClientHandler';
-import { UpdateMyProfileClientInput } from 'application/usecases/user/client/update-my-profile-client/UpdateMyProfileClientInput';
-import { UpdateMyProfileClientOutput } from 'application/usecases/user/client/update-my-profile-client/UpdateMyProfileClientOutput';
+import { UpdateProfileClientHandler } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientHandler';
+import { UpdateProfileClientInput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientInput';
+import { UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientOutput';
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UsecaseOptionRequest } from 'shared/decorators/UsecaseOptionRequest';
@@ -41,13 +41,13 @@ export class ClientController {
     constructor(
         private readonly _findClientHandler: FindClientHandler,
         private readonly _getClientHandler: GetClientHandler,
-        private readonly _getMyProfileClientHandler: GetMyProfileClientHandler,
+        private readonly _getProfileClientHandler: GetProfileClientHandler,
         private readonly _registerClientHandler: RegisterClientHandler,
         private readonly _activeClientHandler: ActiveClientHandler,
         private readonly _resendActivationHandler: ResendActivationHandler,
         private readonly _createClientHandler: CreateClientHandler,
         private readonly _updateClientHandler: UpdateClientHandler,
-        private readonly _updateMyProfileClientHandler: UpdateMyProfileClientHandler,
+        private readonly _updateProfileClientHandler: UpdateProfileClientHandler,
         private readonly _deleteClientHandler: DeleteClientHandler,
         private readonly _archiveClientHandler: ArchiveClientHandler
     ) {}
@@ -68,12 +68,12 @@ export class ClientController {
         return this._getClientHandler.handle(id);
     }
 
-    @Get('/my-profile')
+    @Get('/profile')
     @Authorized(RoleId.Client)
-    @OpenAPI({ summary: 'Get my profile information' })
-    @ResponseSchema(GetMyProfileClientOutput)
-    getMyProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetMyProfileClientOutput> {
-        return this._getMyProfileClientHandler.handle(userAuth.userId);
+    @OpenAPI({ summary: 'Get profile information' })
+    @ResponseSchema(GetProfileClientOutput)
+    getProfile(@CurrentUser() userAuth: UserAuthenticated): Promise<GetProfileClientOutput> {
+        return this._getProfileClientHandler.handle(userAuth.userId);
     }
 
     @Post('/register')
@@ -113,12 +113,12 @@ export class ClientController {
         return this._updateClientHandler.handle(id, param);
     }
 
-    @Put('/my-profile')
+    @Put('/profile')
     @Authorized(RoleId.Client)
-    @OpenAPI({ summary: 'Update my profile information' })
-    @ResponseSchema(UpdateMyProfileClientOutput)
-    updateMyProfile(@Body() param: UpdateMyProfileClientInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateMyProfileClientOutput> {
-        return this._updateMyProfileClientHandler.handle(userAuth.userId, param);
+    @OpenAPI({ summary: 'Update profile information' })
+    @ResponseSchema(UpdateProfileClientOutput)
+    updateProfile(@Body() param: UpdateProfileClientInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateProfileClientOutput> {
+        return this._updateProfileClientHandler.handle(userAuth.userId, param);
     }
 
     @Delete('/:id([0-9a-f-]{36})')

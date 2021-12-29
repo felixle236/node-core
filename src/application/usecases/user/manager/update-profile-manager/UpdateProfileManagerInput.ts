@@ -1,7 +1,7 @@
 import { GenderType } from 'domain/enums/user/GenderType';
 import { IsDateOnlyString, IsEnum, IsOptional, IsString, MaxLength } from 'shared/decorators/ValidationDecorator';
 
-export class UpdateMyProfileManagerInput {
+export class UpdateProfileManagerInput {
     @IsString()
     @MaxLength(20)
     firstName: string;

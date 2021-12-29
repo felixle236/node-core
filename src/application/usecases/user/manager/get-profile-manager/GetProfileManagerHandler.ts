@@ -3,20 +3,20 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { GetMyProfileManagerData, GetMyProfileManagerOutput } from './GetMyProfileManagerOutput';
+import { GetProfileManagerData, GetProfileManagerOutput } from './GetProfileManagerOutput';
 
 @Service()
-export class GetMyProfileManagerHandler implements IUsecaseHandler<string, GetMyProfileManagerOutput> {
+export class GetProfileManagerHandler implements IUsecaseHandler<string, GetProfileManagerOutput> {
     constructor(
         @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
     ) {}
 
-    async handle(id: string): Promise<GetMyProfileManagerOutput> {
+    async handle(id: string): Promise<GetProfileManagerOutput> {
         const manager = await this._managerRepository.get(id);
         if (!manager)
             throw new NotFoundError();
 
-        const data = new GetMyProfileManagerData();
+        const data = new GetProfileManagerData();
         data.id = manager.id;
         data.createdAt = manager.createdAt;
         data.firstName = manager.firstName;
@@ -24,7 +24,7 @@ export class GetMyProfileManagerHandler implements IUsecaseHandler<string, GetMy
         data.email = manager.email;
         data.avatar = manager.avatar;
 
-        const result = new GetMyProfileManagerOutput();
+        const result = new GetProfileManagerOutput();
         result.data = data;
         return result;
     }

@@ -6,16 +6,16 @@ import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { readFile, writeFile } from 'utils/File';
 import { ImportClientTestOutput } from './ImportClientTestOutput';
-import { UploadMyAvatarHandler } from '../../user/upload-my-avatar/UploadMyAvatarHandler';
-import { UploadMyAvatarInput } from '../../user/upload-my-avatar/UploadMyAvatarInput';
+import { UploadAvatarHandler } from '../../user/upload-avatar/UploadAvatarHandler';
+import { UploadAvatarInput } from '../../user/upload-avatar/UploadAvatarInput';
 import { CreateClientHandler } from '../create-client/CreateClientHandler';
 import { CreateClientInput } from '../create-client/CreateClientInput';
 
 @Service()
 export class ImportClientTestHandler implements IUsecaseHandler<undefined, ImportClientTestOutput> {
     constructor(
-        @Inject() private readonly _createClientHandler: CreateClientHandler,
-        @Inject() private readonly _uploadMyAvatarHandler: UploadMyAvatarHandler,
+        private readonly _createClientHandler: CreateClientHandler,
+        private readonly _uploadAvatarHandler: UploadAvatarHandler,
         @Inject(InjectService.Log) private readonly _logService: ILogService
     ) {}
 
@@ -36,14 +36,14 @@ export class ImportClientTestHandler implements IUsecaseHandler<undefined, Impor
                     const filePath = path.join(STORAGE_UPLOAD_DIR, client.avatar.substring(client.avatar.lastIndexOf('/') + 1));
                     await writeFile(filePath, buffer);
 
-                    const fileInput = new UploadMyAvatarInput();
+                    const fileInput = new UploadAvatarInput();
                     fileInput.file = {
                         buffer,
                         path: filePath,
                         mimetype: 'image/' + filePath.substring(filePath.lastIndexOf('.') + 1),
                         size: buffer.length
                     } as Express.Multer.File;
-                    await this._uploadMyAvatarHandler.handle(result.data, fileInput);
+                    await this._uploadAvatarHandler.handle(result.data, fileInput);
                 }
             }
             catch (error) {

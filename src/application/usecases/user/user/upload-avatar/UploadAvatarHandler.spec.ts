@@ -16,20 +16,20 @@ import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import * as fileLib from 'utils/File';
-import { UploadMyAvatarHandler } from './UploadMyAvatarHandler';
-import { UploadMyAvatarInput } from './UploadMyAvatarInput';
+import { UploadAvatarHandler } from './UploadAvatarHandler';
+import { UploadAvatarInput } from './UploadAvatarInput';
 
-describe('User usecases - Upload my avatar', () => {
+describe('User usecases - Upload avatar', () => {
     const sandbox = createSandbox();
     let userRepository: IUserRepository;
     let storageService: IStorageService;
-    let uploadMyAvatarHandler: UploadMyAvatarHandler;
+    let uploadAvatarHandler: UploadAvatarHandler;
     let userTest: User;
 
     before(() => {
         storageService = mockInjection(InjectService.Storage, mockStorageService());
         userRepository = mockRepositoryInjection<IUserRepository>(InjectRepository.User);
-        uploadMyAvatarHandler = new UploadMyAvatarHandler(storageService, userRepository);
+        uploadAvatarHandler = new UploadAvatarHandler(storageService, userRepository);
     });
 
     beforeEach(() => {
@@ -44,40 +44,40 @@ describe('User usecases - Upload my avatar', () => {
         Container.reset();
     });
 
-    it('Upload my avatar with data invalid error', async () => {
-        const param = new UploadMyAvatarInput();
+    it('Upload avatar with data invalid error', async () => {
+        const param = new UploadAvatarInput();
         param.file = {
             buffer: Buffer.from('test')
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarHandler.handle(randomUUID(), param).catch(error => error);
+        const error = await uploadAvatarHandler.handle(randomUUID(), param).catch(error => error);
         const err = new LogicalError(MessageError.PARAM_INVALID, { t: 'avatar' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Upload my avatar with data not found error', async () => {
+    it('Upload avatar with data not found error', async () => {
         sandbox.stub(User, 'validateAvatarFile').returns();
         sandbox.stub(userRepository, 'get').resolves();
         const filePath = path.join(__dirname, '../../../../../resources/images/test/workplace.jpg');
         const buffer = await fileLib.readFile(filePath);
 
-        const param = new UploadMyAvatarInput();
+        const param = new UploadAvatarInput();
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
             buffer
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarHandler.handle(randomUUID(), param).catch(error => error);
+        const error = await uploadAvatarHandler.handle(randomUUID(), param).catch(error => error);
         const err = new NotFoundError();
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Upload my avatar with upload failed error', async () => {
+    it('Upload avatar with upload failed error', async () => {
         sandbox.stub(User, 'validateAvatarFile').returns();
         sandbox.stub(userRepository, 'get').resolves(userTest);
         sandbox.stub(storageService, 'upload').resolves(false);
@@ -85,21 +85,21 @@ describe('User usecases - Upload my avatar', () => {
         const filePath = path.join(__dirname, '../../../../../resources/images/test/workplace.jpg');
         const buffer = await fileLib.readFile(filePath);
 
-        const param = new UploadMyAvatarInput();
+        const param = new UploadAvatarInput();
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
             buffer
         } as Express.Multer.File;
 
-        const error = await uploadMyAvatarHandler.handle(randomUUID(), param).catch(error => error);
+        const error = await uploadAvatarHandler.handle(randomUUID(), param).catch(error => error);
         const err = new LogicalError(MessageError.PARAM_CANNOT_UPLOAD, { t: 'avatar' });
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Upload my avatar', async () => {
+    it('Upload avatar', async () => {
         sandbox.stub(User, 'validateAvatarFile').returns();
         sandbox.stub(userRepository, 'get').resolves(userTest);
         sandbox.stub(storageService, 'upload').resolves(true);
@@ -112,14 +112,14 @@ describe('User usecases - Upload my avatar', () => {
         const ext = mime.extension(mime.lookup('jpg') as string);
         const pathExpected = `users/${id}/images/avatar.${ext}`;
 
-        const param = new UploadMyAvatarInput();
+        const param = new UploadAvatarInput();
         param.file = {
             mimetype: mime.lookup('jpg'),
             size: buffer.length,
             buffer
         } as Express.Multer.File;
 
-        const result = await uploadMyAvatarHandler.handle(id, param);
+        const result = await uploadAvatarHandler.handle(id, param);
         expect(result.data).to.eq(pathExpected);
     });
 });

@@ -9,17 +9,17 @@ import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { removeFile } from 'utils/File';
-import { UploadMyAvatarInput } from './UploadMyAvatarInput';
-import { UploadMyAvatarOutput } from './UploadMyAvatarOutput';
+import { UploadAvatarInput } from './UploadAvatarInput';
+import { UploadAvatarOutput } from './UploadAvatarOutput';
 
 @Service()
-export class UploadMyAvatarHandler implements IUsecaseHandler<UploadMyAvatarInput, UploadMyAvatarOutput> {
+export class UploadAvatarHandler implements IUsecaseHandler<UploadAvatarInput, UploadAvatarOutput> {
     constructor(
         @Inject(InjectService.Storage) private readonly _storageService: IStorageService,
         @Inject(InjectRepository.User) private readonly _userRepository: IUserRepository
     ) {}
 
-    async handle(id: string, param: UploadMyAvatarInput): Promise<UploadMyAvatarOutput> {
+    async handle(id: string, param: UploadAvatarInput): Promise<UploadAvatarOutput> {
         const file = param.file;
         const ext = mime.extension(file.mimetype);
         if (!ext)
@@ -41,7 +41,7 @@ export class UploadMyAvatarHandler implements IUsecaseHandler<UploadMyAvatarInpu
         data.avatar = this._storageService.mapUrl(avatarPath);
         hasSucceed = await this._userRepository.update(id, data);
 
-        const result = new UploadMyAvatarOutput();
+        const result = new UploadAvatarOutput();
         result.data = data.avatar;
         return result;
     }

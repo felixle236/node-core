@@ -54,7 +54,7 @@ export class ForgotPasswordByEmailHandler implements IUsecaseHandler<ForgotPassw
         result.data = await this._authRepository.update(auth.id, data);
 
         const name = `${auth.user.firstName} ${auth.user.lastName}`;
-        this._mailService.sendForgotPassword(name, param.email, data.forgotKey, usecaseOption.req.locale);
+        this._mailService.sendForgotPassword({ name, email: param.email, forgotKey: data.forgotKey, locale: usecaseOption.locale });
 
         return result;
     }

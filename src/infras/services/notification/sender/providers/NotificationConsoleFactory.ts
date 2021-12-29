@@ -6,9 +6,9 @@ import { INotificationProvider } from '../interfaces/INotificationProvider';
 export class NotificationConsoleFactory implements INotificationProvider {
     private readonly _logService = Container.get<ILogService>(InjectService.Log);
 
-    async send(deviceIds: string[], title: string, content: string): Promise<any> {
+    async send(deviceTokens: string[], title: string, content: string): Promise<any> {
         const data = {
-            deviceIds,
+            deviceTokens,
             title,
             content
         };

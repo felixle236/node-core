@@ -15,16 +15,16 @@ import { FindClientHandler } from 'application/usecases/user/client/find-client/
 import { FindClientOutput, FindClientData } from 'application/usecases/user/client/find-client/FindClientOutput';
 import { GetClientHandler } from 'application/usecases/user/client/get-client/GetClientHandler';
 import { GetClientData, GetClientOutput } from 'application/usecases/user/client/get-client/GetClientOutput';
-import { GetMyProfileClientHandler } from 'application/usecases/user/client/get-my-profile-client/GetMyProfileClientHandler';
-import { GetMyProfileClientData, GetMyProfileClientOutput } from 'application/usecases/user/client/get-my-profile-client/GetMyProfileClientOutput';
+import { GetProfileClientHandler } from 'application/usecases/user/client/get-profile-client/GetProfileClientHandler';
+import { GetProfileClientData, GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientOutput';
 import { RegisterClientHandler } from 'application/usecases/user/client/register-client/RegisterClientHandler';
 import { RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientOutput';
 import { ResendActivationHandler } from 'application/usecases/user/client/resend-activation/ResendActivationHandler';
 import { ResendActivationOutput } from 'application/usecases/user/client/resend-activation/ResendActivationOutput';
 import { UpdateClientHandler } from 'application/usecases/user/client/update-client/UpdateClientHandler';
 import { UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientOutput';
-import { UpdateMyProfileClientHandler } from 'application/usecases/user/client/update-my-profile-client/UpdateMyProfileClientHandler';
-import { UpdateMyProfileClientOutput } from 'application/usecases/user/client/update-my-profile-client/UpdateMyProfileClientOutput';
+import { UpdateProfileClientHandler } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientHandler';
+import { UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
@@ -44,13 +44,13 @@ describe('Client controller', () => {
     const options = { headers: { authorization: 'Bearer token' } };
     let findClientHandler: FindClientHandler;
     let getClientHandler: GetClientHandler;
-    let getMyProfileClientHandler: GetMyProfileClientHandler;
+    let getProfileClientHandler: GetProfileClientHandler;
     let registerClientHandler: RegisterClientHandler;
     let activeClientHandler: ActiveClientHandler;
     let resendActivationHandler: ResendActivationHandler;
     let createClientHandler: CreateClientHandler;
     let updateClientHandler: UpdateClientHandler;
-    let updateMyProfileClientHandler: UpdateMyProfileClientHandler;
+    let updateProfileClientHandler: UpdateProfileClientHandler;
     let deleteClientHandler: DeleteClientHandler;
     let archiveClientHandler: ArchiveClientHandler;
 
@@ -61,13 +61,13 @@ describe('Client controller', () => {
             server = mockWebApi(obj.ClientController, port, () => {
                 findClientHandler = mockUsecaseInjection(FindClientHandler);
                 getClientHandler = mockUsecaseInjection(GetClientHandler);
-                getMyProfileClientHandler = mockUsecaseInjection(GetMyProfileClientHandler);
+                getProfileClientHandler = mockUsecaseInjection(GetProfileClientHandler);
                 registerClientHandler = mockUsecaseInjection(RegisterClientHandler);
                 activeClientHandler = mockUsecaseInjection(ActiveClientHandler);
                 resendActivationHandler = mockUsecaseInjection(ResendActivationHandler);
                 createClientHandler = mockUsecaseInjection(CreateClientHandler);
                 updateClientHandler = mockUsecaseInjection(UpdateClientHandler);
-                updateMyProfileClientHandler = mockUsecaseInjection(UpdateMyProfileClientHandler);
+                updateProfileClientHandler = mockUsecaseInjection(UpdateProfileClientHandler);
                 deleteClientHandler = mockUsecaseInjection(DeleteClientHandler);
                 archiveClientHandler = mockUsecaseInjection(ArchiveClientHandler);
 
@@ -156,22 +156,22 @@ describe('Client controller', () => {
         expect(data.data.id).to.eq(d.id);
     });
 
-    it('Get my profile with unauthorized error', async () => {
-        const { status, data } = await axios.get(endpoint + '/my-profile').catch(error => error.response);
+    it('Get profile with unauthorized error', async () => {
+        const { status, data } = await axios.get(endpoint + '/profile').catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
-    it('Get my profile by client', async () => {
+    it('Get profile by client', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Client });
-        const d = new GetMyProfileClientData();
+        const d = new GetProfileClientData();
         d.id = randomUUID();
-        const result = new GetMyProfileClientOutput();
+        const result = new GetProfileClientOutput();
         result.data = d;
 
-        sandbox.stub(getMyProfileClientHandler, 'handle').resolves(result);
-        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
+        sandbox.stub(getProfileClientHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/profile', options);
 
         expect(status).to.eq(200);
         expect(data.data.id).to.eq(d.id);
@@ -274,8 +274,8 @@ describe('Client controller', () => {
         expect(data.data).to.eq(true);
     });
 
-    it('Update my client profile with unauthorized error', async () => {
-        const { status, data } = await axios.put(endpoint + '/my-profile', {
+    it('Update client profile with unauthorized error', async () => {
+        const { status, data } = await axios.put(endpoint + '/profile', {
             firstName: 'client',
             lastName: 'test'
         }).catch(error => error.response);
@@ -284,13 +284,13 @@ describe('Client controller', () => {
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
-    it('Update my client profile by client', async () => {
+    it('Update client profile by client', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Client });
-        const result = new UpdateMyProfileClientOutput();
+        const result = new UpdateProfileClientOutput();
         result.data = true;
-        sandbox.stub(updateMyProfileClientHandler, 'handle').resolves(result);
+        sandbox.stub(updateProfileClientHandler, 'handle').resolves(result);
 
-        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/profile', {
             firstName: 'client',
             lastName: 'test'
         }, options);

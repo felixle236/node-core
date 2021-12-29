@@ -1,3 +1,4 @@
+import { SMS_SENDER_OR_PHONE } from 'config/Configuration';
 import sibApiV3Sdk from 'sib-api-v3-sdk';
 import { ISmsProvider } from '../interfaces/ISmsProvider';
 
@@ -15,9 +16,9 @@ export class SendInBlueFactory implements ISmsProvider {
         this._provider = new sibApiV3Sdk.TransactionalSMSApi();
     }
 
-    async send(senderOrPhone: string, phoneNumber: string, content: string): Promise<any> {
+    async send(phoneNumber: string, content: string): Promise<any> {
         return await this._provider.sendTransacSms({
-            sender: senderOrPhone,
+            sender: SMS_SENDER_OR_PHONE,
             recipient: phoneNumber,
             content
         });

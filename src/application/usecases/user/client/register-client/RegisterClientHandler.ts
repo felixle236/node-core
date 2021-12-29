@@ -25,8 +25,8 @@ export class RegisterClientHandler implements IUsecaseHandler<RegisterClientInpu
     constructor(
         @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
         @Inject(InjectService.Mail) private readonly _mailService: IMailService,
-        @Inject() private readonly _checkEmailExistHandler: CheckEmailExistHandler,
-        @Inject() private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
+        private readonly _checkEmailExistHandler: CheckEmailExistHandler,
+        private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
         @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
         @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository
     ) {}
@@ -65,7 +65,7 @@ export class RegisterClientHandler implements IUsecaseHandler<RegisterClientInpu
             await this._createAuthByEmailHandler.handle(auth, usecaseOption);
 
             const name = `${data.firstName} ${data.lastName}`;
-            this._mailService.sendUserActivation(name, data.email, activeKey, usecaseOption.req.locale);
+            this._mailService.sendUserActivation({ name, email: data.email, activeKey, locale: usecaseOption.locale });
 
             const result = new RegisterClientOutput();
             result.data = true;

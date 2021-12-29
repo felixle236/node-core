@@ -4,7 +4,6 @@ export const {UPPER_CASE_NAME}_SCHEMA = {
     TABLE_NAME: '{lower_case_name}',
     COLUMNS: {
         ...SCHEMA.COLUMNS,
-        ID: 'id',
         NAME: 'name'
     },
     RELATED_ONE: {

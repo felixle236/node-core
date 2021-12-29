@@ -4,19 +4,45 @@ import { ImportManagerTestHandler } from 'application/usecases/user/manager/impo
 import { GetListOnlineStatusByIdsHandler } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
 import { GetListOnlineStatusByIdsInput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsInput';
 import { GetListOnlineStatusByIdsOutput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
+import { UploadAvatarHandler } from 'application/usecases/user/user/upload-avatar/UploadAvatarHandler';
+import { UploadAvatarInput } from 'application/usecases/user/user/upload-avatar/UploadAvatarInput';
+import { UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarOutput';
+import { STORAGE_UPLOAD_DIR } from 'config/Configuration';
 import { PrivateAccessMiddleware } from 'exposes/api/web/middlewares/PrivateAccessMiddleware';
-import { Authorized, Get, JsonController, Post, QueryParams, UseBefore } from 'routing-controllers';
-import { ResponseSchema } from 'routing-controllers-openapi';
+import multer from 'multer';
+import { Authorized, Get, JsonController, Post, QueryParams, UseBefore, UploadedFile, CurrentUser } from 'routing-controllers';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
+import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { Service } from 'typedi';
+
+const storage = multer.diskStorage({
+    destination(_req, _file, cb) {
+        cb(null, STORAGE_UPLOAD_DIR);
+    },
+    filename(_req, file, cb) {
+        cb(null, `${file.fieldname}-${Date.now()}`);
+    }
+});
 
 @Service()
 @JsonController('/v1/users')
 export class UserController {
     constructor(
+        private readonly _uploadAvatarHandler: UploadAvatarHandler,
         private readonly _getListOnlineStatusByIdsHandler: GetListOnlineStatusByIdsHandler,
         private readonly _importManagerTestHandler: ImportManagerTestHandler,
         private readonly _importClientTestHandler: ImportClientTestHandler
     ) {}
+
+    @Post('/avatar')
+    @Authorized()
+    @OpenAPI({ summary: 'Upload avatar' })
+    @ResponseSchema(UploadAvatarOutput)
+    uploadAvatar(@UploadedFile('avatar', { required: true, options: { storage } }) file: Express.Multer.File, @CurrentUser() userAuth: UserAuthenticated): Promise<UploadAvatarOutput> {
+        const param = new UploadAvatarInput();
+        param.file = file;
+        return this._uploadAvatarHandler.handle(userAuth.userId, param);
+    }
 
     @Get('/list-online-status')
     @Authorized()

@@ -1,3 +1,3 @@
 export interface INotificationService {
-    sendNewUserRegistration(deviceIds: string[]): Promise<void>;
+    sendNewUserRegistration(deviceTokens: string[], param: { name: string }): Promise<void>;
 }

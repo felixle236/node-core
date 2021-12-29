@@ -1,3 +1,4 @@
+import { RoleId } from 'domain/enums/user/RoleId';
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
@@ -13,6 +14,7 @@ export class FindManagerHandler implements IUsecaseHandler<FindManagerInput, Fin
 
     async handle(param: FindManagerInput): Promise<FindManagerOutput> {
         const [managers, count] = await this._managerRepository.findAndCount({
+            roleIds: [RoleId.Manager],
             keyword: param.keyword,
             status: param.status,
             skip: param.skip,

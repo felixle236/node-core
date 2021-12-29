@@ -4,16 +4,16 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { UpdateMyProfileManagerInput } from './UpdateMyProfileManagerInput';
-import { UpdateMyProfileManagerOutput } from './UpdateMyProfileManagerOutput';
+import { UpdateProfileManagerInput } from './UpdateProfileManagerInput';
+import { UpdateProfileManagerOutput } from './UpdateProfileManagerOutput';
 
 @Service()
-export class UpdateMyProfileManagerHandler implements IUsecaseHandler<UpdateMyProfileManagerInput, UpdateMyProfileManagerOutput> {
+export class UpdateProfileManagerHandler implements IUsecaseHandler<UpdateProfileManagerInput, UpdateProfileManagerOutput> {
     constructor(
         @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
     ) {}
 
-    async handle(id: string, param: UpdateMyProfileManagerInput): Promise<UpdateMyProfileManagerOutput> {
+    async handle(id: string, param: UpdateProfileManagerInput): Promise<UpdateProfileManagerOutput> {
         const data = new Manager();
         data.firstName = param.firstName;
         data.lastName = param.lastName;
@@ -24,7 +24,7 @@ export class UpdateMyProfileManagerHandler implements IUsecaseHandler<UpdateMyPr
         if (!manager)
             throw new NotFoundError();
 
-        const result = new UpdateMyProfileManagerOutput();
+        const result = new UpdateProfileManagerOutput();
         result.data = await this._managerRepository.update(id, data);
         return result;
     }

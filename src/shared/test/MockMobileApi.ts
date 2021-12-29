@@ -34,6 +34,5 @@ export const mockMobileApi = (controller: string | Function, port = 3000, callba
     options.controllers = [controller as any];
 
     const httpServer = new HttpServer();
-    httpServer.createApp(app, options);
-    return httpServer.start(port, callback);
+    return httpServer.start(app, port, options, callback);
 };

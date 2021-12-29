@@ -1,4 +1,4 @@
-import { DOMAIN, PROJECT_NAME, PROTOTYPE } from 'config/Configuration';
+import { PROJECT_DOMAIN, PROJECT_NAME, PROJECT_PROTOTYPE } from 'config/Configuration';
 import Mailgen from 'mailgen';
 
 export class MailGenerator {
@@ -10,7 +10,7 @@ export class MailGenerator {
             product: {
                 // Appears in header & footer of e-mails
                 name: PROJECT_NAME,
-                link: `${PROTOTYPE}://${DOMAIN}`
+                link: `${PROJECT_PROTOTYPE}://${PROJECT_DOMAIN}`
                 // Optional product logo
                 // logo: 'https://mailgen.js/img/logo.png'
             }

@@ -20,6 +20,9 @@ export class {PascalName}Db extends DbEntity<{PascalName}> {
     override toEntity(): {PascalName} {
         const entity = super.toEntity();
         entity.name = this.name;
+
+        /* Relationship */
+
         return entity;
     }
 

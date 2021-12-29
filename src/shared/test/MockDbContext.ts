@@ -28,6 +28,7 @@ export const mockDb = (): IMemoryDb => {
 export const mockDbContext = async (db = mockDb(), entities?: Function[]): Promise<DbContext> => {
     const conn: Connection = await db.adapters.createTypeormConnection({
         type: 'postgres',
+        cache: true,
         entities: entities || [path.join(__dirname, '../../infras/data/typeorm/entities/**/*{.js,.ts}')],
         subscribers: [path.join(__dirname, '../../infras/data/typeorm/subscribers/*{.js,.ts}')]
     });

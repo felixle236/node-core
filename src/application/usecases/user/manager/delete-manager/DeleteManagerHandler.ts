@@ -1,6 +1,8 @@
+import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
+import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
-import { InjectRepository } from 'shared/types/Injection';
+import { InjectDb, InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { DeleteManagerOutput } from './DeleteManagerOutput';
@@ -8,7 +10,9 @@ import { DeleteManagerOutput } from './DeleteManagerOutput';
 @Service()
 export class DeleteManagerHandler implements IUsecaseHandler<string, DeleteManagerOutput> {
     constructor(
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
+        @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
+        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
+        @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository
     ) {}
 
     async handle(id: string): Promise<DeleteManagerOutput> {
@@ -16,8 +20,15 @@ export class DeleteManagerHandler implements IUsecaseHandler<string, DeleteManag
         if (!manager)
             throw new NotFoundError();
 
-        const result = new DeleteManagerOutput();
-        result.data = await this._managerRepository.softDelete(id);
-        return result;
+        return await this._dbContext.runTransaction(async querySession => {
+            const result = new DeleteManagerOutput();
+            result.data = await this._managerRepository.softDelete(id, querySession);
+
+            const auths = await this._authRepository.getAllByUser(id, querySession);
+            for (const auth of auths)
+                await this._authRepository.softDelete(auth.id, querySession);
+
+            return result;
+        });
     }
 }

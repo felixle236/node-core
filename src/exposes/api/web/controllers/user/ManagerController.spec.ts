@@ -13,12 +13,12 @@ import { FindManagerHandler } from 'application/usecases/user/manager/find-manag
 import { FindManagerData, FindManagerOutput } from 'application/usecases/user/manager/find-manager/FindManagerOutput';
 import { GetManagerHandler } from 'application/usecases/user/manager/get-manager/GetManagerHandler';
 import { GetManagerData, GetManagerOutput } from 'application/usecases/user/manager/get-manager/GetManagerOutput';
-import { GetMyProfileManagerHandler } from 'application/usecases/user/manager/get-my-profile-manager/GetMyProfileManagerHandler';
-import { GetMyProfileManagerData, GetMyProfileManagerOutput } from 'application/usecases/user/manager/get-my-profile-manager/GetMyProfileManagerOutput';
+import { GetProfileManagerHandler } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerHandler';
+import { GetProfileManagerData, GetProfileManagerOutput } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerOutput';
 import { UpdateManagerHandler } from 'application/usecases/user/manager/update-manager/UpdateManagerHandler';
 import { UpdateManagerOutput } from 'application/usecases/user/manager/update-manager/UpdateManagerOutput';
-import { UpdateMyProfileManagerHandler } from 'application/usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerHandler';
-import { UpdateMyProfileManagerOutput } from 'application/usecases/user/manager/update-my-profile-manager/UpdateMyProfileManagerOutput';
+import { UpdateProfileManagerHandler } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerHandler';
+import { UpdateProfileManagerOutput } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerOutput';
 import axios from 'axios';
 import { expect } from 'chai';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
@@ -38,10 +38,10 @@ describe('Manager controller', () => {
     const options = { headers: { authorization: 'Bearer token' } };
     let findManagerHandler: FindManagerHandler;
     let getManagerHandler: GetManagerHandler;
-    let getMyProfileManagerHandler: GetMyProfileManagerHandler;
+    let getProfileManagerHandler: GetProfileManagerHandler;
     let createManagerHandler: CreateManagerHandler;
     let updateManagerHandler: UpdateManagerHandler;
-    let updateMyProfileManagerHandler: UpdateMyProfileManagerHandler;
+    let updateProfileManagerHandler: UpdateProfileManagerHandler;
     let deleteManagerHandler: DeleteManagerHandler;
     let archiveManagerHandler: ArchiveManagerHandler;
 
@@ -52,10 +52,10 @@ describe('Manager controller', () => {
             server = mockWebApi(obj.ManagerController, port, () => {
                 findManagerHandler = mockUsecaseInjection(FindManagerHandler);
                 getManagerHandler = mockUsecaseInjection(GetManagerHandler);
-                getMyProfileManagerHandler = mockUsecaseInjection(GetMyProfileManagerHandler);
+                getProfileManagerHandler = mockUsecaseInjection(GetProfileManagerHandler);
                 createManagerHandler = mockUsecaseInjection(CreateManagerHandler);
                 updateManagerHandler = mockUsecaseInjection(UpdateManagerHandler);
-                updateMyProfileManagerHandler = mockUsecaseInjection(UpdateMyProfileManagerHandler);
+                updateProfileManagerHandler = mockUsecaseInjection(UpdateProfileManagerHandler);
                 deleteManagerHandler = mockUsecaseInjection(DeleteManagerHandler);
                 archiveManagerHandler = mockUsecaseInjection(ArchiveManagerHandler);
 
@@ -116,36 +116,36 @@ describe('Manager controller', () => {
         expect(data.data.id).to.eq(d.id);
     });
 
-    it('Get my profile with unauthorized error', async () => {
-        const { status, data } = await axios.get(endpoint + '/my-profile').catch(error => error.response);
+    it('Get profile with unauthorized error', async () => {
+        const { status, data } = await axios.get(endpoint + '/profile').catch(error => error.response);
 
         expect(status).to.eq(401);
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
-    it('Get my profile by super admin', async () => {
+    it('Get profile by super admin', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-        const d = new GetMyProfileManagerData();
+        const d = new GetProfileManagerData();
         d.id = randomUUID();
-        const result = new GetMyProfileManagerOutput();
+        const result = new GetProfileManagerOutput();
         result.data = d;
 
-        sandbox.stub(getMyProfileManagerHandler, 'handle').resolves(result);
-        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
+        sandbox.stub(getProfileManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/profile', options);
 
         expect(status).to.eq(200);
         expect(data.data.id).to.eq(d.id);
     });
 
-    it('Get my profile by manager', async () => {
+    it('Get profile by manager', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
-        const d = new GetMyProfileManagerData();
+        const d = new GetProfileManagerData();
         d.id = randomUUID();
-        const result = new GetMyProfileManagerOutput();
+        const result = new GetProfileManagerOutput();
         result.data = d;
 
-        sandbox.stub(getMyProfileManagerHandler, 'handle').resolves(result);
-        const { status, data }: any = await axios.get(endpoint + '/my-profile', options);
+        sandbox.stub(getProfileManagerHandler, 'handle').resolves(result);
+        const { status, data }: any = await axios.get(endpoint + '/profile', options);
 
         expect(status).to.eq(200);
         expect(data.data.id).to.eq(d.id);
@@ -205,8 +205,8 @@ describe('Manager controller', () => {
         expect(data.data).to.eq(true);
     });
 
-    it('Update my manager profile with unauthorized error', async () => {
-        const { status, data } = await axios.put(endpoint + '/my-profile', {
+    it('Update manager profile with unauthorized error', async () => {
+        const { status, data } = await axios.put(endpoint + '/profile', {
             firstName: 'manager',
             lastName: 'test'
         }).catch(error => error.response);
@@ -215,13 +215,13 @@ describe('Manager controller', () => {
         expect(data.code).to.eq(new UnauthorizedError().code);
     });
 
-    it('Update my manager profile by super admin', async () => {
+    it('Update manager profile by super admin', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-        const result = new UpdateMyProfileManagerOutput();
+        const result = new UpdateProfileManagerOutput();
         result.data = true;
-        sandbox.stub(updateMyProfileManagerHandler, 'handle').resolves(result);
+        sandbox.stub(updateProfileManagerHandler, 'handle').resolves(result);
 
-        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/profile', {
             firstName: 'manager',
             lastName: 'test'
         }, options);
@@ -230,13 +230,13 @@ describe('Manager controller', () => {
         expect(data.data).to.eq(true);
     });
 
-    it('Update my manager profile by manager', async () => {
+    it('Update manager profile by manager', async () => {
         mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
-        const result = new UpdateMyProfileManagerOutput();
+        const result = new UpdateProfileManagerOutput();
         result.data = true;
-        sandbox.stub(updateMyProfileManagerHandler, 'handle').resolves(result);
+        sandbox.stub(updateProfileManagerHandler, 'handle').resolves(result);
 
-        const { status, data }: any = await axios.put(endpoint + '/my-profile', {
+        const { status, data }: any = await axios.put(endpoint + '/profile', {
             firstName: 'manager',
             lastName: 'test'
         }, options);

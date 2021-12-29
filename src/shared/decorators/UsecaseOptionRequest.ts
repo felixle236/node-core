@@ -14,6 +14,7 @@ export function UsecaseOptionRequest(): (object: object, method: string, index: 
             const usecaseOption = new UsecaseOption();
             usecaseOption.req = reqExt;
             usecaseOption.res = actionProperties.response;
+            usecaseOption.locale = reqExt.locale;
             usecaseOption.trace = reqExt.trace;
             usecaseOption.userAuth = reqExt.userAuth;
             return usecaseOption;

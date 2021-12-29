@@ -1,136 +1,143 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import path from 'path';
 import dotenv from 'dotenv';
-import { convertStringToBoolean } from 'utils/Converter';
-import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from '../shared/types/Environment';
+import env from 'env-var';
+import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from 'shared/types/Environment';
 dotenv.config();
 
 // SYSTEM ENVIRONMENT
-const keyEnv = Object.keys(Environment).find(key => Environment[key] === process.env.NODE_ENV);
+export const NODE_ENV = env.get('NODE_ENV').required().asString();
+const keyEnv = Object.keys(Environment).find(key => Environment[key] === NODE_ENV);
 export const ENVIRONMENT: Environment = keyEnv ? Environment[keyEnv] : Environment.Local;
-
-export const PROJECT_ID: string = process.env.PROJECT_ID ?? '';
-export const PROJECT_NAME: string = process.env.PROJECT_NAME ?? '';
-export const PROTOTYPE: string = process.env.PROTOTYPE ?? '';
-export const DOMAIN: string = process.env.DOMAIN ?? '';
+export const PROJECT_ID = env.get('PROJECT_ID').required().asString();
+export const PROJECT_NAME = env.get('PROJECT_NAME').required().asString();
+export const PROJECT_PROTOTYPE = env.get('PROJECT_PROTOTYPE').required().asString();
+export const PROJECT_DOMAIN = env.get('PROJECT_DOMAIN').required().asString();
+export const PROJECT_SUPPORT_NAME = env.get('PROJECT_SUPPORT_NAME').asString();
+export const PROJECT_SUPPORT_EMAIL = env.get('PROJECT_SUPPORT_EMAIL').asString();
 
 // WEB API
 
-export const ENABLE_WEB_API: boolean = convertStringToBoolean(process.env.ENABLE_WEB_API);
-export const WEB_API_PORT = Number(process.env.WEB_API_PORT);
-export const WEB_API_URL: string = process.env.WEB_API_URL ?? '';
-export const WEB_API_PRIVATE_KEY: string = process.env.WEB_API_PRIVATE_KEY ?? '';
+export const ENABLE_WEB_API = env.get('ENABLE_WEB_API').default(1).asBool();
+export const WEB_API_PORT = env.get('WEB_API_PORT').required(ENABLE_WEB_API).asPortNumber();
+export const WEB_API_URL = env.get('WEB_API_URL').required(ENABLE_WEB_API).asUrlString();
+export const WEB_API_PRIVATE_KEY = env.get('WEB_API_PRIVATE_KEY').required(ENABLE_WEB_API).asString();
 
 // MOBILE API
 
-export const ENABLE_MOBILE_API: boolean = convertStringToBoolean(process.env.ENABLE_MOBILE_API);
-export const MOBILE_API_PORT = Number(process.env.MOBILE_API_PORT);
-export const MOBILE_API_URL: string = process.env.MOBILE_API_URL ?? '';
+export const ENABLE_MOBILE_API = env.get('ENABLE_MOBILE_API').default(0).asBool();
+export const MOBILE_API_PORT = env.get('MOBILE_API_PORT').required(ENABLE_MOBILE_API).asPortNumber();
+export const MOBILE_API_URL = env.get('MOBILE_API_URL').required(ENABLE_MOBILE_API).asUrlString();
 
 // SWAGGER UI
 
-export const ENABLE_SWAGGER_UI: boolean = convertStringToBoolean(process.env.ENABLE_SWAGGER_UI);
-export const SWAGGER_UI_PORT = Number(process.env.SWAGGER_UI_PORT);
-export const SWAGGER_UI_URL: string = process.env.SWAGGER_UI_URL ?? '';
+export const ENABLE_SWAGGER_UI = env.get('ENABLE_SWAGGER_UI').default(1).asBool();
+export const SWAGGER_UI_PORT = env.get('SWAGGER_UI_PORT').required(ENABLE_SWAGGER_UI).asPortNumber();
+export const SWAGGER_UI_URL = env.get('SWAGGER_UI_URL').required(ENABLE_SWAGGER_UI).asUrlString();
+export const SWAGGER_UI_BASIC_USER = env.get('SWAGGER_UI_BASIC_USER').required(ENABLE_SWAGGER_UI).asString();
+export const SWAGGER_UI_BASIC_PASS = env.get('SWAGGER_UI_BASIC_PASS').required(ENABLE_SWAGGER_UI).asString();
+export const SWAGGER_UI_APIS = env.get('SWAGGER_UI_APIS').required(ENABLE_SWAGGER_UI).asArray();
 
 // WEB UI
 
-export const ENABLE_WEB_UI: boolean = convertStringToBoolean(process.env.ENABLE_WEB_UI);
-export const WEB_UI_PORT = Number(process.env.WEB_UI_PORT);
-export const WEB_UI_URL: string = process.env.WEB_UI_URL ?? '';
+export const ENABLE_WEB_UI = env.get('ENABLE_WEB_UI').default(0).asBool();
+export const WEB_UI_PORT = env.get('WEB_UI_PORT').required(ENABLE_WEB_UI).asPortNumber();
+export const WEB_UI_URL = env.get('WEB_UI_URL').required(ENABLE_WEB_UI).asUrlString();
 
 // WEB SOCKET
 
-export const ENABLE_WEB_SOCKET: boolean = convertStringToBoolean(process.env.ENABLE_WEB_SOCKET);
-export const WEB_SOCKET_PORT = Number(process.env.WEB_SOCKET_PORT);
-export const WEB_SOCKET_URL: string = process.env.WEB_SOCKET_URL ?? '';
-
-// CLOUD CREDENTIALS
-
-export const AWS_REGION: string = process.env.AWS_REGION ?? '';
-export const AWS_ACCESS_KEY: string = process.env.AWS_ACCESS_KEY ?? '';
-export const AWS_SECRET_KEY: string = process.env.AWS_SECRET_KEY ?? '';
-
-export const GOOGLE_APPLICATION_CREDENTIALS: string = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? '';
+export const ENABLE_WEB_SOCKET = env.get('ENABLE_WEB_SOCKET').default(1).asBool();
+export const WEB_SOCKET_PORT = env.get('WEB_SOCKET_PORT').required(ENABLE_WEB_SOCKET).asPortNumber();
+export const WEB_SOCKET_URL = env.get('WEB_SOCKET_URL').required(ENABLE_WEB_SOCKET).asUrlString();
 
 // DATABASE CONFIGURATION
 
-export const DB_TYPE: string = process.env.DB_TYPE ?? '';
-export const DB_HOST: string = process.env.DB_HOST ?? '';
-export const DB_PORT: number = process.env.DB_PORT ? Number(process.env.DB_PORT) : 0;
-export const DB_NAME: string = process.env.DB_NAME ?? '';
-export const DB_USER: string = process.env.DB_USER ?? '';
-export const DB_PASS: string = process.env.DB_PASS ?? '';
+export const DB_TYPE = env.get('DB_TYPE').required().asString();
+export const DB_HOST = env.get('DB_HOST').required().asString();
+export const DB_PORT = env.get('DB_PORT').required().asPortNumber();
+export const DB_NAME = env.get('DB_NAME').required().asString();
+export const DB_USER = env.get('DB_USER').required().asString();
+export const DB_PASS = env.get('DB_PASS').required().asString();
 
 // DB CACHING CONFIGURATION
 
-export const DB_CACHING_HOST: string = process.env.DB_CACHING_HOST ?? '';
-export const DB_CACHING_PORT: number = process.env.DB_CACHING_PORT ? Number(process.env.DB_CACHING_PORT) : 0;
-export const DB_CACHING_PASSWORD: string | undefined = process.env.DB_CACHING_PASSWORD || undefined;
-export const DB_CACHING_PREFIX: string | undefined = process.env.DB_CACHING_PREFIX || undefined;
+export const DB_CACHING_HOST = env.get('DB_CACHING_HOST').required().asString();
+export const DB_CACHING_PORT = env.get('DB_CACHING_PORT').required().asPortNumber();
+export const DB_CACHING_PASSWORD = env.get('DB_CACHING_PASSWORD').asString();
+export const DB_CACHING_PREFIX = env.get('DB_CACHING_PREFIX').asString();
 
 // DB SOCKET CONFIGURATION
 
-export const DB_SOCKET_HOST: string = process.env.DB_SOCKET_HOST ?? '';
-export const DB_SOCKET_PORT: number = process.env.DB_SOCKET_PORT ? Number(process.env.DB_SOCKET_PORT) : 0;
-export const DB_SOCKET_PASSWORD: string | undefined = process.env.DB_SOCKET_PASSWORD || undefined;
-export const DB_SOCKET_PREFIX: string | undefined = process.env.DB_SOCKET_PREFIX || undefined;
+export const DB_SOCKET_HOST = env.get('DB_SOCKET_HOST').required().asString();
+export const DB_SOCKET_PORT = env.get('DB_SOCKET_PORT').required().asPortNumber();
+export const DB_SOCKET_PASSWORD = env.get('DB_SOCKET_PASSWORD').asString();
+export const DB_SOCKET_PREFIX = env.get('DB_SOCKET_PREFIX').asString();
 
 // AUTHENTICATION SERVICE
 
-export const AUTH_SIGNATURE: string = process.env.AUTH_SIGNATURE ?? '';
-export const AUTH_SECRET_OR_PRIVATE_KEY: string = process.env.AUTH_SECRET_KEY ?? '';
-export const AUTH_SECRET_OR_PUBLIC_KEY: string = process.env.AUTH_SECRET_KEY ?? '';
+export const AUTH_SIGNATURE = env.get('AUTH_SIGNATURE').required().asString();
+export const AUTH_SECRET_OR_PRIVATE_KEY = env.get('AUTH_SECRET_KEY').required().asString();
+export const AUTH_SECRET_OR_PUBLIC_KEY = env.get('AUTH_SECRET_KEY').required().asString();
 
 // LOG SERVICE
 
-export const LOG_PROVIDER: LogProvider = process.env.LOG_PROVIDER ? Number(process.env.LOG_PROVIDER) : LogProvider.Winston;
+export const LOG_PROVIDER: LogProvider = env.get('LOG_PROVIDER').default(LogProvider.Winston).asIntPositive();
 
 // STORAGE SERVICE
 
-export const STORAGE_PROVIDER: StorageProvider = process.env.STORAGE_PROVIDER ? Number(process.env.STORAGE_PROVIDER) : StorageProvider.Console;
-export const STORAGE_URL: string = process.env.STORAGE_URL ?? 'http://localhost';
-export const STORAGE_UPLOAD_DIR: string = process.env.STORAGE_UPLOAD_DIR ?? path.join(__dirname, 'uploads');
-export const STORAGE_BUCKET_NAME: string = process.env.STORAGE_BUCKET_NAME ?? '';
+export const STORAGE_PROVIDER: StorageProvider = env.get('STORAGE_PROVIDER').default(StorageProvider.Console).asIntPositive();
+export const STORAGE_URL = env.get('STORAGE_URL').required(STORAGE_PROVIDER !== StorageProvider.Console).asUrlString();
+export const STORAGE_UPLOAD_DIR = env.get('STORAGE_UPLOAD_DIR').default(path.join(__dirname, 'uploads')).asString();
+export const STORAGE_BUCKET_NAME = env.get('STORAGE_BUCKET_NAME').required(STORAGE_PROVIDER !== StorageProvider.Console).asString();
 
-export const MINIO_HOST: string = process.env.MINIO_HOST ?? '';
-export const MINIO_PORT: number = process.env.MINIO_PORT ? Number(process.env.MINIO_PORT) : 0;
-export const MINIO_ACCESS_KEY: string = process.env.MINIO_ACCESS_KEY ?? '';
-export const MINIO_SECRET_KEY: string = process.env.MINIO_SECRET_KEY ?? '';
-export const MINIO_USE_SSL: boolean = convertStringToBoolean(process.env.MINIO_USE_SSL);
+export const MINIO_HOST = env.get('MINIO_HOST').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
+export const MINIO_PORT = env.get('MINIO_PORT').required(STORAGE_PROVIDER === StorageProvider.MinIO).asPortNumber();
+export const MINIO_ACCESS_KEY = env.get('MINIO_ACCESS_KEY').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
+export const MINIO_SECRET_KEY = env.get('MINIO_SECRET_KEY').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
+export const MINIO_USE_SSL = env.get('MINIO_USE_SSL').default(0).asBool();
 
-export const GOOGLE_STORAGE_LOCATION: string = process.env.GOOGLE_STORAGE_LOCATION ?? '';
-export const GOOGLE_STORAGE_CLASS: string = process.env.GOOGLE_STORAGE_CLASS ?? '';
+const REQUIRED_GCP_CREDENTIAL = STORAGE_PROVIDER === StorageProvider.GoogleStorage;
+export const GOOGLE_STORAGE_LOCATION = env.get('GOOGLE_STORAGE_LOCATION').required(REQUIRED_GCP_CREDENTIAL).asString();
+export const GOOGLE_STORAGE_CLASS = env.get('GOOGLE_STORAGE_CLASS').required(REQUIRED_GCP_CREDENTIAL).asString();
 
 // MAIL SERVICE
 
-export const MAIL_PROVIDER: MailProvider = process.env.MAIL_PROVIDER ? Number(process.env.MAIL_PROVIDER) : MailProvider.Console;
-export const MAIL_SENDER_NAME: string = process.env.MAIL_SENDER_NAME ?? '';
-export const MAIL_SENDER_EMAIL: string = process.env.MAIL_SENDER_EMAIL ?? '';
+export const MAIL_PROVIDER: MailProvider = env.get('MAIL_PROVIDER').default(MailProvider.Console).asIntPositive();
+export const MAIL_SENDER_NAME = env.get('MAIL_SENDER_NAME').required(MAIL_PROVIDER !== MailProvider.Console).asString();
+export const MAIL_SENDER_EMAIL = env.get('MAIL_SENDER_EMAIL').required(MAIL_PROVIDER !== MailProvider.Console).asString();
 
-export const GOOGLE_SMTP_USERNAME: string = process.env.GOOGLE_SMTP_USERNAME ?? '';
-export const GOOGLE_SMTP_PASSWORD: string = process.env.GOOGLE_SMTP_PASSWORD ?? '';
+export const GOOGLE_SMTP_USERNAME = env.get('GOOGLE_SMTP_USERNAME').required(MAIL_PROVIDER === MailProvider.GoogleSmtp).asString();
+export const GOOGLE_SMTP_PASSWORD = env.get('GOOGLE_SMTP_PASSWORD').required(MAIL_PROVIDER === MailProvider.GoogleSmtp).asString();
 
-export const MAILGUN_DOMAIN: string = process.env.MAILGUN_DOMAIN ?? '';
-export const MAILGUN_API_KEY: string = process.env.MAILGUN_API_KEY ?? '';
+export const MAILGUN_DOMAIN = env.get('MAILGUN_DOMAIN').required(MAIL_PROVIDER === MailProvider.MailGun).asString();
+export const MAILGUN_API_KEY = env.get('MAILGUN_API_KEY').required(MAIL_PROVIDER === MailProvider.MailGun).asString();
 
-export const SENDINBLUE_API_KEY: string = process.env.SENDINBLUE_API_KEY ?? '';
+export const SENDINBLUE_API_KEY = env.get('SENDINBLUE_API_KEY').required(MAIL_PROVIDER === MailProvider.SendInBlue).asString();
 
 // SMS SERVICE
 
-export const SMS_PROVIDER: SmsProvider = process.env.SMS_PROVIDER ? Number(process.env.SMS_PROVIDER) : SmsProvider.Console;
-export const SMS_SENDER_OR_PHONE: string = process.env.SMS_SENDER_OR_PHONE ?? '';
+export const SMS_PROVIDER: SmsProvider = env.get('SMS_PROVIDER').default(SmsProvider.Console).asIntPositive();
+export const SMS_SENDER_OR_PHONE = env.get('SMS_SENDER_OR_PHONE').required(SMS_PROVIDER !== SmsProvider.Console).asString();
 
-export const TWILIO_ACCOUNT_SID: string = process.env.TWILIO_ACCOUNT_SID ?? '';
-export const TWILIO_AUTH_TOKEN: string = process.env.TWILIO_AUTH_TOKEN ?? '';
+export const TWILIO_ACCOUNT_SID = env.get('TWILIO_ACCOUNT_SID').required(SMS_PROVIDER === SmsProvider.Twilio).asString();
+export const TWILIO_AUTH_TOKEN = env.get('TWILIO_AUTH_TOKEN').required(SMS_PROVIDER === SmsProvider.Twilio).asString();
 
 // PAYMENT SERVICE
 
-export const STRIPE_KEY: string = process.env.STRIPE_KEY ?? '';
-export const PAYPAL_KEY: string = process.env.PAYPAL_KEY ?? '';
+export const STRIPE_KEY = env.get('STRIPE_KEY').default('').asString();
+export const PAYPAL_KEY = env.get('PAYPAL_KEY').default('').asString();
 
 // NOTIFICATION SERVICE
 
-export const NOTIFICATION_PROVIDER: NotificationProvider = process.env.NOTIFICATION_PROVIDER ? Number(process.env.NOTIFICATION_PROVIDER) : NotificationProvider.Console;
-export const FCM_KEY: string = process.env.FCM_KEY ?? '';
-export const APN_KEY: string = process.env.APN_KEY ?? '';
+export const NOTIFICATION_PROVIDER: NotificationProvider = env.get('NOTIFICATION_PROVIDER').default(NotificationProvider.Console).asIntPositive();
+export const FCM_KEY = env.get('FCM_KEY').required(NOTIFICATION_PROVIDER !== NotificationProvider.Console).asString();
+export const APN_KEY = env.get('APN_KEY').required(NOTIFICATION_PROVIDER !== NotificationProvider.Console).asString();
+
+// CLOUD CREDENTIALS
+
+const REQUIRED_AWS_CREDENTIAL = STORAGE_PROVIDER === StorageProvider.AwsS3;
+export const AWS_REGION = env.get('AWS_REGION').required(REQUIRED_AWS_CREDENTIAL).asString();
+export const AWS_ACCESS_KEY = env.get('AWS_ACCESS_KEY').required(REQUIRED_AWS_CREDENTIAL).asString();
+export const AWS_SECRET_KEY = env.get('AWS_SECRET_KEY').required(REQUIRED_AWS_CREDENTIAL).asString();
+
+export const GOOGLE_APPLICATION_CREDENTIALS = env.get('GOOGLE_APPLICATION_CREDENTIALS').required(REQUIRED_GCP_CREDENTIAL).asString();

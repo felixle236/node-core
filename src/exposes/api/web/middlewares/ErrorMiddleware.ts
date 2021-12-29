@@ -24,25 +24,25 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
         if (error.httpCode === 400) {
             if (error.errors) {
                 error = new InputValidationError(error.errors);
-                req.logService.warn('[input-validation]', error, trace.id);
+                req.logService.warn('[input-validation]', error, trace);
             }
             else if (!error.code) {
-                req.logService.warn('[unknown]', error, trace.id);
+                req.logService.warn('[unknown]', error, trace);
                 error = new LogicalError(MessageError.UNKNOWN, error.message);
             }
             else
-                req.logService.warn('[logical]', error, trace.id);
+                req.logService.warn('[logical]', error, trace);
         }
         else if (error.httpCode === 401)
-            req.logService.warn('[unauthorized]', error, trace.id);
+            req.logService.warn('[unauthorized]', error, trace);
         else if (error.httpCode === 403) {
-            req.logService.warn('[access-denied]', error, trace.id);
+            req.logService.warn('[access-denied]', error, trace);
             error = new AccessDeniedError();
         }
         else if (error.httpCode === 404)
-            req.logService.warn('[not-found]', error, trace.id);
+            req.logService.warn('[not-found]', error, trace);
         else {
-            req.logService.error('[internal-server]', error, trace.id);
+            req.logService.error('[internal-server]', error, trace);
             error = new InternalServerError();
         }
 

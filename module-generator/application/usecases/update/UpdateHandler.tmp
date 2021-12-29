@@ -3,6 +3,7 @@ import { I{PascalName}Repository } from 'application/interfaces/repositories/{fo
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { NotFoundError } from 'shared/exceptions/NotFoundError';
+import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { {UpdateUsecaseName}Input } from './{UpdateUsecaseName}Input';
@@ -11,7 +12,7 @@ import { {UpdateUsecaseName}Output } from './{UpdateUsecaseName}Output';
 @Service()
 export class {UpdateUsecaseName}Handler implements IUsecaseHandler<{UpdateUsecaseName}Input, {UpdateUsecaseName}Output> {
     constructor(
-        @Inject('{lower_case_name}.repository') private readonly _{camelName}Repository: I{PascalName}Repository
+        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
     ) {}
 
     async handle(id: string, param: {UpdateUsecaseName}Input): Promise<{UpdateUsecaseName}Output> {

@@ -1,0 +1,8 @@
+<h2><%= title %> [ <span style="color: orange"><%= environment %></span> ]</h2>
+<h3>Developed by <a href="mailto:<%= supportEmail %>"><%= supportName %></a></h3>
+
+<% apis.forEach(apiName => { %>
+<p style="margin-top: 10px; margin-bottom: 10px;">
+    <a class="btn btn-link" style="color: blue" href="/<%= apiName %>-api"><%= apiName.substring(0, 1).toUpperCase() + apiName.substring(1) %> API</a>
+</p>
+<% }) %>

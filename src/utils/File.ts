@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { glob } from 'glob';
 
 /**
  * Get list directories into specified directory.
@@ -45,6 +46,28 @@ export function getFiles(dir: string): Promise<string[]> {
 export function getFilesSync(dir: string): string[] {
     const list = fs.readdirSync(dir);
     return list.filter(item => !fs.statSync(path.join(dir, item)).isDirectory());
+}
+
+/**
+ * Search files with pattern.
+ * @param pattern string
+ */
+export function searchFiles(pattern: string): Promise<string[]> {
+    return new Promise<string[]>((resolve, reject) => {
+        glob(pattern, (err, matches) => {
+            if (err)
+                return reject(err);
+            resolve(matches);
+        });
+    });
+}
+
+/**
+ * Search files synchronize with pattern.
+ * @param pattern string
+ */
+export function searchFilesSync(pattern: string): string[] {
+    return glob.sync(pattern);
 }
 
 /**

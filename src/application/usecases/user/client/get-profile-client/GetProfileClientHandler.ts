@@ -3,20 +3,20 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { GetMyProfileClientData, GetMyProfileClientOutput } from './GetMyProfileClientOutput';
+import { GetProfileClientData, GetProfileClientOutput } from './GetProfileClientOutput';
 
 @Service()
-export class GetMyProfileClientHandler implements IUsecaseHandler<string, GetMyProfileClientOutput> {
+export class GetProfileClientHandler implements IUsecaseHandler<string, GetProfileClientOutput> {
     constructor(
         @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository
     ) {}
 
-    async handle(id: string): Promise<GetMyProfileClientOutput> {
+    async handle(id: string): Promise<GetProfileClientOutput> {
         const client = await this._clientRepository.get(id);
         if (!client)
             throw new NotFoundError();
 
-        const data = new GetMyProfileClientData();
+        const data = new GetProfileClientData();
         data.id = client.id;
         data.createdAt = client.createdAt;
         data.firstName = client.firstName;
@@ -29,7 +29,7 @@ export class GetMyProfileClientHandler implements IUsecaseHandler<string, GetMyP
         data.address = client.address;
         data.locale = client.locale;
 
-        const result = new GetMyProfileClientOutput();
+        const result = new GetProfileClientOutput();
         result.data = data;
         return result;
     }

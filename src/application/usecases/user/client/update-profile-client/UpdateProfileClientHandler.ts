@@ -4,16 +4,16 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { UpdateMyProfileClientInput } from './UpdateMyProfileClientInput';
-import { UpdateMyProfileClientOutput } from './UpdateMyProfileClientOutput';
+import { UpdateProfileClientInput } from './UpdateProfileClientInput';
+import { UpdateProfileClientOutput } from './UpdateProfileClientOutput';
 
 @Service()
-export class UpdateMyProfileClientHandler implements IUsecaseHandler<UpdateMyProfileClientInput, UpdateMyProfileClientOutput> {
+export class UpdateProfileClientHandler implements IUsecaseHandler<UpdateProfileClientInput, UpdateProfileClientOutput> {
     constructor(
         @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository
     ) {}
 
-    async handle(id: string, param: UpdateMyProfileClientInput): Promise<UpdateMyProfileClientOutput> {
+    async handle(id: string, param: UpdateProfileClientInput): Promise<UpdateProfileClientOutput> {
         const data = new Client();
         data.firstName = param.firstName;
         data.lastName = param.lastName;
@@ -27,7 +27,7 @@ export class UpdateMyProfileClientHandler implements IUsecaseHandler<UpdateMyPro
         if (!client)
             throw new NotFoundError();
 
-        const result = new UpdateMyProfileClientOutput();
+        const result = new UpdateProfileClientOutput();
         result.data = await this._clientRepository.update(id, data);
         return result;
     }

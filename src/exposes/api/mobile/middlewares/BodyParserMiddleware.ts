@@ -1,7 +1,7 @@
 import { json, NextFunction, Request, Response } from 'express';
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 
-@Middleware({ type: 'before', priority: 5 })
+@Middleware({ type: 'before', priority: 2 })
 export class BodyParserMiddleware implements ExpressMiddlewareInterface {
     private readonly _jsonBodyParser;
 
@@ -10,6 +10,6 @@ export class BodyParserMiddleware implements ExpressMiddlewareInterface {
     }
 
     use(req: Request, res: Response, next: NextFunction): void {
-        this._jsonBodyParser(req, res as any, next);
+        this._jsonBodyParser(req, res, next);
     }
 }

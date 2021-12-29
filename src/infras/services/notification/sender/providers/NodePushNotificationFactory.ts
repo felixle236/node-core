@@ -22,8 +22,8 @@ export class NodePushNotificationFactory implements INotificationProvider {
         });
     }
 
-    async send(deviceIds: string[], title: string, content: string): Promise<any> {
-        return await this._sender.send(deviceIds, {
+    async send(deviceTokens: string[], title: string, content: string): Promise<any> {
+        return await this._sender.send(deviceTokens, {
             title, // REQUIRED for Android
             topic: title, // REQUIRED for iOS (apn and gcm)
             body: content,

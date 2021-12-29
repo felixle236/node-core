@@ -1,5 +1,6 @@
 import { {PascalName} } from 'domain/entities/{folder}/{PascalName}';
 import { I{PascalName}Repository } from 'application/interfaces/repositories/{folder}/I{PascalName}Repository';
+import { SelectFilterPaginationQuery } from 'shared/database/DbTypes';
 import { InjectRepository } from 'shared/types/Injection';
 import { Service } from 'typedi';
 import { Repository } from '../../common/Repository';
@@ -12,25 +13,27 @@ export class {PascalName}Repository extends Repository<{PascalName}, {PascalName
         super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);
     }
 
-    override async findAndCount(filter: { keyword?: string, skip: number, limit: number }): Promise<[{PascalName}[], number]> {
-        let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
+    override async findAndCount(filter: { keyword?: string } & SelectFilterPaginationQuery<{PascalName}>): Promise<[{PascalName}[], number]> {
+        const query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
 
         if (filter.keyword) {
             const keyword = `%${filter.keyword}%`;
-            query = query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
+            query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
         }
-        query.skip(filter.skip).take(filter.limit);
+
+        query.skip(filter.skip);
+        query.take(filter.limit);
 
         const [list, count] = await query.getManyAndCount();
         return [list.map(item => item.toEntity()), count];
     }
 
     async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
-        let query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+        const query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
             .where(`lower(${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 
         if (excludeId)
-            query = query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
+            query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
 
         const result = await query.getOne();
         return !!result;

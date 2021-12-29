@@ -28,8 +28,7 @@ export class WebService {
         app.use(cookieParser());
 
         const httpServer = new HttpServer();
-        const options = WebService.getRoutingOptions();
-        httpServer.createApp(app, options);
+        const server = httpServer.start(app, port, WebService.getRoutingOptions(), callback);
 
         // catch 404 and forward to error handler
         app.use(function(_req, res) {
@@ -38,8 +37,7 @@ export class WebService {
                 res.render('404');
             }
         });
-
-        return httpServer.start(port, callback);
+        return server;
     }
 
     static getRoutingOptions(): RoutingControllersOptions {

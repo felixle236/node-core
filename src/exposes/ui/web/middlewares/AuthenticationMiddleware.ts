@@ -6,7 +6,7 @@ import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import Container from 'typedi';
 
-@Middleware({ type: 'before', priority: 1 })
+@Middleware({ type: 'before', priority: 3 })
 export class AuthenticationMiddleware implements ExpressMiddlewareInterface {
     use(req: IRequest, _res: Response, next: NextFunction): void {
         const token = req.cookies && req.cookies.token;

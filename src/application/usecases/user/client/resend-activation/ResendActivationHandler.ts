@@ -31,7 +31,7 @@ export class ResendActivationHandler implements IUsecaseHandler<ResendActivation
         const hasSucceed = await this._clientRepository.update(client.id, data);
 
         const name = `${client.firstName} ${client.lastName}`;
-        this._mailService.resendUserActivation(name, client.email, data.activeKey, usecaseOption.req.locale);
+        this._mailService.resendUserActivation({ name, email: client.email, activeKey: data.activeKey, locale: usecaseOption.locale });
 
         const result = new ResendActivationOutput();
         result.data = hasSucceed;

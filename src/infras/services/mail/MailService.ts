@@ -18,24 +18,24 @@ export class MailService implements IMailService {
         this._generator = new MailGenerator();
     }
 
-    async sendUserActivation(name: string, email: string, activeKey: string, locale?: string): Promise<void> {
-        const template = UserActivationTemplate.getTemplate(name, email, activeKey, locale);
+    async sendUserActivation(param: { name: string, email: string, activeKey: string, locale?: string }): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(param);
         const content = this._generator.generateHtmlContent(template);
-        const subject = i18n.__({ phrase: 'mail.account_activation.subject', locale });
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, subject, content);
+        const subject = i18n.__({ phrase: 'mail.account_activation.subject', locale: param.locale });
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, param.email, subject, content);
     }
 
-    async resendUserActivation(name: string, email: string, activeKey: string, locale?: string): Promise<void> {
-        const template = UserActivationTemplate.getTemplate(name, email, activeKey, locale);
+    async resendUserActivation(param: { name: string, email: string, activeKey: string, locale?: string }): Promise<void> {
+        const template = UserActivationTemplate.getTemplate(param);
         const content = this._generator.generateHtmlContent(template);
-        const subject = i18n.__({ phrase: 'mail.resend_account_activation.subject', locale });
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, subject, content);
+        const subject = i18n.__({ phrase: 'mail.resend_account_activation.subject', locale: param.locale });
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, param.email, subject, content);
     }
 
-    async sendForgotPassword(name: string, email: string, forgotKey: string, locale?: string): Promise<void> {
-        const template = ForgotPasswordTemplate.getTemplate(name, email, forgotKey, locale);
+    async sendForgotPassword(param: { name: string, email: string, forgotKey: string, locale?: string }): Promise<void> {
+        const template = ForgotPasswordTemplate.getTemplate(param);
         const content = this._generator.generateHtmlContent(template);
-        const subject = i18n.__({ phrase: 'mail.reset_password.subject', locale });
-        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, email, subject, content);
+        const subject = i18n.__({ phrase: 'mail.reset_password.subject', locale: param.locale });
+        await this._sender.sendHtml(MAIL_SENDER_NAME, MAIL_SENDER_EMAIL, param.email, subject, content);
     }
 }

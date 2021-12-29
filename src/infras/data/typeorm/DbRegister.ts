@@ -1,11 +1,6 @@
 import './DbContext';
 import path from 'path';
-import { getDirectoriesSync, getFilesSync } from 'utils/File';
+import { searchFilesSync } from 'utils/File';
 
-const folder = path.join(__dirname, './repositories');
-for (const childFolder of getDirectoriesSync(folder)) {
-    for (const file of getFilesSync(`${folder}/${childFolder}`)) {
-        if (!file.includes('.spec'))
-            require(`${folder}/${childFolder}/${file}`);
-    }
-}
+const files = searchFilesSync(path.join(__dirname, './repositories/**/*Repository{.js,.ts}'));
+files.forEach(file => require(file));

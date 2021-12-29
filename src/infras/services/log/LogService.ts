@@ -20,6 +20,16 @@ export class LogService implements ILogService {
         const { combine, colorize, simple } = format;
 
         switch (LOG_PROVIDER) {
+            case LogProvider.GoogleWinston:
+                this._logger = createLogger({
+                    level: 'debug',
+                    transports: [
+                        new LoggingWinston({
+                            prefix: PROJECT_ID
+                        })
+                    ]
+                });
+                break;
             case LogProvider.AwsWinston:
                 this._logger = createLogger({
                     level: 'debug',
@@ -34,16 +44,6 @@ export class LogService implements ILogService {
                             messageFormatter: ({ level, message, ...meta }) => {
                                 return level + ': ' + message + (meta && Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '');
                             }
-                        })
-                    ]
-                });
-                break;
-            case LogProvider.GoogleWinston:
-                this._logger = createLogger({
-                    level: 'debug',
-                    transports: [
-                        new LoggingWinston({
-                            prefix: PROJECT_ID
                         })
                     ]
                 });
@@ -74,40 +74,36 @@ export class LogService implements ILogService {
         }
     }
 
-    info<T>(message: string, meta?: T, trace?: string): void {
-        this._logger.info(message, this._formatContent(meta, trace));
+    info(message: string, ...meta: any[]): void {
+        this._logger.info(message, this._formatContent(meta));
     }
 
-    debug<T>(message: string, meta?: T, trace?: string): void {
-        this._logger.debug(message, this._formatContent(meta, trace));
+    debug(message: string, ...meta: any[]): void {
+        this._logger.debug(message, this._formatContent(meta));
     }
 
-    warn<T>(message: string, meta?: T, trace?: string): void {
-        this._logger.warn(message, this._formatContent(meta, trace));
+    warn(message: string, ...meta: any[]): void {
+        this._logger.warn(message, this._formatContent(meta));
     }
 
-    error<T>(message: string, meta?: T, trace?: string): void {
-        this._logger.error(message, this._formatContent(meta, trace));
+    error(message: string, ...meta: any[]): void {
+        this._logger.error(message, this._formatContent(meta));
     }
 
-    private _formatContent(meta?: any, trace?: string): any {
-        let metadata: any;
-        if (meta) {
-            if (isLiteralObject(meta))
-                metadata = JSON.parse(JSON.stringify(meta, Object.getOwnPropertyNames(meta)));
+    private _formatContent(meta: any[]): any[] {
+        const metadata: any[] = [];
+        meta.forEach(m => {
+            if (m instanceof TraceRequest) {
+                if (LOG_PROVIDER === LogProvider.GoogleWinston)
+                    metadata.push({ [LoggingWinston.LOGGING_TRACE_KEY]: m.id });
+                else
+                    metadata.push({ trace: m.id });
+            }
+            else if (isLiteralObject(m))
+                metadata.push(JSON.parse(JSON.stringify(m, Object.getOwnPropertyNames(m))));
             else
-                metadata = { content: meta };
-        }
-        if (trace) {
-            if (!metadata)
-                metadata = {};
-
-            if (LOG_PROVIDER === LogProvider.GoogleWinston)
-                metadata[LoggingWinston.LOGGING_TRACE_KEY] = trace;
-            else
-                metadata.trace = trace;
-        }
-
+                metadata.push(m);
+        });
         return metadata;
     }
 

@@ -11,34 +11,33 @@ import { mockRepositoryInjection } from 'shared/test/MockInjection';
 import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
-import { GetMyProfileClientHandler } from './GetMyProfileClientHandler';
+import { UpdateProfileClientHandler } from './UpdateProfileClientHandler';
+import { UpdateProfileClientInput } from './UpdateProfileClientInput';
 
-describe('Client usecases - Get my profile client', () => {
+describe('Client usecases - Update profile client', () => {
     const sandbox = createSandbox();
     let clientRepository: IClientRepository;
-    let getMyProfileClientHandler: GetMyProfileClientHandler;
+    let updateProfileClientHandler: UpdateProfileClientHandler;
     let clientTest: Client;
+    let param: UpdateProfileClientInput;
 
     before(() => {
         clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
-        getMyProfileClientHandler = new GetMyProfileClientHandler(clientRepository);
+        updateProfileClientHandler = new UpdateProfileClientHandler(clientRepository);
     });
 
     beforeEach(() => {
         clientTest = new Client();
-        clientTest.id = randomUUID();
-        clientTest.firstName = 'Client';
-        clientTest.lastName = 'Test';
-        clientTest.email = 'client.test@localhost.com';
-        clientTest.avatar = 'avatar.png';
-        clientTest.gender = GenderType.Female;
-        clientTest.birthday = '1970-01-01';
-        clientTest.phone = '0123456789';
-        clientTest.address = new AddressInfoData();
-        clientTest.address.street = '123 Abc';
-        clientTest.locale = 'en-US';
-        clientTest.activedAt = new Date();
-        clientTest.archivedAt = new Date();
+
+        param = new UpdateProfileClientInput();
+        param.firstName = 'Client';
+        param.lastName = 'Test';
+        param.gender = GenderType.Female;
+        param.birthday = '1970-01-01';
+        param.phone = '0123456789';
+        param.address = new AddressInfoData();
+        param.address.street = '123 Abc';
+        param.locale = 'en-US';
     });
 
     afterEach(() => {
@@ -49,20 +48,20 @@ describe('Client usecases - Get my profile client', () => {
         Container.reset();
     });
 
-    it('Get my profile client with not found error', async () => {
+    it('Update profile client with data not found error', async () => {
         sandbox.stub(clientRepository, 'get').resolves();
-
-        const error = await getMyProfileClientHandler.handle(clientTest.id).catch(error => error);
+        const error = await updateProfileClientHandler.handle(randomUUID(), param).catch(error => error);
         const err = new NotFoundError();
 
         expect(error.code).to.eq(err.code);
         expect(error.message).to.eq(err.message);
     });
 
-    it('Get my profile client', async () => {
+    it('Update profile client', async () => {
         sandbox.stub(clientRepository, 'get').resolves(clientTest);
+        sandbox.stub(clientRepository, 'update').resolves(true);
 
-        const result = await getMyProfileClientHandler.handle(clientTest.id);
-        expect(result.data.id).to.eq(clientTest.id);
+        const result = await updateProfileClientHandler.handle(randomUUID(), param);
+        expect(result.data).to.eq(true);
     });
 });
