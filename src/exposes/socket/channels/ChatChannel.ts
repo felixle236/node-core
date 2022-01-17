@@ -1,7 +1,7 @@
 import { RoleId } from 'domain/enums/user/RoleId';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
 import { UpdateUserOnlineStatusHandler } from 'application/usecases/user/user/update-user-online-status/UpdateUserOnlineStatusHandler';
-import { UpdateUserOnlineStatusInput } from 'application/usecases/user/user/update-user-online-status/UpdateUserOnlineStatusInput';
+import { UpdateUserOnlineStatusInput } from 'application/usecases/user/user/update-user-online-status/UpdateUserOnlineStatusSchema';
 import { TraceRequest } from 'shared/request/TraceRequest';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { ISocket } from 'shared/socket/interfaces/ISocket';

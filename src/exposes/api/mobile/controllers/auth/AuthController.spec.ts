@@ -4,16 +4,16 @@ import { randomUUID, randomBytes } from 'crypto';
 import { AuthType } from 'domain/enums/auth/AuthType';
 import { Server } from 'http';
 import { ForgotPasswordByEmailHandler } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailHandler';
-import { ForgotPasswordByEmailOutput } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailOutput';
+import { ForgotPasswordByEmailOutput } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailSchema';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
 import { LoginByEmailHandler } from 'application/usecases/auth/auth/login-by-email/LoginByEmailHandler';
-import { LoginByEmailData, LoginByEmailOutput } from 'application/usecases/auth/auth/login-by-email/LoginByEmailOutput';
+import { LoginByEmailDataOutput, LoginByEmailOutput } from 'application/usecases/auth/auth/login-by-email/LoginByEmailSchema';
 import { ResetPasswordByEmailHandler } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailHandler';
-import { ResetPasswordByEmailOutput } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailOutput';
+import { ResetPasswordByEmailOutput } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailSchema';
 import { UpdateMyPasswordByEmailHandler } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailHandler';
-import { UpdateMyPasswordByEmailOutput } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailOutput';
+import { UpdateMyPasswordByEmailOutput } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailSchema';
 import { ValidateForgotKeyForEmailHandler } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailHandler';
-import { ValidateForgotKeyForEmailOutput } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailOutput';
+import { ValidateForgotKeyForEmailOutput } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailSchema';
 import axios from 'axios';
 import { expect } from 'chai';
 import { InputValidationError } from 'shared/exceptions/InputValidationError';
@@ -79,7 +79,7 @@ describe('Authorization controller', () => {
 
   it('Login by email', async () => {
     const result = new LoginByEmailOutput();
-    result.data = new LoginByEmailData();
+    result.data = new LoginByEmailDataOutput();
     result.data.token = 'token';
     result.data.userId = 'user id';
     result.data.roleId = 'role id';

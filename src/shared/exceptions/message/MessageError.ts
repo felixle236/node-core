@@ -39,10 +39,7 @@ export class MessageError {
   // Data invalid
   static DATA_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'data_is_invalid');
   static PARAM_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, '%s_is_invalid');
-  static PARAM_FORMAT_INVALID = new ErrorObject(
-    ErrorCode.DATA_INVALID,
-    'format_of_%s_is_invalid_or_not_supported_following_formats_are_supported_%s',
-  );
+  static PARAM_FORMAT_INVALID = new ErrorObject(ErrorCode.DATA_INVALID, 'format_of_%s_is_invalid_or_not_supported_following_formats_are_supported_%s');
 
   static PARAM_MAX_NUMBER = new ErrorObject(ErrorCode.DATA_INVALID, 'maximum_number_of_%s_is_%s');
   static PARAM_MIN_MAX_NUMBER = new ErrorObject(ErrorCode.DATA_INVALID, '%s_number_field_must_be_at_least_%s_and_a_maximum_of_%s');

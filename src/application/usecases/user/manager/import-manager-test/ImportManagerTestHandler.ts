@@ -5,11 +5,11 @@ import { InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { readFile, writeFile } from 'utils/File';
-import { ImportManagerTestOutput } from './ImportManagerTestOutput';
+import { ImportManagerTestOutput } from './ImportManagerTestSchema';
 import { UploadAvatarHandler } from '../../user/upload-avatar/UploadAvatarHandler';
-import { UploadAvatarInput } from '../../user/upload-avatar/UploadAvatarInput';
+import { UploadAvatarInput } from '../../user/upload-avatar/UploadAvatarSchema';
 import { CreateManagerHandler } from '../create-manager/CreateManagerHandler';
-import { CreateManagerInput } from '../create-manager/CreateManagerInput';
+import { CreateManagerInput } from '../create-manager/CreateManagerSchema';
 
 @Service()
 export class ImportManagerTestHandler implements IUsecaseHandler<undefined, ImportManagerTestOutput> {

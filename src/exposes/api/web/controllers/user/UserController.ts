@@ -2,11 +2,12 @@ import { RoleId } from 'domain/enums/user/RoleId';
 import { ImportClientTestHandler } from 'application/usecases/user/client/import-client-test/ImportClientTestHandler';
 import { ImportManagerTestHandler } from 'application/usecases/user/manager/import-manager-test/ImportManagerTestHandler';
 import { GetListOnlineStatusByIdsHandler } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
-import { GetListOnlineStatusByIdsInput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsInput';
-import { GetListOnlineStatusByIdsOutput } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
+import {
+  GetListOnlineStatusByIdsInput,
+  GetListOnlineStatusByIdsOutput,
+} from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsSchema';
 import { UploadAvatarHandler } from 'application/usecases/user/user/upload-avatar/UploadAvatarHandler';
-import { UploadAvatarInput } from 'application/usecases/user/user/upload-avatar/UploadAvatarInput';
-import { UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarOutput';
+import { UploadAvatarInput, UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarSchema';
 import { Type } from 'class-transformer';
 import { STORAGE_UPLOAD_DIR } from 'config/Configuration';
 import { PrivateAccessMiddleware } from 'exposes/api/web/middlewares/PrivateAccessMiddleware';
@@ -14,16 +15,7 @@ import multer from 'multer';
 import { Authorized, Get, JsonController, Post, QueryParams, UseBefore, UploadedFile, CurrentUser, Body } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { RefSchemaArray } from 'shared/decorators/RefSchema';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsOptional,
-  IsPositive,
-  IsString,
-  MaxLength,
-  ValidateNested,
-} from 'shared/decorators/ValidationDecorator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsOptional, IsPositive, IsString, MaxLength, ValidateNested } from 'shared/decorators/ValidationDecorator';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { Service } from 'typedi';
 import { generateAuthRequiredDoc } from 'utils/Common';

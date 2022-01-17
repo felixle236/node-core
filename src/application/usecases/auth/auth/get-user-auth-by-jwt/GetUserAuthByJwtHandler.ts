@@ -7,7 +7,7 @@ import { InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
-import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from './GetUserAuthByJwtOutput';
+import { GetUserAuthByJwtDataOutput, GetUserAuthByJwtOutput } from './GetUserAuthByJwtSchema';
 
 @Service()
 export class GetUserAuthByJwtHandler implements IUsecaseHandler<string, GetUserAuthByJwtOutput> {
@@ -38,7 +38,7 @@ export class GetUserAuthByJwtHandler implements IUsecaseHandler<string, GetUserA
     }
 
     const result = new GetUserAuthByJwtOutput();
-    result.data = new GetUserAuthByJwtData();
+    result.data = new GetUserAuthByJwtDataOutput();
     result.data.userId = payload.userId;
     result.data.roleId = payload.roleId;
     result.data.type = payload.type;

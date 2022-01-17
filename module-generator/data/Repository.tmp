@@ -9,33 +9,35 @@ import { {UPPER_CASE_NAME}_SCHEMA } from '../../schemas/{folder}/{PascalName}Sch
 
 @Service(InjectRepository.{PascalName})
 export class {PascalName}Repository extends Repository<{PascalName}, {PascalName}Db> implements I{PascalName}Repository {
-    constructor() {
-        super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);
+  constructor() {
+    super({PascalName}Db, {UPPER_CASE_NAME}_SCHEMA);
+  }
+
+  override async findAndCount(filter: { keyword?: string } & SelectFilterPaginationQuery<{PascalName}>): Promise<[{PascalName}[], number]> {
+    const query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
+
+    if (filter.keyword) {
+      const keyword = `%${filter.keyword}%`;
+      query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
     }
 
-    override async findAndCount(filter: { keyword?: string } & SelectFilterPaginationQuery<{PascalName}>): Promise<[{PascalName}[], number]> {
-        const query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME);
+    query.skip(filter.skip);
+    query.take(filter.limit);
 
-        if (filter.keyword) {
-            const keyword = `%${filter.keyword}%`;
-            query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME} ILIKE :keyword`, { keyword });
-        }
+    const [list, count] = await query.getManyAndCount();
+    return [list.map((item) => item.toEntity()), count];
+  }
 
-        query.skip(filter.skip);
-        query.take(filter.limit);
+  async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
+    const query = this.repository
+      .createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
+      .where(`lower(${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
 
-        const [list, count] = await query.getManyAndCount();
-        return [list.map(item => item.toEntity()), count];
+    if (excludeId) {
+      query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
     }
 
-    async checkNameExist(name: string, excludeId?: string): Promise<boolean> {
-        const query = this.repository.createQueryBuilder({UPPER_CASE_NAME}_SCHEMA.TABLE_NAME)
-            .where(`lower(${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.NAME}) = lower(:name)`, { name });
-
-        if (excludeId)
-            query.andWhere(`${{UPPER_CASE_NAME}_SCHEMA.TABLE_NAME}.${{UPPER_CASE_NAME}_SCHEMA.COLUMNS.ID} != :id`, { id: excludeId });
-
-        const result = await query.getOne();
-        return !!result;
-    }
+    const result = await query.getOne();
+    return !!result;
+  }
 }

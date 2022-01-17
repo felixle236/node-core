@@ -1,7 +1,0 @@
-import { IsBoolean } from 'shared/decorators/ValidationDecorator';
-import { DataResponse } from 'shared/usecase/DataResponse';
-
-export class {UpdateUsecaseName}Output extends DataResponse<boolean> {
-    @IsBoolean()
-    data: boolean;
-}

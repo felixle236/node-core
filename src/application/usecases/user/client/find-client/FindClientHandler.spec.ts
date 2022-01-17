@@ -12,7 +12,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { FindClientHandler } from './FindClientHandler';
-import { FindClientInput } from './FindClientInput';
+import { FindClientInput } from './FindClientSchema';
 
 describe('Client usecases - Find client', () => {
   const sandbox = createSandbox();

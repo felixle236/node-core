@@ -39,12 +39,7 @@ export class ApiService {
 
     SWAGGER_UI_APIS.forEach((apiName) => {
       const apiOptions = { swaggerUrl: `${SWAGGER_UI_URL}/api-docs/${apiName}-api.json` } as SwaggerUiOptions;
-      app.use(
-        `/${apiName}-api`,
-        authMiddleware,
-        swaggerUiExpress.serveFiles(undefined, apiOptions),
-        swaggerUiExpress.setup(undefined, apiOptions),
-      );
+      app.use(`/${apiName}-api`, authMiddleware, swaggerUiExpress.serveFiles(undefined, apiOptions), swaggerUiExpress.setup(undefined, apiOptions));
     });
 
     return app.listen(port, '0.0.0.0', callback);

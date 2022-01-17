@@ -1,9 +1,9 @@
 import { Entity } from '../../common/Entity';
 
 export class {PascalName} extends Entity {
-    name: string;
+  name: string;
 
-    /* Relationship */
+  /* Relationship */
 
-    /* Handlers */
+  /* Handlers */
 }

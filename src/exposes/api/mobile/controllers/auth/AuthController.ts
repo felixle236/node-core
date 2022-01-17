@@ -1,21 +1,22 @@
 import { IAuthJwtService } from 'application/interfaces/services/IAuthJwtService';
 import { ForgotPasswordByEmailHandler } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailHandler';
-import { ForgotPasswordByEmailInput } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailInput';
-import { ForgotPasswordByEmailOutput } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailOutput';
+import { ForgotPasswordByEmailInput, ForgotPasswordByEmailOutput } from 'application/usecases/auth/auth/forgot-password-by-email/ForgotPasswordByEmailSchema';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
-import { GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
+import { GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtSchema';
 import { LoginByEmailHandler } from 'application/usecases/auth/auth/login-by-email/LoginByEmailHandler';
-import { LoginByEmailInput } from 'application/usecases/auth/auth/login-by-email/LoginByEmailInput';
-import { LoginByEmailOutput } from 'application/usecases/auth/auth/login-by-email/LoginByEmailOutput';
+import { LoginByEmailInput, LoginByEmailOutput } from 'application/usecases/auth/auth/login-by-email/LoginByEmailSchema';
 import { ResetPasswordByEmailHandler } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailHandler';
-import { ResetPasswordByEmailInput } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailInput';
-import { ResetPasswordByEmailOutput } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailOutput';
+import { ResetPasswordByEmailInput, ResetPasswordByEmailOutput } from 'application/usecases/auth/auth/reset-password-by-email/ResetPasswordByEmailSchema';
 import { UpdateMyPasswordByEmailHandler } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailHandler';
-import { UpdateMyPasswordByEmailInput } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailInput';
-import { UpdateMyPasswordByEmailOutput } from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailOutput';
+import {
+  UpdateMyPasswordByEmailInput,
+  UpdateMyPasswordByEmailOutput,
+} from 'application/usecases/auth/auth/update-my-password-by-email/UpdateMyPasswordByEmailSchema';
 import { ValidateForgotKeyForEmailHandler } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailHandler';
-import { ValidateForgotKeyForEmailInput } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailInput';
-import { ValidateForgotKeyForEmailOutput } from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailOutput';
+import {
+  ValidateForgotKeyForEmailInput,
+  ValidateForgotKeyForEmailOutput,
+} from 'application/usecases/auth/auth/validate-forgot-key-for-email/ValidateForgotKeyForEmailSchema';
 import { Request } from 'express';
 import { Authorized, Body, CurrentUser, Get, JsonController, Patch, Post, Req } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -64,10 +65,7 @@ export class AuthController {
     security: [],
   })
   @ResponseSchema(ForgotPasswordByEmailOutput)
-  forgotPassword(
-    @Body() param: ForgotPasswordByEmailInput,
-    @UsecaseOptionRequest() usecaseOption: UsecaseOption,
-  ): Promise<ForgotPasswordByEmailOutput> {
+  forgotPassword(@Body() param: ForgotPasswordByEmailInput, @UsecaseOptionRequest() usecaseOption: UsecaseOption): Promise<ForgotPasswordByEmailOutput> {
     return this._forgotPasswordByEmailHandler.handle(param, usecaseOption);
   }
 
@@ -95,10 +93,7 @@ export class AuthController {
   @Authorized()
   @OpenAPI({ summary: 'Update my password', description: generateAuthRequiredDoc() })
   @ResponseSchema(UpdateMyPasswordByEmailOutput)
-  updateMyPassword(
-    @Body() param: UpdateMyPasswordByEmailInput,
-    @CurrentUser() userAuth: UserAuthenticated,
-  ): Promise<UpdateMyPasswordByEmailOutput> {
+  updateMyPassword(@Body() param: UpdateMyPasswordByEmailInput, @CurrentUser() userAuth: UserAuthenticated): Promise<UpdateMyPasswordByEmailOutput> {
     return this._updateMyPasswordByEmailHandler.handle(userAuth.userId, param);
   }
 }

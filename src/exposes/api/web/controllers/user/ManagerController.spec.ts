@@ -4,24 +4,21 @@ import { randomUUID } from 'crypto';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { Server } from 'http';
 import { ArchiveManagerHandler } from 'application/usecases/user/manager/archive-manager/ArchiveManagerHandler';
-import { ArchiveManagerOutput } from 'application/usecases/user/manager/archive-manager/ArchiveManagerOutput';
+import { ArchiveManagerOutput } from 'application/usecases/user/manager/archive-manager/ArchiveManagerSchema';
 import { CreateManagerHandler } from 'application/usecases/user/manager/create-manager/CreateManagerHandler';
-import { CreateManagerOutput } from 'application/usecases/user/manager/create-manager/CreateManagerOutput';
+import { CreateManagerOutput } from 'application/usecases/user/manager/create-manager/CreateManagerSchema';
 import { DeleteManagerHandler } from 'application/usecases/user/manager/delete-manager/DeleteManagerHandler';
-import { DeleteManagerOutput } from 'application/usecases/user/manager/delete-manager/DeleteManagerOutput';
+import { DeleteManagerOutput } from 'application/usecases/user/manager/delete-manager/DeleteManagerSchema';
 import { FindManagerHandler } from 'application/usecases/user/manager/find-manager/FindManagerHandler';
-import { FindManagerData, FindManagerOutput } from 'application/usecases/user/manager/find-manager/FindManagerOutput';
+import { FindManagerDataOutput, FindManagerOutput } from 'application/usecases/user/manager/find-manager/FindManagerSchema';
 import { GetManagerHandler } from 'application/usecases/user/manager/get-manager/GetManagerHandler';
-import { GetManagerData, GetManagerOutput } from 'application/usecases/user/manager/get-manager/GetManagerOutput';
+import { GetManagerDataOutput, GetManagerOutput } from 'application/usecases/user/manager/get-manager/GetManagerSchema';
 import { GetProfileManagerHandler } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerHandler';
-import {
-  GetProfileManagerData,
-  GetProfileManagerOutput,
-} from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerOutput';
+import { GetProfileManagerDataOutput, GetProfileManagerOutput } from 'application/usecases/user/manager/get-profile-manager/GetProfileManagerSchema';
 import { UpdateManagerHandler } from 'application/usecases/user/manager/update-manager/UpdateManagerHandler';
-import { UpdateManagerOutput } from 'application/usecases/user/manager/update-manager/UpdateManagerOutput';
+import { UpdateManagerOutput } from 'application/usecases/user/manager/update-manager/UpdateManagerSchema';
 import { UpdateProfileManagerHandler } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerHandler';
-import { UpdateProfileManagerOutput } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerOutput';
+import { UpdateProfileManagerOutput } from 'application/usecases/user/manager/update-profile-manager/UpdateProfileManagerSchema';
 import axios from 'axios';
 import { expect } from 'chai';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
@@ -85,7 +82,7 @@ describe('Manager controller', () => {
 
   it('Find managers by super admin', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-    const d = new FindManagerData();
+    const d = new FindManagerDataOutput();
     d.id = randomUUID();
     const result = new FindManagerOutput();
     result.data = [d];
@@ -107,7 +104,7 @@ describe('Manager controller', () => {
 
   it('Get manager by super admin', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-    const d = new GetManagerData();
+    const d = new GetManagerDataOutput();
     d.id = randomUUID();
     const result = new GetManagerOutput();
     result.data = d;
@@ -128,7 +125,7 @@ describe('Manager controller', () => {
 
   it('Get profile by super admin', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-    const d = new GetProfileManagerData();
+    const d = new GetProfileManagerDataOutput();
     d.id = randomUUID();
     const result = new GetProfileManagerOutput();
     result.data = d;
@@ -142,7 +139,7 @@ describe('Manager controller', () => {
 
   it('Get profile by manager', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
-    const d = new GetProfileManagerData();
+    const d = new GetProfileManagerDataOutput();
     d.id = randomUUID();
     const result = new GetProfileManagerOutput();
     result.data = d;

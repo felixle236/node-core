@@ -3,7 +3,7 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { GetManagerData, GetManagerOutput } from './GetManagerOutput';
+import { GetManagerDataOutput, GetManagerOutput } from './GetManagerSchema';
 
 @Service()
 export class GetManagerHandler implements IUsecaseHandler<string, GetManagerOutput> {
@@ -15,7 +15,7 @@ export class GetManagerHandler implements IUsecaseHandler<string, GetManagerOutp
       throw new NotFoundError();
     }
 
-    const data = new GetManagerData();
+    const data = new GetManagerDataOutput();
     data.id = manager.id;
     data.createdAt = manager.createdAt;
     data.firstName = manager.firstName;

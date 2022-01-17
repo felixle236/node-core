@@ -4,13 +4,13 @@ import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 
 describe('{moduleNameText} repository', () => {
-    const sandbox = createSandbox();
+  const sandbox = createSandbox();
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    it('Test something', () => {
-        expect(true).to.be.eq(false);
-    });
+  it('Test something', () => {
+    expect(true).to.be.eq(false);
+  });
 });

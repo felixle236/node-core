@@ -6,8 +6,7 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { ActiveClientInput } from './ActiveClientInput';
-import { ActiveClientOutput } from './ActiveClientOutput';
+import { ActiveClientInput, ActiveClientOutput } from './ActiveClientSchema';
 
 @Service()
 export class ActiveClientHandler implements IUsecaseHandler<ActiveClientInput, ActiveClientOutput> {

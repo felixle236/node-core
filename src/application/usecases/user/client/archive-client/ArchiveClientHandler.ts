@@ -5,7 +5,7 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { ArchiveClientOutput } from './ArchiveClientOutput';
+import { ArchiveClientOutput } from './ArchiveClientSchema';
 
 @Service()
 export class ArchiveClientHandler implements IUsecaseHandler<string, ArchiveClientOutput> {

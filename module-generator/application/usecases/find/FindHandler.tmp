@@ -2,32 +2,28 @@ import { I{PascalName}Repository } from 'application/interfaces/repositories/{fo
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { {FindUsecaseName}Input } from './{FindUsecaseName}Input';
-import { {FindUsecaseName}Data, {FindUsecaseName}Output } from './{FindUsecaseName}Output';
+import { {FindUsecaseName}Input, {FindUsecaseName}DataOutput, {FindUsecaseName}Output } from './{FindUsecaseName}Schema';
 
 @Service()
 export class {FindUsecaseName}Handler implements IUsecaseHandler<{FindUsecaseName}Input, {FindUsecaseName}Output> {
-    constructor(
-        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
-    ) {}
+  constructor(@Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository) {}
 
-    async handle(param: {FindUsecaseName}Input): Promise<{FindUsecaseName}Output> {
-        const [{camelName}s, count] = await this._{camelName}Repository.findAndCount({
-            keyword: param.keyword,
-            skip: param.skip,
-            limit: param.limit
-        });
+  async handle(param: {FindUsecaseName}Input): Promise<{FindUsecaseName}Output> {
+    const [{camelName}s, count] = await this._{camelName}Repository.findAndCount({
+      keyword: param.keyword,
+      skip: param.skip,
+      limit: param.limit,
+    });
 
-        const result = new {FindUsecaseName}Output();
-        result.setPagination(count, param.skip, param.limit);
-        result.data = {camelName}s.map({camelName} => {
-            const data = new {FindUsecaseName}Data();
-            data.id = {camelName}.id;
-            data.createdAt = {camelName}.createdAt;
-            data.name = {camelName}.name;
-
-            return data;
-        });
-        return result;
-    }
+    const result = new {FindUsecaseName}Output();
+    result.setPagination(count, param.skip, param.limit);
+    result.data = {camelName}s.map(({camelName}) => {
+      const data = new {FindUsecaseName}DataOutput();
+      data.id = {camelName}.id;
+      data.createdAt = {camelName}.createdAt;
+      data.name = {camelName}.name;
+      return data;
+    });
+    return result;
+  }
 }

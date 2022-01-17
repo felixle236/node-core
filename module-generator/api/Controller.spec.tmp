@@ -7,28 +7,28 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 
 describe('{moduleNameText} controller', () => {
-    const sandbox = createSandbox();
-    let server: Server;
-    const port = 3301;
+  const sandbox = createSandbox();
+  let server: Server;
+  const port = 3301;
 
-    before(done => {
-        import('./{PascalName}Controller').then(obj => {
-            server = mockWebApi(obj.{PascalName}Controller, port, () => {
-                done();
-            });
-        });
+  before((done) => {
+    import('./{PascalName}Controller').then((obj) => {
+      server = mockWebApi(obj.{PascalName}Controller, port, () => {
+        done();
+      });
     });
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(done => {
-        Container.reset();
-        server.close(done);
-    });
+  after((done) => {
+    Container.reset();
+    server.close(done);
+  });
 
-    it('Test something', () => {
-        expect(true).to.be.eq(false);
-    });
+  it('Test something', () => {
+    expect(true).to.be.eq(false);
+  });
 });

@@ -12,7 +12,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { UpdateMyPasswordByEmailHandler } from './UpdateMyPasswordByEmailHandler';
-import { UpdateMyPasswordByEmailInput } from './UpdateMyPasswordByEmailInput';
+import { UpdateMyPasswordByEmailInput } from './UpdateMyPasswordByEmailSchema';
 
 describe('Authorization usecases - Update my password by email', () => {
   const sandbox = createSandbox();

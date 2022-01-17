@@ -3,7 +3,7 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { GetClientData, GetClientOutput } from './GetClientOutput';
+import { GetClientDataOutput, GetClientOutput } from './GetClientSchema';
 
 @Service()
 export class GetClientHandler implements IUsecaseHandler<string, GetClientOutput> {
@@ -15,7 +15,7 @@ export class GetClientHandler implements IUsecaseHandler<string, GetClientOutput
       throw new NotFoundError();
     }
 
-    const data = new GetClientData();
+    const data = new GetClientDataOutput();
     data.id = client.id;
     data.createdAt = client.createdAt;
     data.firstName = client.firstName;

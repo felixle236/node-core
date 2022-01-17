@@ -32,9 +32,7 @@ export class ClientRepository extends Repository<Client, ClientDb> implements IC
     }
   }
 
-  override async findAndCount(
-    filter: { keyword?: string; status?: ClientStatus } & SelectFilterPaginationQuery<Client>,
-  ): Promise<[Client[], number]> {
+  override async findAndCount(filter: { keyword?: string; status?: ClientStatus } & SelectFilterPaginationQuery<Client>): Promise<[Client[], number]> {
     const query = this.repository.createQueryBuilder(CLIENT_SCHEMA.TABLE_NAME);
     if (filter.status) {
       query.where(`${CLIENT_SCHEMA.TABLE_NAME}.${CLIENT_SCHEMA.COLUMNS.STATUS} = :status`, { status: filter.status });

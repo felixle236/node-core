@@ -2,8 +2,7 @@ import { IClientRepository } from 'application/interfaces/repositories/user/ICli
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { FindClientInput } from './FindClientInput';
-import { FindClientData, FindClientOutput } from './FindClientOutput';
+import { FindClientDataOutput, FindClientInput, FindClientOutput } from './FindClientSchema';
 
 @Service()
 export class FindClientHandler implements IUsecaseHandler<FindClientInput, FindClientOutput> {
@@ -20,7 +19,7 @@ export class FindClientHandler implements IUsecaseHandler<FindClientInput, FindC
     const result = new FindClientOutput();
     result.setPagination(count, param.skip, param.limit);
     result.data = clients.map((client) => {
-      const data = new FindClientData();
+      const data = new FindClientDataOutput();
       data.id = client.id;
       data.createdAt = client.createdAt;
       data.firstName = client.firstName;

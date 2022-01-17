@@ -1,16 +1,13 @@
 import { {CreateUsecaseName}Handler } from 'application/usecases/{folder}/{subFolder}/create-{subFolder}/{CreateUsecaseName}Handler';
-import { {CreateUsecaseName}Input } from 'application/usecases/{folder}/{subFolder}/create-{subFolder}/{CreateUsecaseName}Input';
-import { {CreateUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/create-{subFolder}/{CreateUsecaseName}Output';
+import { {CreateUsecaseName}Input, {CreateUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/create-{subFolder}/{CreateUsecaseName}Schema';
 import { {DeleteUsecaseName}Handler } from 'application/usecases/{folder}/{subFolder}/delete-{subFolder}/{DeleteUsecaseName}Handler';
-import { {DeleteUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/delete-{subFolder}/{DeleteUsecaseName}Output';
+import { {DeleteUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/delete-{subFolder}/{DeleteUsecaseName}Schema';
 import { {FindUsecaseName}Handler } from 'application/usecases/{folder}/{subFolder}/find-{subFolder}/{FindUsecaseName}Handler';
-import { {FindUsecaseName}Input } from 'application/usecases/{folder}/{subFolder}/find-{subFolder}/{FindUsecaseName}Input';
-import { {FindUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/find-{subFolder}/{FindUsecaseName}Output';
+import { {FindUsecaseName}Input, {FindUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/find-{subFolder}/{FindUsecaseName}Schema';
 import { {GetUsecaseName}Handler } from 'application/usecases/{folder}/{subFolder}/get-{subFolder}/{GetUsecaseName}Handler';
-import { {GetUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/get-{subFolder}/{GetUsecaseName}Output';
+import { {GetUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/get-{subFolder}/{GetUsecaseName}Schema';
 import { {UpdateUsecaseName}Handler } from 'application/usecases/{folder}/{subFolder}/update-{subFolder}/{UpdateUsecaseName}Handler';
-import { {UpdateUsecaseName}Input } from 'application/usecases/{folder}/{subFolder}/update-{subFolder}/{UpdateUsecaseName}Input';
-import { {UpdateUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/update-{subFolder}/{UpdateUsecaseName}Output';
+import { {UpdateUsecaseName}Input, {UpdateUsecaseName}Output } from 'application/usecases/{folder}/{subFolder}/update-{subFolder}/{UpdateUsecaseName}Schema';
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service } from 'typedi';
@@ -18,46 +15,46 @@ import { Service } from 'typedi';
 @Service()
 @JsonController('/v1/{subFolder}s')
 export class {PascalName}Controller {
-    constructor(
-        private readonly _find{PascalName}Handler: {FindUsecaseName}Handler,
-        private readonly _get{PascalName}Handler: {GetUsecaseName}Handler,
-        private readonly _create{PascalName}Handler: {CreateUsecaseName}Handler,
-        private readonly _update{PascalName}Handler: {UpdateUsecaseName}Handler,
-        private readonly _delete{PascalName}Handler: {DeleteUsecaseName}Handler
-    ) {}
+  constructor(
+    private readonly _find{PascalName}Handler: {FindUsecaseName}Handler,
+    private readonly _get{PascalName}Handler: {GetUsecaseName}Handler,
+    private readonly _create{PascalName}Handler: {CreateUsecaseName}Handler,
+    private readonly _update{PascalName}Handler: {UpdateUsecaseName}Handler,
+    private readonly _delete{PascalName}Handler: {DeleteUsecaseName}Handler,
+  ) {}
 
-    @Get('/')
-    @OpenAPI({ summary: 'Find {moduleNameTextLowerCase}' })
-    @ResponseSchema({FindUsecaseName}Output)
-    async find(@QueryParams() param: {FindUsecaseName}Input): Promise<{FindUsecaseName}Output> {
-        return await this._find{PascalName}Handler.handle(param);
-    }
+  @Get('/')
+  @OpenAPI({ summary: 'Find {moduleNameTextLowerCase}' })
+  @ResponseSchema({FindUsecaseName}Output)
+  async find(@QueryParams() param: {FindUsecaseName}Input): Promise<{FindUsecaseName}Output> {
+    return await this._find{PascalName}Handler.handle(param);
+  }
 
-    @Get('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Get {moduleNameTextLowerCase}' })
-    @ResponseSchema({GetUsecaseName}Output)
-    async get(@Param('id') id: string): Promise<{GetUsecaseName}Output> {
-        return await this._get{PascalName}Handler.handle(id);
-    }
+  @Get('/:id([0-9a-f-]{36})')
+  @OpenAPI({ summary: 'Get {moduleNameTextLowerCase}' })
+  @ResponseSchema({GetUsecaseName}Output)
+  async get(@Param('id') id: string): Promise<{GetUsecaseName}Output> {
+    return await this._get{PascalName}Handler.handle(id);
+  }
 
-    @Post('/')
-    @OpenAPI({ summary: 'Create {moduleNameTextLowerCase}' })
-    @ResponseSchema({CreateUsecaseName}Output)
-    async create(@Body() param: {CreateUsecaseName}Input): Promise<{CreateUsecaseName}Output> {
-        return await this._create{PascalName}Handler.handle(param);
-    }
+  @Post('/')
+  @OpenAPI({ summary: 'Create {moduleNameTextLowerCase}' })
+  @ResponseSchema({CreateUsecaseName}Output)
+  async create(@Body() param: {CreateUsecaseName}Input): Promise<{CreateUsecaseName}Output> {
+    return await this._create{PascalName}Handler.handle(param);
+  }
 
-    @Put('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Update {moduleNameTextLowerCase}' })
-    @ResponseSchema({UpdateUsecaseName}Output)
-    async update(@Param('id') id: string, @Body() param: {UpdateUsecaseName}Input): Promise<{UpdateUsecaseName}Output> {
-        return await this._update{PascalName}Handler.handle(id, param);
-    }
+  @Put('/:id([0-9a-f-]{36})')
+  @OpenAPI({ summary: 'Update {moduleNameTextLowerCase}' })
+  @ResponseSchema({UpdateUsecaseName}Output)
+  async update(@Param('id') id: string, @Body() param: {UpdateUsecaseName}Input): Promise<{UpdateUsecaseName}Output> {
+    return await this._update{PascalName}Handler.handle(id, param);
+  }
 
-    @Delete('/:id([0-9a-f-]{36})')
-    @OpenAPI({ summary: 'Delete {moduleNameTextLowerCase}' })
-    @ResponseSchema({DeleteUsecaseName}Output)
-    async delete(@Param('id') id: string): Promise<{DeleteUsecaseName}Output> {
-        return await this._delete{PascalName}Handler.handle(id);
-    }
+  @Delete('/:id([0-9a-f-]{36})')
+  @OpenAPI({ summary: 'Delete {moduleNameTextLowerCase}' })
+  @ResponseSchema({DeleteUsecaseName}Output)
+  async delete(@Param('id') id: string): Promise<{DeleteUsecaseName}Output> {
+    return await this._delete{PascalName}Handler.handle(id);
+  }
 }

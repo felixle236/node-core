@@ -25,14 +25,11 @@ export function intlMsg(key: string, params?: object) {
 export const ValidateNested = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.ValidateNested({ ...opts, message: intlMsg('validate_nested') });
 
-export const IsArray = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsArray({ ...opts, message: intlMsg('is_array') });
+export const IsArray = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsArray({ ...opts, message: intlMsg('is_array') });
 
-export const IsBoolean = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsBoolean({ ...opts, message: intlMsg('is_boolean') });
+export const IsBoolean = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsBoolean({ ...opts, message: intlMsg('is_boolean') });
 
-export const IsDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsDate({ ...opts, message: intlMsg('is_date') });
+export const IsDate = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsDate({ ...opts, message: intlMsg('is_date') });
 
 export const IsDateString = (iOpts?: ValidatorJS.IsISO8601Options, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsDateString(iOpts, { ...opts, message: intlMsg('is_date_string') });
@@ -87,8 +84,7 @@ function isPastDate(validationOptions?: classValidator.ValidationOptions) {
   };
 }
 
-export const IsPastDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  isPastDate({ ...opts, message: intlMsg('is_past_date') });
+export const IsPastDate = (opts?: classValidator.ValidationOptions): PropertyDecorator => isPastDate({ ...opts, message: intlMsg('is_past_date') });
 
 /**
  * Checks if the value is a date in the future.
@@ -114,14 +110,12 @@ function isFutureDate(validationOptions?: classValidator.ValidationOptions) {
   };
 }
 
-export const IsFutureDate = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  isFutureDate({ ...opts, message: intlMsg('is_future_date') });
+export const IsFutureDate = (opts?: classValidator.ValidationOptions): PropertyDecorator => isFutureDate({ ...opts, message: intlMsg('is_future_date') });
 
 export const IsEnum = (entity: object, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsEnum(entity, { ...opts, message: intlMsg('is_enum') });
 
-export const IsInt = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsInt({ ...opts, message: intlMsg('is_int') });
+export const IsInt = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsInt({ ...opts, message: intlMsg('is_int') });
 
 export const IsNumber = (nOpts?: classValidator.IsNumberOptions, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsNumber(nOpts, { ...opts, message: intlMsg('is_number') });
@@ -141,11 +135,9 @@ export const IsDecimal = (dOpts?: ValidatorJS.IsDecimalOptions, opts?: classVali
 export const IsNotEmpty = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsNotEmpty({ ...opts, message: intlMsg('is_not_empty') });
 
-export const IsString = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsString({ ...opts, message: intlMsg('is_string') });
+export const IsString = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsString({ ...opts, message: intlMsg('is_string') });
 
-export const IsObject = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsObject({ ...opts, message: intlMsg('is_object') });
+export const IsObject = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsObject({ ...opts, message: intlMsg('is_object') });
 
 export const IsNotEmptyObject = (neOpts?: { nullable?: boolean }, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsNotEmptyObject(neOpts, { ...opts, message: intlMsg('is_not_empty_object') });
@@ -159,8 +151,7 @@ export const IsLatitude = (opts?: classValidator.ValidationOptions): PropertyDec
 export const IsLongitude = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsLongitude({ ...opts, message: intlMsg('is_longitude') });
 
-export const IsLatLong = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsLatLong({ ...opts, message: intlMsg('is_lat_long') });
+export const IsLatLong = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsLatLong({ ...opts, message: intlMsg('is_lat_long') });
 
 export const IsUUID = (version?: classValidator.UUIDVersion, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsUUID(version, { ...opts, message: intlMsg('is_uuid') });
@@ -168,8 +159,7 @@ export const IsUUID = (version?: classValidator.UUIDVersion, opts?: classValidat
 export const IsUrl = (uOpts?: ValidatorJS.IsURLOptions, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsUrl(uOpts, { ...opts, message: intlMsg('is_url') });
 
-export const IsBase64 = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsBase64({ ...opts, message: intlMsg('is_base64') });
+export const IsBase64 = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsBase64({ ...opts, message: intlMsg('is_base64') });
 
 export const IsCreditCard = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsCreditCard({ ...opts, message: intlMsg('is_credit_card') });
@@ -183,11 +173,9 @@ export const IsEmail = (eOpts?: ValidatorJS.IsEmailOptions, opts?: classValidato
 export const IsHexColor = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsHexColor({ ...opts, message: intlMsg('is_hex_color') });
 
-export const IsJWT = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsJWT({ ...opts, message: intlMsg('is_jwt') });
+export const IsJWT = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsJWT({ ...opts, message: intlMsg('is_jwt') });
 
-export const IsLocale = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsLocale({ ...opts, message: intlMsg('is_locale') });
+export const IsLocale = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsLocale({ ...opts, message: intlMsg('is_locale') });
 
 export const IsMobilePhone = (
   locale?: ValidatorJS.MobilePhoneLocale,
@@ -195,8 +183,7 @@ export const IsMobilePhone = (
   opts?: classValidator.ValidationOptions,
 ): PropertyDecorator => classValidator.IsMobilePhone(locale, mOpts, { ...opts, message: intlMsg('is_mobile_phone', { locale }) });
 
-export const IsMongoId = (opts?: classValidator.ValidationOptions): PropertyDecorator =>
-  classValidator.IsMongoId({ ...opts, message: intlMsg('is_mongo_id') });
+export const IsMongoId = (opts?: classValidator.ValidationOptions): PropertyDecorator => classValidator.IsMongoId({ ...opts, message: intlMsg('is_mongo_id') });
 
 export const IsPassportNumber = (countryCode: string, opts?: classValidator.ValidationOptions): PropertyDecorator =>
   classValidator.IsPassportNumber(countryCode, { ...opts, message: intlMsg('is_passport_number', { countryCode }) });

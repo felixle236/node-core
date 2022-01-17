@@ -21,7 +21,7 @@ import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { LoginByEmailHandler } from './LoginByEmailHandler';
-import { LoginByEmailInput } from './LoginByEmailInput';
+import { LoginByEmailInput } from './LoginByEmailSchema';
 
 describe('Authorization usecases - Login by email', () => {
   const sandbox = createSandbox();

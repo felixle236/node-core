@@ -3,21 +3,20 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { {DeleteUsecaseName}Output } from './{DeleteUsecaseName}Output';
+import { {DeleteUsecaseName}Output } from './{DeleteUsecaseName}Schema';
 
 @Service()
 export class {DeleteUsecaseName}Handler implements IUsecaseHandler<string, {DeleteUsecaseName}Output> {
-    constructor(
-        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
-    ) {}
+  constructor(@Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository) {}
 
-    async handle(id: string): Promise<{DeleteUsecaseName}Output> {
-        const {camelName} = await this._{camelName}Repository.get(id);
-        if (!{camelName})
-            throw new NotFoundError();
-
-        const result = new {DeleteUsecaseName}Output();
-        result.data = await this._{camelName}Repository.softDelete(id);
-        return result;
+  async handle(id: string): Promise<{DeleteUsecaseName}Output> {
+    const {camelName} = await this._{camelName}Repository.get(id);
+    if (!{camelName}) {
+      throw new NotFoundError();
     }
+
+    const result = new {DeleteUsecaseName}Output();
+    result.data = await this._{camelName}Repository.softDelete(id);
+    return result;
+  }
 }

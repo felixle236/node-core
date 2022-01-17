@@ -13,7 +13,7 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { addSeconds } from 'utils/Datetime';
 import { ActiveClientHandler } from './ActiveClientHandler';
-import { ActiveClientInput } from './ActiveClientInput';
+import { ActiveClientInput } from './ActiveClientSchema';
 
 describe('Client usecases - Active client', () => {
   const sandbox = createSandbox();

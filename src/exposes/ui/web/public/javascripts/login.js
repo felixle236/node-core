@@ -13,7 +13,7 @@ function login() {
         })
     }).done(function(result) {
         if (result.data) {
-            setCookie('token', result.data, 1);
+            setCookie('token', result.data && result.data.token, 1);
             setTimeout(function() { location.reload() }, 100);
         }
     }).fail(function(jqXHR, textStatus) {

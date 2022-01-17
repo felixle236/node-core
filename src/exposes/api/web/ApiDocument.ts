@@ -1,13 +1,5 @@
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
-import {
-  PROJECT_DOMAIN,
-  ENVIRONMENT,
-  PROJECT_NAME,
-  PROJECT_PROTOTYPE,
-  WEB_API_URL,
-  PROJECT_SUPPORT_EMAIL,
-  PROJECT_SUPPORT_NAME,
-} from 'config/Configuration';
+import { PROJECT_DOMAIN, ENVIRONMENT, PROJECT_NAME, PROJECT_PROTOTYPE, WEB_API_URL, PROJECT_SUPPORT_EMAIL, PROJECT_SUPPORT_NAME } from 'config/Configuration';
 import { OpenAPIObject } from 'openapi3-ts';
 import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';

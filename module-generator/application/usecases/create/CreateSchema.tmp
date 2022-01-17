@@ -1,0 +1,13 @@
+import { IsString, IsUUID, MaxLength } from 'shared/decorators/ValidationDecorator';
+import { DataResponse } from 'shared/usecase/DataResponse';
+
+export class {CreateUsecaseName}Input {
+  @IsString()
+  @MaxLength(100)
+  name: string;
+}
+
+export class {CreateUsecaseName}Output extends DataResponse<string> {
+  @IsUUID()
+  data: string;
+}

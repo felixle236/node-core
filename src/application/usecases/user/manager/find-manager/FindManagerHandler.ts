@@ -3,8 +3,7 @@ import { IManagerRepository } from 'application/interfaces/repositories/user/IMa
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { FindManagerInput } from './FindManagerInput';
-import { FindManagerData, FindManagerOutput } from './FindManagerOutput';
+import { FindManagerInput, FindManagerDataOutput, FindManagerOutput } from './FindManagerSchema';
 
 @Service()
 export class FindManagerHandler implements IUsecaseHandler<FindManagerInput, FindManagerOutput> {
@@ -22,7 +21,7 @@ export class FindManagerHandler implements IUsecaseHandler<FindManagerInput, Fin
     const result = new FindManagerOutput();
     result.setPagination(count, param.skip, param.limit);
     result.data = managers.map((manager) => {
-      const data = new FindManagerData();
+      const data = new FindManagerDataOutput();
       data.id = manager.id;
       data.createdAt = manager.createdAt;
       data.firstName = manager.firstName;

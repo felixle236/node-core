@@ -85,11 +85,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     return await query.getCount();
   }
 
-  async get(
-    id: string,
-    _relations?: SelectRelationQuery<TEntity>[] | string[],
-    querySession?: DbQuerySession,
-  ): Promise<TEntity | undefined> {
+  async get(id: string, _relations?: SelectRelationQuery<TEntity>[] | string[], querySession?: DbQuerySession): Promise<TEntity | undefined> {
     const query = this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession).whereInIds(id);
 
     const result = await query.getOne();
@@ -100,11 +96,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     const dataObject = new this._type();
     dataObject.fromEntity(data);
 
-    const result = await this.repository
-      .createQueryBuilder(this._schema.TABLE_NAME, querySession)
-      .insert()
-      .values(dataObject.toJSON())
-      .execute();
+    const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession).insert().values(dataObject.toJSON()).execute();
     return result.identifiers[0].id;
   }
 
@@ -112,11 +104,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     const dataObject = new this._type();
     dataObject.fromEntity(data);
 
-    const result = await this.repository
-      .createQueryBuilder(this._schema.TABLE_NAME, querySession)
-      .insert()
-      .values(dataObject.toJSON())
-      .execute();
+    const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession).insert().values(dataObject.toJSON()).execute();
 
     const result2 = await this.get(result.identifiers[0].id, _relations, querySession);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -138,11 +126,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     const dataObject = new this._type();
     dataObject.fromEntity(data);
 
-    const result = await this.repository
-      .createQueryBuilder(this._schema.TABLE_NAME, querySession)
-      .update(dataObject.toJSON())
-      .whereInIds(id)
-      .execute();
+    const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession).update(dataObject.toJSON()).whereInIds(id).execute();
     return !!result.affected;
   }
 
@@ -155,11 +139,7 @@ export abstract class Repository<TEntity extends Entity, TDbEntity extends DbEnt
     const dataObject = new this._type();
     dataObject.fromEntity(data);
 
-    const result = await this.repository
-      .createQueryBuilder(this._schema.TABLE_NAME, querySession)
-      .update(dataObject.toJSON())
-      .whereInIds(id)
-      .execute();
+    const result = await this.repository.createQueryBuilder(this._schema.TABLE_NAME, querySession).update(dataObject.toJSON()).whereInIds(id).execute();
 
     if (!result.affected) {
       return;

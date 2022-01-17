@@ -1,0 +1,27 @@
+import { RefSchemaArray } from 'shared/decorators/RefSchema';
+import { IsArray, IsDateString, IsOptional, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
+import { PaginationRequest } from 'shared/usecase/PaginationRequest';
+import { PaginationResponse } from 'shared/usecase/PaginationResponse';
+
+export class {FindUsecaseName}Input extends PaginationRequest {
+  @IsString()
+  @IsOptional()
+  keyword?: string;
+}
+
+export class {FindUsecaseName}DataOutput {
+  @IsUUID()
+  id: string;
+
+  @IsDateString()
+  createdAt: Date;
+
+  @IsString()
+  name: string;
+}
+
+export class {FindUsecaseName}Output extends PaginationResponse<{FindUsecaseName}DataOutput> {
+  @IsArray()
+  @RefSchemaArray({FindUsecaseName}DataOutput)
+  data: {FindUsecaseName}DataOutput[];
+}

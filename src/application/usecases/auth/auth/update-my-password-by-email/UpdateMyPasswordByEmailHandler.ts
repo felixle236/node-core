@@ -6,8 +6,7 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { UpdateMyPasswordByEmailInput } from './UpdateMyPasswordByEmailInput';
-import { UpdateMyPasswordByEmailOutput } from './UpdateMyPasswordByEmailOutput';
+import { UpdateMyPasswordByEmailInput, UpdateMyPasswordByEmailOutput } from './UpdateMyPasswordByEmailSchema';
 
 @Service()
 export class UpdateMyPasswordByEmailHandler implements IUsecaseHandler<UpdateMyPasswordByEmailInput, UpdateMyPasswordByEmailOutput> {

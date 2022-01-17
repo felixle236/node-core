@@ -1,0 +1,13 @@
+import { IsBoolean, IsString, MaxLength } from 'shared/decorators/ValidationDecorator';
+import { DataResponse } from 'shared/usecase/DataResponse';
+
+export class {UpdateUsecaseName}Input {
+  @IsString()
+  @MaxLength(100)
+  name: string;
+}
+
+export class {UpdateUsecaseName}Output extends DataResponse<boolean> {
+  @IsBoolean()
+  data: boolean;
+}

@@ -10,7 +10,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { GetListOnlineStatusByIdsHandler } from './GetListOnlineStatusByIdsHandler';
-import { GetListOnlineStatusByIdsInput } from './GetListOnlineStatusByIdsInput';
+import { GetListOnlineStatusByIdsInput } from './GetListOnlineStatusByIdsSchema';
 
 describe('User usecases - Get list online status by ids', () => {
   const sandbox = createSandbox();
@@ -18,9 +18,7 @@ describe('User usecases - Get list online status by ids', () => {
   let getListOnlineStatusByIdsHandler: GetListOnlineStatusByIdsHandler;
 
   before(() => {
-    userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, [
-      'getListOnlineStatusByIds',
-    ]);
+    userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, ['getListOnlineStatusByIds']);
     getListOnlineStatusByIdsHandler = new GetListOnlineStatusByIdsHandler(userOnlineStatusRepository);
   });
 

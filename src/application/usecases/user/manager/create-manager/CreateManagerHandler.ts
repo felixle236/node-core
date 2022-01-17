@@ -6,7 +6,7 @@ import { RoleId } from 'domain/enums/user/RoleId';
 import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthRepository';
 import { IManagerRepository } from 'application/interfaces/repositories/user/IManagerRepository';
 import { CreateAuthByEmailHandler } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailHandler';
-import { CreateAuthByEmailInput } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailInput';
+import { CreateAuthByEmailInput } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailSchema';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
@@ -14,8 +14,7 @@ import { InjectDb, InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
-import { CreateManagerInput } from './CreateManagerInput';
-import { CreateManagerOutput } from './CreateManagerOutput';
+import { CreateManagerInput, CreateManagerOutput } from './CreateManagerSchema';
 import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailExistHandler';
 
 @Service()

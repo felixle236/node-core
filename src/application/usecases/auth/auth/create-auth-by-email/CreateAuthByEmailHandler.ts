@@ -7,8 +7,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
-import { CreateAuthByEmailInput } from './CreateAuthByEmailInput';
-import { CreateAuthByEmailOutput } from './CreateAuthByEmailOutput';
+import { CreateAuthByEmailInput, CreateAuthByEmailOutput } from './CreateAuthByEmailSchema';
 
 @Service()
 export class CreateAuthByEmailHandler implements IUsecaseHandler<CreateAuthByEmailInput, CreateAuthByEmailOutput> {

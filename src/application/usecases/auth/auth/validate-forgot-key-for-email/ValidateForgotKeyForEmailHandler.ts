@@ -7,8 +7,7 @@ import { IManagerRepository } from 'application/interfaces/repositories/user/IMa
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { ValidateForgotKeyForEmailInput } from './ValidateForgotKeyForEmailInput';
-import { ValidateForgotKeyForEmailOutput } from './ValidateForgotKeyForEmailOutput';
+import { ValidateForgotKeyForEmailInput, ValidateForgotKeyForEmailOutput } from './ValidateForgotKeyForEmailSchema';
 
 @Service()
 export class ValidateForgotKeyForEmailHandler implements IUsecaseHandler<ValidateForgotKeyForEmailInput, ValidateForgotKeyForEmailOutput> {

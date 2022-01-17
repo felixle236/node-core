@@ -1,33 +1,26 @@
 import { RoleId } from 'domain/enums/user/RoleId';
 import { ActiveClientHandler } from 'application/usecases/user/client/active-client/ActiveClientHandler';
-import { ActiveClientInput } from 'application/usecases/user/client/active-client/ActiveClientInput';
-import { ActiveClientOutput } from 'application/usecases/user/client/active-client/ActiveClientOutput';
+import { ActiveClientInput, ActiveClientOutput } from 'application/usecases/user/client/active-client/ActiveClientSchema';
 import { ArchiveClientHandler } from 'application/usecases/user/client/archive-client/ArchiveClientHandler';
-import { ArchiveClientOutput } from 'application/usecases/user/client/archive-client/ArchiveClientOutput';
+import { ArchiveClientOutput } from 'application/usecases/user/client/archive-client/ArchiveClientSchema';
 import { CreateClientHandler } from 'application/usecases/user/client/create-client/CreateClientHandler';
-import { CreateClientInput } from 'application/usecases/user/client/create-client/CreateClientInput';
-import { CreateClientOutput } from 'application/usecases/user/client/create-client/CreateClientOutput';
+import { CreateClientInput, CreateClientOutput } from 'application/usecases/user/client/create-client/CreateClientSchema';
 import { DeleteClientHandler } from 'application/usecases/user/client/delete-client/DeleteClientHandler';
-import { DeleteClientOutput } from 'application/usecases/user/client/delete-client/DeleteClientOutput';
+import { DeleteClientOutput } from 'application/usecases/user/client/delete-client/DeleteClientSchema';
 import { FindClientHandler } from 'application/usecases/user/client/find-client/FindClientHandler';
-import { FindClientInput } from 'application/usecases/user/client/find-client/FindClientInput';
-import { FindClientOutput } from 'application/usecases/user/client/find-client/FindClientOutput';
+import { FindClientInput, FindClientOutput } from 'application/usecases/user/client/find-client/FindClientSchema';
 import { GetClientHandler } from 'application/usecases/user/client/get-client/GetClientHandler';
-import { GetClientOutput } from 'application/usecases/user/client/get-client/GetClientOutput';
+import { GetClientOutput } from 'application/usecases/user/client/get-client/GetClientSchema';
 import { GetProfileClientHandler } from 'application/usecases/user/client/get-profile-client/GetProfileClientHandler';
-import { GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientOutput';
+import { GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientSchema';
 import { RegisterClientHandler } from 'application/usecases/user/client/register-client/RegisterClientHandler';
-import { RegisterClientInput } from 'application/usecases/user/client/register-client/RegisterClientInput';
-import { RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientOutput';
+import { RegisterClientInput, RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientSchema';
 import { ResendActivationHandler } from 'application/usecases/user/client/resend-activation/ResendActivationHandler';
-import { ResendActivationInput } from 'application/usecases/user/client/resend-activation/ResendActivationInput';
-import { ResendActivationOutput } from 'application/usecases/user/client/resend-activation/ResendActivationOutput';
+import { ResendActivationInput, ResendActivationOutput } from 'application/usecases/user/client/resend-activation/ResendActivationSchema';
 import { UpdateClientHandler } from 'application/usecases/user/client/update-client/UpdateClientHandler';
-import { UpdateClientInput } from 'application/usecases/user/client/update-client/UpdateClientInput';
-import { UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientOutput';
+import { UpdateClientInput, UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientSchema';
 import { UpdateProfileClientHandler } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientHandler';
-import { UpdateProfileClientInput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientInput';
-import { UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientOutput';
+import { UpdateProfileClientInput, UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientSchema';
 import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put, QueryParams } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UsecaseOptionRequest } from 'shared/decorators/UsecaseOptionRequest';
@@ -94,10 +87,7 @@ export class ClientController {
   @Post('/resend-activation')
   @OpenAPI({ summary: 'Resend activation for client' })
   @ResponseSchema(ResendActivationOutput)
-  resendActivation(
-    @Body() param: ResendActivationInput,
-    @UsecaseOptionRequest() usecaseOption: UsecaseOption,
-  ): Promise<ResendActivationOutput> {
+  resendActivation(@Body() param: ResendActivationInput, @UsecaseOptionRequest() usecaseOption: UsecaseOption): Promise<ResendActivationOutput> {
     return this._resendActivationHandler.handle(param, usecaseOption);
   }
 

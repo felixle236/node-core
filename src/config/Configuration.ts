@@ -174,10 +174,7 @@ export const PAYPAL_KEY = env.get('PAYPAL_KEY').default('').asString();
 
 // NOTIFICATION SERVICE
 
-export const NOTIFICATION_PROVIDER: NotificationProvider = env
-  .get('NOTIFICATION_PROVIDER')
-  .default(NotificationProvider.Console)
-  .asIntPositive();
+export const NOTIFICATION_PROVIDER: NotificationProvider = env.get('NOTIFICATION_PROVIDER').default(NotificationProvider.Console).asIntPositive();
 export const FCM_KEY = env
   .get('FCM_KEY')
   .required(NOTIFICATION_PROVIDER !== NotificationProvider.Console)

@@ -8,11 +8,11 @@ import { ImportClientTestHandler } from 'application/usecases/user/client/import
 import { ImportManagerTestHandler } from 'application/usecases/user/manager/import-manager-test/ImportManagerTestHandler';
 import { GetListOnlineStatusByIdsHandler } from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsHandler';
 import {
-  GetListOnlineStatusByIdsData,
+  GetListOnlineStatusByIdsDataOutput,
   GetListOnlineStatusByIdsOutput,
-} from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsOutput';
+} from 'application/usecases/user/user/get-list-online-status-by-ids/GetListOnlineStatusByIdsSchema';
 import { UploadAvatarHandler } from 'application/usecases/user/user/upload-avatar/UploadAvatarHandler';
-import { UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarOutput';
+import { UploadAvatarOutput } from 'application/usecases/user/user/upload-avatar/UploadAvatarSchema';
 import axios from 'axios';
 import { expect } from 'chai';
 import { WEB_API_PRIVATE_KEY } from 'config/Configuration';
@@ -127,12 +127,12 @@ describe('User controller', () => {
 
   it('Get list online status', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: randomUUID() });
-    const d = new GetListOnlineStatusByIdsData();
+    const d = new GetListOnlineStatusByIdsDataOutput();
     d.id = randomUUID();
     d.isOnline = true;
     d.onlineAt = new Date();
 
-    const d2 = new GetListOnlineStatusByIdsData();
+    const d2 = new GetListOnlineStatusByIdsDataOutput();
     d2.id = randomUUID();
     d2.isOnline = true;
     d2.onlineAt = new Date();

@@ -1,11 +1,4 @@
-import {
-  DbQuerySession,
-  SelectFilterListQuery,
-  SelectFilterPaginationQuery,
-  SelectFilterQuery,
-  SelectRelationQuery,
-  UpdateFieldQuery,
-} from '../DbTypes';
+import { DbQuerySession, SelectFilterListQuery, SelectFilterPaginationQuery, SelectFilterQuery, SelectRelationQuery, UpdateFieldQuery } from '../DbTypes';
 
 export interface IRepository<TEntity> {
   findAll(filter: SelectFilterListQuery<TEntity>): Promise<TEntity[]>;
@@ -25,22 +18,14 @@ export interface IRepository<TEntity> {
 
   get(id: string): Promise<TEntity | undefined>;
   get(id: string, relations: SelectRelationQuery<TEntity>[] | string[]): Promise<TEntity | undefined>;
-  get(
-    id: string,
-    relations: SelectRelationQuery<TEntity>[] | string[] | undefined,
-    querySession: DbQuerySession,
-  ): Promise<TEntity | undefined>;
+  get(id: string, relations: SelectRelationQuery<TEntity>[] | string[] | undefined, querySession: DbQuerySession): Promise<TEntity | undefined>;
 
   create(data: TEntity): Promise<string>;
   create(data: TEntity, querySession: DbQuerySession): Promise<string>;
 
   createGet(data: TEntity): Promise<TEntity>;
   createGet(data: TEntity, relations: SelectRelationQuery<TEntity>[] | string[]): Promise<TEntity>;
-  createGet(
-    data: TEntity,
-    relations: SelectRelationQuery<TEntity>[] | string[] | undefined,
-    querySession: DbQuerySession,
-  ): Promise<TEntity>;
+  createGet(data: TEntity, relations: SelectRelationQuery<TEntity>[] | string[] | undefined, querySession: DbQuerySession): Promise<TEntity>;
 
   createMultiple(list: TEntity[]): Promise<string[]>;
   createMultiple(list: TEntity[], querySession: DbQuerySession): Promise<string[]>;

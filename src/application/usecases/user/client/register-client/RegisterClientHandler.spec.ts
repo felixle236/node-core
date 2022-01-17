@@ -19,9 +19,9 @@ import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { RegisterClientHandler } from './RegisterClientHandler';
-import { RegisterClientInput } from './RegisterClientInput';
+import { RegisterClientInput } from './RegisterClientSchema';
 import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailExistHandler';
-import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistOutput';
+import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistSchema';
 
 describe('Client usecases - Register client', () => {
   const sandbox = createSandbox();

@@ -50,12 +50,7 @@ export class StorageConsoleFactory implements IStorageProvider {
     return `${STORAGE_URL}/${bucketName}/${urlPath}`;
   }
 
-  async upload(
-    bucketName: string,
-    objectName: string,
-    _stream: string | Readable | Buffer,
-    options?: IStorageProviderUploadOption,
-  ): Promise<boolean> {
+  async upload(bucketName: string, objectName: string, _stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
     this._logService.info('StorageService.upload', { bucketName, objectName, options });
     return true;
   }

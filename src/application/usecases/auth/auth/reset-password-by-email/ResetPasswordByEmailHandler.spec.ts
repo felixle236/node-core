@@ -15,7 +15,7 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { addMinutes } from 'utils/Datetime';
 import { ResetPasswordByEmailHandler } from './ResetPasswordByEmailHandler';
-import { ResetPasswordByEmailInput } from './ResetPasswordByEmailInput';
+import { ResetPasswordByEmailInput } from './ResetPasswordByEmailSchema';
 
 describe('Authorization usecases - Reset password by email', () => {
   const sandbox = createSandbox();

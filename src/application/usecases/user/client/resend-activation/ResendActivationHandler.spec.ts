@@ -14,7 +14,7 @@ import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { ResendActivationHandler } from './ResendActivationHandler';
-import { ResendActivationInput } from './ResendActivationInput';
+import { ResendActivationInput } from './ResendActivationSchema';
 
 describe('Client usecases - Resend activation', () => {
   const sandbox = createSandbox();

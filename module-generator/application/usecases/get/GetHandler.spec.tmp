@@ -5,17 +5,17 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 
 describe('{moduleNameText} usecases - {usecaseFncNameText}', () => {
-    const sandbox = createSandbox();
+  const sandbox = createSandbox();
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Test something', () => {
-        expect(true).to.be.eq(false);
-    });
+  it('Test something', () => {
+    expect(true).to.be.eq(false);
+  });
 });

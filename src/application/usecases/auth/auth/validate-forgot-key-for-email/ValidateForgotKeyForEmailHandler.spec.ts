@@ -18,7 +18,7 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { addMinutes } from 'utils/Datetime';
 import { ValidateForgotKeyForEmailHandler } from './ValidateForgotKeyForEmailHandler';
-import { ValidateForgotKeyForEmailInput } from './ValidateForgotKeyForEmailInput';
+import { ValidateForgotKeyForEmailInput } from './ValidateForgotKeyForEmailSchema';
 
 describe('Authorization usecases - Validate forgot key for email', () => {
   const sandbox = createSandbox();

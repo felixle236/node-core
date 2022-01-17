@@ -7,7 +7,7 @@ import { IAuthRepository } from 'application/interfaces/repositories/auth/IAuthR
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
 import { CreateAuthByEmailHandler } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailHandler';
-import { CreateAuthByEmailInput } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailInput';
+import { CreateAuthByEmailInput } from 'application/usecases/auth/auth/create-auth-by-email/CreateAuthByEmailSchema';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
@@ -16,8 +16,7 @@ import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
 import { addSeconds } from 'utils/Datetime';
-import { RegisterClientInput } from './RegisterClientInput';
-import { RegisterClientOutput } from './RegisterClientOutput';
+import { RegisterClientInput, RegisterClientOutput } from './RegisterClientSchema';
 import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailExistHandler';
 
 @Service()

@@ -17,9 +17,9 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CreateClientHandler } from './CreateClientHandler';
-import { CreateClientInput } from './CreateClientInput';
+import { CreateClientInput } from './CreateClientSchema';
 import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailExistHandler';
-import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistOutput';
+import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistSchema';
 
 describe('Client usecases - Create client', () => {
   const sandbox = createSandbox();
@@ -37,13 +37,7 @@ describe('Client usecases - Create client', () => {
     createAuthByEmailHandler = mockUsecaseInjection(CreateAuthByEmailHandler);
     authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getByUsername']);
     clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
-    createClientHandler = new CreateClientHandler(
-      dbContext,
-      checkEmailExistHandler,
-      createAuthByEmailHandler,
-      authRepository,
-      clientRepository,
-    );
+    createClientHandler = new CreateClientHandler(dbContext, checkEmailExistHandler, createAuthByEmailHandler, authRepository, clientRepository);
   });
 
   beforeEach(() => {

@@ -11,7 +11,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { FindManagerHandler } from './FindManagerHandler';
-import { FindManagerInput } from './FindManagerInput';
+import { FindManagerInput } from './FindManagerSchema';
 
 describe('Manager usecases - Find manager', () => {
   const sandbox = createSandbox();

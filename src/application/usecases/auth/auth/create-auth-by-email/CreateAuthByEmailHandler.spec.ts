@@ -13,7 +13,7 @@ import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CreateAuthByEmailHandler } from './CreateAuthByEmailHandler';
-import { CreateAuthByEmailInput } from './CreateAuthByEmailInput';
+import { CreateAuthByEmailInput } from './CreateAuthByEmailSchema';
 
 describe('Authorization usecases - Create authorization by email', () => {
   const sandbox = createSandbox();

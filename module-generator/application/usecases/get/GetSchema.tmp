@@ -1,0 +1,20 @@
+import { RefSchemaObject } from 'shared/decorators/RefSchema';
+import { IsDateString, IsObject, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
+import { DataResponse } from 'shared/usecase/DataResponse';
+
+export class {GetUsecaseName}DataOutput {
+  @IsUUID()
+  id: string;
+
+  @IsDateString()
+  createdAt: Date;
+
+  @IsString()
+  name: string;
+}
+
+export class {GetUsecaseName}Output extends DataResponse<{GetUsecaseName}DataOutput> {
+  @IsObject()
+  @RefSchemaObject({GetUsecaseName}DataOutput)
+  data: {GetUsecaseName}DataOutput;
+}

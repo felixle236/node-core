@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { IAuthJwtService } from 'application/interfaces/services/IAuthJwtService';
 import { ILogService } from 'application/interfaces/services/ILogService';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
-import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
+import { GetUserAuthByJwtDataOutput, GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtSchema';
 import jwt from 'jsonwebtoken';
 import { InjectService } from 'shared/types/Injection';
 import { SinonSandbox } from 'sinon';
@@ -33,7 +33,7 @@ export const mockUserAuthentication = (sandbox: SinonSandbox, data: { userId: st
   const getUserAuthByJwtHandler = new GetUserAuthByJwtHandler(authJwtService, logService);
   mockInjection(GetUserAuthByJwtHandler, getUserAuthByJwtHandler);
 
-  const userAuthData = new GetUserAuthByJwtData();
+  const userAuthData = new GetUserAuthByJwtDataOutput();
   userAuthData.roleId = data.roleId;
   userAuthData.userId = data.userId;
 

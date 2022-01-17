@@ -4,8 +4,7 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { UpdateClientInput } from './UpdateClientInput';
-import { UpdateClientOutput } from './UpdateClientOutput';
+import { UpdateClientInput, UpdateClientOutput } from './UpdateClientSchema';
 
 @Service()
 export class UpdateClientHandler implements IUsecaseHandler<UpdateClientInput, UpdateClientOutput> {

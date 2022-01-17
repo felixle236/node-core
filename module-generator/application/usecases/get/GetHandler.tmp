@@ -3,26 +3,25 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { {GetUsecaseName}Data, {GetUsecaseName}Output } from './{GetUsecaseName}Output';
+import { {GetUsecaseName}DataOutput, {GetUsecaseName}Output } from './{GetUsecaseName}Schema';
 
 @Service()
 export class {GetUsecaseName}Handler implements IUsecaseHandler<string, {GetUsecaseName}Output> {
-    constructor(
-        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
-    ) {}
+  constructor(@Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository) {}
 
-    async handle(id: string): Promise<{GetUsecaseName}Output> {
-        const {camelName} = await this._{camelName}Repository.get(id);
-        if (!{camelName})
-            throw new NotFoundError();
-
-        const data = new {GetUsecaseName}Data();
-        data.id = {camelName}.id;
-        data.createdAt = {camelName}.createdAt;
-        data.name = {camelName}.name;
-
-        const result = new {GetUsecaseName}Output();
-        result.data = data;
-        return result;
+  async handle(id: string): Promise<{GetUsecaseName}Output> {
+    const {camelName} = await this._{camelName}Repository.get(id);
+    if (!{camelName}) {
+      throw new NotFoundError();
     }
+
+    const data = new {GetUsecaseName}DataOutput();
+    data.id = {camelName}.id;
+    data.createdAt = {camelName}.createdAt;
+    data.name = {camelName}.name;
+
+    const result = new {GetUsecaseName}Output();
+    result.data = data;
+    return result;
+  }
 }

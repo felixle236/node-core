@@ -11,7 +11,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { UpdateProfileManagerHandler } from './UpdateProfileManagerHandler';
-import { UpdateProfileManagerInput } from './UpdateProfileManagerInput';
+import { UpdateProfileManagerInput } from './UpdateProfileManagerSchema';
 
 describe('Manager usecases - Update profile manager', () => {
   const sandbox = createSandbox();

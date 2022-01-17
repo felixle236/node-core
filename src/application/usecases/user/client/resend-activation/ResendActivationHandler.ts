@@ -10,8 +10,7 @@ import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
 import { addSeconds } from 'utils/Datetime';
-import { ResendActivationInput } from './ResendActivationInput';
-import { ResendActivationOutput } from './ResendActivationOutput';
+import { ResendActivationInput, ResendActivationOutput } from './ResendActivationSchema';
 
 @Service()
 export class ResendActivationHandler implements IUsecaseHandler<ResendActivationInput, ResendActivationOutput> {

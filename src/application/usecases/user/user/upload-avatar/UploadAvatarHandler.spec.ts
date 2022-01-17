@@ -17,7 +17,7 @@ import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import * as fileLib from 'utils/File';
 import { UploadAvatarHandler } from './UploadAvatarHandler';
-import { UploadAvatarInput } from './UploadAvatarInput';
+import { UploadAvatarInput } from './UploadAvatarSchema';
 
 describe('User usecases - Upload avatar', () => {
   const sandbox = createSandbox();

@@ -9,8 +9,7 @@ import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
 import { removeFile } from 'utils/File';
-import { UploadAvatarInput } from './UploadAvatarInput';
-import { UploadAvatarOutput } from './UploadAvatarOutput';
+import { UploadAvatarInput, UploadAvatarOutput } from './UploadAvatarSchema';
 
 @Service()
 export class UploadAvatarHandler implements IUsecaseHandler<UploadAvatarInput, UploadAvatarOutput> {

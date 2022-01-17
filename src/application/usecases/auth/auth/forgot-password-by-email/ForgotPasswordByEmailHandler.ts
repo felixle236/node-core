@@ -14,8 +14,7 @@ import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { Inject, Service } from 'typedi';
 import { addSeconds } from 'utils/Datetime';
-import { ForgotPasswordByEmailInput } from './ForgotPasswordByEmailInput';
-import { ForgotPasswordByEmailOutput } from './ForgotPasswordByEmailOutput';
+import { ForgotPasswordByEmailInput, ForgotPasswordByEmailOutput } from './ForgotPasswordByEmailSchema';
 
 @Service()
 export class ForgotPasswordByEmailHandler implements IUsecaseHandler<ForgotPasswordByEmailInput, ForgotPasswordByEmailOutput> {

@@ -15,9 +15,9 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { CreateManagerHandler } from './CreateManagerHandler';
-import { CreateManagerInput } from './CreateManagerInput';
+import { CreateManagerInput } from './CreateManagerSchema';
 import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailExistHandler';
-import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistOutput';
+import { CheckEmailExistOutput } from '../../user/check-email-exist/CheckEmailExistSchema';
 
 describe('Manager usecases - Create manager', () => {
   const sandbox = createSandbox();
@@ -36,13 +36,7 @@ describe('Manager usecases - Create manager', () => {
     checkEmailExistHandler = mockUsecaseInjection(CheckEmailExistHandler);
     createAuthByEmailHandler = mockUsecaseInjection(CreateAuthByEmailHandler);
 
-    createManagerHandler = new CreateManagerHandler(
-      dbContext,
-      checkEmailExistHandler,
-      createAuthByEmailHandler,
-      managerRepository,
-      authRepository,
-    );
+    createManagerHandler = new CreateManagerHandler(dbContext, checkEmailExistHandler, createAuthByEmailHandler, managerRepository, authRepository);
   });
 
   beforeEach(() => {

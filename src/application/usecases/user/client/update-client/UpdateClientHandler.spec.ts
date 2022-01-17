@@ -12,7 +12,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { UpdateClientHandler } from './UpdateClientHandler';
-import { UpdateClientInput } from './UpdateClientInput';
+import { UpdateClientInput } from './UpdateClientSchema';
 
 describe('Client usecases - Update client', () => {
   const sandbox = createSandbox();

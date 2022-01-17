@@ -4,27 +4,27 @@ import { randomUUID, randomBytes } from 'crypto';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { Server } from 'http';
 import { ActiveClientHandler } from 'application/usecases/user/client/active-client/ActiveClientHandler';
-import { ActiveClientOutput } from 'application/usecases/user/client/active-client/ActiveClientOutput';
+import { ActiveClientOutput } from 'application/usecases/user/client/active-client/ActiveClientSchema';
 import { ArchiveClientHandler } from 'application/usecases/user/client/archive-client/ArchiveClientHandler';
-import { ArchiveClientOutput } from 'application/usecases/user/client/archive-client/ArchiveClientOutput';
+import { ArchiveClientOutput } from 'application/usecases/user/client/archive-client/ArchiveClientSchema';
 import { CreateClientHandler } from 'application/usecases/user/client/create-client/CreateClientHandler';
-import { CreateClientOutput } from 'application/usecases/user/client/create-client/CreateClientOutput';
+import { CreateClientOutput } from 'application/usecases/user/client/create-client/CreateClientSchema';
 import { DeleteClientHandler } from 'application/usecases/user/client/delete-client/DeleteClientHandler';
-import { DeleteClientOutput } from 'application/usecases/user/client/delete-client/DeleteClientOutput';
+import { DeleteClientOutput } from 'application/usecases/user/client/delete-client/DeleteClientSchema';
 import { FindClientHandler } from 'application/usecases/user/client/find-client/FindClientHandler';
-import { FindClientOutput, FindClientData } from 'application/usecases/user/client/find-client/FindClientOutput';
+import { FindClientDataOutput, FindClientOutput } from 'application/usecases/user/client/find-client/FindClientSchema';
 import { GetClientHandler } from 'application/usecases/user/client/get-client/GetClientHandler';
-import { GetClientData, GetClientOutput } from 'application/usecases/user/client/get-client/GetClientOutput';
+import { GetClientDataOutput, GetClientOutput } from 'application/usecases/user/client/get-client/GetClientSchema';
 import { GetProfileClientHandler } from 'application/usecases/user/client/get-profile-client/GetProfileClientHandler';
-import { GetProfileClientData, GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientOutput';
+import { GetProfileClientDataOutput, GetProfileClientOutput } from 'application/usecases/user/client/get-profile-client/GetProfileClientSchema';
 import { RegisterClientHandler } from 'application/usecases/user/client/register-client/RegisterClientHandler';
-import { RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientOutput';
+import { RegisterClientOutput } from 'application/usecases/user/client/register-client/RegisterClientSchema';
 import { ResendActivationHandler } from 'application/usecases/user/client/resend-activation/ResendActivationHandler';
-import { ResendActivationOutput } from 'application/usecases/user/client/resend-activation/ResendActivationOutput';
+import { ResendActivationOutput } from 'application/usecases/user/client/resend-activation/ResendActivationSchema';
 import { UpdateClientHandler } from 'application/usecases/user/client/update-client/UpdateClientHandler';
-import { UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientOutput';
+import { UpdateClientOutput } from 'application/usecases/user/client/update-client/UpdateClientSchema';
 import { UpdateProfileClientHandler } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientHandler';
-import { UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientOutput';
+import { UpdateProfileClientOutput } from 'application/usecases/user/client/update-profile-client/UpdateProfileClientSchema';
 import axios from 'axios';
 import { expect } from 'chai';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
@@ -95,7 +95,7 @@ describe('Client controller', () => {
   it('Find clients by super admin', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
     const result = new FindClientOutput();
-    const d = new FindClientData();
+    const d = new FindClientDataOutput();
     d.id = randomUUID();
     result.data = [d];
 
@@ -109,7 +109,7 @@ describe('Client controller', () => {
   it('Find clients by manager', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
     const result = new FindClientOutput();
-    const d = new FindClientData();
+    const d = new FindClientDataOutput();
     d.id = randomUUID();
     result.data = [d];
 
@@ -130,7 +130,7 @@ describe('Client controller', () => {
 
   it('Get client by super admin', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.SuperAdmin });
-    const d = new GetClientData();
+    const d = new FindClientDataOutput();
     d.id = randomUUID();
     const result = new GetClientOutput();
     result.data = d;
@@ -144,7 +144,7 @@ describe('Client controller', () => {
 
   it('Get client by manager', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Manager });
-    const d = new GetClientData();
+    const d = new GetClientDataOutput();
     d.id = randomUUID();
     const result = new GetClientOutput();
     result.data = d;
@@ -165,7 +165,7 @@ describe('Client controller', () => {
 
   it('Get profile by client', async () => {
     mockUserAuthentication(sandbox, { userId: randomUUID(), roleId: RoleId.Client });
-    const d = new GetProfileClientData();
+    const d = new GetProfileClientDataOutput();
     d.id = randomUUID();
     const result = new GetProfileClientOutput();
     result.data = d;

@@ -4,7 +4,7 @@ import { AuthType } from 'domain/enums/auth/AuthType';
 import { RoleId } from 'domain/enums/user/RoleId';
 import { IAuthJwtService } from 'application/interfaces/services/IAuthJwtService';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
-import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtOutput';
+import { GetUserAuthByJwtDataOutput, GetUserAuthByJwtOutput } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtSchema';
 import { expect } from 'chai';
 import { Action } from 'routing-controllers';
 import { AccessDeniedError } from 'shared/exceptions/AccessDeniedError';
@@ -59,7 +59,7 @@ describe('Api authenticator', () => {
 
   it('Authorize with access denied error', async () => {
     sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
-    const d = new GetUserAuthByJwtData();
+    const d = new GetUserAuthByJwtDataOutput();
     d.userId = randomUUID();
     d.roleId = RoleId.Client;
     d.type = AuthType.PersonalEmail;
@@ -77,7 +77,7 @@ describe('Api authenticator', () => {
 
   it('Authorize success without checking role', async () => {
     sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
-    const d = new GetUserAuthByJwtData();
+    const d = new GetUserAuthByJwtDataOutput();
     d.userId = randomUUID();
     d.roleId = RoleId.Client;
     d.type = AuthType.PersonalEmail;
@@ -93,7 +93,7 @@ describe('Api authenticator', () => {
 
   it('Authorize success with checking role', async () => {
     sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
-    const d = new GetUserAuthByJwtData();
+    const d = new GetUserAuthByJwtDataOutput();
     d.userId = randomUUID();
     d.roleId = RoleId.Client;
     d.type = AuthType.PersonalEmail;
@@ -108,7 +108,7 @@ describe('Api authenticator', () => {
 
   it('Authorize success and get current user authorized', async () => {
     sandbox.stub(authJwtService, 'getTokenFromHeader').returns(mockJwtToken());
-    const d = new GetUserAuthByJwtData();
+    const d = new GetUserAuthByJwtDataOutput();
     d.userId = randomUUID();
     d.roleId = RoleId.Client;
     d.type = AuthType.PersonalEmail;

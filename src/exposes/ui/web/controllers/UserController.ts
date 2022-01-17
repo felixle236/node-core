@@ -1,6 +1,6 @@
 import { RoleId } from 'domain/enums/user/RoleId';
 import { FindClientHandler } from 'application/usecases/user/client/find-client/FindClientHandler';
-import { FindClientInput } from 'application/usecases/user/client/find-client/FindClientInput';
+import { FindClientInput } from 'application/usecases/user/client/find-client/FindClientSchema';
 import { Response } from 'express';
 import { Authorized, Controller, CurrentUser, Get, QueryParams, Render, Res } from 'routing-controllers';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';

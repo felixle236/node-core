@@ -1,7 +1,0 @@
-import { IsString, MaxLength } from 'shared/decorators/ValidationDecorator';
-
-export class {UpdateUsecaseName}Input {
-    @IsString()
-    @MaxLength(100)
-    name: string;
-}

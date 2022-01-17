@@ -1,17 +1,15 @@
 import { SCHEMA } from '../../common/Schema';
 
 export const {UPPER_CASE_NAME}_SCHEMA = {
-    TABLE_NAME: '{lower_case_name}',
-    COLUMNS: {
-        ...SCHEMA.COLUMNS,
-        NAME: 'name'
-    },
-    RELATED_ONE: {
-        // The field name that we're defined into entity to map the entity related.
-
-    },
-    RELATED_MANY: {
-        // The field name that we're defined into entity to map the entity related.
-
-    }
+  TABLE_NAME: '{lower_case_name}',
+  COLUMNS: {
+    ...SCHEMA.COLUMNS,
+    NAME: 'name',
+  },
+  RELATED_ONE: {
+    // The field name that we're defined into entity to map the entity related.
+  },
+  RELATED_MANY: {
+    // The field name that we're defined into entity to map the entity related.
+  },
 };

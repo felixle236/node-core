@@ -2,8 +2,7 @@ import { IUserOnlineStatusRepository } from 'application/interfaces/repositories
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { UpdateUserOnlineStatusInput } from './UpdateUserOnlineStatusInput';
-import { UpdateUserOnlineStatusOutput } from './UpdateUserOnlineStatusOutput';
+import { UpdateUserOnlineStatusInput, UpdateUserOnlineStatusOutput } from './UpdateUserOnlineStatusSchema';
 
 @Service()
 export class UpdateUserOnlineStatusHandler implements IUsecaseHandler<UpdateUserOnlineStatusInput, UpdateUserOnlineStatusOutput> {

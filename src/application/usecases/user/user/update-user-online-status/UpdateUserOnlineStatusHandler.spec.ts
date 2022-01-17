@@ -8,7 +8,7 @@ import { InjectRepository } from 'shared/types/Injection';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { UpdateUserOnlineStatusHandler } from './UpdateUserOnlineStatusHandler';
-import { UpdateUserOnlineStatusInput } from './UpdateUserOnlineStatusInput';
+import { UpdateUserOnlineStatusInput } from './UpdateUserOnlineStatusSchema';
 
 describe('User usecases - Update user online status', () => {
   const sandbox = createSandbox();
@@ -16,9 +16,7 @@ describe('User usecases - Update user online status', () => {
   let updateUserOnlineStatusHandler: UpdateUserOnlineStatusHandler;
 
   before(() => {
-    userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, [
-      'updateUserOnlineStatus',
-    ]);
+    userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, ['updateUserOnlineStatus']);
     updateUserOnlineStatusHandler = new UpdateUserOnlineStatusHandler(userOnlineStatusRepository);
   });
 

@@ -180,9 +180,9 @@ export class LogService implements ILogService {
           if (LOG_PROVIDER === LogProvider.AwsWinston) {
             return `${remoteIp} ${req.method} ${res.statusCode} ${req.socket.bytesRead}B ${responseSize}B ${latencySeconds}s ${req.url} ${req.headers['user-agent']}`;
           }
-          return `[${new Date().toISOString()}]: ${remoteIp} ${req.method} ${res.statusCode} ${
-            req.socket.bytesRead
-          }B ${responseSize}B ${latencySeconds}s ${req.url} ${req.headers['user-agent']}`;
+          return `[${new Date().toISOString()}]: ${remoteIp} ${req.method} ${res.statusCode} ${req.socket.bytesRead}B ${responseSize}B ${latencySeconds}s ${
+            req.url
+          } ${req.headers['user-agent']}`;
         },
         metaField: null, // this causes the metadata to be stored at the root of the log entry
         responseField: null, // this prevents the response from being included in the metadata (including body and status code)

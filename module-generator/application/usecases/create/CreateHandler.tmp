@@ -5,25 +5,23 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { {CreateUsecaseName}Input } from './{CreateUsecaseName}Input';
-import { {CreateUsecaseName}Output } from './{CreateUsecaseName}Output';
+import { {CreateUsecaseName}Input, {CreateUsecaseName}Output } from './{CreateUsecaseName}Schema';
 
 @Service()
 export class {CreateUsecaseName}Handler implements IUsecaseHandler<{CreateUsecaseName}Input, {CreateUsecaseName}Output> {
-    constructor(
-        @Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository
-    ) {}
+  constructor(@Inject(InjectRepository.{PascalName}) private readonly _{camelName}Repository: I{PascalName}Repository) {}
 
-    async handle(param: {CreateUsecaseName}Input): Promise<{CreateUsecaseName}Output> {
-        const data = new {PascalName}();
-        data.name = param.name;
+  async handle(param: {CreateUsecaseName}Input): Promise<{CreateUsecaseName}Output> {
+    const data = new {PascalName}();
+    data.name = param.name;
 
-        const isExist = await this._{camelName}Repository.checkNameExist(data.name);
-        if (isExist)
-            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'name' });
-
-        const result = new {CreateUsecaseName}Output();
-        result.data = await this._{camelName}Repository.create(data);
-        return result;
+    const isExist = await this._{camelName}Repository.checkNameExist(data.name);
+    if (isExist) {
+      throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'name' });
     }
+
+    const result = new {CreateUsecaseName}Output();
+    result.data = await this._{camelName}Repository.create(data);
+    return result;
+  }
 }

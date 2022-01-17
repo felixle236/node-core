@@ -22,7 +22,7 @@ import { UsecaseOption } from 'shared/usecase/UsecaseOption';
 import { createSandbox } from 'sinon';
 import Container from 'typedi';
 import { ForgotPasswordByEmailHandler } from './ForgotPasswordByEmailHandler';
-import { ForgotPasswordByEmailInput } from './ForgotPasswordByEmailInput';
+import { ForgotPasswordByEmailInput } from './ForgotPasswordByEmailSchema';
 
 describe('Authorization usecases - Forgot password by email', () => {
   const sandbox = createSandbox();

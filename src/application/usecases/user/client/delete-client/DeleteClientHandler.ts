@@ -5,7 +5,7 @@ import { NotFoundError } from 'shared/exceptions/NotFoundError';
 import { InjectDb, InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { DeleteClientOutput } from './DeleteClientOutput';
+import { DeleteClientOutput } from './DeleteClientSchema';
 
 @Service()
 export class DeleteClientHandler implements IUsecaseHandler<string, DeleteClientOutput> {

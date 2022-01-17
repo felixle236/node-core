@@ -3,7 +3,7 @@ import { IManagerRepository } from 'application/interfaces/repositories/user/IMa
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { CheckEmailExistOutput } from './CheckEmailExistOutput';
+import { CheckEmailExistOutput } from './CheckEmailExistSchema';
 
 @Service()
 export class CheckEmailExistHandler implements IUsecaseHandler<string, CheckEmailExistOutput> {

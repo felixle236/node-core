@@ -5,8 +5,7 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { ResetPasswordByEmailInput } from './ResetPasswordByEmailInput';
-import { ResetPasswordByEmailOutput } from './ResetPasswordByEmailOutput';
+import { ResetPasswordByEmailInput, ResetPasswordByEmailOutput } from './ResetPasswordByEmailSchema';
 
 @Service()
 export class ResetPasswordByEmailHandler implements IUsecaseHandler<ResetPasswordByEmailInput, ResetPasswordByEmailOutput> {

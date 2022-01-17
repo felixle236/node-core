@@ -11,8 +11,8 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository, InjectService } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { LoginByEmailInput } from './LoginByEmailInput';
-import { LoginByEmailData, LoginByEmailOutput } from './LoginByEmailOutput';
+import { LoginByEmailInput } from './LoginByEmailSchema';
+import { LoginByEmailDataOutput, LoginByEmailOutput } from './LoginByEmailSchema';
 
 @Service()
 export class LoginByEmailHandler implements IUsecaseHandler<LoginByEmailInput, LoginByEmailOutput> {
@@ -46,7 +46,7 @@ export class LoginByEmailHandler implements IUsecaseHandler<LoginByEmailInput, L
         throw new LogicalError(MessageError.PARAM_NOT_ACTIVATED, { t: 'account' });
       }
     }
-    const data = new LoginByEmailData();
+    const data = new LoginByEmailDataOutput();
     data.token = this._authJwtService.sign(auth.userId, auth.user.roleId, auth.type);
     data.userId = auth.userId;
     data.roleId = auth.user.roleId;

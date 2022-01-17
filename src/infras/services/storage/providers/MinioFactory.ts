@@ -79,12 +79,7 @@ export class MinioFactory implements IStorageProvider {
     return `${STORAGE_URL}/${bucketName}/${urlPath}`;
   }
 
-  upload(
-    bucketName: string,
-    objectName: string,
-    stream: string | Readable | Buffer,
-    options?: IStorageProviderUploadOption,
-  ): Promise<boolean> {
+  upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
     const metaData = {} as minio.ItemBucketMetadata;
     if (options) {
       if (options.mimetype) {

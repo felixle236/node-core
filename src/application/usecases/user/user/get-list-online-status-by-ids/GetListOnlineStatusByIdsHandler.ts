@@ -5,8 +5,7 @@ import { MessageError } from 'shared/exceptions/message/MessageError';
 import { InjectRepository } from 'shared/types/Injection';
 import { IUsecaseHandler } from 'shared/usecase/interfaces/IUsecaseHandler';
 import { Inject, Service } from 'typedi';
-import { GetListOnlineStatusByIdsInput } from './GetListOnlineStatusByIdsInput';
-import { GetListOnlineStatusByIdsData, GetListOnlineStatusByIdsOutput } from './GetListOnlineStatusByIdsOutput';
+import { GetListOnlineStatusByIdsInput, GetListOnlineStatusByIdsDataOutput, GetListOnlineStatusByIdsOutput } from './GetListOnlineStatusByIdsSchema';
 
 @Service()
 export class GetListOnlineStatusByIdsHandler implements IUsecaseHandler<GetListOnlineStatusByIdsInput, GetListOnlineStatusByIdsOutput> {
@@ -24,7 +23,7 @@ export class GetListOnlineStatusByIdsHandler implements IUsecaseHandler<GetListO
       const onlineStatus: { isOnline: boolean; onlineAt?: Date } = onlineStatuses[index]
         ? JSON.parse(onlineStatuses[index])
         : { isOnline: false, onlineAt: null };
-      const data = new GetListOnlineStatusByIdsData();
+      const data = new GetListOnlineStatusByIdsDataOutput();
       data.id = id;
       data.isOnline = onlineStatus.isOnline;
       data.onlineAt = onlineStatus.onlineAt;

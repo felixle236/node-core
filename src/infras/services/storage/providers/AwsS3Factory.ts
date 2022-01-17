@@ -148,12 +148,7 @@ export class AwsS3Factory implements IStorageProvider {
     return `${STORAGE_URL}/${bucketName}/${urlPath}`;
   }
 
-  upload(
-    bucketName: string,
-    objectName: string,
-    stream: string | Readable | Buffer,
-    options?: IStorageProviderUploadOption,
-  ): Promise<boolean> {
+  upload(bucketName: string, objectName: string, stream: string | Readable | Buffer, options?: IStorageProviderUploadOption): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (typeof stream === 'string') {
         stream = fs.createReadStream(stream);
