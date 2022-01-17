@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import 'shared/types/Global';
 import path from 'path';
 import dotenv from 'dotenv';
 import env from 'env-var';
 import { Environment, LogProvider, MailProvider, NotificationProvider, SmsProvider, StorageProvider } from 'shared/types/Environment';
+
 dotenv.config();
 
 // SYSTEM ENVIRONMENT
 export const NODE_ENV = env.get('NODE_ENV').required().asString();
-const keyEnv = Object.keys(Environment).find(key => Environment[key] === NODE_ENV);
+const keyEnv = Object.keys(Environment).find((key) => Environment[key] === NODE_ENV);
 export const ENVIRONMENT: Environment = keyEnv ? Environment[keyEnv] : Environment.Local;
 export const PROJECT_ID = env.get('PROJECT_ID').required().asString();
 export const PROJECT_NAME = env.get('PROJECT_NAME').required().asString();
@@ -61,17 +63,12 @@ export const DB_PASS = env.get('DB_PASS').required().asString();
 
 // DB CACHING CONFIGURATION
 
-export const DB_CACHING_HOST = env.get('DB_CACHING_HOST').required().asString();
-export const DB_CACHING_PORT = env.get('DB_CACHING_PORT').required().asPortNumber();
-export const DB_CACHING_PASSWORD = env.get('DB_CACHING_PASSWORD').asString();
+export const DB_CACHING_URI = env.get('DB_CACHING_URI').required().asString();
 export const DB_CACHING_PREFIX = env.get('DB_CACHING_PREFIX').asString();
 
 // DB SOCKET CONFIGURATION
 
-export const DB_SOCKET_HOST = env.get('DB_SOCKET_HOST').required().asString();
-export const DB_SOCKET_PORT = env.get('DB_SOCKET_PORT').required().asPortNumber();
-export const DB_SOCKET_PASSWORD = env.get('DB_SOCKET_PASSWORD').asString();
-export const DB_SOCKET_PREFIX = env.get('DB_SOCKET_PREFIX').asString();
+export const DB_SOCKET_URI = env.get('DB_SOCKET_URI').required().asString();
 
 // AUTHENTICATION SERVICE
 
@@ -86,14 +83,32 @@ export const LOG_PROVIDER: LogProvider = env.get('LOG_PROVIDER').default(LogProv
 // STORAGE SERVICE
 
 export const STORAGE_PROVIDER: StorageProvider = env.get('STORAGE_PROVIDER').default(StorageProvider.Console).asIntPositive();
-export const STORAGE_URL = env.get('STORAGE_URL').required(STORAGE_PROVIDER !== StorageProvider.Console).asUrlString();
+export const STORAGE_URL = env
+  .get('STORAGE_URL')
+  .required(STORAGE_PROVIDER !== StorageProvider.Console)
+  .asUrlString();
 export const STORAGE_UPLOAD_DIR = env.get('STORAGE_UPLOAD_DIR').default(path.join(__dirname, 'uploads')).asString();
-export const STORAGE_BUCKET_NAME = env.get('STORAGE_BUCKET_NAME').required(STORAGE_PROVIDER !== StorageProvider.Console).asString();
+export const STORAGE_BUCKET_NAME = env
+  .get('STORAGE_BUCKET_NAME')
+  .required(STORAGE_PROVIDER !== StorageProvider.Console)
+  .asString();
 
-export const MINIO_HOST = env.get('MINIO_HOST').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
-export const MINIO_PORT = env.get('MINIO_PORT').required(STORAGE_PROVIDER === StorageProvider.MinIO).asPortNumber();
-export const MINIO_ACCESS_KEY = env.get('MINIO_ACCESS_KEY').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
-export const MINIO_SECRET_KEY = env.get('MINIO_SECRET_KEY').required(STORAGE_PROVIDER === StorageProvider.MinIO).asString();
+export const MINIO_HOST = env
+  .get('MINIO_HOST')
+  .required(STORAGE_PROVIDER === StorageProvider.MinIO)
+  .asString();
+export const MINIO_PORT = env
+  .get('MINIO_PORT')
+  .required(STORAGE_PROVIDER === StorageProvider.MinIO)
+  .asPortNumber();
+export const MINIO_ACCESS_KEY = env
+  .get('MINIO_ACCESS_KEY')
+  .required(STORAGE_PROVIDER === StorageProvider.MinIO)
+  .asString();
+export const MINIO_SECRET_KEY = env
+  .get('MINIO_SECRET_KEY')
+  .required(STORAGE_PROVIDER === StorageProvider.MinIO)
+  .asString();
 export const MINIO_USE_SSL = env.get('MINIO_USE_SSL').default(0).asBool();
 
 const REQUIRED_GCP_CREDENTIAL = STORAGE_PROVIDER === StorageProvider.GoogleStorage;
@@ -103,24 +118,54 @@ export const GOOGLE_STORAGE_CLASS = env.get('GOOGLE_STORAGE_CLASS').required(REQ
 // MAIL SERVICE
 
 export const MAIL_PROVIDER: MailProvider = env.get('MAIL_PROVIDER').default(MailProvider.Console).asIntPositive();
-export const MAIL_SENDER_NAME = env.get('MAIL_SENDER_NAME').required(MAIL_PROVIDER !== MailProvider.Console).asString();
-export const MAIL_SENDER_EMAIL = env.get('MAIL_SENDER_EMAIL').required(MAIL_PROVIDER !== MailProvider.Console).asString();
+export const MAIL_SENDER_NAME = env
+  .get('MAIL_SENDER_NAME')
+  .required(MAIL_PROVIDER !== MailProvider.Console)
+  .asString();
+export const MAIL_SENDER_EMAIL = env
+  .get('MAIL_SENDER_EMAIL')
+  .required(MAIL_PROVIDER !== MailProvider.Console)
+  .asString();
 
-export const GOOGLE_SMTP_USERNAME = env.get('GOOGLE_SMTP_USERNAME').required(MAIL_PROVIDER === MailProvider.GoogleSmtp).asString();
-export const GOOGLE_SMTP_PASSWORD = env.get('GOOGLE_SMTP_PASSWORD').required(MAIL_PROVIDER === MailProvider.GoogleSmtp).asString();
+export const GOOGLE_SMTP_USERNAME = env
+  .get('GOOGLE_SMTP_USERNAME')
+  .required(MAIL_PROVIDER === MailProvider.GoogleSmtp)
+  .asString();
+export const GOOGLE_SMTP_PASSWORD = env
+  .get('GOOGLE_SMTP_PASSWORD')
+  .required(MAIL_PROVIDER === MailProvider.GoogleSmtp)
+  .asString();
 
-export const MAILGUN_DOMAIN = env.get('MAILGUN_DOMAIN').required(MAIL_PROVIDER === MailProvider.MailGun).asString();
-export const MAILGUN_API_KEY = env.get('MAILGUN_API_KEY').required(MAIL_PROVIDER === MailProvider.MailGun).asString();
+export const MAILGUN_DOMAIN = env
+  .get('MAILGUN_DOMAIN')
+  .required(MAIL_PROVIDER === MailProvider.MailGun)
+  .asString();
+export const MAILGUN_API_KEY = env
+  .get('MAILGUN_API_KEY')
+  .required(MAIL_PROVIDER === MailProvider.MailGun)
+  .asString();
 
-export const SENDINBLUE_API_KEY = env.get('SENDINBLUE_API_KEY').required(MAIL_PROVIDER === MailProvider.SendInBlue).asString();
+export const SENDINBLUE_API_KEY = env
+  .get('SENDINBLUE_API_KEY')
+  .required(MAIL_PROVIDER === MailProvider.SendInBlue)
+  .asString();
 
 // SMS SERVICE
 
 export const SMS_PROVIDER: SmsProvider = env.get('SMS_PROVIDER').default(SmsProvider.Console).asIntPositive();
-export const SMS_SENDER_OR_PHONE = env.get('SMS_SENDER_OR_PHONE').required(SMS_PROVIDER !== SmsProvider.Console).asString();
+export const SMS_SENDER_OR_PHONE = env
+  .get('SMS_SENDER_OR_PHONE')
+  .required(SMS_PROVIDER !== SmsProvider.Console)
+  .asString();
 
-export const TWILIO_ACCOUNT_SID = env.get('TWILIO_ACCOUNT_SID').required(SMS_PROVIDER === SmsProvider.Twilio).asString();
-export const TWILIO_AUTH_TOKEN = env.get('TWILIO_AUTH_TOKEN').required(SMS_PROVIDER === SmsProvider.Twilio).asString();
+export const TWILIO_ACCOUNT_SID = env
+  .get('TWILIO_ACCOUNT_SID')
+  .required(SMS_PROVIDER === SmsProvider.Twilio)
+  .asString();
+export const TWILIO_AUTH_TOKEN = env
+  .get('TWILIO_AUTH_TOKEN')
+  .required(SMS_PROVIDER === SmsProvider.Twilio)
+  .asString();
 
 // PAYMENT SERVICE
 
@@ -129,9 +174,18 @@ export const PAYPAL_KEY = env.get('PAYPAL_KEY').default('').asString();
 
 // NOTIFICATION SERVICE
 
-export const NOTIFICATION_PROVIDER: NotificationProvider = env.get('NOTIFICATION_PROVIDER').default(NotificationProvider.Console).asIntPositive();
-export const FCM_KEY = env.get('FCM_KEY').required(NOTIFICATION_PROVIDER !== NotificationProvider.Console).asString();
-export const APN_KEY = env.get('APN_KEY').required(NOTIFICATION_PROVIDER !== NotificationProvider.Console).asString();
+export const NOTIFICATION_PROVIDER: NotificationProvider = env
+  .get('NOTIFICATION_PROVIDER')
+  .default(NotificationProvider.Console)
+  .asIntPositive();
+export const FCM_KEY = env
+  .get('FCM_KEY')
+  .required(NOTIFICATION_PROVIDER !== NotificationProvider.Console)
+  .asString();
+export const APN_KEY = env
+  .get('APN_KEY')
+  .required(NOTIFICATION_PROVIDER !== NotificationProvider.Console)
+  .asString();
 
 // CLOUD CREDENTIALS
 

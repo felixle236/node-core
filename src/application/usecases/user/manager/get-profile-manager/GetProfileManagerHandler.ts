@@ -7,25 +7,24 @@ import { GetProfileManagerData, GetProfileManagerOutput } from './GetProfileMana
 
 @Service()
 export class GetProfileManagerHandler implements IUsecaseHandler<string, GetProfileManagerOutput> {
-    constructor(
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
-    ) {}
+  constructor(@Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository) {}
 
-    async handle(id: string): Promise<GetProfileManagerOutput> {
-        const manager = await this._managerRepository.get(id);
-        if (!manager)
-            throw new NotFoundError();
-
-        const data = new GetProfileManagerData();
-        data.id = manager.id;
-        data.createdAt = manager.createdAt;
-        data.firstName = manager.firstName;
-        data.lastName = manager.lastName;
-        data.email = manager.email;
-        data.avatar = manager.avatar;
-
-        const result = new GetProfileManagerOutput();
-        result.data = data;
-        return result;
+  async handle(id: string): Promise<GetProfileManagerOutput> {
+    const manager = await this._managerRepository.get(id);
+    if (!manager) {
+      throw new NotFoundError();
     }
+
+    const data = new GetProfileManagerData();
+    data.id = manager.id;
+    data.createdAt = manager.createdAt;
+    data.firstName = manager.firstName;
+    data.lastName = manager.lastName;
+    data.email = manager.email;
+    data.avatar = manager.avatar;
+
+    const result = new GetProfileManagerOutput();
+    result.data = data;
+    return result;
+  }
 }

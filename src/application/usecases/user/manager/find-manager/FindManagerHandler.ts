@@ -8,32 +8,30 @@ import { FindManagerData, FindManagerOutput } from './FindManagerOutput';
 
 @Service()
 export class FindManagerHandler implements IUsecaseHandler<FindManagerInput, FindManagerOutput> {
-    constructor(
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
-    ) {}
+  constructor(@Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository) {}
 
-    async handle(param: FindManagerInput): Promise<FindManagerOutput> {
-        const [managers, count] = await this._managerRepository.findAndCount({
-            roleIds: [RoleId.Manager],
-            keyword: param.keyword,
-            status: param.status,
-            skip: param.skip,
-            limit: param.limit
-        });
+  async handle(param: FindManagerInput): Promise<FindManagerOutput> {
+    const [managers, count] = await this._managerRepository.findAndCount({
+      roleIds: [RoleId.Manager],
+      keyword: param.keyword,
+      status: param.status,
+      skip: param.skip,
+      limit: param.limit,
+    });
 
-        const result = new FindManagerOutput();
-        result.setPagination(count, param.skip, param.limit);
-        result.data = managers.map(manager => {
-            const data = new FindManagerData();
-            data.id = manager.id;
-            data.createdAt = manager.createdAt;
-            data.firstName = manager.firstName;
-            data.lastName = manager.lastName;
-            data.email = manager.email;
-            data.avatar = manager.avatar;
+    const result = new FindManagerOutput();
+    result.setPagination(count, param.skip, param.limit);
+    result.data = managers.map((manager) => {
+      const data = new FindManagerData();
+      data.id = manager.id;
+      data.createdAt = manager.createdAt;
+      data.firstName = manager.firstName;
+      data.lastName = manager.lastName;
+      data.email = manager.email;
+      data.avatar = manager.avatar;
 
-            return data;
-        });
-        return result;
-    }
+      return data;
+    });
+    return result;
+  }
 }

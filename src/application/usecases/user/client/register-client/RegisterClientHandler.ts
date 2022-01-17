@@ -22,54 +22,56 @@ import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailE
 
 @Service()
 export class RegisterClientHandler implements IUsecaseHandler<RegisterClientInput, RegisterClientOutput> {
-    constructor(
-        @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
-        @Inject(InjectService.Mail) private readonly _mailService: IMailService,
-        private readonly _checkEmailExistHandler: CheckEmailExistHandler,
-        private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
-        @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
-        @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository
-    ) {}
+  constructor(
+    @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
+    @Inject(InjectService.Mail) private readonly _mailService: IMailService,
+    private readonly _checkEmailExistHandler: CheckEmailExistHandler,
+    private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
+    @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
+    @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
+  ) {}
 
-    async handle(param: RegisterClientInput, usecaseOption: UsecaseOption): Promise<RegisterClientOutput> {
-        const data = new Client();
-        data.id = randomUUID();
-        data.roleId = RoleId.Client;
-        data.firstName = param.firstName;
-        data.lastName = param.lastName;
-        data.email = param.email;
+  async handle(param: RegisterClientInput, usecaseOption: UsecaseOption): Promise<RegisterClientOutput> {
+    const data = new Client();
+    data.id = randomUUID();
+    data.roleId = RoleId.Client;
+    data.firstName = param.firstName;
+    data.lastName = param.lastName;
+    data.email = param.email;
 
-        const auth = new CreateAuthByEmailInput();
-        auth.userId = data.id;
-        auth.email = data.email;
+    const auth = new CreateAuthByEmailInput();
+    auth.userId = data.id;
+    auth.email = data.email;
 
-        Auth.validatePassword(param.password);
-        auth.password = param.password;
+    Auth.validatePassword(param.password);
+    auth.password = param.password;
 
-        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
-        if (checkEmailResult.data)
-            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
-
-        const isExistUsername = await this._authRepository.getByUsername(data.email);
-        if (isExistUsername)
-            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
-
-        const activeKey = randomBytes(32).toString('hex');
-        data.status = ClientStatus.Inactived;
-        data.activeKey = activeKey;
-        data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-
-        return await this._dbContext.runTransaction(async querySession => {
-            await this._clientRepository.create(data, querySession);
-            usecaseOption.querySession = querySession;
-            await this._createAuthByEmailHandler.handle(auth, usecaseOption);
-
-            const name = `${data.firstName} ${data.lastName}`;
-            this._mailService.sendUserActivation({ name, email: data.email, activeKey, locale: usecaseOption.locale });
-
-            const result = new RegisterClientOutput();
-            result.data = true;
-            return result;
-        });
+    const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+    if (checkEmailResult.data) {
+      throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
     }
+
+    const isExistUsername = await this._authRepository.getByUsername(data.email);
+    if (isExistUsername) {
+      throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
+    }
+
+    const activeKey = randomBytes(32).toString('hex');
+    data.status = ClientStatus.Inactived;
+    data.activeKey = activeKey;
+    data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+
+    return await this._dbContext.runTransaction(async (querySession) => {
+      await this._clientRepository.create(data, querySession);
+      usecaseOption.querySession = querySession;
+      await this._createAuthByEmailHandler.handle(auth, usecaseOption);
+
+      const name = `${data.firstName} ${data.lastName}`;
+      this._mailService.sendUserActivation({ name, email: data.email, activeKey, locale: usecaseOption.locale });
+
+      const result = new RegisterClientOutput();
+      result.data = true;
+      return result;
+    });
+  }
 }

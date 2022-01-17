@@ -7,26 +7,26 @@ import { CheckEmailExistOutput } from './CheckEmailExistOutput';
 
 @Service()
 export class CheckEmailExistHandler implements IUsecaseHandler<string, CheckEmailExistOutput> {
-    constructor(
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
-        @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository
-    ) {}
+  constructor(
+    @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
+    @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
+  ) {}
 
-    async handle(email: string): Promise<CheckEmailExistOutput> {
-        const result = new CheckEmailExistOutput();
-        let isExist = await this._managerRepository.checkEmailExist(email);
-        if (isExist) {
-            result.data = true;
-            return result;
-        }
-
-        isExist = await this._clientRepository.checkEmailExist(email);
-        if (isExist) {
-            result.data = true;
-            return result;
-        }
-
-        result.data = false;
-        return result;
+  async handle(email: string): Promise<CheckEmailExistOutput> {
+    const result = new CheckEmailExistOutput();
+    let isExist = await this._managerRepository.checkEmailExist(email);
+    if (isExist) {
+      result.data = true;
+      return result;
     }
+
+    isExist = await this._clientRepository.checkEmailExist(email);
+    if (isExist) {
+      result.data = true;
+      return result;
+    }
+
+    result.data = false;
+    return result;
+  }
 }

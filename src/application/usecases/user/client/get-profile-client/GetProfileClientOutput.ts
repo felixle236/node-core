@@ -5,50 +5,50 @@ import { IsDateString, IsEnum, IsObject, IsOptional, IsString, IsUUID } from 'sh
 import { DataResponse } from 'shared/usecase/DataResponse';
 
 export class GetProfileClientData {
-    @IsUUID()
-    id: string;
+  @IsUUID()
+  id: string;
 
-    @IsDateString()
-    createdAt: Date;
+  @IsDateString()
+  createdAt: Date;
 
-    @IsString()
-    firstName: string;
+  @IsString()
+  firstName: string;
 
-    @IsString()
-    @IsOptional()
-    lastName?: string;
+  @IsString()
+  @IsOptional()
+  lastName?: string;
 
-    @IsString()
-    email: string;
+  @IsString()
+  email: string;
 
-    @IsString()
-    @IsOptional()
-    avatar?: string;
+  @IsString()
+  @IsOptional()
+  avatar?: string;
 
-    @IsEnum(GenderType)
-    @IsOptional()
-    gender?: GenderType;
+  @IsEnum(GenderType)
+  @IsOptional()
+  gender?: GenderType;
 
-    @IsString()
-    @IsOptional()
-    birthday?: string;
+  @IsString()
+  @IsOptional()
+  birthday?: string;
 
-    @IsString()
-    @IsOptional()
-    phone?: string;
+  @IsString()
+  @IsOptional()
+  phone?: string;
 
-    @IsObject()
-    @IsOptional()
-    @RefSchemaObject(AddressInfoData)
-    address?: AddressInfoData;
+  @IsObject()
+  @IsOptional()
+  @RefSchemaObject(AddressInfoData)
+  address?: AddressInfoData;
 
-    @IsString()
-    @IsOptional()
-    locale?: string;
+  @IsString()
+  @IsOptional()
+  locale?: string;
 }
 
 export class GetProfileClientOutput extends DataResponse<GetProfileClientData> {
-    @IsObject()
-    @RefSchemaObject(GetProfileClientData)
-    data: GetProfileClientData;
+  @IsObject()
+  @RefSchemaObject(GetProfileClientData)
+  data: GetProfileClientData;
 }

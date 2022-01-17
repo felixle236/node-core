@@ -1,4 +1,4 @@
 export interface IStorageProviderUploadOption {
-    mimetype?: string;
-    size?: number;
+  mimetype?: string;
+  size?: number;
 }

@@ -9,18 +9,18 @@ import { ISmsProvider } from '../interfaces/ISmsProvider';
  */
 
 export class SendInBlueFactory implements ISmsProvider {
-    private readonly _provider;
+  private readonly _provider;
 
-    constructor(apiKey: string) {
-        sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
-        this._provider = new sibApiV3Sdk.TransactionalSMSApi();
-    }
+  constructor(apiKey: string) {
+    sibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;
+    this._provider = new sibApiV3Sdk.TransactionalSMSApi();
+  }
 
-    async send(phoneNumber: string, content: string): Promise<any> {
-        return await this._provider.sendTransacSms({
-            sender: SMS_SENDER_OR_PHONE,
-            recipient: phoneNumber,
-            content
-        });
-    }
+  async send(phoneNumber: string, content: string): Promise<any> {
+    return await this._provider.sendTransacSms({
+      sender: SMS_SENDER_OR_PHONE,
+      recipient: phoneNumber,
+      content,
+    });
+  }
 }

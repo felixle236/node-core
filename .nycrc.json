@@ -1,31 +1,32 @@
 {
-    "check-coverage": true,
-    "lines": 80,
-    "watermarks": {
-        "lines": [80, 90],
-        "functions": [80, 90],
-        "branches": [80, 90],
-        "statements": [80, 90]
-    },
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude": [
-        "**/shared/**",
-        "**/entities/**",
-        "**/middlewares/**",
-        "**/DbContext.ts"
-    ],
-    "extension": [
-        ".ts"
-    ],
-    "require": [
-        "ts-node/register",
-        "tsconfig-paths/register"
-    ],
-    "reporter": [],
-    "exit-on-error": true,
-    "instrument": true,
-    "all": false,
-    "cache": false
+  "check-coverage": true,
+  "lines": 80,
+  "watermarks": {
+    "lines": [80, 90],
+    "functions": [80, 90],
+    "branches": [80, 90],
+    "statements": [80, 90]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/shared/**",
+    "**/entities/**",
+    "**/middlewares/**",
+    "**/DbContext.ts",
+    "**/RedisContext.ts"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "require": [
+    "ts-node/register",
+    "tsconfig-paths/register"
+  ],
+  "reporter": [],
+  "exit-on-error": true,
+  "instrument": true,
+  "all": false,
+  "cache": false
 }

@@ -1,6 +1,5 @@
 import { User } from 'domain/entities/user/User';
 import { IRepository } from 'shared/database/interfaces/IRepository';
 
-export interface IUserRepository extends IRepository<User> {
-
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IUserRepository extends IRepository<User> {}

@@ -12,43 +12,43 @@ import Container from 'typedi';
 import { ArchiveClientHandler } from './ArchiveClientHandler';
 
 describe('Client usecases - Archive client', () => {
-    const sandbox = createSandbox();
-    let clientRepository: IClientRepository;
-    let archiveClientHandler: ArchiveClientHandler;
-    let clientTest: Client;
+  const sandbox = createSandbox();
+  let clientRepository: IClientRepository;
+  let archiveClientHandler: ArchiveClientHandler;
+  let clientTest: Client;
 
-    before(() => {
-        clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
-        archiveClientHandler = new ArchiveClientHandler(clientRepository);
-    });
+  before(() => {
+    clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
+    archiveClientHandler = new ArchiveClientHandler(clientRepository);
+  });
 
-    beforeEach(() => {
-        clientTest = new Client();
-        clientTest.id = randomUUID();
-    });
+  beforeEach(() => {
+    clientTest = new Client();
+    clientTest.id = randomUUID();
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Archive client with data not found error', async () => {
-        sandbox.stub(clientRepository, 'get').resolves();
-        const error = await archiveClientHandler.handle(clientTest.id).catch(error => error);
-        const err = new NotFoundError();
+  it('Archive client with data not found error', async () => {
+    sandbox.stub(clientRepository, 'get').resolves();
+    const error = await archiveClientHandler.handle(clientTest.id).catch((error) => error);
+    const err = new NotFoundError();
 
-        expect(error.code).to.eq(err.code);
-        expect(error.message).to.eq(err.message);
-    });
+    expect(error.code).to.eq(err.code);
+    expect(error.message).to.eq(err.message);
+  });
 
-    it('Archive client', async () => {
-        sandbox.stub(clientRepository, 'get').resolves(clientTest);
-        sandbox.stub(clientRepository, 'update').resolves(true);
+  it('Archive client', async () => {
+    sandbox.stub(clientRepository, 'get').resolves(clientTest);
+    sandbox.stub(clientRepository, 'update').resolves(true);
 
-        const result = await archiveClientHandler.handle(clientTest.id);
-        expect(result.data).to.eq(true);
-    });
+    const result = await archiveClientHandler.handle(clientTest.id);
+    expect(result.data).to.eq(true);
+  });
 });

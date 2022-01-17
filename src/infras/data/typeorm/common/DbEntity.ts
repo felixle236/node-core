@@ -3,47 +3,47 @@ import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateC
 import { SCHEMA } from './Schema';
 
 export abstract class DbEntity<TEntity extends Entity> {
-    constructor(private _type: { new(): TEntity }) {}
+  constructor(private _type: { new (): TEntity }) {}
 
-    @PrimaryGeneratedColumn('uuid', { name: SCHEMA.COLUMNS.ID })
-    id: string;
+  @PrimaryGeneratedColumn('uuid', { name: SCHEMA.COLUMNS.ID })
+  id: string;
 
-    @CreateDateColumn({ name: SCHEMA.COLUMNS.CREATED_AT, type: 'timestamptz' })
-    createdAt: Date;
+  @CreateDateColumn({ name: SCHEMA.COLUMNS.CREATED_AT, type: 'timestamptz' })
+  createdAt: Date;
 
-    @UpdateDateColumn({ name: SCHEMA.COLUMNS.UPDATED_AT, type: 'timestamptz' })
-    updatedAt: Date;
+  @UpdateDateColumn({ name: SCHEMA.COLUMNS.UPDATED_AT, type: 'timestamptz' })
+  updatedAt: Date;
 
-    @DeleteDateColumn({ name: SCHEMA.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
-    deletedAt?: Date;
+  @DeleteDateColumn({ name: SCHEMA.COLUMNS.DELETED_AT, type: 'timestamptz', nullable: true })
+  deletedAt?: Date;
 
-    /* Relationship */
+  /* Relationship */
 
-    /* Handlers */
+  /* Handlers */
 
-    toEntity(): TEntity {
-        const entity = new this._type();
-        entity.id = this.id;
-        entity.createdAt = this.createdAt;
-        entity.updatedAt = this.updatedAt;
-        entity.deletedAt = this.deletedAt;
-        return entity;
-    }
+  toEntity(): TEntity {
+    const entity = new this._type();
+    entity.id = this.id;
+    entity.createdAt = this.createdAt;
+    entity.updatedAt = this.updatedAt;
+    entity.deletedAt = this.deletedAt;
+    return entity;
+  }
 
-    fromEntity(entity: TEntity): void {
-        this.id = entity.id;
-        this.createdAt = entity.createdAt;
-        this.updatedAt = entity.updatedAt;
-        this.deletedAt = entity.deletedAt;
-    }
+  fromEntity(entity: TEntity): void {
+    this.id = entity.id;
+    this.createdAt = entity.createdAt;
+    this.updatedAt = entity.updatedAt;
+    this.deletedAt = entity.deletedAt;
+  }
 
-    toJSON(): any {
-        const data = JSON.parse(JSON.stringify({ ...this }));
-        delete data._type;
-        return data;
-    }
+  toJSON(): any {
+    const data = JSON.parse(JSON.stringify({ ...this }));
+    delete data._type;
+    return data;
+  }
 
-    static getIndexFilterDeletedColumn(): string {
-        return `${SCHEMA.COLUMNS.DELETED_AT} IS NULL`;
-    }
+  static getIndexFilterDeletedColumn(): string {
+    return `${SCHEMA.COLUMNS.DELETED_AT} IS NULL`;
+  }
 }

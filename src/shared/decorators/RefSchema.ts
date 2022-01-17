@@ -8,12 +8,12 @@ export const COMPONENT_SCHEMA_PATH = '#/components/schemas/';
  * Reference schema object
  */
 export function RefSchemaObject(type: Function): (target: object | Function, key?: string) => void {
-    return JSONSchema({ type: 'object', $ref: COMPONENT_SCHEMA_PATH + type.name });
+  return JSONSchema({ type: 'object', $ref: COMPONENT_SCHEMA_PATH + type.name });
 }
 
 /**
  * Reference schema object
  */
 export function RefSchemaArray(type: Function): (target: object | Function, key?: string) => void {
-    return JSONSchema({ type: 'array', items: { $ref: COMPONENT_SCHEMA_PATH + type.name } });
+  return JSONSchema({ type: 'array', items: { $ref: COMPONENT_SCHEMA_PATH + type.name } });
 }

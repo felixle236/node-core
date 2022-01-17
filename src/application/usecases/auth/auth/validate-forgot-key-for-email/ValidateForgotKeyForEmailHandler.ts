@@ -12,31 +12,32 @@ import { ValidateForgotKeyForEmailOutput } from './ValidateForgotKeyForEmailOutp
 
 @Service()
 export class ValidateForgotKeyForEmailHandler implements IUsecaseHandler<ValidateForgotKeyForEmailInput, ValidateForgotKeyForEmailOutput> {
-    constructor(
-        @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
-        @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository
-    ) {}
+  constructor(
+    @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
+    @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
+    @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
+  ) {}
 
-    async handle(param: ValidateForgotKeyForEmailInput): Promise<ValidateForgotKeyForEmailOutput> {
-        let isValid = true;
-        const auth = await this._authRepository.getByUsername(param.email);
+  async handle(param: ValidateForgotKeyForEmailInput): Promise<ValidateForgotKeyForEmailOutput> {
+    let isValid = true;
+    const auth = await this._authRepository.getByUsername(param.email);
 
-        if (!auth || !auth.user || auth.forgotKey !== param.forgotKey || !auth.forgotExpire || auth.forgotExpire < new Date())
-            isValid = false;
-        else if (auth.user.roleId === RoleId.Client) {
-            const client = await this._clientRepository.get(auth.userId);
-            if (!client || client.status !== ClientStatus.Actived)
-                isValid = false;
-        }
-        else {
-            const manager = await this._managerRepository.get(auth.userId);
-            if (!manager || manager.status !== ManagerStatus.Actived)
-                isValid = false;
-        }
-
-        const result = new ValidateForgotKeyForEmailOutput();
-        result.data = isValid;
-        return result;
+    if (!auth || !auth.user || auth.forgotKey !== param.forgotKey || !auth.forgotExpire || auth.forgotExpire < new Date()) {
+      isValid = false;
+    } else if (auth.user.roleId === RoleId.Client) {
+      const client = await this._clientRepository.get(auth.userId);
+      if (!client || client.status !== ClientStatus.Actived) {
+        isValid = false;
+      }
+    } else {
+      const manager = await this._managerRepository.get(auth.userId);
+      if (!manager || manager.status !== ManagerStatus.Actived) {
+        isValid = false;
+      }
     }
+
+    const result = new ValidateForgotKeyForEmailOutput();
+    result.data = isValid;
+    return result;
+  }
 }

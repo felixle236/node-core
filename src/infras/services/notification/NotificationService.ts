@@ -5,13 +5,13 @@ import { NotificationSender } from './sender/NotificationSender';
 
 @Service(InjectService.Notification)
 export class NotificationService implements INotificationService {
-    private readonly _sender: NotificationSender;
+  private readonly _sender: NotificationSender;
 
-    constructor() {
-        this._sender = new NotificationSender();
-    }
+  constructor() {
+    this._sender = new NotificationSender();
+  }
 
-    async sendNewUserRegistration(deviceTokens: string[], param: { name: string }): Promise<void> {
-        await this._sender.send(deviceTokens, 'User Registration', `New user registration: "${param.name}"`);
-    }
+  async sendNewUserRegistration(deviceTokens: string[], param: { name: string }): Promise<void> {
+    await this._sender.send(deviceTokens, 'User Registration', `New user registration: "${param.name}"`);
+  }
 }

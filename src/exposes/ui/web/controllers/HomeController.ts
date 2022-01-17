@@ -5,12 +5,12 @@ import { Service } from 'typedi';
 @Service()
 @Controller()
 export class HomeController {
-    @Get('/')
-    @Render('index')
-    async home(@CurrentUser() userAuth: UserAuthenticated): Promise<any> {
-        return {
-            title: 'Node Core',
-            userAuth
-        };
-    }
+  @Get('/')
+  @Render('index')
+  async home(@CurrentUser() userAuth: UserAuthenticated): Promise<any> {
+    return {
+      title: 'Node Core',
+      userAuth,
+    };
+  }
 }

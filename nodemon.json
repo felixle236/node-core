@@ -1,10 +1,10 @@
 {
-    "delay": 800,
-    "watch": [
-        "src/",
-        ".env"
-    ],
-    "ignore": [
-        "public/"
-    ]
+  "delay": 800,
+  "watch": [
+    "src/",
+    ".env"
+  ],
+  "ignore": [
+    "public/"
+  ]
 }

@@ -15,26 +15,27 @@ import { ResendActivationOutput } from './ResendActivationOutput';
 
 @Service()
 export class ResendActivationHandler implements IUsecaseHandler<ResendActivationInput, ResendActivationOutput> {
-    constructor(
-        @Inject(InjectService.Mail) private readonly _mailService: IMailService,
-        @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository
-    ) {}
+  constructor(
+    @Inject(InjectService.Mail) private readonly _mailService: IMailService,
+    @Inject(InjectRepository.Client) private readonly _clientRepository: IClientRepository,
+  ) {}
 
-    async handle(param: ResendActivationInput, usecaseOption: UsecaseOption): Promise<ResendActivationOutput> {
-        const client = await this._clientRepository.getByEmail(param.email);
-        if (!client || client.status === ClientStatus.Actived)
-            throw new LogicalError(MessageError.DATA_INVALID);
-
-        const data = new Client();
-        data.activeKey = crypto.randomBytes(32).toString('hex');
-        data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
-        const hasSucceed = await this._clientRepository.update(client.id, data);
-
-        const name = `${client.firstName} ${client.lastName}`;
-        this._mailService.resendUserActivation({ name, email: client.email, activeKey: data.activeKey, locale: usecaseOption.locale });
-
-        const result = new ResendActivationOutput();
-        result.data = hasSucceed;
-        return result;
+  async handle(param: ResendActivationInput, usecaseOption: UsecaseOption): Promise<ResendActivationOutput> {
+    const client = await this._clientRepository.getByEmail(param.email);
+    if (!client || client.status === ClientStatus.Actived) {
+      throw new LogicalError(MessageError.DATA_INVALID);
     }
+
+    const data = new Client();
+    data.activeKey = crypto.randomBytes(32).toString('hex');
+    data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
+    const hasSucceed = await this._clientRepository.update(client.id, data);
+
+    const name = `${client.firstName} ${client.lastName}`;
+    this._mailService.resendUserActivation({ name, email: client.email, activeKey: data.activeKey, locale: usecaseOption.locale });
+
+    const result = new ResendActivationOutput();
+    result.data = hasSucceed;
+    return result;
+  }
 }

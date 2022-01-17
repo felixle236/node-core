@@ -13,49 +13,43 @@ import { Container } from 'typedi';
 import { WebAuthenticator } from './WebAuthenticator';
 
 export class WebService {
-    static init(port: number, callback?: () => void): Server {
-        const logger = Container.get<ILogService>(InjectService.Log);
-        const app = express();
-        const loggingMiddleware = logger.createMiddleware();
-        app.use(loggingMiddleware);
-        app.use(i18n.init);
+  static init(port: number, callback?: () => void): Server {
+    const logger = Container.get<ILogService>(InjectService.Log);
+    const app = express();
+    const loggingMiddleware = logger.createMiddleware();
+    app.use(loggingMiddleware);
+    app.use(i18n.init);
 
-        // view engine setup
-        app.set('views', path.join(__dirname, 'views'));
-        app.set('view engine', 'ejs');
+    // view engine setup
+    app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', 'ejs');
 
-        app.use(express.static(path.join(__dirname, 'public')));
-        app.use(cookieParser());
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(cookieParser());
 
-        const httpServer = new HttpServer();
-        const server = httpServer.start(app, port, WebService.getRoutingOptions(), callback);
+    const httpServer = new HttpServer();
+    const server = httpServer.start(app, port, WebService.getRoutingOptions(), callback);
 
-        // catch 404 and forward to error handler
-        app.use(function(_req, res) {
-            if (!res.writableEnded) {
-                res.status(404);
-                res.render('404');
-            }
-        });
-        return server;
-    }
+    // catch 404 and forward to error handler
+    app.use(function (_req, res) {
+      if (!res.writableEnded) {
+        res.status(404);
+        res.render('404');
+      }
+    });
+    return server;
+  }
 
-    static getRoutingOptions(): RoutingControllersOptions {
-        return {
-            controllers: [
-                path.join(__dirname, './controllers/*Controller{.js,.ts}')
-            ],
-            middlewares: [
-                path.join(__dirname, './middlewares/*Middleware{.js,.ts}')
-            ],
-            interceptors: [
-                path.join(__dirname, './interceptors/Interceptor*{.js,.ts}')
-            ],
-            validation: { whitelist: true, validationError: { target: false, value: false } },
-            defaultErrorHandler: false,
-            development: ENVIRONMENT === Environment.Local,
-            authorizationChecker: WebAuthenticator.authorizationChecker,
-            currentUserChecker: WebAuthenticator.currentUserChecker
-        };
-    }
+  static getRoutingOptions(): RoutingControllersOptions {
+    return {
+      controllers: [path.join(__dirname, './controllers/*Controller{.js,.ts}')],
+      middlewares: [path.join(__dirname, './middlewares/*Middleware{.js,.ts}')],
+      interceptors: [path.join(__dirname, './interceptors/Interceptor*{.js,.ts}')],
+      validation: { whitelist: true, validationError: { target: false, value: false } },
+      defaultErrorHandler: false,
+      development: ENVIRONMENT === Environment.Local,
+      authorizationChecker: WebAuthenticator.authorizationChecker,
+      currentUserChecker: WebAuthenticator.currentUserChecker,
+    };
+  }
 }

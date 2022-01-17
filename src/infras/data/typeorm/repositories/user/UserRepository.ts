@@ -8,7 +8,7 @@ import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 
 @Service(InjectRepository.User)
 export class UserRepository extends Repository<User, UserDb> implements IUserRepository {
-    constructor() {
-        super(UserDb, USER_SCHEMA);
-    }
+  constructor() {
+    super(UserDb, USER_SCHEMA);
+  }
 }

@@ -1,13 +1,13 @@
 import { IsEmail, IsString, IsUUID, Length } from 'shared/decorators/ValidationDecorator';
 
 export class CreateAuthByEmailInput {
-    @IsUUID()
-    userId: string;
+  @IsUUID()
+  userId: string;
 
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 
-    @IsString()
-    @Length(6, 20)
-    password: string;
+  @IsString()
+  @Length(6, 20)
+  password: string;
 }

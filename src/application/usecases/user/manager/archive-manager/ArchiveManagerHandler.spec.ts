@@ -12,43 +12,43 @@ import Container from 'typedi';
 import { ArchiveManagerHandler } from './ArchiveManagerHandler';
 
 describe('Manager usecases - Archive manager', () => {
-    const sandbox = createSandbox();
-    let managerRepository: IManagerRepository;
-    let archiveManagerHandler: ArchiveManagerHandler;
-    let managerTest: Manager;
+  const sandbox = createSandbox();
+  let managerRepository: IManagerRepository;
+  let archiveManagerHandler: ArchiveManagerHandler;
+  let managerTest: Manager;
 
-    before(() => {
-        managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
-        archiveManagerHandler = new ArchiveManagerHandler(managerRepository);
-    });
+  before(() => {
+    managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
+    archiveManagerHandler = new ArchiveManagerHandler(managerRepository);
+  });
 
-    beforeEach(() => {
-        managerTest = new Manager();
-        managerTest.id = randomUUID();
-    });
+  beforeEach(() => {
+    managerTest = new Manager();
+    managerTest.id = randomUUID();
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Archive manager with data not found error', async () => {
-        sandbox.stub(managerRepository, 'get').resolves();
-        const error = await archiveManagerHandler.handle(managerTest.id).catch(error => error);
-        const err = new NotFoundError();
+  it('Archive manager with data not found error', async () => {
+    sandbox.stub(managerRepository, 'get').resolves();
+    const error = await archiveManagerHandler.handle(managerTest.id).catch((error) => error);
+    const err = new NotFoundError();
 
-        expect(error.code).to.eq(err.code);
-        expect(error.message).to.eq(err.message);
-    });
+    expect(error.code).to.eq(err.code);
+    expect(error.message).to.eq(err.message);
+  });
 
-    it('Archive manager', async () => {
-        sandbox.stub(managerRepository, 'get').resolves(managerTest);
-        sandbox.stub(managerRepository, 'update').resolves(true);
+  it('Archive manager', async () => {
+    sandbox.stub(managerRepository, 'get').resolves(managerTest);
+    sandbox.stub(managerRepository, 'update').resolves(true);
 
-        const result = await archiveManagerHandler.handle(managerTest.id);
-        expect(result.data).to.eq(true);
-    });
+    const result = await archiveManagerHandler.handle(managerTest.id);
+    expect(result.data).to.eq(true);
+  });
 });

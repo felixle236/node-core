@@ -6,26 +6,27 @@ import { hashMD5 } from 'utils/Crypt';
 import { User } from '../user/User';
 
 export class Auth extends Entity {
-    userId: string;
-    type: AuthType;
-    username: string;
-    password: string;
-    forgotKey?: string;
-    forgotExpire?: Date;
+  userId: string;
+  type: AuthType;
+  username: string;
+  password: string;
+  forgotKey?: string;
+  forgotExpire?: Date;
 
-    /* Relationship */
+  /* Relationship */
 
-    user?: User;
+  user?: User;
 
-    /* Handlers */
+  /* Handlers */
 
-    static validatePassword(password: string): void {
-        const regExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{8,20}$/;
-        if (!regExp.test(password))
-            throw new LogicalError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, { t: 'password' }, 6, 20);
+  static validatePassword(password: string): void {
+    const regExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-_=+[{\]}\\|;:'",<.>/?]).{8,20}$/;
+    if (!regExp.test(password)) {
+      throw new LogicalError(MessageError.PARAM_LEN_AT_LEAST_AND_MAX_SPECIAL, { t: 'password' }, 6, 20);
     }
+  }
 
-    static hashPassword(password: string): string {
-        return hashMD5(password, '$$');
-    }
+  static hashPassword(password: string): string {
+    return hashMD5(password, '$$');
+  }
 }

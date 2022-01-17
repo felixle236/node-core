@@ -3,11 +3,11 @@ import { IsEnum, IsOptional, IsString } from 'shared/decorators/ValidationDecora
 import { PaginationRequest } from 'shared/usecase/PaginationRequest';
 
 export class FindManagerInput extends PaginationRequest {
-    @IsString()
-    @IsOptional()
-    keyword?: string;
+  @IsString()
+  @IsOptional()
+  keyword?: string;
 
-    @IsEnum(ManagerStatus)
-    @IsOptional()
-    status?: ManagerStatus;
+  @IsEnum(ManagerStatus)
+  @IsOptional()
+  status?: ManagerStatus;
 }

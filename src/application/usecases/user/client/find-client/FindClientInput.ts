@@ -3,11 +3,11 @@ import { IsEnum, IsOptional, IsString } from 'shared/decorators/ValidationDecora
 import { PaginationRequest } from 'shared/usecase/PaginationRequest';
 
 export class FindClientInput extends PaginationRequest {
-    @IsString()
-    @IsOptional()
-    keyword?: string;
+  @IsString()
+  @IsOptional()
+  keyword?: string;
 
-    @IsEnum(ClientStatus)
-    @IsOptional()
-    status?: ClientStatus;
+  @IsEnum(ClientStatus)
+  @IsOptional()
+  status?: ClientStatus;
 }

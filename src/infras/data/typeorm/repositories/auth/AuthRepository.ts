@@ -10,23 +10,25 @@ import { USER_SCHEMA } from '../../schemas/user/UserSchema';
 
 @Service(InjectRepository.Auth)
 export class AuthRepository extends Repository<Auth, AuthDb> implements IAuthRepository {
-    constructor() {
-        super(AuthDb, AUTH_SCHEMA);
-    }
+  constructor() {
+    super(AuthDb, AUTH_SCHEMA);
+  }
 
-    async getAllByUser(userId: string, querySession?: DbQuerySession): Promise<Auth[]> {
-        const results = await this.repository.createQueryBuilder(AUTH_SCHEMA.TABLE_NAME, querySession)
-            .where(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USER_ID} = :userId`, { userId })
-            .getMany();
-        return results.map(result => result.toEntity());
-    }
+  async getAllByUser(userId: string, querySession?: DbQuerySession): Promise<Auth[]> {
+    const results = await this.repository
+      .createQueryBuilder(AUTH_SCHEMA.TABLE_NAME, querySession)
+      .where(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USER_ID} = :userId`, { userId })
+      .getMany();
+    return results.map((result) => result.toEntity());
+  }
 
-    async getByUsername(username: string): Promise<Auth | undefined> {
-        const query = this.repository.createQueryBuilder(AUTH_SCHEMA.TABLE_NAME)
-            .innerJoinAndSelect(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.RELATED_ONE.USER}`, USER_SCHEMA.TABLE_NAME)
-            .where(`LOWER(${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USERNAME}) = LOWER(:username)`, { username });
+  async getByUsername(username: string): Promise<Auth | undefined> {
+    const query = this.repository
+      .createQueryBuilder(AUTH_SCHEMA.TABLE_NAME)
+      .innerJoinAndSelect(`${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.RELATED_ONE.USER}`, USER_SCHEMA.TABLE_NAME)
+      .where(`LOWER(${AUTH_SCHEMA.TABLE_NAME}.${AUTH_SCHEMA.COLUMNS.USERNAME}) = LOWER(:username)`, { username });
 
-        const result = await query.getOne();
-        return result && result.toEntity();
-    }
+    const result = await query.getOne();
+    return result && result.toEntity();
+  }
 }

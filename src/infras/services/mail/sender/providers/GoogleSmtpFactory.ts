@@ -9,33 +9,33 @@ import { IMailProvider } from '../interfaces/IMailProvider';
  */
 
 export class GoogleSmtpFactory implements IMailProvider {
-    private readonly _transporter: nodeMailer.Transporter;
+  private readonly _transporter: nodeMailer.Transporter;
 
-    constructor() {
-        this._transporter = nodeMailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: GOOGLE_SMTP_USERNAME,
-                pass: GOOGLE_SMTP_PASSWORD
-            }
-        });
-    }
+  constructor() {
+    this._transporter = nodeMailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: GOOGLE_SMTP_USERNAME,
+        pass: GOOGLE_SMTP_PASSWORD,
+      },
+    });
+  }
 
-    async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
-        return await this._transporter.sendMail({
-            from: `${senderName} <${senderEmail}>`,
-            to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
-            subject: subject,
-            text: content
-        });
-    }
+  async send(senderName: string, senderEmail: string, emails: string | string[], subject: string, content: string): Promise<any> {
+    return await this._transporter.sendMail({
+      from: `${senderName} <${senderEmail}>`,
+      to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
+      subject: subject,
+      text: content,
+    });
+  }
 
-    async sendHtml(senderName: string, senderEmail: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
-        return await this._transporter.sendMail({
-            from: `${senderName} <${senderEmail}>`,
-            to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
-            subject: subject,
-            html: htmlContent
-        });
-    }
+  async sendHtml(senderName: string, senderEmail: string, emails: string | string[], subject: string, htmlContent: string): Promise<any> {
+    return await this._transporter.sendMail({
+      from: `${senderName} <${senderEmail}>`,
+      to: Array.isArray(emails) ? (emails.length > 0 ? emails.join(', ') : emails[0]) : emails,
+      subject: subject,
+      html: htmlContent,
+    });
+  }
 }

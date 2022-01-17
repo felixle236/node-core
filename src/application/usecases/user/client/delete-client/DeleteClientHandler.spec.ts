@@ -16,50 +16,50 @@ import Container from 'typedi';
 import { DeleteClientHandler } from './DeleteClientHandler';
 
 describe('Client usecases - Delete client', () => {
-    const sandbox = createSandbox();
-    let dbContext: IDbContext;
-    let clientRepository: IClientRepository;
-    let authRepository: IAuthRepository;
-    let deleteClientHandler: DeleteClientHandler;
-    let clientTest: Client;
+  const sandbox = createSandbox();
+  let dbContext: IDbContext;
+  let clientRepository: IClientRepository;
+  let authRepository: IAuthRepository;
+  let deleteClientHandler: DeleteClientHandler;
+  let clientTest: Client;
 
-    before(async () => {
-        dbContext = await mockDbContext();
-        authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getAllByUser']);
-        clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
-        deleteClientHandler = new DeleteClientHandler(dbContext, clientRepository, authRepository);
-    });
+  before(async () => {
+    dbContext = await mockDbContext();
+    authRepository = mockRepositoryInjection<IAuthRepository>(InjectRepository.Auth, ['getAllByUser']);
+    clientRepository = mockRepositoryInjection<IClientRepository>(InjectRepository.Client);
+    deleteClientHandler = new DeleteClientHandler(dbContext, clientRepository, authRepository);
+  });
 
-    beforeEach(() => {
-        clientTest = new Client();
-        clientTest.id = randomUUID();
-    });
+  beforeEach(() => {
+    clientTest = new Client();
+    clientTest.id = randomUUID();
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(async () => {
-        Container.reset();
-        await dbContext.destroyConnection();
-    });
+  after(async () => {
+    Container.reset();
+    await dbContext.destroyConnection();
+  });
 
-    it('Delete client with data not found error', async () => {
-        sandbox.stub(clientRepository, 'get').resolves();
-        const error = await deleteClientHandler.handle(clientTest.id).catch(error => error);
-        const err = new NotFoundError();
+  it('Delete client with data not found error', async () => {
+    sandbox.stub(clientRepository, 'get').resolves();
+    const error = await deleteClientHandler.handle(clientTest.id).catch((error) => error);
+    const err = new NotFoundError();
 
-        expect(error.code).to.eq(err.code);
-        expect(error.message).to.eq(err.message);
-    });
+    expect(error.code).to.eq(err.code);
+    expect(error.message).to.eq(err.message);
+  });
 
-    it('Delete client', async () => {
-        sandbox.stub(clientRepository, 'get').resolves(clientTest);
-        sandbox.stub(clientRepository, 'softDelete').resolves(true);
-        sandbox.stub(authRepository, 'getAllByUser').resolves([{ id: randomUUID() } as Auth]);
-        sandbox.stub(authRepository, 'softDelete').resolves(true);
+  it('Delete client', async () => {
+    sandbox.stub(clientRepository, 'get').resolves(clientTest);
+    sandbox.stub(clientRepository, 'softDelete').resolves(true);
+    sandbox.stub(authRepository, 'getAllByUser').resolves([{ id: randomUUID() } as Auth]);
+    sandbox.stub(authRepository, 'softDelete').resolves(true);
 
-        const result = await deleteClientHandler.handle(clientTest.id);
-        expect(result.data).to.eq(true);
-    });
+    const result = await deleteClientHandler.handle(clientTest.id);
+    expect(result.data).to.eq(true);
+  });
 });

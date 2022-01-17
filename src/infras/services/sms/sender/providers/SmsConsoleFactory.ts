@@ -5,15 +5,15 @@ import Container from 'typedi';
 import { ISmsProvider } from '../interfaces/ISmsProvider';
 
 export class SmsConsoleFactory implements ISmsProvider {
-    private readonly _logService = Container.get<ILogService>(InjectService.Log);
+  private readonly _logService = Container.get<ILogService>(InjectService.Log);
 
-    async send(phoneNumber: string, content: string): Promise<any> {
-        const data = {
-            senderOrPhone: SMS_SENDER_OR_PHONE,
-            phoneNumber,
-            content
-        };
-        this._logService.info('SmsService.send', data);
-        return data;
-    }
+  async send(phoneNumber: string, content: string): Promise<any> {
+    const data = {
+      senderOrPhone: SMS_SENDER_OR_PHONE,
+      phoneNumber,
+      content,
+    };
+    this._logService.info('SmsService.send', data);
+    return data;
+  }
 }

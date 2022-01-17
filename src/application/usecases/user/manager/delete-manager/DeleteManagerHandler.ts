@@ -9,26 +9,28 @@ import { DeleteManagerOutput } from './DeleteManagerOutput';
 
 @Service()
 export class DeleteManagerHandler implements IUsecaseHandler<string, DeleteManagerOutput> {
-    constructor(
-        @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
-        @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository
-    ) {}
+  constructor(
+    @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
+    @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
+    @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
+  ) {}
 
-    async handle(id: string): Promise<DeleteManagerOutput> {
-        const manager = await this._managerRepository.get(id);
-        if (!manager)
-            throw new NotFoundError();
-
-        return await this._dbContext.runTransaction(async querySession => {
-            const result = new DeleteManagerOutput();
-            result.data = await this._managerRepository.softDelete(id, querySession);
-
-            const auths = await this._authRepository.getAllByUser(id, querySession);
-            for (const auth of auths)
-                await this._authRepository.softDelete(auth.id, querySession);
-
-            return result;
-        });
+  async handle(id: string): Promise<DeleteManagerOutput> {
+    const manager = await this._managerRepository.get(id);
+    if (!manager) {
+      throw new NotFoundError();
     }
+
+    return await this._dbContext.runTransaction(async (querySession) => {
+      const result = new DeleteManagerOutput();
+      result.data = await this._managerRepository.softDelete(id, querySession);
+
+      const auths = await this._authRepository.getAllByUser(id, querySession);
+      for (const auth of auths) {
+        await this._authRepository.softDelete(auth.id, querySession);
+      }
+
+      return result;
+    });
+  }
 }

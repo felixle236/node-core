@@ -11,35 +11,37 @@ import { GetUserAuthByJwtData, GetUserAuthByJwtOutput } from './GetUserAuthByJwt
 
 @Service()
 export class GetUserAuthByJwtHandler implements IUsecaseHandler<string, GetUserAuthByJwtOutput> {
-    constructor(
-        @Inject(InjectService.AuthJwt) private readonly _authJwtService: IAuthJwtService,
-        @Inject(InjectService.Log) private readonly _logService: ILogService
-    ) {}
+  constructor(
+    @Inject(InjectService.AuthJwt) private readonly _authJwtService: IAuthJwtService,
+    @Inject(InjectService.Log) private readonly _logService: ILogService,
+  ) {}
 
-    async handle(token: string, usecaseOption: UsecaseOption): Promise<GetUserAuthByJwtOutput> {
-        if (!token)
-            throw new LogicalError(MessageError.PARAM_REQUIRED, { t: 'token' });
-
-        let payload: IJwtPayloadExtend;
-        try {
-            payload = this._authJwtService.verify(token);
-        }
-        catch (error: any) {
-            this._logService.error('Verify token', error, usecaseOption.trace);
-            if (error.name === 'TokenExpiredError')
-                throw new UnauthorizedError(MessageError.PARAM_EXPIRED, { t: 'token' });
-            else
-                throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
-        }
-
-        if (!payload || !payload.userId || !payload.roleId || !payload.type)
-            throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token_payload' });
-
-        const result = new GetUserAuthByJwtOutput();
-        result.data = new GetUserAuthByJwtData();
-        result.data.userId = payload.userId;
-        result.data.roleId = payload.roleId;
-        result.data.type = payload.type;
-        return result;
+  async handle(token: string, usecaseOption: UsecaseOption): Promise<GetUserAuthByJwtOutput> {
+    if (!token) {
+      throw new LogicalError(MessageError.PARAM_REQUIRED, { t: 'token' });
     }
+
+    let payload: IJwtPayloadExtend;
+    try {
+      payload = this._authJwtService.verify(token);
+    } catch (error: any) {
+      this._logService.error('Verify token', error, usecaseOption.trace);
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedError(MessageError.PARAM_EXPIRED, { t: 'token' });
+      } else {
+        throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token' });
+      }
+    }
+
+    if (!payload || !payload.userId || !payload.roleId || !payload.type) {
+      throw new UnauthorizedError(MessageError.PARAM_INVALID, { t: 'token_payload' });
+    }
+
+    const result = new GetUserAuthByJwtOutput();
+    result.data = new GetUserAuthByJwtData();
+    result.data.userId = payload.userId;
+    result.data.roleId = payload.roleId;
+    result.data.type = payload.type;
+    return result;
+  }
 }

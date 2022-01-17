@@ -6,39 +6,39 @@ import { MANAGER_SCHEMA } from '../../schemas/user/ManagerSchema';
 
 @Entity(MANAGER_SCHEMA.TABLE_NAME)
 export class ManagerDb extends UserBaseDb<Manager> {
-    constructor() {
-        super(Manager);
-    }
+  constructor() {
+    super(Manager);
+  }
 
-    @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL })
-    @Index({ unique: true, where: ManagerDb.getIndexFilterDeletedColumn() })
-    email: string;
+  @Column('varchar', { name: MANAGER_SCHEMA.COLUMNS.EMAIL })
+  @Index({ unique: true, where: UserBaseDb.getIndexFilterDeletedColumn() })
+  email: string;
 
-    @Column('enum', { name: MANAGER_SCHEMA.COLUMNS.STATUS, enum: ManagerStatus, default: ManagerStatus.Actived })
-    status: ManagerStatus;
+  @Column('enum', { name: MANAGER_SCHEMA.COLUMNS.STATUS, enum: ManagerStatus, default: ManagerStatus.Actived })
+  status: ManagerStatus;
 
-    @Column('timestamptz', { name: MANAGER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
-    archivedAt?: Date;
+  @Column('timestamptz', { name: MANAGER_SCHEMA.COLUMNS.ARCHIVED_AT, nullable: true })
+  archivedAt?: Date;
 
-    /* Relationship */
+  /* Relationship */
 
-    /* Handlers */
+  /* Handlers */
 
-    override toEntity(): Manager {
-        const entity = super.toEntity();
+  override toEntity(): Manager {
+    const entity = super.toEntity();
 
-        entity.email = this.email;
-        entity.status = this.status;
-        entity.archivedAt = this.archivedAt;
+    entity.email = this.email;
+    entity.status = this.status;
+    entity.archivedAt = this.archivedAt;
 
-        return entity;
-    }
+    return entity;
+  }
 
-    override fromEntity(entity: Manager): void {
-        super.fromEntity(entity);
+  override fromEntity(entity: Manager): void {
+    super.fromEntity(entity);
 
-        this.email = entity.email;
-        this.status = entity.status;
-        this.archivedAt = entity.archivedAt;
-    }
+    this.email = entity.email;
+    this.status = entity.status;
+    this.archivedAt = entity.archivedAt;
+  }
 }

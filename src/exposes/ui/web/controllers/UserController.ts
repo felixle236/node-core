@@ -9,22 +9,21 @@ import { Service } from 'typedi';
 @Service()
 @Controller('/users')
 export class UserController {
-    constructor(
-        private readonly _findClientHandler: FindClientHandler
-    ) {}
+  constructor(private readonly _findClientHandler: FindClientHandler) {}
 
-    @Get('/')
-    @Render('users/index')
-    @Authorized([RoleId.SuperAdmin, RoleId.Manager])
-    async find(@Res() response: Response, @QueryParams() param: FindClientInput, @CurrentUser() userAuth: UserAuthenticated): Promise<any> {
-        if (!userAuth)
-            return response.redirect('/');
-
-        const result = await this._findClientHandler.handle(param);
-        return {
-            title: 'User List',
-            userAuth,
-            result
-        };
+  @Get('/')
+  @Render('users/index')
+  @Authorized([RoleId.SuperAdmin, RoleId.Manager])
+  async find(@Res() response: Response, @QueryParams() param: FindClientInput, @CurrentUser() userAuth: UserAuthenticated): Promise<any> {
+    if (!userAuth) {
+      return response.redirect('/');
     }
+
+    const result = await this._findClientHandler.handle(param);
+    return {
+      title: 'User List',
+      userAuth,
+      result,
+    };
+  }
 }

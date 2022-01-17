@@ -14,49 +14,49 @@ import { UpdateProfileManagerHandler } from './UpdateProfileManagerHandler';
 import { UpdateProfileManagerInput } from './UpdateProfileManagerInput';
 
 describe('Manager usecases - Update profile manager', () => {
-    const sandbox = createSandbox();
-    let managerRepository: IManagerRepository;
-    let updateProfileManagerHandler: UpdateProfileManagerHandler;
-    let managerTest: Manager;
-    let param: UpdateProfileManagerInput;
+  const sandbox = createSandbox();
+  let managerRepository: IManagerRepository;
+  let updateProfileManagerHandler: UpdateProfileManagerHandler;
+  let managerTest: Manager;
+  let param: UpdateProfileManagerInput;
 
-    before(() => {
-        managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
-        updateProfileManagerHandler = new UpdateProfileManagerHandler(managerRepository);
-    });
+  before(() => {
+    managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
+    updateProfileManagerHandler = new UpdateProfileManagerHandler(managerRepository);
+  });
 
-    beforeEach(() => {
-        managerTest = new Manager();
+  beforeEach(() => {
+    managerTest = new Manager();
 
-        param = new UpdateProfileManagerInput();
-        param.firstName = 'Manager';
-        param.lastName = 'Test';
-        param.gender = GenderType.Female;
-        param.birthday = '2000-06-08';
-    });
+    param = new UpdateProfileManagerInput();
+    param.firstName = 'Manager';
+    param.lastName = 'Test';
+    param.gender = GenderType.Female;
+    param.birthday = '2000-06-08';
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Update profile manager with data not found error', async () => {
-        sandbox.stub(managerRepository, 'get').resolves();
-        const error = await updateProfileManagerHandler.handle(randomUUID(), param).catch(error => error);
-        const err = new NotFoundError();
+  it('Update profile manager with data not found error', async () => {
+    sandbox.stub(managerRepository, 'get').resolves();
+    const error = await updateProfileManagerHandler.handle(randomUUID(), param).catch((error) => error);
+    const err = new NotFoundError();
 
-        expect(error.code).to.eq(err.code);
-        expect(error.message).to.eq(err.message);
-    });
+    expect(error.code).to.eq(err.code);
+    expect(error.message).to.eq(err.message);
+  });
 
-    it('Update profile manager', async () => {
-        sandbox.stub(managerRepository, 'get').resolves(managerTest);
-        sandbox.stub(managerRepository, 'update').resolves(true);
+  it('Update profile manager', async () => {
+    sandbox.stub(managerRepository, 'get').resolves(managerTest);
+    sandbox.stub(managerRepository, 'update').resolves(true);
 
-        const result = await updateProfileManagerHandler.handle(randomUUID(), param);
-        expect(result.data).to.eq(true);
-    });
+    const result = await updateProfileManagerHandler.handle(randomUUID(), param);
+    expect(result.data).to.eq(true);
+  });
 });

@@ -3,19 +3,19 @@ import { IsArray, IsBoolean, IsDateString, IsOptional, IsUUID } from 'shared/dec
 import { DataResponse } from 'shared/usecase/DataResponse';
 
 export class GetListOnlineStatusByIdsData {
-    @IsUUID()
-    id: string;
+  @IsUUID()
+  id: string;
 
-    @IsBoolean()
-    isOnline: boolean;
+  @IsBoolean()
+  isOnline: boolean;
 
-    @IsDateString()
-    @IsOptional()
-    onlineAt?: Date;
+  @IsDateString()
+  @IsOptional()
+  onlineAt?: Date;
 }
 
 export class GetListOnlineStatusByIdsOutput extends DataResponse<GetListOnlineStatusByIdsData[]> {
-    @IsArray()
-    @RefSchemaArray(GetListOnlineStatusByIdsData)
-    data: GetListOnlineStatusByIdsData[];
+  @IsArray()
+  @RefSchemaArray(GetListOnlineStatusByIdsData)
+  data: GetListOnlineStatusByIdsData[];
 }

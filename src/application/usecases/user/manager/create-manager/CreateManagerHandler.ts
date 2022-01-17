@@ -20,46 +20,48 @@ import { CheckEmailExistHandler } from '../../user/check-email-exist/CheckEmailE
 
 @Service()
 export class CreateManagerHandler implements IUsecaseHandler<CreateManagerInput, CreateManagerOutput> {
-    constructor(
-        @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
-        private readonly _checkEmailExistHandler: CheckEmailExistHandler,
-        private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
-        @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
-        @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository
-    ) {}
+  constructor(
+    @Inject(InjectDb.DbContext) private readonly _dbContext: IDbContext,
+    private readonly _checkEmailExistHandler: CheckEmailExistHandler,
+    private readonly _createAuthByEmailHandler: CreateAuthByEmailHandler,
+    @Inject(InjectRepository.Manager) private readonly _managerRepository: IManagerRepository,
+    @Inject(InjectRepository.Auth) private readonly _authRepository: IAuthRepository,
+  ) {}
 
-    async handle(param: CreateManagerInput): Promise<CreateManagerOutput> {
-        const data = new Manager();
-        data.id = randomUUID();
-        data.roleId = RoleId.Manager;
-        data.status = ManagerStatus.Actived;
-        data.firstName = param.firstName;
-        data.lastName = param.lastName;
-        data.email = param.email;
+  async handle(param: CreateManagerInput): Promise<CreateManagerOutput> {
+    const data = new Manager();
+    data.id = randomUUID();
+    data.roleId = RoleId.Manager;
+    data.status = ManagerStatus.Actived;
+    data.firstName = param.firstName;
+    data.lastName = param.lastName;
+    data.email = param.email;
 
-        const auth = new CreateAuthByEmailInput();
-        auth.userId = data.id;
-        auth.email = data.email;
+    const auth = new CreateAuthByEmailInput();
+    auth.userId = data.id;
+    auth.email = data.email;
 
-        Auth.validatePassword(param.password);
-        auth.password = param.password;
+    Auth.validatePassword(param.password);
+    auth.password = param.password;
 
-        const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
-        if (checkEmailResult.data)
-            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
-
-        const isExistUsername = await this._authRepository.getByUsername(data.email);
-        if (isExistUsername)
-            throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
-
-        return await this._dbContext.runTransaction(async querySession => {
-            const result = new CreateManagerOutput();
-            result.data = await this._managerRepository.create(data, querySession);
-
-            const usecaseOption = new UsecaseOption();
-            usecaseOption.querySession = querySession;
-            await this._createAuthByEmailHandler.handle(auth, usecaseOption);
-            return result;
-        });
+    const checkEmailResult = await this._checkEmailExistHandler.handle(data.email);
+    if (checkEmailResult.data) {
+      throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
     }
+
+    const isExistUsername = await this._authRepository.getByUsername(data.email);
+    if (isExistUsername) {
+      throw new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' });
+    }
+
+    return await this._dbContext.runTransaction(async (querySession) => {
+      const result = new CreateManagerOutput();
+      result.data = await this._managerRepository.create(data, querySession);
+
+      const usecaseOption = new UsecaseOption();
+      usecaseOption.querySession = querySession;
+      await this._createAuthByEmailHandler.handle(auth, usecaseOption);
+      return result;
+    });
+  }
 }

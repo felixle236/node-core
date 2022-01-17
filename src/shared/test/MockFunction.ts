@@ -1,5 +1,5 @@
 export const mockFunction = (paramReturned?: any): any => {
-    return () => {
-        return paramReturned;
-    };
+  return () => {
+    return paramReturned;
+  };
 };

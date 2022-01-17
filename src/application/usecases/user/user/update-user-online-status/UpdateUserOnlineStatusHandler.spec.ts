@@ -11,42 +11,44 @@ import { UpdateUserOnlineStatusHandler } from './UpdateUserOnlineStatusHandler';
 import { UpdateUserOnlineStatusInput } from './UpdateUserOnlineStatusInput';
 
 describe('User usecases - Update user online status', () => {
-    const sandbox = createSandbox();
-    let userOnlineStatusRepository: IUserOnlineStatusRepository;
-    let updateUserOnlineStatusHandler: UpdateUserOnlineStatusHandler;
+  const sandbox = createSandbox();
+  let userOnlineStatusRepository: IUserOnlineStatusRepository;
+  let updateUserOnlineStatusHandler: UpdateUserOnlineStatusHandler;
 
-    before(() => {
-        userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, ['updateUserOnlineStatus']);
-        updateUserOnlineStatusHandler = new UpdateUserOnlineStatusHandler(userOnlineStatusRepository);
-    });
+  before(() => {
+    userOnlineStatusRepository = mockRepositoryInjection<IUserOnlineStatusRepository>(InjectRepository.UserOnlineStatus, [
+      'updateUserOnlineStatus',
+    ]);
+    updateUserOnlineStatusHandler = new UpdateUserOnlineStatusHandler(userOnlineStatusRepository);
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Update user online status - Online status', async () => {
-        sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
+  it('Update user online status - Online status', async () => {
+    sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
 
-        const param = new UpdateUserOnlineStatusInput();
-        param.isOnline = true;
-        param.onlineAt = new Date();
+    const param = new UpdateUserOnlineStatusInput();
+    param.isOnline = true;
+    param.onlineAt = new Date();
 
-        const result = await updateUserOnlineStatusHandler.handle(randomUUID(), param);
-        expect(result.data).to.eq(true);
-    });
+    const result = await updateUserOnlineStatusHandler.handle(randomUUID(), param);
+    expect(result.data).to.eq(true);
+  });
 
-    it('Update user online status - Offline status', async () => {
-        sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
+  it('Update user online status - Offline status', async () => {
+    sandbox.stub(userOnlineStatusRepository, 'updateUserOnlineStatus').resolves(true);
 
-        const param = new UpdateUserOnlineStatusInput();
-        param.isOnline = false;
-        param.onlineAt = new Date();
+    const param = new UpdateUserOnlineStatusInput();
+    param.isOnline = false;
+    param.onlineAt = new Date();
 
-        const result = await updateUserOnlineStatusHandler.handle(randomUUID(), param);
-        expect(result.data).to.eq(true);
-    });
+    const result = await updateUserOnlineStatusHandler.handle(randomUUID(), param);
+    expect(result.data).to.eq(true);
+  });
 });

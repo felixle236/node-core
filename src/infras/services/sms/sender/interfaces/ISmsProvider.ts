@@ -1,3 +1,3 @@
 export interface ISmsProvider {
-    send(phoneNumber: string, content: string): Promise<any>;
+  send(phoneNumber: string, content: string): Promise<any>;
 }

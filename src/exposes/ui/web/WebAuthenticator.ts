@@ -1,17 +1,18 @@
+import { Request } from 'express';
 import { Action } from 'routing-controllers';
-import { IRequest } from 'shared/request/IRequest';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 
 export class WebAuthenticator {
-    static authorizationChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
-        const reqExt = action.request as IRequest;
-        if (!reqExt.userAuth || (roleIds && roleIds.length && !roleIds.some(roleId => reqExt.userAuth && roleId === reqExt.userAuth.roleId)))
-            return action.response.status(301).redirect('/');
-        return true;
-    };
+  static authorizationChecker = async (action: Action, roleIds: string[]): Promise<boolean> => {
+    const req = action.request as Request;
+    if (!req.userAuth || (roleIds && roleIds.length && !roleIds.some((roleId) => req.userAuth && roleId === req.userAuth.roleId))) {
+      return action.response.status(301).redirect('/');
+    }
+    return true;
+  };
 
-    static currentUserChecker = (action: Action): UserAuthenticated | undefined => {
-        const reqExt = action.request as IRequest;
-        return reqExt.userAuth;
-    };
+  static currentUserChecker = (action: Action): UserAuthenticated | undefined => {
+    const req = action.request as Request;
+    return req.userAuth;
+  };
 }

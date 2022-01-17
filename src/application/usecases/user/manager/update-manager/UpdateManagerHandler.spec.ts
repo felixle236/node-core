@@ -14,49 +14,49 @@ import { UpdateManagerHandler } from './UpdateManagerHandler';
 import { UpdateManagerInput } from './UpdateManagerInput';
 
 describe('Manager usecases - Update manager', () => {
-    const sandbox = createSandbox();
-    let managerRepository: IManagerRepository;
-    let updateManagerHandler: UpdateManagerHandler;
-    let managerTest: Manager;
-    let param: UpdateManagerInput;
+  const sandbox = createSandbox();
+  let managerRepository: IManagerRepository;
+  let updateManagerHandler: UpdateManagerHandler;
+  let managerTest: Manager;
+  let param: UpdateManagerInput;
 
-    before(() => {
-        managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
-        updateManagerHandler = new UpdateManagerHandler(managerRepository);
-    });
+  before(() => {
+    managerRepository = mockRepositoryInjection<IManagerRepository>(InjectRepository.Manager);
+    updateManagerHandler = new UpdateManagerHandler(managerRepository);
+  });
 
-    beforeEach(() => {
-        managerTest = new Manager();
+  beforeEach(() => {
+    managerTest = new Manager();
 
-        param = new UpdateManagerInput();
-        param.firstName = 'Manager';
-        param.lastName = 'Test';
-        param.gender = GenderType.Female;
-        param.birthday = '2000-06-08';
-    });
+    param = new UpdateManagerInput();
+    param.firstName = 'Manager';
+    param.lastName = 'Test';
+    param.gender = GenderType.Female;
+    param.birthday = '2000-06-08';
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Update manager with data not found error', async () => {
-        sandbox.stub(managerRepository, 'get').resolves();
-        const error = await updateManagerHandler.handle(randomUUID(), param).catch(error => error);
-        const err = new NotFoundError();
+  it('Update manager with data not found error', async () => {
+    sandbox.stub(managerRepository, 'get').resolves();
+    const error = await updateManagerHandler.handle(randomUUID(), param).catch((error) => error);
+    const err = new NotFoundError();
 
-        expect(error.code).to.eq(err.code);
-        expect(error.message).to.eq(err.message);
-    });
+    expect(error.code).to.eq(err.code);
+    expect(error.message).to.eq(err.message);
+  });
 
-    it('Update manager', async () => {
-        sandbox.stub(managerRepository, 'get').resolves(managerTest);
-        sandbox.stub(managerRepository, 'update').resolves(true);
+  it('Update manager', async () => {
+    sandbox.stub(managerRepository, 'get').resolves(managerTest);
+    sandbox.stub(managerRepository, 'update').resolves(true);
 
-        const result = await updateManagerHandler.handle(randomUUID(), param);
-        expect(result.data).to.eq(true);
-    });
+    const result = await updateManagerHandler.handle(randomUUID(), param);
+    expect(result.data).to.eq(true);
+  });
 });

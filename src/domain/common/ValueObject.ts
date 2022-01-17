@@ -1,4 +1,1 @@
-
-export abstract class ValueObject {
-
-}
+export abstract class ValueObject {}

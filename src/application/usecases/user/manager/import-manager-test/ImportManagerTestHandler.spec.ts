@@ -15,39 +15,39 @@ import { UploadAvatarHandler } from '../../user/upload-avatar/UploadAvatarHandle
 import { CreateManagerHandler } from '../create-manager/CreateManagerHandler';
 
 describe('Manager usecases - Import manager test', () => {
-    const sandbox = createSandbox();
-    let createManagerHandler: CreateManagerHandler;
-    let uploadAvatarHandler: UploadAvatarHandler;
-    let importManagerTestHandler: ImportManagerTestHandler;
-    let logService: ILogService;
+  const sandbox = createSandbox();
+  let createManagerHandler: CreateManagerHandler;
+  let uploadAvatarHandler: UploadAvatarHandler;
+  let importManagerTestHandler: ImportManagerTestHandler;
+  let logService: ILogService;
 
-    before(async () => {
-        createManagerHandler = mockUsecaseInjection(CreateManagerHandler);
-        uploadAvatarHandler = mockUsecaseInjection(UploadAvatarHandler);
-        logService = mockInjection<ILogService>(InjectService.Log, mockLogService());
-        importManagerTestHandler = new ImportManagerTestHandler(createManagerHandler, uploadAvatarHandler, logService);
-    });
+  before(async () => {
+    createManagerHandler = mockUsecaseInjection(CreateManagerHandler);
+    uploadAvatarHandler = mockUsecaseInjection(UploadAvatarHandler);
+    logService = mockInjection<ILogService>(InjectService.Log, mockLogService());
+    importManagerTestHandler = new ImportManagerTestHandler(createManagerHandler, uploadAvatarHandler, logService);
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    after(() => {
-        Container.reset();
-    });
+  after(() => {
+    Container.reset();
+  });
 
-    it('Import manager test', async () => {
-        sandbox.stub(createManagerHandler, 'handle').resolves({ data: 'id' });
-        sandbox.stub(file, 'writeFile').resolves();
-        sandbox.stub(uploadAvatarHandler, 'handle').resolves();
+  it('Import manager test', async () => {
+    sandbox.stub(createManagerHandler, 'handle').resolves({ data: 'id' });
+    sandbox.stub(file, 'writeFile').resolves();
+    sandbox.stub(uploadAvatarHandler, 'handle').resolves();
 
-        const result = await importManagerTestHandler.handle();
-        expect(result.data).to.eq(true);
-    });
+    const result = await importManagerTestHandler.handle();
+    expect(result.data).to.eq(true);
+  });
 
-    it('Import manager test with data exists', async () => {
-        sandbox.stub(createManagerHandler, 'handle').throws(new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' }));
-        const result = await importManagerTestHandler.handle();
-        expect(result.data).to.eq(true);
-    });
+  it('Import manager test with data exists', async () => {
+    sandbox.stub(createManagerHandler, 'handle').throws(new LogicalError(MessageError.PARAM_EXISTED, { t: 'email' }));
+    const result = await importManagerTestHandler.handle();
+    expect(result.data).to.eq(true);
+  });
 });
