@@ -1,7 +1,7 @@
 import path from 'path';
 import { Environment } from 'shared/types/Environment';
 import { ConnectionOptions } from 'typeorm';
-import { DB_CACHING_URI, DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENVIRONMENT } from './Configuration';
+import { DB_CACHE, REDIS_URI, DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_TYPE, DB_USER, ENVIRONMENT } from './Configuration';
 
 export default {
   name: 'default',
@@ -11,10 +11,11 @@ export default {
   database: DB_NAME,
   username: DB_USER,
   password: DB_PASS,
-  cache: {
+  cache: DB_CACHE && {
     type: 'redis',
     options: {
-      url: DB_CACHING_URI,
+      url: REDIS_URI,
+      legacyMode: true,
     },
   },
   synchronize: false,

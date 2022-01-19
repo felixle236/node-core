@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'mocha';
 import { Client } from 'domain/entities/user/Client';
+import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { IClientRepository } from 'application/interfaces/repositories/user/IClientRepository';
 import { IMailService } from 'application/interfaces/services/IMailService';
 import { expect } from 'chai';
@@ -61,6 +62,7 @@ describe('Client usecases - Resend activation', () => {
   it('Resend activation', async () => {
     const usecaseOption = new UsecaseOption();
     usecaseOption.req = {} as Request;
+    clientTest.status = ClientStatus.Unverified;
     sandbox.stub(clientRepository, 'getByEmail').resolves(clientTest);
     sandbox.stub(clientRepository, 'update').resolves(true);
 

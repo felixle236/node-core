@@ -101,9 +101,9 @@ describe('Authorization usecases - Forgot password by email', () => {
     expect(error.message).to.eq(err.message);
   });
 
-  it('Forgot password by email with client account has not been activated error', async () => {
+  it('Forgot password by email with client account has not been verified error', async () => {
     sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-    clientTest.status = ClientStatus.Inactived;
+    clientTest.status = ClientStatus.Unverified;
     sandbox.stub(clientRepository, 'get').resolves(clientTest);
 
     const usecaseOption = new UsecaseOption();

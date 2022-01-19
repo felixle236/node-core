@@ -100,9 +100,9 @@ describe('Authorization usecases - Login by email', () => {
     expect(error.message).to.eq(err.message);
   });
 
-  it('Login by email with client account has not been activated error', async () => {
+  it('Login by email with client account has not been verified error', async () => {
     sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
-    clientTest.status = ClientStatus.Inactived;
+    clientTest.status = ClientStatus.Unverified;
     sandbox.stub(clientRepository, 'get').resolves(clientTest);
 
     const error: LogicalError = await loginByEmailHandler.handle(param).catch((error) => error);

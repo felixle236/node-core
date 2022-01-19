@@ -81,7 +81,7 @@ describe('Authorization usecases - Validate forgot key for email', () => {
   });
 
   it('Validate forgot key for email with client account is not exist or activated error', async () => {
-    clientTest.status = ClientStatus.Inactived;
+    clientTest.status = ClientStatus.Unverified;
     sandbox.stub(authRepository, 'getByUsername').resolves(authTest);
     sandbox.stub(clientRepository, 'get').resolves();
 

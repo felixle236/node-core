@@ -1,3 +1,4 @@
+import { DB_CACHE } from 'config/Configuration';
 import dbConfig from 'config/DbConfig';
 import { DbQuerySession, DbConnection } from 'shared/database/DbTypes';
 import { IDbContext } from 'shared/database/interfaces/IDbContext';
@@ -29,8 +30,11 @@ export class DbContext implements IDbContext {
     if (this._connection && this._connection.isConnected) {
       return this._connection;
     }
-
     this._connection = await createDbConnection({ ...dbConfig, name: 'default' } as any);
+
+    if (DB_CACHE && this._connection.queryResultCache && 'connect' in this._connection.queryResultCache) {
+      await this._connection.queryResultCache.connect();
+    }
     return this._connection;
   }
 

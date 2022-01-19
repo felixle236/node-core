@@ -1,5 +1,5 @@
 import { ISocketEmitterService } from 'application/interfaces/services/ISocketEmitterService';
-import { DB_SOCKET_URI } from 'config/Configuration';
+import { SOCKET_REDIS_URI } from 'config/Configuration';
 import { createClient } from 'redis';
 import { InjectService } from 'shared/types/Injection';
 import socketIOEmitter from 'socket.io-emitter';
@@ -11,7 +11,7 @@ export class SocketEmitterService implements ISocketEmitterService {
 
   constructor() {
     const redisClient = createClient({
-      url: DB_SOCKET_URI,
+      url: SOCKET_REDIS_URI,
     });
 
     this._socketEmitter = socketIOEmitter(redisClient as any);

@@ -56,7 +56,7 @@ export class RegisterClientHandler implements IUsecaseHandler<RegisterClientInpu
     }
 
     const activeKey = randomBytes(32).toString('hex');
-    data.status = ClientStatus.Inactived;
+    data.status = ClientStatus.Unverified;
     data.activeKey = activeKey;
     data.activeExpire = addSeconds(new Date(), 3 * 24 * 60 * 60);
 

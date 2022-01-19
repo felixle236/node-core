@@ -24,7 +24,7 @@ export class ClientDb extends UserBaseDb<Client> {
   @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.LOCALE, nullable: true })
   locale?: string;
 
-  @Column('enum', { name: CLIENT_SCHEMA.COLUMNS.STATUS, enum: ClientStatus, default: ClientStatus.Actived })
+  @Column('enum', { name: CLIENT_SCHEMA.COLUMNS.STATUS, enum: ClientStatus, default: ClientStatus.Unverified })
   status: ClientStatus;
 
   @Column('varchar', { name: CLIENT_SCHEMA.COLUMNS.ACTIVE_KEY, nullable: true })

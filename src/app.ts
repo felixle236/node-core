@@ -3,7 +3,7 @@ import cluster from 'cluster';
 import os from 'os';
 import { ILogService } from 'application/interfaces/services/ILogService';
 import {
-  DB_CACHING_URI,
+  REDIS_URI,
   ENABLE_MOBILE_API,
   ENABLE_SWAGGER_UI,
   ENABLE_WEB_API,
@@ -40,7 +40,7 @@ const redisContext = Container.get<IRedisContext>(InjectDb.RedisContext);
 
 const startApplication = async (): Promise<void> => {
   configureI18n(['en']);
-  await redisContext.createConnection(DB_CACHING_URI);
+  await redisContext.createConnection(REDIS_URI);
   await dbContext.createConnection();
 
   if (ENABLE_WEB_API) {

@@ -1,5 +1,5 @@
 export enum ClientStatus {
-  Inactived = 'inactived',
+  Unverified = 'unverified',
   Actived = 'actived',
   Archived = 'archived',
 }

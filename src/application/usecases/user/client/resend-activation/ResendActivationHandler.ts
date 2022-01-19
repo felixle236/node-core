@@ -21,7 +21,7 @@ export class ResendActivationHandler implements IUsecaseHandler<ResendActivation
 
   async handle(param: ResendActivationInput, usecaseOption: UsecaseOption): Promise<ResendActivationOutput> {
     const client = await this._clientRepository.getByEmail(param.email);
-    if (!client || client.status === ClientStatus.Actived) {
+    if (!client || client.status !== ClientStatus.Unverified) {
       throw new LogicalError(MessageError.DATA_INVALID);
     }
 

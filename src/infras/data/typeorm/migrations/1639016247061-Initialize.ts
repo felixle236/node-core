@@ -105,9 +105,9 @@ export class Initialize1639016247061 implements MigrationInterface {
     );
     await queryRunner.query('CREATE UNIQUE INDEX "IDX_968b36cde50de085eb4cbb9486" ON "auth" ("username") WHERE deleted_at IS NULL');
     await queryRunner.query('CREATE UNIQUE INDEX "IDX_4f6bf4f0ab35e68dfe3bc087e3" ON "auth" ("user_id", "type") WHERE deleted_at IS NULL');
-    await queryRunner.query("CREATE TYPE \"public\".\"client_status_enum\" AS ENUM('inactived', 'actived', 'archived')");
+    await queryRunner.query("CREATE TYPE \"public\".\"client_status_enum\" AS ENUM('unverified', 'actived', 'archived')");
     await queryRunner.query(
-      'CREATE TABLE "client" ("email" character varying NOT NULL, "phone" character varying, "address" jsonb, "locale" character varying, "status" "public"."client_status_enum" NOT NULL DEFAULT \'actived\', "active_key" character varying, "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_96da49381769303a6515a8785c7" PRIMARY KEY ("id")) INHERITS ("users")',
+      'CREATE TABLE "client" ("email" character varying NOT NULL, "phone" character varying, "address" jsonb, "locale" character varying, "status" "public"."client_status_enum" NOT NULL DEFAULT \'unverified\', "active_key" character varying, "active_expire" TIMESTAMP WITH TIME ZONE, "actived_at" TIMESTAMP WITH TIME ZONE, "archived_at" TIMESTAMP WITH TIME ZONE, CONSTRAINT "PK_96da49381769303a6515a8785c7" PRIMARY KEY ("id")) INHERITS ("users")',
     );
     await queryRunner.query('CREATE INDEX "IDX_ea545365f74ddd2a7ed1fd4263" ON "client" ("role_id") ');
     await queryRunner.query('CREATE UNIQUE INDEX "IDX_6376cac90cf2c7378f369a271c" ON "client" ("email") WHERE deleted_at IS NULL');

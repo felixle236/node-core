@@ -1,12 +1,12 @@
 import { IUserOnlineStatusRepository } from 'application/interfaces/repositories/user/IUserOnlineStatusRepository';
-import { DB_CACHING_PREFIX } from 'config/Configuration';
+import { REDIS_PREFIX } from 'config/Configuration';
 import { IRedisContext } from 'shared/database/interfaces/IRedisContext';
 import { InjectDb, InjectRepository } from 'shared/types/Injection';
 import { Inject, Service } from 'typedi';
 
 @Service(InjectRepository.UserOnlineStatus)
 export class UserOnlineStatusRepository implements IUserOnlineStatusRepository {
-  private readonly _onlineStatusKey = DB_CACHING_PREFIX + 'user_online_status';
+  private readonly _onlineStatusKey = REDIS_PREFIX + 'user_online_status';
 
   constructor(@Inject(InjectDb.RedisContext) private readonly _redisContext: IRedisContext) {}
 

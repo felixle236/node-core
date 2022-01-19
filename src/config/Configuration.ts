@@ -60,15 +60,16 @@ export const DB_PORT = env.get('DB_PORT').required().asPortNumber();
 export const DB_NAME = env.get('DB_NAME').required().asString();
 export const DB_USER = env.get('DB_USER').required().asString();
 export const DB_PASS = env.get('DB_PASS').required().asString();
+export const DB_CACHE = env.get('DB_CACHE').default(0).asBool();
 
-// DB CACHING CONFIGURATION
+// REDIS CONFIGURATION
 
-export const DB_CACHING_URI = env.get('DB_CACHING_URI').required().asString();
-export const DB_CACHING_PREFIX = env.get('DB_CACHING_PREFIX').asString();
+export const REDIS_URI = env.get('REDIS_URI').required().asString();
+export const REDIS_PREFIX = env.get('REDIS_PREFIX').asString();
 
 // DB SOCKET CONFIGURATION
 
-export const DB_SOCKET_URI = env.get('DB_SOCKET_URI').required().asString();
+export const SOCKET_REDIS_URI = env.get('SOCKET_REDIS_URI').required().asString();
 
 // AUTHENTICATION SERVICE
 

@@ -87,6 +87,9 @@ export class LogService implements ILogService {
   private _formatContent(meta?: any, trace?: TraceRequest): string {
     const contents: string[] = [];
     if (meta) {
+      if (meta.name === 'Error') {
+        meta = { name: meta.name, message: meta.message, stack: meta.stack };
+      }
       contents.push(convertObjectToString(meta));
     }
     if (trace) {

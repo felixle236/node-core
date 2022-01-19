@@ -1,6 +1,6 @@
 import path from 'path';
 import { createAdapter } from '@socket.io/redis-adapter';
-import { DB_SOCKET_URI } from 'config/Configuration';
+import { SOCKET_REDIS_URI } from 'config/Configuration';
 import { SocketServer } from 'infras/servers/socket/SocketServer';
 import { createClient } from 'redis';
 import { Server } from 'socket.io';
@@ -13,7 +13,7 @@ export class SocketService {
   static init(port: number): Server {
     // Initalize redis instance
     const pubClient = createClient({
-      url: DB_SOCKET_URI,
+      url: SOCKET_REDIS_URI,
     });
 
     const subClient = pubClient.duplicate();
