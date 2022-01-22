@@ -3,7 +3,7 @@ import { IncomingHttpHeaders } from 'http';
 import { ISocket } from 'shared/socket/interfaces/ISocket';
 import { HttpHeaderKey } from 'shared/types/Common';
 
-export class TraceRequest {
+export class LogTracing {
   id: string;
 
   getFromHttpHeader(headers: IncomingHttpHeaders): void {

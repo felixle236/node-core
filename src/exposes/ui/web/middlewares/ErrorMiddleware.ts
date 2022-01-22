@@ -1,3 +1,4 @@
+import { ILogService } from 'application/interfaces/services/ILogService';
 import { ValidationError } from 'class-validator';
 import { Request, Response } from 'express';
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
@@ -7,6 +8,8 @@ import { InputValidationError, InputValidationFieldError } from 'shared/exceptio
 import { InternalServerError } from 'shared/exceptions/InternalServerError';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
+import { InjectService } from 'shared/types/Injection';
+import Container from 'typedi';
 
 interface IErrorExtend extends BaseError {
   httpCode: number;
@@ -18,27 +21,28 @@ interface IErrorExtend extends BaseError {
 @Middleware({ type: 'after' })
 export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
   error(error: IErrorExtend, req: Request, res: Response): void {
-    const trace = req.trace;
+    const logService = Container.get<ILogService>(InjectService.Log);
+    const tracing = req.tracing;
 
     if (error.httpCode === 400) {
       if (error.errors) {
         error = new InputValidationError(error.errors);
-        req.logService.warn('[input-validation]', error, trace);
+        logService.warn('[input-validation]', error, tracing);
       } else if (!error.code) {
-        req.logService.warn('[unknown]', error, trace);
+        logService.warn('[unknown]', error, tracing);
         error = new LogicalError(MessageError.UNKNOWN, error.message);
       } else {
-        req.logService.warn('[logical]', error, trace);
+        logService.warn('[logical]', error, tracing);
       }
     } else if (error.httpCode === 401) {
-      req.logService.warn('[unauthorized]', error, trace);
+      logService.warn('[unauthorized]', error, tracing);
     } else if (error.httpCode === 403) {
-      req.logService.warn('[access-denied]', error, trace);
+      logService.warn('[access-denied]', error, tracing);
       error = new AccessDeniedError();
     } else if (error.httpCode === 404) {
-      req.logService.warn('[not-found]', error, trace);
+      logService.warn('[not-found]', error, tracing);
     } else {
-      req.logService.error('[internal-server]', error, trace);
+      logService.error('[internal-server]', error, tracing);
       error = new InternalServerError();
     }
 

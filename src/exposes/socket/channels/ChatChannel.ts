@@ -2,7 +2,7 @@ import { RoleId } from 'domain/enums/user/RoleId';
 import { GetUserAuthByJwtHandler } from 'application/usecases/auth/auth/get-user-auth-by-jwt/GetUserAuthByJwtHandler';
 import { UpdateUserOnlineStatusHandler } from 'application/usecases/user/user/update-user-online-status/UpdateUserOnlineStatusHandler';
 import { UpdateUserOnlineStatusInput } from 'application/usecases/user/user/update-user-online-status/UpdateUserOnlineStatusSchema';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 import { ISocket } from 'shared/socket/interfaces/ISocket';
 import { ChatNS } from 'shared/socket/namespaces/ChatNS';
@@ -26,8 +26,8 @@ export default class ChatChannel {
       try {
         const token = (socket.handshake.auth as { token: string }).token;
         const usecaseOption = new UsecaseOption();
-        usecaseOption.trace = new TraceRequest();
-        usecaseOption.trace.getFromSocket(socket);
+        usecaseOption.tracing = new LogTracing();
+        usecaseOption.tracing.getFromSocket(socket);
 
         const { data } = await this._getUserAuthByJwtHandler.handle(token, usecaseOption);
         socket.userAuth = new UserAuthenticated(data.userId, data.roleId, data.type);

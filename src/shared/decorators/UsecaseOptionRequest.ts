@@ -15,7 +15,7 @@ export function UsecaseOptionRequest(): (object: object, method: string, index: 
       usecaseOption.req = req;
       usecaseOption.res = actionProperties.response;
       usecaseOption.locale = req.locale;
-      usecaseOption.trace = req.trace;
+      usecaseOption.tracing = req.tracing;
       usecaseOption.userAuth = req.userAuth;
       return usecaseOption;
     },

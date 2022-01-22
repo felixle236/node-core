@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { DbQuerySession } from 'shared/database/DbTypes';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
 
 export class UsecaseOption {
   req: Request;
   res: Response;
   locale?: string;
-  trace: TraceRequest;
+  tracing: LogTracing;
   userAuth?: UserAuthenticated;
   querySession?: DbQuerySession;
 }

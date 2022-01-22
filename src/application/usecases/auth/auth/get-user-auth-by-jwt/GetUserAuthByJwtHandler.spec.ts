@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
 import { UnauthorizedError } from 'shared/exceptions/UnauthorizedError';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { mockAuthJwtService } from 'shared/test/MockAuthJwtService';
 import { mockInjection } from 'shared/test/MockInjection';
 import { mockLogService } from 'shared/test/MockLogService';
@@ -25,7 +25,7 @@ describe('Authorization usecases - Get user authorization by JWT', () => {
   let logService: ILogService;
   let getUserAuthByJwtHandler: GetUserAuthByJwtHandler;
   const usecaseOption = new UsecaseOption();
-  usecaseOption.trace = new TraceRequest();
+  usecaseOption.tracing = new LogTracing();
   const token = jwt.sign(
     {
       userId: randomUUID(),

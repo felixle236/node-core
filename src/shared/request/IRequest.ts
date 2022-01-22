@@ -1,9 +1,7 @@
-import { ILogService } from 'application/interfaces/services/ILogService';
 import { UserAuthenticated } from 'shared/request/UserAuthenticated';
-import { TraceRequest } from './TraceRequest';
+import { LogTracing } from './LogTracing';
 
 export interface IRequest {
-  trace: TraceRequest;
-  logService: ILogService;
+  tracing: LogTracing;
   userAuth?: UserAuthenticated;
 }

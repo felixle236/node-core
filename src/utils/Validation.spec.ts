@@ -2,14 +2,14 @@ import 'mocha';
 import { expect } from 'chai';
 import { IsString } from 'shared/decorators/ValidationDecorator';
 import { InputValidationError } from 'shared/exceptions/InputValidationError';
-import { isLiteralObject, validateDataInput } from './Validator';
+import { isLiteralObject, validateDataInput } from './Validation';
 
 class Test {
   @IsString()
   name: string;
 }
 
-describe('Utils - Validator', () => {
+describe('Utils - Validation', () => {
   describe('Check literal object', () => {
     it('Check literal object with value is object', async () => {
       const isObject = isLiteralObject({ test: 1 });

@@ -12,7 +12,7 @@ import { InputValidationError } from 'shared/exceptions/InputValidationError';
 import { InternalServerError } from 'shared/exceptions/InternalServerError';
 import { LogicalError } from 'shared/exceptions/LogicalError';
 import { MessageError } from 'shared/exceptions/message/MessageError';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { mockInjection } from 'shared/test/MockInjection';
 import { mockLogService } from 'shared/test/MockLogService';
 import { InjectService } from 'shared/types/Injection';
@@ -94,7 +94,7 @@ describe('Api service', () => {
 
   it('Send trace id header to out site', async () => {
     const headers = {};
-    const trace = new TraceRequest();
+    const trace = new LogTracing();
     trace.setToHttpHeader(headers);
     const { status } = await axios.get(endpoint + '/api/test', headers);
 

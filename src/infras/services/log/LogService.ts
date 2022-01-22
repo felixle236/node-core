@@ -3,7 +3,7 @@ import { ILogService } from 'application/interfaces/services/ILogService';
 import { AWS_ACCESS_KEY, AWS_REGION, AWS_SECRET_KEY, LOG_PROVIDER, PROJECT_ID } from 'config/Configuration';
 import { Handler, NextFunction, Request, Response } from 'express';
 import expressWinston from 'express-winston';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { LogProvider } from 'shared/types/Environment';
 import { InjectService } from 'shared/types/Injection';
 import { Service } from 'typedi';
@@ -68,23 +68,23 @@ export class LogService implements ILogService {
     }
   }
 
-  info(message: string, meta?: any, trace?: TraceRequest): void {
-    this._logger.info(message + this._formatContent(meta, trace));
+  info(message: string, meta?: any, tracing?: LogTracing): void {
+    this._logger.info(message + this._formatContent(meta, tracing));
   }
 
-  debug(message: string, meta?: any, trace?: TraceRequest): void {
-    this._logger.debug(message + this._formatContent(meta, trace));
+  debug(message: string, meta?: any, tracing?: LogTracing): void {
+    this._logger.debug(message + this._formatContent(meta, tracing));
   }
 
-  warn(message: string, meta?: any, trace?: TraceRequest): void {
-    this._logger.warn(message + this._formatContent(meta, trace));
+  warn(message: string, meta?: any, tracing?: LogTracing): void {
+    this._logger.warn(message + this._formatContent(meta, tracing));
   }
 
-  error(message: string, meta?: any, trace?: TraceRequest): void {
-    this._logger.error(message + this._formatContent(meta, trace));
+  error(message: string, meta?: any, tracing?: LogTracing): void {
+    this._logger.error(message + this._formatContent(meta, tracing));
   }
 
-  private _formatContent(meta?: any, trace?: TraceRequest): string {
+  private _formatContent(meta?: any, tracing?: LogTracing): string {
     const contents: string[] = [];
     if (meta) {
       if (meta.name === 'Error') {
@@ -92,11 +92,11 @@ export class LogService implements ILogService {
       }
       contents.push(convertObjectToString(meta));
     }
-    if (trace) {
+    if (tracing) {
       if (LOG_PROVIDER === LogProvider.GoogleWinston) {
-        contents.push(`[${LoggingWinston.LOGGING_TRACE_KEY}: ${trace.id}]`);
+        contents.push(`[${LoggingWinston.LOGGING_TRACE_KEY}: ${tracing.id}]`);
       } else {
-        contents.push(`[trace: ${trace.id}]`);
+        contents.push(`[trace: ${tracing.id}]`);
       }
     }
 
@@ -132,7 +132,7 @@ export class LogService implements ILogService {
           const meta = {} as any;
           if (req) {
             if (!meta[LoggingWinston.LOGGING_TRACE_KEY]) {
-              meta[LoggingWinston.LOGGING_TRACE_KEY] = req.trace.id;
+              meta[LoggingWinston.LOGGING_TRACE_KEY] = req.tracing.id;
             }
 
             meta.httpRequest = httpRequest;
@@ -203,9 +203,8 @@ export class LogService implements ILogService {
     }
 
     return (req: Request, res: Response, next: NextFunction) => {
-      req.logService = this;
-      req.trace = new TraceRequest();
-      req.trace.getFromHttpHeader(req.headers);
+      req.tracing = new LogTracing();
+      req.tracing.getFromHttpHeader(req.headers);
 
       handler(req, res, next);
     };

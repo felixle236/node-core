@@ -20,7 +20,7 @@ export class ApiAuthenticator {
 
     const usecaseOption = new UsecaseOption();
     usecaseOption.req = req;
-    usecaseOption.trace = req.trace;
+    usecaseOption.tracing = req.tracing;
 
     const getUserAuthByJwtHandler = Container.get(GetUserAuthByJwtHandler);
     const { data } = await getUserAuthByJwtHandler.handle(token, usecaseOption);

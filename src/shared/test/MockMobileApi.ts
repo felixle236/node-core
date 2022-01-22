@@ -5,14 +5,12 @@ import express, { Request } from 'express';
 import { HttpServer } from 'infras/servers/http/HttpServer';
 import { useContainer } from 'routing-controllers';
 import { i18n } from 'shared/localization/Localization';
-import { TraceRequest } from 'shared/request/TraceRequest';
+import { LogTracing } from 'shared/request/LogTracing';
 import { Container } from 'typeorm-typedi-extensions';
-import { mockLogService } from './MockLogService';
 
 export const mockHttpRequest = (req: Request): Request => {
-  req.logService = mockLogService();
-  req.trace = new TraceRequest();
-  req.trace.getFromHttpHeader(req.headers);
+  req.tracing = new LogTracing();
+  req.tracing.getFromHttpHeader(req.headers);
   return req;
 };
 

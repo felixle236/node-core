@@ -15,7 +15,7 @@ export class AuthenticationMiddleware implements ExpressMiddlewareInterface {
 
     const usecaseOption = new UsecaseOption();
     usecaseOption.req = req;
-    usecaseOption.trace = req.trace;
+    usecaseOption.tracing = req.tracing;
 
     const getUserAuthByJwtHandler = Container.get(GetUserAuthByJwtHandler);
     getUserAuthByJwtHandler
