@@ -18,6 +18,7 @@ export class GetManagerHandler implements IUsecaseHandler<string, GetManagerOutp
     const data = new GetManagerDataOutput();
     data.id = manager.id;
     data.createdAt = manager.createdAt;
+    data.status = manager.status;
     data.firstName = manager.firstName;
     data.lastName = manager.lastName;
     data.email = manager.email;

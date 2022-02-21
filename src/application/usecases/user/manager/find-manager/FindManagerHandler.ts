@@ -24,6 +24,7 @@ export class FindManagerHandler implements IUsecaseHandler<FindManagerInput, Fin
       const data = new FindManagerDataOutput();
       data.id = manager.id;
       data.createdAt = manager.createdAt;
+      data.status = manager.status;
       data.firstName = manager.firstName;
       data.lastName = manager.lastName;
       data.email = manager.email;

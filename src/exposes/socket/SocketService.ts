@@ -23,6 +23,7 @@ export class SocketService {
         preflightContinue: true,
         optionsSuccessStatus: 204,
       },
+      connectTimeout: 10000,
       pingInterval: 10000,
       pingTimeout: 5000,
       cookie: false,
@@ -37,8 +38,8 @@ export class SocketService {
     const files = searchFilesSync(path.join(__dirname, './channels/**/*Channel{.js,.ts}'));
     for (const file of files) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const controller = require(file).default;
-      const con = Container.get(controller) as { init: (io: Server) => void };
+      const channel = require(file).default;
+      const con = Container.get(channel) as { init: (io: Server) => void };
       con.init(this.io);
     }
   }

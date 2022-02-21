@@ -1,5 +1,6 @@
+import { ManagerStatus } from 'domain/enums/user/ManagerStatus';
 import { RefSchemaObject } from 'shared/decorators/RefSchema';
-import { IsDateString, IsObject, IsOptional, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
+import { IsDateString, IsEnum, IsObject, IsOptional, IsString, IsUUID } from 'shared/decorators/ValidationDecorator';
 import { DataResponse } from 'shared/usecase/DataResponse';
 
 export class GetManagerDataOutput {
@@ -8,6 +9,9 @@ export class GetManagerDataOutput {
 
   @IsDateString()
   createdAt: Date;
+
+  @IsEnum(ManagerStatus)
+  status: ManagerStatus;
 
   @IsString()
   firstName: string;

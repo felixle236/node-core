@@ -18,6 +18,7 @@ export class GetClientHandler implements IUsecaseHandler<string, GetClientOutput
     const data = new GetClientDataOutput();
     data.id = client.id;
     data.createdAt = client.createdAt;
+    data.status = client.status;
     data.firstName = client.firstName;
     data.lastName = client.lastName;
     data.email = client.email;

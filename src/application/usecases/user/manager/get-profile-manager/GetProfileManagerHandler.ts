@@ -18,6 +18,7 @@ export class GetProfileManagerHandler implements IUsecaseHandler<string, GetProf
     const data = new GetProfileManagerDataOutput();
     data.id = manager.id;
     data.createdAt = manager.createdAt;
+    data.status = manager.status;
     data.firstName = manager.firstName;
     data.lastName = manager.lastName;
     data.email = manager.email;

@@ -32,7 +32,7 @@ export class DbContext implements IDbContext {
     }
     this._connection = await createDbConnection({ ...dbConfig, name: 'default' } as any);
 
-    if (DB_CACHE && this._connection.queryResultCache && 'connect' in this._connection.queryResultCache) {
+    if (DB_CACHE && this._connection.queryResultCache) {
       await this._connection.queryResultCache.connect();
     }
     return this._connection;

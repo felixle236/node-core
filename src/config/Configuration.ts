@@ -67,7 +67,7 @@ export const DB_CACHE = env.get('DB_CACHE').default(0).asBool();
 export const REDIS_URI = env.get('REDIS_URI').required().asString();
 export const REDIS_PREFIX = env.get('REDIS_PREFIX').asString();
 
-// DB SOCKET CONFIGURATION
+// SOCKET REDIS CONFIGURATION
 
 export const SOCKET_REDIS_URI = env.get('SOCKET_REDIS_URI').required().asString();
 

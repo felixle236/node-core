@@ -53,6 +53,7 @@
 	"message": {
 		"something_went_wrong": "something went wrong",
 		"unknown": "%s",
+		"logical": "%s",
 		"invalid_data_check_fields_property_for_more_info": "invalid data, check 'fields' property for more info",
 		"%s_is_not_supported": "%s is not supported",
 		"unauthorized": "unauthorized",

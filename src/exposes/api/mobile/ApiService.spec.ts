@@ -49,7 +49,7 @@ export class TestController {
 
   @Get('/test-400-logic')
   async test400Logic(): Promise<boolean> {
-    throw new LogicalError(MessageError.UNKNOWN);
+    throw new LogicalError(MessageError.LOGICAL);
   }
 
   @Get('/test-403-access-denied')
@@ -125,7 +125,7 @@ describe('Api service', () => {
     const { status, data } = await axios.get(endpoint + '/api/test/test-400-logic').catch((error) => error.response);
 
     expect(status).to.eq(400);
-    expect(data.code).to.eq(new LogicalError(MessageError.UNKNOWN).code);
+    expect(data.code).to.eq(new LogicalError(MessageError.LOGICAL).code);
   });
 
   it('Test 403 access denied', async () => {

@@ -6,6 +6,8 @@ export class MessageError {
 
   static UNKNOWN = new ErrorObject(ErrorCode.UNKNOWN, 'unknown');
 
+  static LOGICAL = new ErrorObject(ErrorCode.LOGICAL, 'logical');
+
   static INPUT_VALIDATION = new ErrorObject(ErrorCode.VALIDATION, 'invalid_data_check_fields_property_for_more_info');
 
   static PARAM_NOT_SUPPORTED = new ErrorObject(ErrorCode.NOT_SUPPORTED, '%s_is_not_supported');

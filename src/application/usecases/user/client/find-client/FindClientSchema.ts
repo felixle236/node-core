@@ -23,6 +23,9 @@ export class FindClientDataOutput {
   @IsDateString()
   createdAt: Date;
 
+  @IsEnum(ClientStatus)
+  status: ClientStatus;
+
   @IsString()
   firstName: string;
 

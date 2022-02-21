@@ -1,3 +1,4 @@
+import { ClientStatus } from 'domain/enums/user/ClientStatus';
 import { GenderType } from 'domain/enums/user/GenderType';
 import { AddressInfoData } from 'application/usecases/common/AddressInfoData';
 import { RefSchemaObject } from 'shared/decorators/RefSchema';
@@ -10,6 +11,9 @@ export class GetClientDataOutput {
 
   @IsDateString()
   createdAt: Date;
+
+  @IsEnum(ClientStatus)
+  status: ClientStatus;
 
   @IsString()
   firstName: string;

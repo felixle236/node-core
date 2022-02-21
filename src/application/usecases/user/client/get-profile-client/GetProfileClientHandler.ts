@@ -18,6 +18,7 @@ export class GetProfileClientHandler implements IUsecaseHandler<string, GetProfi
     const data = new GetProfileClientDataOutput();
     data.id = client.id;
     data.createdAt = client.createdAt;
+    data.status = client.status;
     data.firstName = client.firstName;
     data.lastName = client.lastName;
     data.email = client.email;

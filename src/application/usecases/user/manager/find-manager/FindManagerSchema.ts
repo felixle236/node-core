@@ -21,6 +21,9 @@ export class FindManagerDataOutput {
   @IsDateString()
   createdAt: Date;
 
+  @IsEnum(ManagerStatus)
+  status: ManagerStatus;
+
   @IsString()
   firstName: string;
 
