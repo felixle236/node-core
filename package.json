@@ -128,7 +128,7 @@
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
-    "grunt": "^1.4.1",
+    "grunt": "^1.5.3",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-exec": "^3.0.0",
     "grunt-sync": "^0.8.2",
