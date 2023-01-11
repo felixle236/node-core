@@ -55,7 +55,7 @@
     "axios": "^0.26.0",
     "child-process-promise": "^2.2.1",
     "class-transformer": "^0.5.1",
-    "class-validator": "0.13.2",
+    "class-validator": "0.14.0",
     "class-validator-jsonschema": "^3.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
